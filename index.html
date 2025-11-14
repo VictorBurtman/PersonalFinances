@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,175 +12,172 @@
             box-sizing: border-box;
         }
 
-```
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 10px;
-        color: #333;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
 
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-    }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    .header {
-        text-align: center;
-        color: white;
-        margin-bottom: 15px;
-    }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+        }
 
-    .header h1 {
-        font-size: 2em;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
-
-    .header p {
-        font-size: 1em;
-        opacity: 0.9;
-    }
-
-    .dashboard {
-        background: white;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        margin-bottom: 20px;
-    }
-
-    .total-section {
-        text-align: center;
-        padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
-        color: white;
-        margin-bottom: 20px;
-    }
-
-    .total-section h2 {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-        opacity: 0.9;
-        font-weight: 500;
-    }
-
-    .total-amount {
-        font-size: 2.5em;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .chart-container {
-        position: relative;
-        height: 250px;
-        margin: 20px 0;
-    }
-
-    .expenses-list {
-        display: grid;
-        gap: 10px;
-    }
-
-    .category-section {
-        margin-bottom: 15px;
-    }
-
-    .category-title {
-        font-size: 1.1em;
-        font-weight: 600;
-        color: #667eea;
-        margin-bottom: 12px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .expense-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-    }
-
-    .expense-item:hover {
-        background: #e9ecef;
-        transform: translateX(5px);
-    }
-
-    .expense-name {
-        font-weight: 500;
-        color: #495057;
-        flex: 1;
-    }
-
-    .expense-input {
-        width: 120px;
-        padding: 8px 12px;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        font-size: 1em;
-        text-align: right;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .expense-input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .currency {
-        margin-left: 8px;
-        color: #667eea;
-        font-weight: 600;
-    }
-
-    .reset-button {
-        width: 100%;
-        padding: 15px;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .reset-button:hover {
-        background: #c0392b;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-    }
-
-    @media (max-width: 600px) {
         .header h1 {
             font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 600;
         }
-        
-        .total-amount {
-            font-size: 2.5em;
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
         }
 
         .dashboard {
+            background: white;
+            border-radius: 20px;
             padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .total-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .total-section h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .total-amount {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            margin: 20px 0;
+        }
+
+        .expenses-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .category-section {
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expense-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .expense-name {
+            font-weight: 500;
+            color: #495057;
+            flex: 1;
         }
 
         .expense-input {
-            width: 100px;
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: right;
+            transition: all 0.3s ease;
+            background: white;
         }
-    }
-</style>
-```
 
+        .expense-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .currency {
+            margin-left: 8px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .reset-button {
+            width: 100%;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .total-amount {
+                font-size: 2.5em;
+            }
+
+            .dashboard {
+                padding: 20px;
+            }
+
+            .expense-input {
+                width: 100px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -190,305 +186,302 @@
             <p>Track your fixed monthly costs</p>
         </div>
 
-```
-    <div class="dashboard">
-        <div class="total-section">
-            <h2>Total Monthly Expenses</h2>
-            <div class="total-amount" id="totalAmount">₪0</div>
-        </div>
-
-        <div class="chart-container">
-            <canvas id="expensesChart"></canvas>
-        </div>
-
-        <div class="expenses-list">
-            <div class="category-section">
-                <div class="category-title">🏠 Housing</div>
-                <div id="housingExpenses"></div>
+        <div class="dashboard">
+            <div class="total-section">
+                <h2>Total Monthly Expenses</h2>
+                <div class="total-amount" id="totalAmount">₪0</div>
             </div>
 
-            <div class="category-section">
-                <div class="category-title">📱 Communications & Tech</div>
-                <div id="techExpenses"></div>
+            <div class="chart-container">
+                <canvas id="expensesChart"></canvas>
             </div>
 
-            <div class="category-section">
-                <div class="category-title">🐱 Pet Care</div>
-                <div id="petExpenses"></div>
-            </div>
+            <div class="expenses-list">
+                <div class="category-section">
+                    <div class="category-title">🏠 Housing</div>
+                    <div id="housingExpenses"></div>
+                </div>
 
-            <div class="category-section">
-                <div class="category-title">🎬 Subscriptions</div>
-                <div id="subscriptionExpenses"></div>
-            </div>
+                <div class="category-section">
+                    <div class="category-title">📱 Communications & Tech</div>
+                    <div id="techExpenses"></div>
+                </div>
 
-            <div class="category-section">
-                <div class="category-title">🛒 Groceries</div>
-                <div id="groceryExpenses"></div>
-            </div>
-        </div>
+                <div class="category-section">
+                    <div class="category-title">🐱 Pet Care</div>
+                    <div id="petExpenses"></div>
+                </div>
 
-        <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
-    </div>
-</div>
+                <div class="category-section">
+                    <div class="category-title">🎬 Subscriptions</div>
+                    <div id="subscriptionExpenses"></div>
+                </div>
 
-<script>
-    // Global error handler
-    window.addEventListener('error', function(e) {
-        console.error('Error caught:', e.message);
-        // Don't let errors break the app
-        e.preventDefault();
-    });
-
-    const defaultExpenses = {
-        housing: [
-            { name: 'Rent', amount: 0 },
-            { name: 'Arnona', amount: 0 },
-            { name: 'Electricity', amount: 0 },
-            { name: 'Gas', amount: 0 },
-            { name: 'Water', amount: 0 }
-        ],
-        tech: [
-            { name: 'Phone Plan', amount: 0 },
-            { name: 'Internet', amount: 0 },
-            { name: 'iCloud', amount: 0 }
-        ],
-        pet: [
-            { name: 'Cat Food', amount: 0 },
-            { name: 'Litter', amount: 0 }
-        ],
-        subscriptions: [
-            { name: 'YouTube Premium', amount: 0 },
-            { name: 'Claude Pro', amount: 0 },
-            { name: 'Therapist', amount: 0 }
-        ],
-        groceries: [
-            { name: 'Food', amount: 0 },
-            { name: 'Household Products', amount: 0 },
-            { name: 'Personal Care', amount: 0 }
-        ]
-    };
-
-    let expenses = JSON.parse(localStorage.getItem('expenses')) || defaultExpenses;
-    
-    // Migration: ensure all categories exist
-    if (!expenses.groceries) {
-        expenses.groceries = [
-            { name: 'Food', amount: 0 },
-            { name: 'Household Products', amount: 0 },
-            { name: 'Personal Care', amount: 0 }
-        ];
-    }
-    if (!expenses.subscriptions.find(s => s.name === 'Therapist')) {
-        expenses.subscriptions.push({ name: 'Therapist', amount: 0 });
-    }
-    // Save migrated data
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    
-    let chart = null;
-
-    const colors = [
-        '#667eea', '#764ba2', '#f093fb', '#4facfe',
-        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
-        '#a8edea', '#fed6e3', '#c471f5', '#12c2e9'
-    ];
-
-    function saveExpenses() {
-        localStorage.setItem('expenses', JSON.stringify(expenses));
-        updateDisplay();
-    }
-
-    function calculateTotal() {
-        let total = 0;
-        Object.values(expenses).forEach(category => {
-            category.forEach(expense => {
-                total += parseFloat(expense.amount) || 0;
-            });
-        });
-        return total;
-    }
-
-    function renderExpenseItem(expense, category, index) {
-        return `
-            <div class="expense-item">
-                <span class="expense-name">${expense.name}</span>
-                <div>
-                    <input 
-                        type="number" 
-                        class="expense-input" 
-                        value="${expense.amount}"
-                        onchange="updateExpense('${category}', ${index}, this.value)"
-                        step="0.01"
-                        min="0"
-                    />
-                    <span class="currency">₪</span>
+                <div class="category-section">
+                    <div class="category-title">🛒 Groceries</div>
+                    <div id="groceryExpenses"></div>
                 </div>
             </div>
-        `;
-    }
 
-    function updateExpense(category, index, value) {
-        expenses[category][index].amount = parseFloat(value) || 0;
-        saveExpenses();
-    }
+            <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
+        </div>
+    </div>
 
-    function updateDisplay() {
-        try {
-            // Update total
-            const total = calculateTotal();
-            document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
-
-            // Render expense lists - only if category exists
-            if (expenses.housing) {
-                document.getElementById('housingExpenses').innerHTML = 
-                    expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
-            }
-            if (expenses.tech) {
-                document.getElementById('techExpenses').innerHTML = 
-                    expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
-            }
-            if (expenses.pet) {
-                document.getElementById('petExpenses').innerHTML = 
-                    expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
-            }
-            if (expenses.subscriptions) {
-                document.getElementById('subscriptionExpenses').innerHTML = 
-                    expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
-            }
-            if (expenses.groceries) {
-                document.getElementById('groceryExpenses').innerHTML = 
-                    expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
-            }
-
-            // Update chart
-            updateChart();
-        } catch (error) {
-            console.error('Error updating display:', error);
-        }
-    }
-
-    function updateChart() {
-        // Check if Chart.js is available
-        if (typeof Chart === 'undefined') {
-            console.warn('Chart.js is not available');
-            return;
-        }
-
-        const ctx = document.getElementById('expensesChart').getContext('2d');
-        
-        // Prepare data for chart
-        const labels = [];
-        const data = [];
-        const backgroundColors = [];
-        let colorIndex = 0;
-
-        Object.values(expenses).forEach(category => {
-            category.forEach(expense => {
-                if (expense.amount > 0) {
-                    labels.push(expense.name);
-                    data.push(expense.amount);
-                    backgroundColors.push(colors[colorIndex % colors.length]);
-                    colorIndex++;
-                }
-            });
+    <script>
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Error caught:', e.message);
+            // Don't let errors break the app
+            e.preventDefault();
         });
 
-        if (chart) {
-            chart.destroy();
-        }
+        const defaultExpenses = {
+            housing: [
+                { name: 'Rent', amount: 0 },
+                { name: 'Arnona', amount: 0 },
+                { name: 'Electricity', amount: 0 },
+                { name: 'Gas', amount: 0 },
+                { name: 'Water', amount: 0 }
+            ],
+            tech: [
+                { name: 'Phone Plan', amount: 0 },
+                { name: 'Internet', amount: 0 },
+                { name: 'iCloud', amount: 0 }
+            ],
+            pet: [
+                { name: 'Cat Food', amount: 0 },
+                { name: 'Litter', amount: 0 }
+            ],
+            subscriptions: [
+                { name: 'YouTube Premium', amount: 0 },
+                { name: 'Claude Pro', amount: 0 },
+                { name: 'Therapist', amount: 0 }
+            ],
+            groceries: [
+                { name: 'Food', amount: 0 },
+                { name: 'Household Products', amount: 0 },
+                { name: 'Personal Care', amount: 0 }
+            ]
+        };
 
-        if (data.length === 0) {
-            // Show placeholder when no data
-            chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['No expenses yet'],
-                    datasets: [{
-                        data: [1],
-                        backgroundColor: ['#e9ecef'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        } else {
-            chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+        let expenses = JSON.parse(localStorage.getItem('expenses')) || defaultExpenses;
+        
+        // Migration: ensure all categories exist
+        if (!expenses.groceries) {
+            expenses.groceries = [
+                { name: 'Food', amount: 0 },
+                { name: 'Household Products', amount: 0 },
+                { name: 'Personal Care', amount: 0 }
+            ];
         }
-    }
+        if (!expenses.subscriptions.find(s => s.name === 'Therapist')) {
+            expenses.subscriptions.push({ name: 'Therapist', amount: 0 });
+        }
+        // Save migrated data
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        
+        let chart = null;
 
-    function resetExpenses() {
-        if (confirm('Are you sure you want to reset all expenses to 0?')) {
-            // Clear localStorage and reload with default
-            localStorage.removeItem('expenses');
-            expenses = JSON.parse(JSON.stringify(defaultExpenses));
+        const colors = [
+            '#667eea', '#764ba2', '#f093fb', '#4facfe',
+            '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+            '#a8edea', '#fed6e3', '#c471f5', '#12c2e9'
+        ];
+
+        function saveExpenses() {
             localStorage.setItem('expenses', JSON.stringify(expenses));
             updateDisplay();
         }
-    }
 
-    // Wait for Chart.js to load before initializing
-    function initializeApp() {
-        if (typeof Chart !== 'undefined') {
-            updateDisplay();
-        } else {
-            console.warn('Chart.js not loaded, waiting...');
-            setTimeout(initializeApp, 100);
+        function calculateTotal() {
+            let total = 0;
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    total += parseFloat(expense.amount) || 0;
+                });
+            });
+            return total;
         }
-    }
 
-    // Initialize on load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeApp);
-    } else {
-        initializeApp();
-    }
-</script>
-```
+        function renderExpenseItem(expense, category, index) {
+            return `
+                <div class="expense-item">
+                    <span class="expense-name">${expense.name}</span>
+                    <div>
+                        <input 
+                            type="number" 
+                            class="expense-input" 
+                            value="${expense.amount}"
+                            onchange="updateExpense('${category}', ${index}, this.value)"
+                            step="0.01"
+                            min="0"
+                        />
+                        <span class="currency">₪</span>
+                    </div>
+                </div>
+            `;
+        }
 
+        function updateExpense(category, index, value) {
+            expenses[category][index].amount = parseFloat(value) || 0;
+            saveExpenses();
+        }
+
+        function updateDisplay() {
+            try {
+                // Update total
+                const total = calculateTotal();
+                document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
+
+                // Render expense lists - only if category exists
+                if (expenses.housing) {
+                    document.getElementById('housingExpenses').innerHTML = 
+                        expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
+                }
+                if (expenses.tech) {
+                    document.getElementById('techExpenses').innerHTML = 
+                        expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
+                }
+                if (expenses.pet) {
+                    document.getElementById('petExpenses').innerHTML = 
+                        expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
+                }
+                if (expenses.subscriptions) {
+                    document.getElementById('subscriptionExpenses').innerHTML = 
+                        expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
+                }
+                if (expenses.groceries) {
+                    document.getElementById('groceryExpenses').innerHTML = 
+                        expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
+                }
+
+                // Update chart
+                updateChart();
+            } catch (error) {
+                console.error('Error updating display:', error);
+            }
+        }
+
+        function updateChart() {
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is not available');
+                return;
+            }
+
+            const ctx = document.getElementById('expensesChart').getContext('2d');
+            
+            // Prepare data for chart
+            const labels = [];
+            const data = [];
+            const backgroundColors = [];
+            let colorIndex = 0;
+
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    if (expense.amount > 0) {
+                        labels.push(expense.name);
+                        data.push(expense.amount);
+                        backgroundColors.push(colors[colorIndex % colors.length]);
+                        colorIndex++;
+                    }
+                });
+            });
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (data.length === 0) {
+                // Show placeholder when no data
+                chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['No expenses yet'],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['#e9ecef'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            } else {
+                chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function resetExpenses() {
+            if (confirm('Are you sure you want to reset all expenses to 0?')) {
+                // Clear localStorage and reload with default
+                localStorage.removeItem('expenses');
+                expenses = JSON.parse(JSON.stringify(defaultExpenses));
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+                updateDisplay();
+            }
+        }
+
+        // Wait for Chart.js to load before initializing
+        function initializeApp() {
+            if (typeof Chart !== 'undefined') {
+                updateDisplay();
+            } else {
+                console.warn('Chart.js not loaded, waiting...');
+                setTimeout(initializeApp, 100);
+            }
+        }
+
+        // Initialize on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
 </body>
 </html>
