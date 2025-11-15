@@ -1438,46 +1438,36 @@
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% of income)`;
 
-                // Hide/show category sections based on whether they exist in expenses
-                const categoryMapping = {
-                    'income': 'incomeExpenses',
-                    'housing': 'housingExpenses',
-                    'tech': 'techExpenses',
-                    'pet': 'petExpenses',
-                    'subscriptions': 'subscriptionExpenses',
-                    'groceries': 'groceryExpenses',
-                    'other': 'otherExpenses'
-                };
-
-                Object.keys(categoryMapping).forEach(categoryKey => {
+                // Update ALL categories dynamically (not just hardcoded ones)
+                Object.keys(expenses).forEach(categoryKey => {
                     const section = document.getElementById(`category-${categoryKey}`);
-                    if (section) {
-                        if (!expenses[categoryKey]) {
-                            // Category deleted - hide it
-                            section.style.display = 'none';
+                    if (!section) {
+                        // Category exists in data but not in DOM - skip it
+                        return;
+                    }
+                    
+                    // Show the section
+                    section.style.display = 'block';
+                    
+                    // Update stats
+                    const stats = getCategoryStats(categoryKey);
+                    const statsElement = document.getElementById(`${categoryKey}Stats`);
+                    
+                    if (statsElement) {
+                        if (categoryKey === 'income') {
+                            statsElement.innerHTML = stats.total > 0 ? 
+                                `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
                         } else {
-                            // Category exists - show and render it
-                            section.style.display = 'block';
-                            
-                            const stats = getCategoryStats(categoryKey);
-                            const statsElement = document.getElementById(`${categoryKey}Stats`);
-                            const expensesElement = document.getElementById(categoryMapping[categoryKey]);
-                            
-                            if (statsElement) {
-                                if (categoryKey === 'income') {
-                                    statsElement.innerHTML = stats.total > 0 ? 
-                                        `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
-                                } else {
-                                    statsElement.innerHTML = stats.total > 0 ? 
-                                        `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                                }
-                            }
-                            
-                            if (expensesElement) {
-                                expensesElement.innerHTML = expenses[categoryKey].map((exp, i) => 
-                                    renderExpenseItem(exp, categoryKey, i)).join('');
-                            }
+                            statsElement.innerHTML = stats.total > 0 ? 
+                                `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                         }
+                    }
+                    
+                    // Update expenses items
+                    const expensesElement = document.getElementById(`${categoryKey}Expenses`);
+                    if (expensesElement && expenses[categoryKey]) {
+                        expensesElement.innerHTML = expenses[categoryKey].map((exp, i) => 
+                            renderExpenseItem(exp, categoryKey, i)).join('');
                     }
                 });
 
