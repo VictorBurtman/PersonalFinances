@@ -781,11 +781,6 @@
     <div class="container">
         <div class="header">
             <h1>💰 Monthly Expenses</h1>
-            <p>Track your fixed monthly costs</p>
-            <div class="user-info">
-                <span id="userEmail"></span>
-                <button class="logout-btn" onclick="handleLogout()">Logout</button>
-            </div>
         </div>
 
         <div class="dashboard">
@@ -963,6 +958,17 @@
             </div>
             <div class="modal-body">
                 <div class="settings-section">
+                    <h3>Account</h3>
+                    <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="font-size: 0.9em; color: #6c757d; margin-bottom: 5px;">Logged in as:</div>
+                        <div style="font-weight: 500; color: #495057;" id="settingsUserEmail"></div>
+                    </div>
+                    <button class="modal-button secondary" onclick="handleLogout()" style="width: 100%;">
+                        Logout
+                    </button>
+                </div>
+                
+                <div class="settings-section">
                     <h3>Currency</h3>
                     <select id="currencySelect" class="settings-select" onchange="updateCurrency(this.value)">
                         <option value="ILS">₪ Israeli Shekel (ILS)</option>
@@ -1107,7 +1113,6 @@
                 currentUser = user;
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').classList.add('show');
-                document.getElementById('userEmail').textContent = user.email;
                 
                 // Load user data from Firestore
                 await loadUserData();
@@ -1797,11 +1802,17 @@
             const modal = document.getElementById('settingsModal');
             const currencySelect = document.getElementById('currencySelect');
             const useIncomeCheckbox = document.getElementById('useIncomeCheckbox');
+            const settingsUserEmail = document.getElementById('settingsUserEmail');
             
             // Set current values
             const currencyCode = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
             currencySelect.value = currencyCode;
             useIncomeCheckbox.checked = useIncome;
+            
+            // Set user email
+            if (currentUser) {
+                settingsUserEmail.textContent = currentUser.email;
+            }
             
             modal.classList.add('show');
         }
