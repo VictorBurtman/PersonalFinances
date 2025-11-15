@@ -563,6 +563,13 @@
             gap: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
 
         .edit-mode-btn {
@@ -1206,8 +1213,22 @@
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
                     
-                    // Recreate HTML for custom categories that don't exist in the default list
+                    // Hide default categories that were deleted by the user
                     const defaultCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    defaultCategories.forEach(categoryKey => {
+                        const section = document.getElementById(`category-${categoryKey}`);
+                        if (section) {
+                            if (!expenses[categoryKey]) {
+                                // Category was deleted - hide it
+                                section.style.display = 'none';
+                            } else {
+                                // Category exists - show it
+                                section.style.display = 'block';
+                            }
+                        }
+                    });
+                    
+                    // Recreate HTML for custom categories that don't exist in the default list
                     const expensesList = document.getElementById('expensesList');
                     
                     Object.keys(expenses).forEach(categoryKey => {
