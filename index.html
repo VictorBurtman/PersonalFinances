@@ -1181,14 +1181,6 @@
                     categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
-                    
-                    // Migration: ensure all default categories exist
-                    if (!expenses.other) {
-                        expenses.other = [{ name: 'Other Expenses', amount: 0 }];
-                    }
-                    if (!expenses.income) {
-                        expenses.income = [{ name: 'Salary', amount: 0 }];
-                    }
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
@@ -1748,14 +1740,21 @@
         }
 
         function deleteCategory(categoryKey) {
-            if (!confirm('Delete this entire category?')) return;
+            if (!confirm('Delete this entire category? This cannot be undone.')) return;
             
+            // Delete from expenses
             delete expenses[categoryKey];
+            
+            // Remove from categoryOrder
             categoryOrder = categoryOrder.filter(c => c !== categoryKey);
             
+            // Remove from DOM
             const section = document.getElementById(`category-${categoryKey}`);
-            if (section) section.remove();
+            if (section) {
+                section.remove();
+            }
             
+            // Save to Firebase
             saveUserData();
             updateDisplay();
         }
