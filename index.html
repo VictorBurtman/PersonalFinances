@@ -791,6 +791,9 @@
                 <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
                     ➕ Add Category
                 </button>
+                <button class="edit-mode-btn" onclick="cleanDatabase()" style="border-color: #dc3545; color: #dc3545;">
+                    🧹 Clean Database
+                </button>
                 <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
                     ⚙️ Settings
                 </button>
@@ -1872,6 +1875,49 @@
             
             // Update the display to refresh stats
             updateDisplay();
+        }
+
+        // Clean Database Function - removes ghost categories
+        function cleanDatabase() {
+            let foundGhosts = false;
+            const ghostCategories = [];
+            
+            // Check for categories that exist in data but not in DOM
+            Object.keys(expenses).forEach(categoryKey => {
+                const section = document.getElementById(`category-${categoryKey}`);
+                if (!section) {
+                    ghostCategories.push(categoryKey);
+                    foundGhosts = true;
+                }
+            });
+            
+            if (foundGhosts) {
+                const message = `Found ${ghostCategories.length} ghost categor${ghostCategories.length > 1 ? 'ies' : 'y'}: ${ghostCategories.join(', ')}\n\nDo you want to remove them?`;
+                if (confirm(message)) {
+                    // Remove ghost categories from expenses
+                    ghostCategories.forEach(categoryKey => {
+                        delete expenses[categoryKey];
+                    });
+                    
+                    // Remove from categoryOrder
+                    categoryOrder = categoryOrder.filter(c => !ghostCategories.includes(c));
+                    
+                    // Remove from categoryMetadata
+                    ghostCategories.forEach(categoryKey => {
+                        if (categoryMetadata[categoryKey]) {
+                            delete categoryMetadata[categoryKey];
+                        }
+                    });
+                    
+                    // Save and update
+                    saveUserData();
+                    updateDisplay();
+                    
+                    alert(`Successfully removed ${ghostCategories.length} ghost categor${ghostCategories.length > 1 ? 'ies' : 'y'}!`);
+                }
+            } else {
+                alert('No ghost categories found! Your database is clean. ✅');
+            }
         }
 
         // Settings Functions
