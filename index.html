@@ -1334,7 +1334,7 @@
                 const incomeDisplaySection = document.getElementById('incomeDisplay');
                 const remainingDisplaySection = document.getElementById('remainingDisplay');
                 
-                if (useIncome && incomeSection) {
+                if (useIncome && expenses.income && incomeSection) {
                     incomeSection.style.display = 'block';
                     incomeDisplaySection.style.display = 'block';
                     remainingDisplaySection.style.display = 'block';
@@ -1355,58 +1355,48 @@
                 document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
 
-                // Render income if enabled
-                if (expenses.income && useIncome) {
-                    const stats = getCategoryStats('income');
-                    document.getElementById('incomeStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
-                    document.getElementById('incomeExpenses').innerHTML = 
-                        expenses.income.map((exp, i) => renderExpenseItem(exp, 'income', i)).join('');
-                }
+                // Hide/show category sections based on whether they exist in expenses
+                const categoryMapping = {
+                    'income': 'incomeExpenses',
+                    'housing': 'housingExpenses',
+                    'tech': 'techExpenses',
+                    'pet': 'petExpenses',
+                    'subscriptions': 'subscriptionExpenses',
+                    'groceries': 'groceryExpenses',
+                    'other': 'otherExpenses'
+                };
 
-                // Render expense lists and category stats
-                if (expenses.housing) {
-                    const stats = getCategoryStats('housing');
-                    document.getElementById('housingStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('housingExpenses').innerHTML = 
-                        expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
-                }
-                if (expenses.tech) {
-                    const stats = getCategoryStats('tech');
-                    document.getElementById('techStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('techExpenses').innerHTML = 
-                        expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
-                }
-                if (expenses.pet) {
-                    const stats = getCategoryStats('pet');
-                    document.getElementById('petStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('petExpenses').innerHTML = 
-                        expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
-                }
-                if (expenses.subscriptions) {
-                    const stats = getCategoryStats('subscriptions');
-                    document.getElementById('subscriptionStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('subscriptionExpenses').innerHTML = 
-                        expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
-                }
-                if (expenses.groceries) {
-                    const stats = getCategoryStats('groceries');
-                    document.getElementById('groceryStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('groceryExpenses').innerHTML = 
-                        expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
-                }
-                if (expenses.other) {
-                    const stats = getCategoryStats('other');
-                    document.getElementById('otherStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                    document.getElementById('otherExpenses').innerHTML = 
-                        expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
-                }
+                Object.keys(categoryMapping).forEach(categoryKey => {
+                    const section = document.getElementById(`category-${categoryKey}`);
+                    if (section) {
+                        if (!expenses[categoryKey]) {
+                            // Category deleted - hide it
+                            section.style.display = 'none';
+                        } else {
+                            // Category exists - show and render it
+                            section.style.display = 'block';
+                            
+                            const stats = getCategoryStats(categoryKey);
+                            const statsElement = document.getElementById(`${categoryKey}Stats`);
+                            const expensesElement = document.getElementById(categoryMapping[categoryKey]);
+                            
+                            if (statsElement) {
+                                if (categoryKey === 'income') {
+                                    statsElement.innerHTML = stats.total > 0 ? 
+                                        `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
+                                } else {
+                                    statsElement.innerHTML = stats.total > 0 ? 
+                                        `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                                }
+                            }
+                            
+                            if (expensesElement) {
+                                expensesElement.innerHTML = expenses[categoryKey].map((exp, i) => 
+                                    renderExpenseItem(exp, categoryKey, i)).join('');
+                            }
+                        }
+                    }
+                });
 
                 // Update chart
                 updateChart();
