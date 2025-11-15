@@ -562,23 +562,26 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            margin-top: -20px;
+            padding: 12px 20px;
             flex-wrap: wrap;
             position: sticky;
-            top: 10px;
+            top: 0;
             background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #f0f0f0;
             z-index: 100;
+            align-items: center;
         }
 
         .edit-mode-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: 2px solid #fd7e14;
             background: white;
             color: #fd7e14;
             border-radius: 8px;
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -798,6 +801,7 @@
                 <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
                     ➕ Add Category
                 </button>
+                <div style="flex: 1;"></div>
                 <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
                     ⚙️ Settings
                 </button>
@@ -1459,7 +1463,13 @@
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% of income)`;
 
-                // Update ALL categories dynamically (not just hardcoded ones)
+                // First, hide ALL category sections
+                const allSections = document.querySelectorAll('.category-section');
+                allSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Then, update ONLY categories that exist in expenses
                 Object.keys(expenses).forEach(categoryKey => {
                     const section = document.getElementById(`category-${categoryKey}`);
                     if (!section) {
@@ -1927,8 +1937,11 @@
             // Create a document fragment for better performance
             const fragment = document.createDocumentFragment();
             
-            // Re-append categories in the correct order
+            // Re-append categories in the correct order, but ONLY if they exist in expenses
             categoryOrder.forEach(categoryKey => {
+                // Skip if category was deleted
+                if (!expenses[categoryKey]) return;
+                
                 const section = document.getElementById(`category-${categoryKey}`);
                 if (section) {
                     // Remove from current position and add to fragment
