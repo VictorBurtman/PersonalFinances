@@ -1,622 +1,619 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Expenses Tracker</title>
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 10px;
-        color: #333;
-    }
-
-    .container {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-    .header {
-        text-align: center;
-        color: white;
-        margin-bottom: 15px;
-    }
-
-    .header h1 {
-        font-size: 2em;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
-
-    .header p {
-        font-size: 1em;
-        opacity: 0.9;
-    }
-
-    .dashboard {
-        background: white;
-        border-radius: 20px;
-        padding: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        margin-bottom: 20px;
-    }
-
-    .total-section {
-        text-align: center;
-        padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
-        color: white;
-        margin-bottom: 20px;
-    }
-
-    .total-section h2 {
-        font-size: 1.2em;
-        margin-bottom: 10px;
-        opacity: 0.9;
-        font-weight: 500;
-    }
-
-    .total-amount {
-        font-size: 2.5em;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .chart-section {
-        margin-bottom: 20px;
-    }
-
-    .chart-controls {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
-        justify-content: center;
-    }
-
-    .chart-toggle-btn {
-        padding: 10px 20px;
-        border: 2px solid #667eea;
-        background: white;
-        color: #667eea;
-        border-radius: 8px;
-        font-size: 0.9em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .chart-toggle-btn:hover {
-        background: #f0f0f0;
-    }
-
-    .chart-toggle-btn.active {
-        background: #667eea;
-        color: white;
-    }
-
-    .color-customize-btn {
-        padding: 10px 20px;
-        border: 2px solid #28a745;
-        background: white;
-        color: #28a745;
-        border-radius: 8px;
-        font-size: 0.9em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .color-customize-btn:hover {
-        background: #28a745;
-        color: white;
-    }
-
-    /* Modal styles */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        animation: fadeIn 0.3s;
-    }
-
-    .modal.show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    .modal-content {
-        background: white;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 500px;
-        max-height: 80vh;
-        display: flex;
-        flex-direction: column;
-        animation: slideIn 0.3s;
-    }
-
-    @keyframes slideIn {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-            transform: translateY(0);
-            opacity: 1;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
         }
-    }
 
-    .modal-header {
-        padding: 20px;
-        border-bottom: 2px solid #f0f0f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    .modal-header h2 {
-        font-size: 1.5em;
-        color: #667eea;
-        margin: 0;
-    }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 15px;
+        }
 
-    .modal-close {
-        background: none;
-        border: none;
-        font-size: 1.5em;
-        color: #999;
-        cursor: pointer;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-    }
-
-    .modal-close:hover {
-        background: #f0f0f0;
-        color: #333;
-    }
-
-    .modal-body {
-        padding: 20px;
-        overflow-y: auto;
-        flex: 1;
-    }
-
-    .color-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px;
-        margin-bottom: 10px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-    }
-
-    .color-item:hover {
-        background: #e9ecef;
-    }
-
-    .color-item-name {
-        font-weight: 500;
-        color: #495057;
-        flex: 1;
-    }
-
-    .color-picker-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .color-preview {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        border: 2px solid #dee2e6;
-        cursor: pointer;
-    }
-
-    input[type="color"] {
-        width: 50px;
-        height: 35px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    .modal-footer {
-        padding: 20px;
-        border-top: 2px solid #f0f0f0;
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-    }
-
-    .modal-button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-button.primary {
-        background: #667eea;
-        color: white;
-    }
-
-    .modal-button.primary:hover {
-        background: #5568d3;
-    }
-
-    .modal-button.secondary {
-        background: #e9ecef;
-        color: #495057;
-    }
-
-    .modal-button.secondary:hover {
-        background: #dee2e6;
-    }
-
-    .chart-container {
-        position: relative;
-        height: 350px;
-        margin-bottom: 20px;
-    }
-
-    .expenses-list {
-        display: grid;
-        gap: 10px;
-    }
-
-    .category-section {
-        margin-bottom: 15px;
-    }
-
-    .category-title {
-        font-size: 1.1em;
-        font-weight: 600;
-        color: #667eea;
-        margin-bottom: 8px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .category-stats {
-        font-size: 0.9em;
-        color: #6c757d;
-        margin-bottom: 8px;
-        font-weight: 500;
-    }
-
-    .category-stats .amount {
-        color: #667eea;
-        font-weight: 600;
-    }
-
-    .category-stats .percentage {
-        color: #999;
-        margin-left: 8px;
-    }
-
-    .expense-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-    }
-
-    .expense-item:hover {
-        background: #e9ecef;
-        transform: translateX(5px);
-    }
-
-    .expense-name {
-        font-weight: 500;
-        color: #495057;
-        flex: 1;
-    }
-
-    .expense-input {
-        width: 120px;
-        padding: 8px 12px;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        font-size: 1em;
-        text-align: right;
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-    .expense-input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .currency {
-        margin-left: 8px;
-        color: #667eea;
-        font-weight: 600;
-    }
-
-    .reset-button {
-        width: 100%;
-        padding: 15px;
-        background: #e74c3c;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .reset-button:hover {
-        background: #c0392b;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-    }
-
-    @media (max-width: 600px) {
         .header h1 {
             font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 600;
         }
-        
-        .total-amount {
-            font-size: 2.5em;
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
         }
 
         .dashboard {
+            background: white;
+            border-radius: 20px;
             padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .total-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .total-section h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .total-amount {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .chart-section {
+            margin-bottom: 20px;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .chart-toggle-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-toggle-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .chart-toggle-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .color-customize-btn {
+            padding: 10px 20px;
+            border: 2px solid #28a745;
+            background: white;
+            color: #28a745;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-customize-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            color: #667eea;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .color-item:hover {
+            background: #e9ecef;
+        }
+
+        .color-item-name {
+            font-weight: 500;
+            color: #495057;
+            flex: 1;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: #5568d3;
+        }
+
+        .modal-button.secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .modal-button.secondary:hover {
+            background: #dee2e6;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 20px;
+        }
+
+        .expenses-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .category-section {
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .category-stats {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .category-stats .amount {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .category-stats .percentage {
+            color: #999;
+            margin-left: 8px;
+        }
+
+        .expense-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expense-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .expense-name {
+            font-weight: 500;
+            color: #495057;
+            flex: 1;
         }
 
         .expense-input {
-            width: 100px;
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: right;
+            transition: all 0.3s ease;
+            background: white;
         }
-    }
 
-    /* Auth Screen Styles */
-    #authScreen {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-    }
+        .expense-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-    .auth-container {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        width: 90%;
-        max-width: 400px;
-    }
+        .currency {
+            margin-left: 8px;
+            color: #667eea;
+            font-weight: 600;
+        }
 
-    .auth-title {
-        text-align: center;
-        color: #667eea;
-        font-size: 2em;
-        margin-bottom: 10px;
-    }
+        .reset-button {
+            width: 100%;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
 
-    .auth-subtitle {
-        text-align: center;
-        color: #6c757d;
-        margin-bottom: 30px;
-    }
+        .reset-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
 
-    .auth-form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .total-amount {
+                font-size: 2.5em;
+            }
 
-    .auth-input {
-        padding: 12px 15px;
-        border: 2px solid #e9ecef;
-        border-radius: 10px;
-        font-size: 1em;
-        transition: all 0.3s ease;
-    }
+            .dashboard {
+                padding: 20px;
+            }
 
-    .auth-input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
+            .expense-input {
+                width: 100px;
+            }
+        }
 
-    .auth-button {
-        padding: 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 1em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        /* Auth Screen Styles */
+        #authScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    .auth-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
 
-    .auth-button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-    }
+        .auth-title {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
 
-    .auth-toggle {
-        text-align: center;
-        margin-top: 20px;
-        color: #6c757d;
-    }
+        .auth-subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
 
-    .auth-toggle button {
-        background: none;
-        border: none;
-        color: #667eea;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: underline;
-    }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-    .auth-error {
-        background: #f8d7da;
-        color: #721c24;
-        padding: 10px;
-        border-radius: 8px;
-        font-size: 0.9em;
-        margin-bottom: 15px;
-        display: none;
-    }
+        .auth-input {
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
 
-    .auth-error.show {
-        display: block;
-    }
+        .auth-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
 
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: white;
-        font-size: 0.9em;
-    }
+        .auth-button {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    .logout-btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 5px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 0.9em;
-        transition: all 0.3s ease;
-    }
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
 
-    .logout-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-    }
+        .auth-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-    /* Edit Mode Styles */
-    .edit-mode-controls {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
 
-    .edit-mode-btn {
-        padding: 10px 20px;
-        border: 2px solid #fd7e14;
-        background: white;
-        color: #fd7e14;
-        border-radius: 8px;
-        font-size: 0.9em;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        .auth-toggle button {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
-    .edit-mode-btn:hover {
-        background: #fd7e14;
-        color: white;
-    }
+        .auth-error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: none;
+        }
 
-    .edit-mode-btn.active {
-        background: #fd7e14;
-        color: white;
-    }
+        .auth-error.show {
+            display: block;
+        }
 
-    .category-controls {
-        display: none;
-        margin-top: 10px;
-        gap: 5px;
-    }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 0.9em;
+        }
 
-    .category-controls.show {
-        display: flex;
-    }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
 
-    .category-btn {
-        padding: 5px 10px;
-        border: 1px solid #dee2e6;
-        background: white;
-        color: #495057;
-        border-radius: 6px;
-        font-size: 0.85em;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
 
-    .category-btn:hover {
-        background: #f8f9fa;
-    }
+        /* Edit Mode Styles */
+        .edit-mode-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
 
-    .category-btn.danger {
-        color: #dc3545;
-        border-color: #dc3545;
-    }
+        .edit-mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #fd7e14;
+            background: white;
+            color: #fd7e14;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    .category-btn.danger:hover {
-        background: #dc3545;
-        color: white;
-    }
+        .edit-mode-btn:hover {
+            background: #fd7e14;
+            color: white;
+        }
 
-    #appScreen {
-        display: none;
-    }
+        .edit-mode-btn.active {
+            background: #fd7e14;
+            color: white;
+        }
 
-    #appScreen.show {
-        display: block;
-    }
-</style>
-```
+        .category-controls {
+            display: none;
+            margin-top: 10px;
+            gap: 5px;
+        }
 
+        .category-controls.show {
+            display: flex;
+        }
+
+        .category-btn {
+            padding: 5px 10px;
+            border: 1px solid #dee2e6;
+            background: white;
+            color: #495057;
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .category-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .category-btn.danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        #appScreen {
+            display: none;
+        }
+
+        #appScreen.show {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <!-- Authentication Screen -->
@@ -624,923 +621,921 @@
         <div class="auth-container">
             <h1 class="auth-title">💰 Expense Tracker</h1>
             <p class="auth-subtitle">Sign in to sync your expenses</p>
-
-```
-        <div class="auth-error" id="authError"></div>
-        
-        <form class="auth-form" id="authForm" onsubmit="handleAuth(event)">
-            <input 
-                type="email" 
-                id="authEmail" 
-                class="auth-input" 
-                placeholder="Email" 
-                required
-            />
-            <input 
-                type="password" 
-                id="authPassword" 
-                class="auth-input" 
-                placeholder="Password (min 6 characters)" 
-                minlength="6"
-                required
-            />
-            <button type="submit" class="auth-button" id="authSubmitBtn">
-                Sign In
-            </button>
-        </form>
-        
-        <div class="auth-toggle">
-            <span id="authToggleText">Don't have an account?</span>
-            <button onclick="toggleAuthMode()" id="authToggleBtn">Sign Up</button>
-        </div>
-    </div>
-</div>
-
-<!-- Main App Screen -->
-<div id="appScreen">
-<div class="container">
-    <div class="header">
-        <h1>💰 Monthly Expenses</h1>
-        <p>Track your fixed monthly costs</p>
-        <div class="user-info">
-            <span id="userEmail"></span>
-            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            
+            <div class="auth-error" id="authError"></div>
+            
+            <form class="auth-form" id="authForm" onsubmit="handleAuth(event)">
+                <input 
+                    type="email" 
+                    id="authEmail" 
+                    class="auth-input" 
+                    placeholder="Email" 
+                    required
+                />
+                <input 
+                    type="password" 
+                    id="authPassword" 
+                    class="auth-input" 
+                    placeholder="Password (min 6 characters)" 
+                    minlength="6"
+                    required
+                />
+                <button type="submit" class="auth-button" id="authSubmitBtn">
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="auth-toggle">
+                <span id="authToggleText">Don't have an account?</span>
+                <button onclick="toggleAuthMode()" id="authToggleBtn">Sign Up</button>
+            </div>
         </div>
     </div>
 
-    <div class="dashboard">
-        <div class="edit-mode-controls">
-            <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-                ✏️ Edit Categories
-            </button>
-            <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
-                ➕ Add Category
-            </button>
-        </div>
-
-        <div class="total-section">
-            <h2>Total Monthly Expenses</h2>
-            <div class="total-amount" id="totalAmount">₪0</div>
-        </div>
-
-        <div class="chart-section">
-            <div class="chart-controls">
-                <button class="chart-toggle-btn active" data-type="doughnut">🍩 Pie Chart</button>
-                <button class="chart-toggle-btn" data-type="bar">📊 Bar Chart</button>
-                <button class="color-customize-btn" onclick="openColorEditor()">🎨 Colors</button>
-            </div>
-            <div class="chart-container">
-                <canvas id="expensesChart"></canvas>
+    <!-- Main App Screen -->
+    <div id="appScreen">
+    <div class="container">
+        <div class="header">
+            <h1>💰 Monthly Expenses</h1>
+            <p>Track your fixed monthly costs</p>
+            <div class="user-info">
+                <span id="userEmail"></span>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
             </div>
         </div>
 
-        <div class="expenses-list">
-            <div class="category-section" id="category-housing">
-                <div class="category-title">🏠 Housing</div>
-                <div class="category-stats" id="housingStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('housing')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('housing')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('housing')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('housing')">🗑️ Delete Category</button>
-                </div>
-                <div id="housingExpenses"></div>
+        <div class="dashboard">
+            <div class="edit-mode-controls">
+                <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
+                    ✏️ Edit Categories
+                </button>
+                <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
+                    ➕ Add Category
+                </button>
             </div>
 
-            <div class="category-section" id="category-tech">
-                <div class="category-title">📱 Communications & Tech</div>
-                <div class="category-stats" id="techStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('tech')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('tech')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('tech')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('tech')">🗑️ Delete Category</button>
-                </div>
-                <div id="techExpenses"></div>
+            <div class="total-section">
+                <h2>Total Monthly Expenses</h2>
+                <div class="total-amount" id="totalAmount">₪0</div>
             </div>
 
-            <div class="category-section" id="category-pet">
-                <div class="category-title">🐱 Pet Care</div>
-                <div class="category-stats" id="petStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('pet')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('pet')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('pet')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('pet')">🗑️ Delete Category</button>
+            <div class="chart-section">
+                <div class="chart-controls">
+                    <button class="chart-toggle-btn active" data-type="doughnut">🍩 Pie Chart</button>
+                    <button class="chart-toggle-btn" data-type="bar">📊 Bar Chart</button>
+                    <button class="color-customize-btn" onclick="openColorEditor()">🎨 Colors</button>
                 </div>
-                <div id="petExpenses"></div>
+                <div class="chart-container">
+                    <canvas id="expensesChart"></canvas>
+                </div>
             </div>
 
-            <div class="category-section" id="category-subscriptions">
-                <div class="category-title">🎬 Subscriptions</div>
-                <div class="category-stats" id="subscriptionStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('subscriptions')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('subscriptions')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('subscriptions')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('subscriptions')">🗑️ Delete Category</button>
+            <div class="expenses-list">
+                <div class="category-section" id="category-housing">
+                    <div class="category-title">🏠 Housing</div>
+                    <div class="category-stats" id="housingStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('housing')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('housing')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('housing')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('housing')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="housingExpenses"></div>
                 </div>
-                <div id="subscriptionExpenses"></div>
+
+                <div class="category-section" id="category-tech">
+                    <div class="category-title">📱 Communications & Tech</div>
+                    <div class="category-stats" id="techStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('tech')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('tech')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('tech')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('tech')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="techExpenses"></div>
+                </div>
+
+                <div class="category-section" id="category-pet">
+                    <div class="category-title">🐱 Pet Care</div>
+                    <div class="category-stats" id="petStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('pet')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('pet')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('pet')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('pet')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="petExpenses"></div>
+                </div>
+
+                <div class="category-section" id="category-subscriptions">
+                    <div class="category-title">🎬 Subscriptions</div>
+                    <div class="category-stats" id="subscriptionStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('subscriptions')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('subscriptions')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('subscriptions')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('subscriptions')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="subscriptionExpenses"></div>
+                </div>
+
+                <div class="category-section" id="category-groceries">
+                    <div class="category-title">🛒 Groceries</div>
+                    <div class="category-stats" id="groceryStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('groceries')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('groceries')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('groceries')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('groceries')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="groceryExpenses"></div>
+                </div>
+
+                <div class="category-section" id="category-other">
+                    <div class="category-title">💸 Other Expenses</div>
+                    <div class="category-stats" id="otherStats"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('other')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('other')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('other')">➕ Add Item</button>
+                        <button class="category-btn danger" onclick="deleteCategory('other')">🗑️ Delete Category</button>
+                    </div>
+                    <div id="otherExpenses"></div>
+                </div>
             </div>
 
-            <div class="category-section" id="category-groceries">
-                <div class="category-title">🛒 Groceries</div>
-                <div class="category-stats" id="groceryStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('groceries')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('groceries')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('groceries')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('groceries')">🗑️ Delete Category</button>
-                </div>
-                <div id="groceryExpenses"></div>
-            </div>
-
-            <div class="category-section" id="category-other">
-                <div class="category-title">💸 Other Expenses</div>
-                <div class="category-stats" id="otherStats"></div>
-                <div class="category-controls">
-                    <button class="category-btn" onclick="moveCategoryUp('other')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('other')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('other')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('other')">🗑️ Delete Category</button>
-                </div>
-                <div id="otherExpenses"></div>
-            </div>
-        </div>
-
-        <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
-    </div>
-</div>
-</div>
-<!-- End App Screen -->
-
-<!-- Color Editor Modal -->
-<div id="colorEditorModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>🎨 Customize Colors</h2>
-            <button class="modal-close" onclick="closeColorEditor()">✕</button>
-        </div>
-        <div class="modal-body" id="colorEditorBody">
-            <!-- Color pickers will be dynamically added here -->
-        </div>
-        <div class="modal-footer">
-            <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
-            <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+            <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
         </div>
     </div>
-</div>
+    </div>
+    <!-- End App Screen -->
 
-<script>
-    // Global error handler
-    window.addEventListener('error', function(e) {
-        console.error('Error caught:', e.message);
-        // Don't let errors break the app
-        e.preventDefault();
-    });
+    <!-- Color Editor Modal -->
+    <div id="colorEditorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎨 Customize Colors</h2>
+                <button class="modal-close" onclick="closeColorEditor()">✕</button>
+            </div>
+            <div class="modal-body" id="colorEditorBody">
+                <!-- Color pickers will be dynamically added here -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
+                <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+            </div>
+        </div>
+    </div>
 
-    // Firebase Configuration
-    // IMPORTANT: Tu devras remplacer cette config par celle de ton projet Firebase
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT_ID.appspot.com",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
-
-    // Initialize Firebase
-    let app, auth, db;
-    try {
-        app = firebase.initializeApp(firebaseConfig);
-        auth = firebase.auth();
-        db = firebase.firestore();
-        console.log('Firebase initialized successfully');
-    } catch (error) {
-        console.error('Firebase initialization error:', error);
-    }
-
-    // Global variables
-    let currentUser = null;
-    let isSignUpMode = false;
-    let isEditMode = false;
-    let categoryOrder = ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
-
-    // Authentication functions
-    function toggleAuthMode() {
-        isSignUpMode = !isSignUpMode;
-        const submitBtn = document.getElementById('authSubmitBtn');
-        const toggleText = document.getElementById('authToggleText');
-        const toggleBtn = document.getElementById('authToggleBtn');
-        
-        if (isSignUpMode) {
-            submitBtn.textContent = 'Sign Up';
-            toggleText.textContent = 'Already have an account?';
-            toggleBtn.textContent = 'Sign In';
-        } else {
-            submitBtn.textContent = 'Sign In';
-            toggleText.textContent = "Don't have an account?";
-            toggleBtn.textContent = 'Sign Up';
-        }
-    }
-
-    function showAuthError(message) {
-        const errorDiv = document.getElementById('authError');
-        errorDiv.textContent = message;
-        errorDiv.classList.add('show');
-        setTimeout(() => {
-            errorDiv.classList.remove('show');
-        }, 5000);
-    }
-
-    async function handleAuth(event) {
-        event.preventDefault();
-        
-        const email = document.getElementById('authEmail').value;
-        const password = document.getElementById('authPassword').value;
-        const submitBtn = document.getElementById('authSubmitBtn');
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = isSignUpMode ? 'Creating account...' : 'Signing in...';
-        
-        try {
-            if (isSignUpMode) {
-                await auth.createUserWithEmailAndPassword(email, password);
-            } else {
-                await auth.signInWithEmailAndPassword(email, password);
-            }
-        } catch (error) {
-            console.error('Auth error:', error);
-            let errorMessage = 'An error occurred. Please try again.';
-            
-            if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'This email is already in use. Try signing in instead.';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Invalid email address.';
-            } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'Password should be at least 6 characters.';
-            } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                errorMessage = 'Invalid email or password.';
-            }
-            
-            showAuthError(errorMessage);
-            submitBtn.disabled = false;
-            submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
-        }
-    }
-
-    function handleLogout() {
-        if (confirm('Are you sure you want to logout?')) {
-            auth.signOut();
-        }
-    }
-
-    // Auth state observer
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            currentUser = user;
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appScreen').classList.add('show');
-            document.getElementById('userEmail').textContent = user.email;
-            
-            // Load user data from Firestore
-            await loadUserData();
-        } else {
-            currentUser = null;
-            document.getElementById('authScreen').style.display = 'flex';
-            document.getElementById('appScreen').classList.remove('show');
-        }
-    });
-
-    const defaultExpenses = {
-        housing: [
-            { name: 'Rent', amount: 0 },
-            { name: 'Arnona', amount: 0 },
-            { name: 'Electricity', amount: 0 },
-            { name: 'Gas', amount: 0 },
-            { name: 'Water', amount: 0 }
-        ],
-        tech: [
-            { name: 'Phone Plan', amount: 0 },
-            { name: 'Internet', amount: 0 },
-            { name: 'iCloud', amount: 0 }
-        ],
-        pet: [
-            { name: 'Cat Food', amount: 0 },
-            { name: 'Litter', amount: 0 }
-        ],
-        subscriptions: [
-            { name: 'YouTube Premium', amount: 0 },
-            { name: 'Claude Pro', amount: 0 },
-            { name: 'Therapist', amount: 0 }
-        ],
-        groceries: [
-            { name: 'Food', amount: 0 },
-            { name: 'Household Products', amount: 0 },
-            { name: 'Personal Care', amount: 0 }
-        ],
-        other: [
-            { name: 'Other Expenses', amount: 0 }
-        ]
-    };
-
-    
-    // Data variables
-    let expenses = JSON.parse(JSON.stringify(defaultExpenses));
-    let chart = null;
-    let currentChartType = 'doughnut';
-    let hiddenItems = {};
-    let customColors = {};
-
-    // Firestore functions
-    async function loadUserData() {
-        if (!currentUser) return;
-        
-        try {
-            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            
-            if (userDoc.exists) {
-                const data = userDoc.data();
-                expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
-                customColors = data.customColors || {};
-                currentChartType = data.chartType || 'doughnut';
-                categoryOrder = data.categoryOrder || ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
-                
-                // Migration: ensure all default categories exist
-                if (!expenses.other) {
-                    expenses.other = [{ name: 'Other Expenses', amount: 0 }];
-                }
-            } else {
-                // First time user - use defaults
-                expenses = JSON.parse(JSON.stringify(defaultExpenses));
-                await saveUserData();
-            }
-            
-            updateDisplay();
-        } catch (error) {
-            console.error('Error loading user data:', error);
-        }
-    }
-
-    async function saveUserData() {
-        if (!currentUser) return;
-        
-        try {
-            await db.collection('users').doc(currentUser.uid).set({
-                expenses: expenses,
-                customColors: customColors,
-                chartType: currentChartType,
-                categoryOrder: categoryOrder,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-        } catch (error) {
-            console.error('Error saving user data:', error);
-        }
-    }
-
-    function saveExpenses() {
-        saveUserData();
-        updateDisplay();
-    }
-
-
-    const colors = [
-        '#667eea', '#764ba2', '#f093fb', '#4facfe',
-        '#43e97b', '#fa709a', '#fee140', '#30cfd0',
-        '#a8edea', '#fed6e3', '#c471f5', '#12c2e9'
-    ];
-
-    function calculateTotal() {
-        let total = 0;
-        Object.values(expenses).forEach(category => {
-            category.forEach(expense => {
-                total += parseFloat(expense.amount) || 0;
-            });
+    <script>
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            console.error('Error caught:', e.message);
+            // Don't let errors break the app
+            e.preventDefault();
         });
-        return total;
-    }
 
-    function calculateCategoryTotal(categoryKey) {
-        let categoryTotal = 0;
-        if (expenses[categoryKey]) {
-            expenses[categoryKey].forEach(expense => {
-                categoryTotal += parseFloat(expense.amount) || 0;
-            });
-        }
-        return categoryTotal;
-    }
-
-    function getCategoryStats(categoryKey) {
-        const categoryTotal = calculateCategoryTotal(categoryKey);
-        const grandTotal = calculateTotal();
-        const percentage = grandTotal > 0 ? ((categoryTotal / grandTotal) * 100).toFixed(1) : 0;
-        return {
-            total: categoryTotal,
-            percentage: percentage
+        // Firebase Configuration
+        // IMPORTANT: Tu devras remplacer cette config par celle de ton projet Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
-    }
 
-    function calculateVisibleTotal(chartInstance) {
-        if (!chartInstance || !chartInstance.data) return calculateTotal();
-        
-        let visibleTotal = 0;
-        const data = chartInstance.data.datasets[0].data;
-        const labels = chartInstance.data.labels;
-        
-        data.forEach((value, index) => {
-            // Check if this data point is visible
-            const meta = chartInstance.getDatasetMeta(0);
-            if (meta.data[index] && !meta.data[index].hidden) {
-                visibleTotal += value;
+        // Initialize Firebase
+        let app, auth, db;
+        try {
+            app = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            console.log('Firebase initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+
+        // Global variables
+        let currentUser = null;
+        let isSignUpMode = false;
+        let isEditMode = false;
+        let categoryOrder = ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+
+        // Authentication functions
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggleText');
+            const toggleBtn = document.getElementById('authToggleBtn');
+            
+            if (isSignUpMode) {
+                submitBtn.textContent = 'Sign Up';
+                toggleText.textContent = 'Already have an account?';
+                toggleBtn.textContent = 'Sign In';
+            } else {
+                submitBtn.textContent = 'Sign In';
+                toggleText.textContent = "Don't have an account?";
+                toggleBtn.textContent = 'Sign Up';
+            }
+        }
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        async function handleAuth(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const submitBtn = document.getElementById('authSubmitBtn');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = isSignUpMode ? 'Creating account...' : 'Signing in...';
+            
+            try {
+                if (isSignUpMode) {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                let errorMessage = 'An error occurred. Please try again.';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'This email is already in use. Try signing in instead.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password should be at least 6 characters.';
+                } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = 'Invalid email or password.';
+                }
+                
+                showAuthError(errorMessage);
+                submitBtn.disabled = false;
+                submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut();
+            }
+        }
+
+        // Auth state observer
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('appScreen').classList.add('show');
+                document.getElementById('userEmail').textContent = user.email;
+                
+                // Load user data from Firestore
+                await loadUserData();
+            } else {
+                currentUser = null;
+                document.getElementById('authScreen').style.display = 'flex';
+                document.getElementById('appScreen').classList.remove('show');
             }
         });
+
+        const defaultExpenses = {
+            housing: [
+                { name: 'Rent', amount: 0 },
+                { name: 'Arnona', amount: 0 },
+                { name: 'Electricity', amount: 0 },
+                { name: 'Gas', amount: 0 },
+                { name: 'Water', amount: 0 }
+            ],
+            tech: [
+                { name: 'Phone Plan', amount: 0 },
+                { name: 'Internet', amount: 0 },
+                { name: 'iCloud', amount: 0 }
+            ],
+            pet: [
+                { name: 'Cat Food', amount: 0 },
+                { name: 'Litter', amount: 0 }
+            ],
+            subscriptions: [
+                { name: 'YouTube Premium', amount: 0 },
+                { name: 'Claude Pro', amount: 0 },
+                { name: 'Therapist', amount: 0 }
+            ],
+            groceries: [
+                { name: 'Food', amount: 0 },
+                { name: 'Household Products', amount: 0 },
+                { name: 'Personal Care', amount: 0 }
+            ],
+            other: [
+                { name: 'Other Expenses', amount: 0 }
+            ]
+        };
+
         
-        return visibleTotal;
-    }
+        // Data variables
+        let expenses = JSON.parse(JSON.stringify(defaultExpenses));
+        let chart = null;
+        let currentChartType = 'doughnut';
+        let hiddenItems = {};
+        let customColors = {};
 
-    function renderExpenseItem(expense, category, index) {
-        return `
-            <div class="expense-item">
-                <span class="expense-name">${expense.name}</span>
-                <div>
-                    <input 
-                        type="number" 
-                        class="expense-input" 
-                        value="${expense.amount}"
-                        onchange="updateExpense('${category}', ${index}, this.value)"
-                        step="0.01"
-                        min="0"
-                    />
-                    <span class="currency">₪</span>
-                </div>
-            </div>
-        `;
-    }
-
-    function updateExpense(category, index, value) {
-        expenses[category][index].amount = parseFloat(value) || 0;
-        saveExpenses();
-    }
-
-    function updateDisplay() {
-        try {
-            // Update total
-            const total = calculateTotal();
-            document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
-
-            // Render expense lists and category stats
-            if (expenses.housing) {
-                const stats = getCategoryStats('housing');
-                document.getElementById('housingStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('housingExpenses').innerHTML = 
-                    expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
+        // Firestore functions
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
+                    customColors = data.customColors || {};
+                    currentChartType = data.chartType || 'doughnut';
+                    categoryOrder = data.categoryOrder || ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    
+                    // Migration: ensure all default categories exist
+                    if (!expenses.other) {
+                        expenses.other = [{ name: 'Other Expenses', amount: 0 }];
+                    }
+                } else {
+                    // First time user - use defaults
+                    expenses = JSON.parse(JSON.stringify(defaultExpenses));
+                    await saveUserData();
+                }
+                
+                updateDisplay();
+            } catch (error) {
+                console.error('Error loading user data:', error);
             }
-            if (expenses.tech) {
-                const stats = getCategoryStats('tech');
-                document.getElementById('techStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('techExpenses').innerHTML = 
-                    expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
-            }
-            if (expenses.pet) {
-                const stats = getCategoryStats('pet');
-                document.getElementById('petStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('petExpenses').innerHTML = 
-                    expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
-            }
-            if (expenses.subscriptions) {
-                const stats = getCategoryStats('subscriptions');
-                document.getElementById('subscriptionStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('subscriptionExpenses').innerHTML = 
-                    expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
-            }
-            if (expenses.groceries) {
-                const stats = getCategoryStats('groceries');
-                document.getElementById('groceryStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('groceryExpenses').innerHTML = 
-                    expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
-            }
-            if (expenses.other) {
-                const stats = getCategoryStats('other');
-                document.getElementById('otherStats').innerHTML = 
-                    stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
-                document.getElementById('otherExpenses').innerHTML = 
-                    expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
-            }
-
-            // Update chart
-            updateChart();
-        } catch (error) {
-            console.error('Error updating display:', error);
-        }
-    }
-
-    function updateChart() {
-        // Check if Chart.js is available
-        if (typeof Chart === 'undefined') {
-            console.warn('Chart.js is not available');
-            return;
         }
 
-        const ctx = document.getElementById('expensesChart').getContext('2d');
-        
-        // Prepare data for chart
-        const allLabels = [];
-        const allData = [];
-        const allBackgroundColors = [];
-        let colorIndex = 0;
+        async function saveUserData() {
+            if (!currentUser) return;
+            
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    expenses: expenses,
+                    customColors: customColors,
+                    chartType: currentChartType,
+                    categoryOrder: categoryOrder,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            } catch (error) {
+                console.error('Error saving user data:', error);
+            }
+        }
 
-        Object.values(expenses).forEach(category => {
-            category.forEach(expense => {
-                if (expense.amount > 0) {
-                    allLabels.push(expense.name);
-                    allData.push(expense.amount);
-                    // Use custom color if available, otherwise use default
-                    const customColor = customColors[expense.name];
-                    allBackgroundColors.push(customColor || colors[colorIndex % colors.length]);
-                    colorIndex++;
+        function saveExpenses() {
+            saveUserData();
+            updateDisplay();
+        }
+
+
+        const colors = [
+            '#667eea', '#764ba2', '#f093fb', '#4facfe',
+            '#43e97b', '#fa709a', '#fee140', '#30cfd0',
+            '#a8edea', '#fed6e3', '#c471f5', '#12c2e9'
+        ];
+
+        function calculateTotal() {
+            let total = 0;
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    total += parseFloat(expense.amount) || 0;
+                });
+            });
+            return total;
+        }
+
+        function calculateCategoryTotal(categoryKey) {
+            let categoryTotal = 0;
+            if (expenses[categoryKey]) {
+                expenses[categoryKey].forEach(expense => {
+                    categoryTotal += parseFloat(expense.amount) || 0;
+                });
+            }
+            return categoryTotal;
+        }
+
+        function getCategoryStats(categoryKey) {
+            const categoryTotal = calculateCategoryTotal(categoryKey);
+            const grandTotal = calculateTotal();
+            const percentage = grandTotal > 0 ? ((categoryTotal / grandTotal) * 100).toFixed(1) : 0;
+            return {
+                total: categoryTotal,
+                percentage: percentage
+            };
+        }
+
+        function calculateVisibleTotal(chartInstance) {
+            if (!chartInstance || !chartInstance.data) return calculateTotal();
+            
+            let visibleTotal = 0;
+            const data = chartInstance.data.datasets[0].data;
+            const labels = chartInstance.data.labels;
+            
+            data.forEach((value, index) => {
+                // Check if this data point is visible
+                const meta = chartInstance.getDatasetMeta(0);
+                if (meta.data[index] && !meta.data[index].hidden) {
+                    visibleTotal += value;
                 }
             });
-        });
-
-        if (chart) {
-            chart.destroy();
+            
+            return visibleTotal;
         }
 
-        if (allLabels.length === 0) {
-            // Show placeholder when no data
-            chart = new Chart(ctx, {
-                type: currentChartType,
-                data: {
-                    labels: ['No expenses yet'],
-                    datasets: [{
-                        data: [1],
-                        backgroundColor: ['#e9ecef'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
+        function renderExpenseItem(expense, category, index) {
+            return `
+                <div class="expense-item">
+                    <span class="expense-name">${expense.name}</span>
+                    <div>
+                        <input 
+                            type="number" 
+                            class="expense-input" 
+                            value="${expense.amount}"
+                            onchange="updateExpense('${category}', ${index}, this.value)"
+                            step="0.01"
+                            min="0"
+                        />
+                        <span class="currency">₪</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateExpense(category, index, value) {
+            expenses[category][index].amount = parseFloat(value) || 0;
+            saveExpenses();
+        }
+
+        function updateDisplay() {
+            try {
+                // Update total
+                const total = calculateTotal();
+                document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
+
+                // Render expense lists and category stats
+                if (expenses.housing) {
+                    const stats = getCategoryStats('housing');
+                    document.getElementById('housingStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('housingExpenses').innerHTML = 
+                        expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
+                }
+                if (expenses.tech) {
+                    const stats = getCategoryStats('tech');
+                    document.getElementById('techStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('techExpenses').innerHTML = 
+                        expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
+                }
+                if (expenses.pet) {
+                    const stats = getCategoryStats('pet');
+                    document.getElementById('petStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('petExpenses').innerHTML = 
+                        expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
+                }
+                if (expenses.subscriptions) {
+                    const stats = getCategoryStats('subscriptions');
+                    document.getElementById('subscriptionStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('subscriptionExpenses').innerHTML = 
+                        expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
+                }
+                if (expenses.groceries) {
+                    const stats = getCategoryStats('groceries');
+                    document.getElementById('groceryStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('groceryExpenses').innerHTML = 
+                        expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
+                }
+                if (expenses.other) {
+                    const stats = getCategoryStats('other');
+                    document.getElementById('otherStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                    document.getElementById('otherExpenses').innerHTML = 
+                        expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
+                }
+
+                // Update chart
+                updateChart();
+            } catch (error) {
+                console.error('Error updating display:', error);
+            }
+        }
+
+        function updateChart() {
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is not available');
+                return;
+            }
+
+            const ctx = document.getElementById('expensesChart').getContext('2d');
+            
+            // Prepare data for chart
+            const allLabels = [];
+            const allData = [];
+            const allBackgroundColors = [];
+            let colorIndex = 0;
+
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    if (expense.amount > 0) {
+                        allLabels.push(expense.name);
+                        allData.push(expense.amount);
+                        // Use custom color if available, otherwise use default
+                        const customColor = customColors[expense.name];
+                        allBackgroundColors.push(customColor || colors[colorIndex % colors.length]);
+                        colorIndex++;
+                    }
+                });
+            });
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (allLabels.length === 0) {
+                // Show placeholder when no data
+                chart = new Chart(ctx, {
+                    type: currentChartType,
+                    data: {
+                        labels: ['No expenses yet'],
+                        datasets: [{
+                            data: [1],
+                            backgroundColor: ['#e9ecef'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Sort data in descending order for both chart types
+                const indices = allData.map((_, i) => i);
+                indices.sort((a, b) => allData[b] - allData[a]);
+                
+                const sortedLabels = indices.map(i => allLabels[i]);
+                const sortedData = indices.map(i => allData[i]);
+                const sortedColors = indices.map(i => allBackgroundColors[i]);
+
+                // Filter out hidden items for display
+                const displayLabels = [];
+                const displayData = [];
+                const displayColors = [];
+                const displayIndices = []; // Track original indices
+                
+                sortedLabels.forEach((label, i) => {
+                    if (!hiddenItems[label]) {
+                        displayLabels.push(label);
+                        displayData.push(sortedData[i]);
+                        displayColors.push(sortedColors[i]);
+                        displayIndices.push(i);
+                    }
+                });
+
+                const commonOptions = {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        } else {
-            // Sort data in descending order for both chart types
-            const indices = allData.map((_, i) => i);
-            indices.sort((a, b) => allData[b] - allData[a]);
-            
-            const sortedLabels = indices.map(i => allLabels[i]);
-            const sortedData = indices.map(i => allData[i]);
-            const sortedColors = indices.map(i => allBackgroundColors[i]);
-
-            // Filter out hidden items for display
-            const displayLabels = [];
-            const displayData = [];
-            const displayColors = [];
-            const displayIndices = []; // Track original indices
-            
-            sortedLabels.forEach((label, i) => {
-                if (!hiddenItems[label]) {
-                    displayLabels.push(label);
-                    displayData.push(sortedData[i]);
-                    displayColors.push(sortedColors[i]);
-                    displayIndices.push(i);
-                }
-            });
-
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            padding: 10,
-                            font: {
-                                size: 11
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                padding: 10,
+                                font: {
+                                    size: 11
+                                },
+                                boxWidth: 15,
+                                boxHeight: 15,
+                                generateLabels: function(chart) {
+                                    // Always show ALL labels in the legend, even hidden ones
+                                    return sortedLabels.map((label, i) => {
+                                        return {
+                                            text: label,
+                                            fillStyle: sortedColors[i],
+                                            strokeStyle: sortedColors[i],
+                                            lineWidth: 0,
+                                            hidden: hiddenItems[label] || false,
+                                            index: i,
+                                            // Store the label for onClick handler
+                                            datasetIndex: 0
+                                        };
+                                    });
+                                }
                             },
-                            boxWidth: 15,
-                            boxHeight: 15,
-                            generateLabels: function(chart) {
-                                // Always show ALL labels in the legend, even hidden ones
-                                return sortedLabels.map((label, i) => {
-                                    return {
-                                        text: label,
-                                        fillStyle: sortedColors[i],
-                                        strokeStyle: sortedColors[i],
-                                        lineWidth: 0,
-                                        hidden: hiddenItems[label] || false,
-                                        index: i,
-                                        // Store the label for onClick handler
-                                        datasetIndex: 0
-                                    };
-                                });
+                            onClick: function(e, legendItem, legend) {
+                                const label = sortedLabels[legendItem.index];
+                                
+                                // Toggle hidden state
+                                hiddenItems[label] = !hiddenItems[label];
+                                
+                                // Redraw the entire chart
+                                updateChart();
                             }
                         },
-                        onClick: function(e, legendItem, legend) {
-                            const label = sortedLabels[legendItem.index];
-                            
-                            // Toggle hidden state
-                            hiddenItems[label] = !hiddenItems[label];
-                            
-                            // Redraw the entire chart
-                            updateChart();
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
-                                const total = displayData.reduce((a, b) => a + b, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            };
-
-            if (currentChartType === 'doughnut') {
-                chart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: displayLabels,
-                        datasets: [{
-                            data: displayData,
-                            backgroundColor: displayColors,
-                            borderWidth: 2,
-                            borderColor: '#fff'
-                        }]
-                    },
-                    options: commonOptions
-                });
-            } else {
-                chart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: displayLabels,
-                        datasets: [{
-                            data: displayData,
-                            backgroundColor: displayColors,
-                            borderWidth: 0,
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        ...commonOptions,
-                        scales: {
-                            x: {
-                                display: false  // Hide X-axis labels
-                            },
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return '₪' + value;
-                                    }
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
+                                    const total = displayData.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
                                 }
                             }
                         }
                     }
-                });
-            }
-            
-            // Update total to reflect visible items
-            const visibleTotal = displayData.reduce((a, b) => a + b, 0);
-            document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
-        }
-    }
+                };
 
-    function resetExpenses() {
-        if (confirm('Are you sure you want to reset all expenses to 0?')) {
-            expenses = JSON.parse(JSON.stringify(defaultExpenses));
-            hiddenItems = {};
-            saveUserData();
-            updateDisplay();
-        }
-    }
-
-    function openColorEditor() {
-        const modal = document.getElementById('colorEditorModal');
-        const body = document.getElementById('colorEditorBody');
-        
-        // Build list of all expenses with their current colors
-        body.innerHTML = '';
-        let colorIndex = 0;
-        
-        Object.values(expenses).forEach(category => {
-            category.forEach(expense => {
-                const currentColor = customColors[expense.name] || colors[colorIndex % colors.length];
+                if (currentChartType === 'doughnut') {
+                    chart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: displayLabels,
+                            datasets: [{
+                                data: displayData,
+                                backgroundColor: displayColors,
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: commonOptions
+                    });
+                } else {
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: displayLabels,
+                            datasets: [{
+                                data: displayData,
+                                backgroundColor: displayColors,
+                                borderWidth: 0,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            ...commonOptions,
+                            scales: {
+                                x: {
+                                    display: false  // Hide X-axis labels
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '₪' + value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
                 
-                const colorItem = document.createElement('div');
-                colorItem.className = 'color-item';
-                colorItem.innerHTML = `
-                    <span class="color-item-name">${expense.name}</span>
-                    <div class="color-picker-wrapper">
-                        <input 
-                            type="color" 
-                            value="${currentColor}" 
-                            onchange="updateColor('${expense.name}', this.value)"
-                        />
-                    </div>
-                `;
-                body.appendChild(colorItem);
-                colorIndex++;
+                // Update total to reflect visible items
+                const visibleTotal = displayData.reduce((a, b) => a + b, 0);
+                document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
+            }
+        }
+
+        function resetExpenses() {
+            if (confirm('Are you sure you want to reset all expenses to 0?')) {
+                expenses = JSON.parse(JSON.stringify(defaultExpenses));
+                hiddenItems = {};
+                saveUserData();
+                updateDisplay();
+            }
+        }
+
+        function openColorEditor() {
+            const modal = document.getElementById('colorEditorModal');
+            const body = document.getElementById('colorEditorBody');
+            
+            // Build list of all expenses with their current colors
+            body.innerHTML = '';
+            let colorIndex = 0;
+            
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    const currentColor = customColors[expense.name] || colors[colorIndex % colors.length];
+                    
+                    const colorItem = document.createElement('div');
+                    colorItem.className = 'color-item';
+                    colorItem.innerHTML = `
+                        <span class="color-item-name">${expense.name}</span>
+                        <div class="color-picker-wrapper">
+                            <input 
+                                type="color" 
+                                value="${currentColor}" 
+                                onchange="updateColor('${expense.name}', this.value)"
+                            />
+                        </div>
+                    `;
+                    body.appendChild(colorItem);
+                    colorIndex++;
+                });
             });
-        });
-        
-        modal.classList.add('show');
-    }
+            
+            modal.classList.add('show');
+        }
 
-    function closeColorEditor() {
-        const modal = document.getElementById('colorEditorModal');
-        modal.classList.remove('show');
-    }
+        function closeColorEditor() {
+            const modal = document.getElementById('colorEditorModal');
+            modal.classList.remove('show');
+        }
 
-    function updateColor(expenseName, color) {
-        customColors[expenseName] = color;
-        saveUserData();
-        updateChart();
-    }
-
-    function resetColors() {
-        if (confirm('Reset all colors to default?')) {
-            customColors = {};
+        function updateColor(expenseName, color) {
+            customColors[expenseName] = color;
             saveUserData();
-            closeColorEditor();
             updateChart();
         }
-    }
 
-    // Edit Mode Functions
-    function toggleEditMode() {
-        isEditMode = !isEditMode;
-        const editBtn = document.getElementById('editModeBtn');
-        const addCategoryBtn = document.getElementById('addCategoryBtn');
-        const categoryControls = document.querySelectorAll('.category-controls');
-        
-        if (isEditMode) {
-            editBtn.classList.add('active');
-            editBtn.textContent = '✓ Done Editing';
-            addCategoryBtn.style.display = 'block';
-            categoryControls.forEach(c => c.classList.add('show'));
-        } else {
-            editBtn.classList.remove('active');
-            editBtn.textContent = '✏️ Edit Categories';
-            addCategoryBtn.style.display = 'none';
-            categoryControls.forEach(c => c.classList.remove('show'));
+        function resetColors() {
+            if (confirm('Reset all colors to default?')) {
+                customColors = {};
+                saveUserData();
+                closeColorEditor();
+                updateChart();
+            }
         }
-    }
 
-    function addNewCategory() {
-        const categoryName = prompt('Enter category name:');
-        if (!categoryName) return;
-        
-        const categoryKey = categoryName.toLowerCase().replace(/\s+/g, '_');
-        if (expenses[categoryKey]) {
-            alert('A category with this name already exists!');
-            return;
-        }
-        
-        const emoji = prompt('Enter emoji for this category (e.g., 🎮):') || '📋';
-        const itemName = prompt('Enter first expense item name:') || 'Item';
-        
-        expenses[categoryKey] = [{ name: itemName, amount: 0 }];
-        categoryOrder.push(categoryKey);
-        
-        // Add to HTML temporarily
-        const categorySection = document.createElement('div');
-        categorySection.className = 'category-section';
-        categorySection.id = `category-${categoryKey}`;
-        categorySection.innerHTML = `
-            <div class="category-title">${emoji} ${categoryName}</div>
-            <div class="category-stats" id="${categoryKey}Stats"></div>
-            <div class="category-controls ${isEditMode ? 'show' : ''}">
-                <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
-                <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
-                <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
-                <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
-            </div>
-            <div id="${categoryKey}Expenses"></div>
-        `;
-        
-        document.querySelector('.expenses-list').appendChild(categorySection);
-        
-        saveUserData();
-        updateDisplay();
-    }
-
-    function deleteCategory(categoryKey) {
-        if (!confirm('Delete this entire category?')) return;
-        
-        delete expenses[categoryKey];
-        categoryOrder = categoryOrder.filter(c => c !== categoryKey);
-        
-        const section = document.getElementById(`category-${categoryKey}`);
-        if (section) section.remove();
-        
-        saveUserData();
-        updateDisplay();
-    }
-
-    function addItemToCategory(categoryKey) {
-        const itemName = prompt('Enter new expense item name:');
-        if (!itemName) return;
-        
-        if (!expenses[categoryKey]) {
-            expenses[categoryKey] = [];
-        }
-        
-        expenses[categoryKey].push({ name: itemName, amount: 0 });
-        saveUserData();
-        updateDisplay();
-    }
-
-    function moveCategoryUp(categoryKey) {
-        const index = categoryOrder.indexOf(categoryKey);
-        if (index > 0) {
-            [categoryOrder[index - 1], categoryOrder[index]] = [categoryOrder[index], categoryOrder[index - 1]];
-            saveUserData();
-            renderCategoriesInOrder();
-        }
-    }
-
-    function moveCategoryDown(categoryKey) {
-        const index = categoryOrder.indexOf(categoryKey);
-        if (index < categoryOrder.length - 1) {
-            [categoryOrder[index], categoryOrder[index + 1]] = [categoryOrder[index + 1], categoryOrder[index]];
-            saveUserData();
-            renderCategoriesInOrder();
-        }
-    }
-
-    function renderCategoriesInOrder() {
-        // This would re-render categories in the new order
-        // For now, just refresh the display
-        updateDisplay();
-    }
-
-    // Wait for Chart.js to load before initializing
-    function initializeApp() {
-        if (typeof Chart !== 'undefined') {
-            // Set up chart type toggle buttons
-            const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
-            toggleButtons.forEach(btn => {
-                // Set initial active state
-                if (btn.dataset.type === currentChartType) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-                
-                // Add click handler
-                btn.addEventListener('click', function() {
-                    currentChartType = this.dataset.type;
-                    saveUserData();
-                    
-                    // Update button states
-                    toggleButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Redraw chart
-                    updateChart();
-                });
-            });
+        // Edit Mode Functions
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const editBtn = document.getElementById('editModeBtn');
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            const categoryControls = document.querySelectorAll('.category-controls');
             
-            // Close modal when clicking outside
-            const modal = document.getElementById('colorEditorModal');
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeColorEditor();
-                }
-            });
+            if (isEditMode) {
+                editBtn.classList.add('active');
+                editBtn.textContent = '✓ Done Editing';
+                addCategoryBtn.style.display = 'block';
+                categoryControls.forEach(c => c.classList.add('show'));
+            } else {
+                editBtn.classList.remove('active');
+                editBtn.textContent = '✏️ Edit Categories';
+                addCategoryBtn.style.display = 'none';
+                categoryControls.forEach(c => c.classList.remove('show'));
+            }
+        }
+
+        function addNewCategory() {
+            const categoryName = prompt('Enter category name:');
+            if (!categoryName) return;
             
+            const categoryKey = categoryName.toLowerCase().replace(/\s+/g, '_');
+            if (expenses[categoryKey]) {
+                alert('A category with this name already exists!');
+                return;
+            }
+            
+            const emoji = prompt('Enter emoji for this category (e.g., 🎮):') || '📋';
+            const itemName = prompt('Enter first expense item name:') || 'Item';
+            
+            expenses[categoryKey] = [{ name: itemName, amount: 0 }];
+            categoryOrder.push(categoryKey);
+            
+            // Add to HTML temporarily
+            const categorySection = document.createElement('div');
+            categorySection.className = 'category-section';
+            categorySection.id = `category-${categoryKey}`;
+            categorySection.innerHTML = `
+                <div class="category-title">${emoji} ${categoryName}</div>
+                <div class="category-stats" id="${categoryKey}Stats"></div>
+                <div class="category-controls ${isEditMode ? 'show' : ''}">
+                    <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
+                    <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
+                    <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
+                    <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
+                </div>
+                <div id="${categoryKey}Expenses"></div>
+            `;
+            
+            document.querySelector('.expenses-list').appendChild(categorySection);
+            
+            saveUserData();
             updateDisplay();
-        } else {
-            console.warn('Chart.js not loaded, waiting...');
-            setTimeout(initializeApp, 100);
         }
-    }
 
-    // Initialize on load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeApp);
-    } else {
-        initializeApp();
-    }
-</script>
+        function deleteCategory(categoryKey) {
+            if (!confirm('Delete this entire category?')) return;
+            
+            delete expenses[categoryKey];
+            categoryOrder = categoryOrder.filter(c => c !== categoryKey);
+            
+            const section = document.getElementById(`category-${categoryKey}`);
+            if (section) section.remove();
+            
+            saveUserData();
+            updateDisplay();
+        }
 
+        function addItemToCategory(categoryKey) {
+            const itemName = prompt('Enter new expense item name:');
+            if (!itemName) return;
+            
+            if (!expenses[categoryKey]) {
+                expenses[categoryKey] = [];
+            }
+            
+            expenses[categoryKey].push({ name: itemName, amount: 0 });
+            saveUserData();
+            updateDisplay();
+        }
+
+        function moveCategoryUp(categoryKey) {
+            const index = categoryOrder.indexOf(categoryKey);
+            if (index > 0) {
+                [categoryOrder[index - 1], categoryOrder[index]] = [categoryOrder[index], categoryOrder[index - 1]];
+                saveUserData();
+                renderCategoriesInOrder();
+            }
+        }
+
+        function moveCategoryDown(categoryKey) {
+            const index = categoryOrder.indexOf(categoryKey);
+            if (index < categoryOrder.length - 1) {
+                [categoryOrder[index], categoryOrder[index + 1]] = [categoryOrder[index + 1], categoryOrder[index]];
+                saveUserData();
+                renderCategoriesInOrder();
+            }
+        }
+
+        function renderCategoriesInOrder() {
+            // This would re-render categories in the new order
+            // For now, just refresh the display
+            updateDisplay();
+        }
+
+        // Wait for Chart.js to load before initializing
+        function initializeApp() {
+            if (typeof Chart !== 'undefined') {
+                // Set up chart type toggle buttons
+                const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
+                toggleButtons.forEach(btn => {
+                    // Set initial active state
+                    if (btn.dataset.type === currentChartType) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                    
+                    // Add click handler
+                    btn.addEventListener('click', function() {
+                        currentChartType = this.dataset.type;
+                        saveUserData();
+                        
+                        // Update button states
+                        toggleButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Redraw chart
+                        updateChart();
+                    });
+                });
+                
+                // Close modal when clicking outside
+                const modal = document.getElementById('colorEditorModal');
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeColorEditor();
+                    }
+                });
+                
+                updateDisplay();
+            } else {
+                console.warn('Chart.js not loaded, waiting...');
+                setTimeout(initializeApp, 100);
+            }
+        }
+
+        // Initialize on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
 </body>
 </html>
