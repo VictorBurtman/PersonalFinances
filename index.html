@@ -987,6 +987,15 @@
                     </label>
                     <p class="settings-description">When enabled, you can track your income sources and see how much money remains after expenses.</p>
                 </div>
+                
+                <div class="settings-section" id="percentageModeSection" style="display: none;">
+                    <h3>Percentage Calculation</h3>
+                    <select id="percentageModeSelect" class="settings-select" onchange="updatePercentageMode(this.value)">
+                        <option value="expenses">Based on Total Expenses</option>
+                        <option value="income">Based on Total Income</option>
+                    </select>
+                    <p class="settings-description">Choose whether category percentages are calculated relative to total expenses or total income.</p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="modal-button primary" onclick="closeSettings()">Done</button>
@@ -1037,6 +1046,7 @@
             'GBP': '£',
             'JPY': '¥'
         };
+        let percentageMode = 'expenses'; // 'expenses' or 'income'
 
         // Authentication functions
         function toggleAuthMode() {
@@ -1181,6 +1191,7 @@
                     categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
+                    percentageMode = data.percentageMode || 'expenses';
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
@@ -1204,6 +1215,7 @@
                     categoryOrder: categoryOrder,
                     useIncome: useIncome,
                     currency: currency,
+                    percentageMode: percentageMode,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             } catch (error) {
@@ -1257,8 +1269,16 @@
 
         function getCategoryStats(categoryKey) {
             const categoryTotal = calculateCategoryTotal(categoryKey);
-            const grandTotal = categoryKey === 'income' ? calculateIncome() : calculateTotal();
-            const percentage = grandTotal > 0 ? ((categoryTotal / grandTotal) * 100).toFixed(1) : 0;
+            
+            // Calculate base depending on percentage mode
+            let base;
+            if (percentageMode === 'income' && useIncome) {
+                base = calculateIncome();
+            } else {
+                base = categoryKey === 'income' ? calculateIncome() : calculateTotal();
+            }
+            
+            const percentage = base > 0 ? ((categoryTotal / base) * 100).toFixed(1) : 0;
             return {
                 total: categoryTotal,
                 percentage: percentage
@@ -1823,11 +1843,21 @@
             const currencySelect = document.getElementById('currencySelect');
             const useIncomeCheckbox = document.getElementById('useIncomeCheckbox');
             const settingsUserEmail = document.getElementById('settingsUserEmail');
+            const percentageModeSelect = document.getElementById('percentageModeSelect');
+            const percentageModeSection = document.getElementById('percentageModeSection');
             
             // Set current values
             const currencyCode = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
             currencySelect.value = currencyCode;
             useIncomeCheckbox.checked = useIncome;
+            percentageModeSelect.value = percentageMode;
+            
+            // Show/hide percentage mode section based on useIncome
+            if (useIncome) {
+                percentageModeSection.style.display = 'block';
+            } else {
+                percentageModeSection.style.display = 'none';
+            }
             
             // Set user email
             if (currentUser) {
@@ -1850,6 +1880,19 @@
 
         function toggleIncomeFeature(enabled) {
             useIncome = enabled;
+            
+            // Show/hide percentage mode section
+            const percentageModeSection = document.getElementById('percentageModeSection');
+            if (percentageModeSection) {
+                percentageModeSection.style.display = enabled ? 'block' : 'none';
+            }
+            
+            saveUserData();
+            updateDisplay();
+        }
+
+        function updatePercentageMode(mode) {
+            percentageMode = mode;
             saveUserData();
             updateDisplay();
         }
