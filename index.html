@@ -1260,7 +1260,7 @@
 
         function getCategoryStats(categoryKey) {
             const categoryTotal = calculateCategoryTotal(categoryKey);
-            const grandTotal = calculateTotal();
+            const grandTotal = categoryKey === 'income' ? calculateIncome() : calculateTotal();
             const percentage = grandTotal > 0 ? ((categoryTotal / grandTotal) * 100).toFixed(1) : 0;
             return {
                 total: categoryTotal,
@@ -1427,14 +1427,17 @@
 
             const ctx = document.getElementById('expensesChart').getContext('2d');
             
-            // Prepare data for chart
+            // Prepare data for chart - EXCLUDE income category
             const allLabels = [];
             const allData = [];
             const allBackgroundColors = [];
             let colorIndex = 0;
 
-            Object.values(expenses).forEach(category => {
-                category.forEach(expense => {
+            Object.keys(expenses).forEach(categoryKey => {
+                // Skip income category in charts
+                if (categoryKey === 'income') return;
+                
+                expenses[categoryKey].forEach(expense => {
                     if (expense.amount > 0) {
                         allLabels.push(expense.name);
                         allData.push(expense.amount);
@@ -1614,12 +1617,15 @@
             const modal = document.getElementById('colorEditorModal');
             const body = document.getElementById('colorEditorBody');
             
-            // Build list of all expenses with their current colors
+            // Build list of all expenses with their current colors - EXCLUDE income
             body.innerHTML = '';
             let colorIndex = 0;
             
-            Object.values(expenses).forEach(category => {
-                category.forEach(expense => {
+            Object.keys(expenses).forEach(categoryKey => {
+                // Skip income category
+                if (categoryKey === 'income') return;
+                
+                expenses[categoryKey].forEach(expense => {
                     const currentColor = customColors[expense.name] || colors[colorIndex % colors.length];
                     
                     const colorItem = document.createElement('div');
