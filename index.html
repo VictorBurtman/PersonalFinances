@@ -472,21 +472,13 @@
                     }
                 });
             } else {
-                // Sort data for bar chart (descending order)
-                let sortedLabels = [...labels];
-                let sortedData = [...data];
-                let sortedColors = [...backgroundColors];
+                // Sort data in descending order for both chart types
+                const indices = data.map((_, i) => i);
+                indices.sort((a, b) => data[b] - data[a]);
                 
-                if (currentChartType === 'bar') {
-                    // Create array of indices and sort by data values (descending)
-                    const indices = data.map((_, i) => i);
-                    indices.sort((a, b) => data[b] - data[a]);
-                    
-                    // Reorder all arrays based on sorted indices
-                    sortedLabels = indices.map(i => labels[i]);
-                    sortedData = indices.map(i => data[i]);
-                    sortedColors = indices.map(i => backgroundColors[i]);
-                }
+                const sortedLabels = indices.map(i => labels[i]);
+                const sortedData = indices.map(i => data[i]);
+                const sortedColors = indices.map(i => backgroundColors[i]);
 
                 const commonOptions = {
                     responsive: true,
@@ -501,7 +493,25 @@
                                     size: 11
                                 },
                                 boxWidth: 15,
-                                boxHeight: 15
+                                boxHeight: 15,
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const style = meta.controller.getStyle(i);
+                                            return {
+                                                text: label,
+                                                fillStyle: style.backgroundColor,
+                                                strokeStyle: style.borderColor,
+                                                lineWidth: style.borderWidth,
+                                                hidden: meta.data[i].hidden,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
                             },
                             onClick: function(e, legendItem, legend) {
                                 const index = legendItem.index;
@@ -552,7 +562,6 @@
                         data: {
                             labels: sortedLabels,
                             datasets: [{
-                                label: 'Expenses',
                                 data: sortedData,
                                 backgroundColor: sortedColors,
                                 borderWidth: 0,
@@ -562,6 +571,9 @@
                         options: {
                             ...commonOptions,
                             scales: {
+                                x: {
+                                    display: false  // Hide X-axis labels
+                                },
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
