@@ -259,6 +259,11 @@
                     <div class="category-title">🛒 Groceries</div>
                     <div id="groceryExpenses"></div>
                 </div>
+
+                <div class="category-section">
+                    <div class="category-title">💸 Other Expenses</div>
+                    <div id="otherExpenses"></div>
+                </div>
             </div>
 
             <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
@@ -299,6 +304,9 @@
                 { name: 'Food', amount: 0 },
                 { name: 'Household Products', amount: 0 },
                 { name: 'Personal Care', amount: 0 }
+            ],
+            other: [
+                { name: 'Other Expenses', amount: 0 }
             ]
         };
 
@@ -314,6 +322,11 @@
         }
         if (!expenses.subscriptions.find(s => s.name === 'Therapist')) {
             expenses.subscriptions.push({ name: 'Therapist', amount: 0 });
+        }
+        if (!expenses.other) {
+            expenses.other = [
+                { name: 'Other Expenses', amount: 0 }
+            ];
         }
         // Save migrated data
         localStorage.setItem('expenses', JSON.stringify(expenses));
@@ -412,6 +425,10 @@
                     document.getElementById('groceryExpenses').innerHTML = 
                         expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
                 }
+                if (expenses.other) {
+                    document.getElementById('otherExpenses').innerHTML = 
+                        expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
+                }
 
                 // Update chart
                 updateChart();
@@ -430,17 +447,17 @@
             const ctx = document.getElementById('expensesChart').getContext('2d');
             
             // Prepare data for chart
-            const labels = [];
-            const data = [];
-            const backgroundColors = [];
+            const allLabels = [];
+            const allData = [];
+            const allBackgroundColors = [];
             let colorIndex = 0;
 
             Object.values(expenses).forEach(category => {
                 category.forEach(expense => {
                     if (expense.amount > 0) {
-                        labels.push(expense.name);
-                        data.push(expense.amount);
-                        backgroundColors.push(colors[colorIndex % colors.length]);
+                        allLabels.push(expense.name);
+                        allData.push(expense.amount);
+                        allBackgroundColors.push(colors[colorIndex % colors.length]);
                         colorIndex++;
                     }
                 });
@@ -450,7 +467,7 @@
                 chart.destroy();
             }
 
-            if (data.length === 0) {
+            if (allLabels.length === 0) {
                 // Show placeholder when no data
                 chart = new Chart(ctx, {
                     type: currentChartType,
@@ -474,12 +491,27 @@
                 });
             } else {
                 // Sort data in descending order for both chart types
-                const indices = data.map((_, i) => i);
-                indices.sort((a, b) => data[b] - data[a]);
+                const indices = allData.map((_, i) => i);
+                indices.sort((a, b) => allData[b] - allData[a]);
                 
-                const sortedLabels = indices.map(i => labels[i]);
-                const sortedData = indices.map(i => data[i]);
-                const sortedColors = indices.map(i => backgroundColors[i]);
+                const sortedLabels = indices.map(i => allLabels[i]);
+                const sortedData = indices.map(i => allData[i]);
+                const sortedColors = indices.map(i => allBackgroundColors[i]);
+
+                // Filter out hidden items for display
+                const displayLabels = [];
+                const displayData = [];
+                const displayColors = [];
+                const displayIndices = []; // Track original indices
+                
+                sortedLabels.forEach((label, i) => {
+                    if (!hiddenItems[label]) {
+                        displayLabels.push(label);
+                        displayData.push(sortedData[i]);
+                        displayColors.push(sortedColors[i]);
+                        displayIndices.push(i);
+                    }
+                });
 
                 const commonOptions = {
                     responsive: true,
@@ -496,54 +528,39 @@
                                 boxWidth: 15,
                                 boxHeight: 15,
                                 generateLabels: function(chart) {
-                                    const data = chart.data;
-                                    if (data.labels.length && data.datasets.length) {
-                                        return data.labels.map((label, i) => {
-                                            const meta = chart.getDatasetMeta(0);
-                                            const style = meta.controller.getStyle(i);
-                                            return {
-                                                text: label,
-                                                fillStyle: style.backgroundColor,
-                                                strokeStyle: style.borderColor,
-                                                lineWidth: style.borderWidth,
-                                                hidden: meta.data[i] && meta.data[i].hidden,
-                                                index: i
-                                            };
-                                        });
-                                    }
-                                    return [];
+                                    // Always show ALL labels in the legend, even hidden ones
+                                    return sortedLabels.map((label, i) => {
+                                        return {
+                                            text: label,
+                                            fillStyle: sortedColors[i],
+                                            strokeStyle: sortedColors[i],
+                                            lineWidth: 0,
+                                            hidden: hiddenItems[label] || false,
+                                            index: i,
+                                            // Store the label for onClick handler
+                                            datasetIndex: 0
+                                        };
+                                    });
                                 }
                             },
                             onClick: function(e, legendItem, legend) {
-                                const index = legendItem.index;
-                                const chart = legend.chart;
-                                const label = chart.data.labels[index];
+                                const label = sortedLabels[legendItem.index];
                                 
-                                // Toggle hidden state in our tracking object
+                                // Toggle hidden state
                                 hiddenItems[label] = !hiddenItems[label];
                                 
-                                // Update chart visibility
-                                const meta = chart.getDatasetMeta(0);
-                                if (meta.data[index]) {
-                                    meta.data[index].hidden = hiddenItems[label];
-                                }
-                                
-                                chart.update();
-                                
-                                // Update the total amount display
-                                const visibleTotal = calculateVisibleTotal(chart);
-                                document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
+                                // Redraw the entire chart
+                                updateChart();
                             }
                         },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
                                     const label = context.label || '';
-                                    const value = context.parsed || context.parsed.y || 0;
-                                    const actualValue = currentChartType === 'bar' ? context.parsed.y : value;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((actualValue / total) * 100).toFixed(1);
-                                    return `${label}: ₪${actualValue.toFixed(2)} (${percentage}%)`;
+                                    const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
+                                    const total = displayData.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -554,10 +571,10 @@
                     chart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
-                            labels: sortedLabels,
+                            labels: displayLabels,
                             datasets: [{
-                                data: sortedData,
-                                backgroundColor: sortedColors,
+                                data: displayData,
+                                backgroundColor: displayColors,
                                 borderWidth: 2,
                                 borderColor: '#fff'
                             }]
@@ -568,10 +585,10 @@
                     chart = new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: sortedLabels,
+                            labels: displayLabels,
                             datasets: [{
-                                data: sortedData,
-                                backgroundColor: sortedColors,
+                                data: displayData,
+                                backgroundColor: displayColors,
                                 borderWidth: 0,
                                 borderRadius: 8
                             }]
@@ -595,20 +612,9 @@
                     });
                 }
                 
-                // Restore hidden state after chart creation
-                if (chart && chart.data) {
-                    const meta = chart.getDatasetMeta(0);
-                    chart.data.labels.forEach((label, index) => {
-                        if (hiddenItems[label] && meta.data[index]) {
-                            meta.data[index].hidden = true;
-                        }
-                    });
-                    chart.update();
-                    
-                    // Update total to reflect hidden items
-                    const visibleTotal = calculateVisibleTotal(chart);
-                    document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
-                }
+                // Update total to reflect visible items
+                const visibleTotal = displayData.reduce((a, b) => a + b, 0);
+                document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
             }
         }
 
