@@ -372,6 +372,22 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        .expense-delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .expense-delete-btn:hover {
+            opacity: 1;
+            background: #fee;
+        }
+
         .currency {
             margin-left: 8px;
             color: #667eea;
@@ -796,7 +812,6 @@
         });
 
         // Firebase Configuration
-        // IMPORTANT: Tu devras remplacer cette config par celle de ton projet Firebase
         const firebaseConfig = {
           apiKey: "AIzaSyBQ817hUTznf99z7ZFhVla39rnyjGibTWo",
           authDomain: "expense-tracker-b086e.firebaseapp.com",
@@ -1056,10 +1071,13 @@
         }
 
         function renderExpenseItem(expense, category, index) {
+            const deleteBtn = isEditMode ? 
+                `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
+            
             return `
                 <div class="expense-item">
                     <span class="expense-name">${expense.name}</span>
-                    <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
                         <input 
                             type="number" 
                             class="expense-input" 
@@ -1069,6 +1087,7 @@
                             min="0"
                         />
                         <span class="currency">₪</span>
+                        ${deleteBtn}
                     </div>
                 </div>
             `;
@@ -1397,6 +1416,19 @@
                 editBtn.textContent = '✏️ Edit Categories';
                 addCategoryBtn.style.display = 'none';
                 categoryControls.forEach(c => c.classList.remove('show'));
+            }
+            
+            // Refresh display to show/hide delete buttons
+            updateDisplay();
+        }
+
+        function deleteExpenseItem(category, index) {
+            if (!confirm('Delete this expense item?')) return;
+            
+            if (expenses[category] && expenses[category][index]) {
+                expenses[category].splice(index, 1);
+                saveUserData();
+                updateDisplay();
             }
         }
 
