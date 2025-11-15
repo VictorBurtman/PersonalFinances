@@ -104,6 +104,189 @@
             color: white;
         }
 
+        .color-customize-btn {
+            padding: 10px 20px;
+            border: 2px solid #28a745;
+            background: white;
+            color: #28a745;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-customize-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5em;
+            color: #667eea;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .color-item:hover {
+            background: #e9ecef;
+        }
+
+        .color-item-name {
+            font-weight: 500;
+            color: #495057;
+            flex: 1;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+            cursor: pointer;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: #5568d3;
+        }
+
+        .modal-button.secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .modal-button.secondary:hover {
+            background: #dee2e6;
+        }
+
         .chart-container {
             position: relative;
             height: 350px;
@@ -123,9 +306,26 @@
             font-size: 1.1em;
             font-weight: 600;
             color: #667eea;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             padding-bottom: 8px;
             border-bottom: 2px solid #f0f0f0;
+        }
+
+        .category-stats {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .category-stats .amount {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .category-stats .percentage {
+            color: #999;
+            margin-left: 8px;
         }
 
         .expense-item {
@@ -228,6 +428,7 @@
                 <div class="chart-controls">
                     <button class="chart-toggle-btn active" data-type="doughnut">🍩 Pie Chart</button>
                     <button class="chart-toggle-btn" data-type="bar">📊 Bar Chart</button>
+                    <button class="color-customize-btn" onclick="openColorEditor()">🎨 Colors</button>
                 </div>
                 <div class="chart-container">
                     <canvas id="expensesChart"></canvas>
@@ -237,36 +438,59 @@
             <div class="expenses-list">
                 <div class="category-section">
                     <div class="category-title">🏠 Housing</div>
+                    <div class="category-stats" id="housingStats"></div>
                     <div id="housingExpenses"></div>
                 </div>
 
                 <div class="category-section">
                     <div class="category-title">📱 Communications & Tech</div>
+                    <div class="category-stats" id="techStats"></div>
                     <div id="techExpenses"></div>
                 </div>
 
                 <div class="category-section">
                     <div class="category-title">🐱 Pet Care</div>
+                    <div class="category-stats" id="petStats"></div>
                     <div id="petExpenses"></div>
                 </div>
 
                 <div class="category-section">
                     <div class="category-title">🎬 Subscriptions</div>
+                    <div class="category-stats" id="subscriptionStats"></div>
                     <div id="subscriptionExpenses"></div>
                 </div>
 
                 <div class="category-section">
                     <div class="category-title">🛒 Groceries</div>
+                    <div class="category-stats" id="groceryStats"></div>
                     <div id="groceryExpenses"></div>
                 </div>
 
                 <div class="category-section">
                     <div class="category-title">💸 Other Expenses</div>
+                    <div class="category-stats" id="otherStats"></div>
                     <div id="otherExpenses"></div>
                 </div>
             </div>
 
             <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
+        </div>
+    </div>
+
+    <!-- Color Editor Modal -->
+    <div id="colorEditorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎨 Customize Colors</h2>
+                <button class="modal-close" onclick="closeColorEditor()">✕</button>
+            </div>
+            <div class="modal-body" id="colorEditorBody">
+                <!-- Color pickers will be dynamically added here -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
+                <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+            </div>
         </div>
     </div>
 
@@ -334,6 +558,7 @@
         let chart = null;
         let currentChartType = localStorage.getItem('chartType') || 'doughnut';
         let hiddenItems = {}; // Track which items are hidden by label name
+        let customColors = JSON.parse(localStorage.getItem('customColors')) || {};
 
         const colors = [
             '#667eea', '#764ba2', '#f093fb', '#4facfe',
@@ -354,6 +579,26 @@
                 });
             });
             return total;
+        }
+
+        function calculateCategoryTotal(categoryKey) {
+            let categoryTotal = 0;
+            if (expenses[categoryKey]) {
+                expenses[categoryKey].forEach(expense => {
+                    categoryTotal += parseFloat(expense.amount) || 0;
+                });
+            }
+            return categoryTotal;
+        }
+
+        function getCategoryStats(categoryKey) {
+            const categoryTotal = calculateCategoryTotal(categoryKey);
+            const grandTotal = calculateTotal();
+            const percentage = grandTotal > 0 ? ((categoryTotal / grandTotal) * 100).toFixed(1) : 0;
+            return {
+                total: categoryTotal,
+                percentage: percentage
+            };
         }
 
         function calculateVisibleTotal(chartInstance) {
@@ -404,28 +649,46 @@
                 const total = calculateTotal();
                 document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
 
-                // Render expense lists - only if category exists
+                // Render expense lists and category stats
                 if (expenses.housing) {
+                    const stats = getCategoryStats('housing');
+                    document.getElementById('housingStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('housingExpenses').innerHTML = 
                         expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
                 }
                 if (expenses.tech) {
+                    const stats = getCategoryStats('tech');
+                    document.getElementById('techStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('techExpenses').innerHTML = 
                         expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
                 }
                 if (expenses.pet) {
+                    const stats = getCategoryStats('pet');
+                    document.getElementById('petStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('petExpenses').innerHTML = 
                         expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
                 }
                 if (expenses.subscriptions) {
+                    const stats = getCategoryStats('subscriptions');
+                    document.getElementById('subscriptionStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('subscriptionExpenses').innerHTML = 
                         expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
                 }
                 if (expenses.groceries) {
+                    const stats = getCategoryStats('groceries');
+                    document.getElementById('groceryStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('groceryExpenses').innerHTML = 
                         expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
                 }
                 if (expenses.other) {
+                    const stats = getCategoryStats('other');
+                    document.getElementById('otherStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('otherExpenses').innerHTML = 
                         expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
                 }
@@ -457,7 +720,9 @@
                     if (expense.amount > 0) {
                         allLabels.push(expense.name);
                         allData.push(expense.amount);
-                        allBackgroundColors.push(colors[colorIndex % colors.length]);
+                        // Use custom color if available, otherwise use default
+                        const customColor = customColors[expense.name];
+                        allBackgroundColors.push(customColor || colors[colorIndex % colors.length]);
                         colorIndex++;
                     }
                 });
@@ -632,6 +897,58 @@
             }
         }
 
+        function openColorEditor() {
+            const modal = document.getElementById('colorEditorModal');
+            const body = document.getElementById('colorEditorBody');
+            
+            // Build list of all expenses with their current colors
+            body.innerHTML = '';
+            let colorIndex = 0;
+            
+            Object.values(expenses).forEach(category => {
+                category.forEach(expense => {
+                    const currentColor = customColors[expense.name] || colors[colorIndex % colors.length];
+                    
+                    const colorItem = document.createElement('div');
+                    colorItem.className = 'color-item';
+                    colorItem.innerHTML = `
+                        <span class="color-item-name">${expense.name}</span>
+                        <div class="color-picker-wrapper">
+                            <input 
+                                type="color" 
+                                value="${currentColor}" 
+                                onchange="updateColor('${expense.name}', this.value)"
+                            />
+                        </div>
+                    `;
+                    body.appendChild(colorItem);
+                    colorIndex++;
+                });
+            });
+            
+            modal.classList.add('show');
+        }
+
+        function closeColorEditor() {
+            const modal = document.getElementById('colorEditorModal');
+            modal.classList.remove('show');
+        }
+
+        function updateColor(expenseName, color) {
+            customColors[expenseName] = color;
+            localStorage.setItem('customColors', JSON.stringify(customColors));
+            updateChart();
+        }
+
+        function resetColors() {
+            if (confirm('Reset all colors to default?')) {
+                customColors = {};
+                localStorage.removeItem('customColors');
+                closeColorEditor();
+                updateChart();
+            }
+        }
+
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             if (typeof Chart !== 'undefined') {
@@ -657,6 +974,14 @@
                         // Redraw chart
                         updateChart();
                     });
+                });
+                
+                // Close modal when clicking outside
+                const modal = document.getElementById('colorEditorModal');
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeColorEditor();
+                    }
                 });
                 
                 updateDisplay();
