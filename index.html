@@ -806,6 +806,7 @@
                 <div id="remainingDisplay" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3);">
                     <h3 style="font-size: 1em; margin-bottom: 5px;">Remaining</h3>
                     <div style="font-size: 2em; font-weight: 700;" id="remainingAmount">₪0</div>
+                    <div style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;" id="remainingPercentage"></div>
                 </div>
             </div>
 
@@ -820,7 +821,7 @@
                 </div>
             </div>
 
-            <div class="expenses-list">
+            <div class="expenses-list" id="expensesList">
                 <div class="category-section income-category" id="category-income" style="display: none;">
                     <div class="category-title" style="color: #28a745; border-color: #28a745;">
                         💰 Income
@@ -1048,6 +1049,9 @@
         };
         let percentageMode = 'expenses'; // 'expenses' or 'income'
 
+        // Store category metadata (emoji, display name)
+        let categoryMetadata = {};
+
         // Authentication functions
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
@@ -1192,6 +1196,7 @@
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
+                    categoryMetadata = data.categoryMetadata || {};
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
@@ -1216,6 +1221,7 @@
                     useIncome: useIncome,
                     currency: currency,
                     percentageMode: percentageMode,
+                    categoryMetadata: categoryMetadata,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             } catch (error) {
@@ -1369,11 +1375,15 @@
                 const totalIncome = calculateIncome();
                 const remaining = totalIncome - totalExpenses;
                 
+                // Calculate remaining percentage
+                const remainingPercentage = totalIncome > 0 ? ((remaining / totalIncome) * 100).toFixed(1) : 0;
+                
                 // Update displays
                 document.getElementById('totalAmount').textContent = `${currency}${totalExpenses.toFixed(2)}`;
                 document.getElementById('totalIncome').textContent = `${currency}${totalIncome.toFixed(2)}`;
                 document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
+                document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% of income)`;
 
                 // Hide/show category sections based on whether they exist in expenses
                 const categoryMapping = {
@@ -1553,7 +1563,7 @@
                                     const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
                                     const total = displayData.reduce((a, b) => a + b, 0);
                                     const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
+                                    return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -1596,7 +1606,7 @@
                                     beginAtZero: true,
                                     ticks: {
                                         callback: function(value) {
-                                            return '₪' + value;
+                                            return currency + value;
                                         }
                                     }
                                 }
@@ -1607,7 +1617,7 @@
                 
                 // Update total to reflect visible items
                 const visibleTotal = displayData.reduce((a, b) => a + b, 0);
-                document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
+                document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
             }
         }
 
@@ -1738,27 +1748,43 @@
             const emoji = prompt('Enter emoji for this category (e.g., 🎮):') || '📋';
             const itemName = prompt('Enter first expense item name:') || 'Item';
             
+            // Create the new category
             expenses[categoryKey] = [{ name: itemName, amount: 0 }];
             categoryOrder.push(categoryKey);
             
-            // Add to HTML temporarily
+            // Store metadata
+            categoryMetadata[categoryKey] = {
+                emoji: emoji,
+                displayName: categoryName
+            };
+            
+            // Generate the stats ID
+            const statsId = `${categoryKey}Stats`;
+            const expensesId = `${categoryKey}Expenses`;
+            
+            // Create the HTML structure
             const categorySection = document.createElement('div');
             categorySection.className = 'category-section';
             categorySection.id = `category-${categoryKey}`;
             categorySection.innerHTML = `
-                <div class="category-title">${emoji} ${categoryName}</div>
-                <div class="category-stats" id="${categoryKey}Stats"></div>
+                <div class="category-title">
+                    ${emoji} ${categoryName}
+                    <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
+                </div>
+                <div class="category-stats" id="${statsId}"></div>
                 <div class="category-controls ${isEditMode ? 'show' : ''}">
                     <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
                     <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
                     <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
                     <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
                 </div>
-                <div id="${categoryKey}Expenses"></div>
+                <div id="${expensesId}"></div>
             `;
             
-            document.querySelector('.expenses-list').appendChild(categorySection);
+            // Add to the expenses list
+            document.getElementById('expensesList').appendChild(categorySection);
             
+            // Save and update display
             saveUserData();
             updateDisplay();
         }
@@ -1777,27 +1803,19 @@
             // Remove from categoryOrder
             categoryOrder = categoryOrder.filter(c => c !== categoryKey);
             
+            // Remove from categoryMetadata
+            if (categoryMetadata[categoryKey]) {
+                delete categoryMetadata[categoryKey];
+            }
+            
             // Hide from DOM immediately
             const section = document.getElementById(`category-${categoryKey}`);
             if (section) {
-                section.style.display = 'none';
+                section.remove();
             }
             
-            // Save to Firebase with async/await
-            db.collection('users').doc(currentUser.uid).set({
-                expenses: expenses,
-                customColors: customColors,
-                chartType: currentChartType,
-                categoryOrder: categoryOrder,
-                useIncome: useIncome,
-                currency: currency,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                updateDisplay();
-            }).catch(error => {
-                console.error('Error deleting category:', error);
-                alert('Error deleting category: ' + error.message);
-            });
+            // Save to Firebase
+            saveUserData();
         }
 
         function addItemToCategory(categoryKey) {
@@ -1816,6 +1834,7 @@
         function moveCategoryUp(categoryKey) {
             const index = categoryOrder.indexOf(categoryKey);
             if (index > 0) {
+                // Swap in the order array
                 [categoryOrder[index - 1], categoryOrder[index]] = [categoryOrder[index], categoryOrder[index - 1]];
                 saveUserData();
                 renderCategoriesInOrder();
@@ -1824,7 +1843,8 @@
 
         function moveCategoryDown(categoryKey) {
             const index = categoryOrder.indexOf(categoryKey);
-            if (index < categoryOrder.length - 1) {
+            if (index < categoryOrder.length - 1 && index !== -1) {
+                // Swap in the order array
                 [categoryOrder[index], categoryOrder[index + 1]] = [categoryOrder[index + 1], categoryOrder[index]];
                 saveUserData();
                 renderCategoriesInOrder();
@@ -1832,8 +1852,25 @@
         }
 
         function renderCategoriesInOrder() {
-            // This would re-render categories in the new order
-            // For now, just refresh the display
+            const expensesList = document.getElementById('expensesList');
+            
+            // Create a document fragment for better performance
+            const fragment = document.createDocumentFragment();
+            
+            // Re-append categories in the correct order
+            categoryOrder.forEach(categoryKey => {
+                const section = document.getElementById(`category-${categoryKey}`);
+                if (section) {
+                    // Remove from current position and add to fragment
+                    section.parentNode.removeChild(section);
+                    fragment.appendChild(section);
+                }
+            });
+            
+            // Append the fragment to the expenses list
+            expensesList.appendChild(fragment);
+            
+            // Update the display to refresh stats
             updateDisplay();
         }
 
@@ -1899,16 +1936,28 @@
 
         // Rename Functions
         function renameCategory(categoryKey) {
-            const newName = prompt('Enter new category name:');
+            const currentMeta = categoryMetadata[categoryKey];
+            const currentName = currentMeta ? currentMeta.displayName : categoryKey;
+            
+            const newName = prompt('Enter new category name:', currentName);
             if (!newName) return;
             
             const categoryTitleElement = document.querySelector(`#category-${categoryKey} .category-title`);
             if (categoryTitleElement) {
-                const emoji = categoryTitleElement.textContent.trim().split(' ')[0];
+                const emoji = currentMeta ? currentMeta.emoji : categoryTitleElement.textContent.trim().split(' ')[0];
+                
+                // Update metadata
+                categoryMetadata[categoryKey] = {
+                    emoji: emoji,
+                    displayName: newName
+                };
+                
                 categoryTitleElement.innerHTML = `
                     ${emoji} ${newName}
                     <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
                 `;
+                
+                saveUserData();
             }
         }
 
