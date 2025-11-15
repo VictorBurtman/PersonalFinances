@@ -794,6 +794,9 @@
                 <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
                     ⚙️ Settings
                 </button>
+                <button class="edit-mode-btn" onclick="forceDeletePet()" style="border-color: #dc3545; color: #dc3545; display: none;" id="debugDeleteBtn">
+                    🗑️ DEBUG: Delete Pet
+                </button>
             </div>
 
             <div class="total-section">
@@ -1660,6 +1663,7 @@
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
             const addCategoryBtn = document.getElementById('addCategoryBtn');
+            const debugDeleteBtn = document.getElementById('debugDeleteBtn');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
             
@@ -1667,18 +1671,64 @@
                 editBtn.classList.add('active');
                 editBtn.textContent = '✓ Done Editing';
                 addCategoryBtn.style.display = 'block';
+                if (expenses.pet) {
+                    debugDeleteBtn.style.display = 'block'; // Show debug button if pet exists
+                }
                 categoryControls.forEach(c => c.classList.add('show'));
                 renameButtons.forEach(btn => btn.style.display = 'inline-block');
             } else {
                 editBtn.classList.remove('active');
                 editBtn.textContent = '✏️ Edit Categories';
                 addCategoryBtn.style.display = 'none';
+                debugDeleteBtn.style.display = 'none';
                 categoryControls.forEach(c => c.classList.remove('show'));
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
             
             // Refresh display to show/hide delete buttons
             updateDisplay();
+        }
+
+        // DEBUG function to force delete pet
+        async function forceDeletePet() {
+            alert('Step 1: Checking if pet exists...');
+            
+            if (!expenses.pet) {
+                alert('Pet category already deleted from expenses object!');
+                return;
+            }
+            
+            alert('Step 2: Pet found in expenses. Deleting now...');
+            delete expenses.pet;
+            
+            alert('Step 3: Removing from category order...');
+            categoryOrder = categoryOrder.filter(c => c !== 'pet');
+            
+            alert('Step 4: Hiding from display...');
+            const section = document.getElementById('category-pet');
+            if (section) {
+                section.style.display = 'none';
+            }
+            
+            alert('Step 5: Saving to Firebase... Please wait.');
+            
+            try {
+                await db.collection('users').doc(currentUser.uid).set({
+                    expenses: expenses,
+                    customColors: customColors,
+                    chartType: currentChartType,
+                    categoryOrder: categoryOrder,
+                    useIncome: useIncome,
+                    currency: currency,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert('SUCCESS! Pet deleted and saved to Firebase. Refresh the page and check Firebase console.');
+                document.getElementById('debugDeleteBtn').style.display = 'none';
+                updateDisplay();
+            } catch (error) {
+                alert('ERROR saving to Firebase: ' + error.message);
+            }
         }
 
         function deleteExpenseItem(category, index) {
@@ -1746,13 +1796,21 @@
         function deleteCategory(categoryKey) {
             if (!confirm('Delete this entire category? This cannot be undone.')) return;
             
+            console.log('Before deletion, expenses:', JSON.parse(JSON.stringify(expenses)));
+            console.log('Deleting category:', categoryKey);
+            
             // Delete from expenses object
-            if (expenses[categoryKey]) {
+            if (expenses.hasOwnProperty(categoryKey)) {
                 delete expenses[categoryKey];
+                console.log('Category deleted from expenses object');
             }
             
             // Remove from categoryOrder
+            const oldOrder = [...categoryOrder];
             categoryOrder = categoryOrder.filter(c => c !== categoryKey);
+            console.log('Category order updated from', oldOrder, 'to', categoryOrder);
+            
+            console.log('After deletion, expenses:', JSON.parse(JSON.stringify(expenses)));
             
             // Hide from DOM immediately
             const section = document.getElementById(`category-${categoryKey}`);
@@ -1760,13 +1818,28 @@
                 section.style.display = 'none';
             }
             
-            // Force save to Firebase and wait for it to complete
-            saveUserData().then(() => {
-                console.log(`Category ${categoryKey} deleted and saved to Firebase`);
+            // Force immediate save to Firebase
+            if (!currentUser) {
+                console.error('No user logged in!');
+                return;
+            }
+            
+            console.log('Saving to Firebase...');
+            db.collection('users').doc(currentUser.uid).set({
+                expenses: expenses,
+                customColors: customColors,
+                chartType: currentChartType,
+                categoryOrder: categoryOrder,
+                useIncome: useIncome,
+                currency: currency,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).then(() => {
+                console.log('Successfully saved to Firebase!');
+                console.log('Saved expenses object:', JSON.parse(JSON.stringify(expenses)));
                 updateDisplay();
             }).catch(error => {
-                console.error('Error saving after category deletion:', error);
-                alert('Error saving changes. Please try again.');
+                console.error('Error saving to Firebase:', error);
+                alert('Error deleting category: ' + error.message);
             });
         }
 
