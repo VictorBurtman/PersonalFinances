@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monthly Expenses Tracker</title>
     
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -750,7 +749,6 @@
     </style>
 </head>
 <body>
-    <!-- Authentication Screen -->
     <div id="authScreen">
         <div class="auth-container">
             <h1 class="auth-title">💰 Expense Tracker</h1>
@@ -786,7 +784,6 @@
         </div>
     </div>
 
-    <!-- Main App Screen -->
     <div id="appScreen">
     <div class="container">
         <div class="header">
@@ -942,9 +939,6 @@
         </div>
     </div>
     </div>
-    <!-- End App Screen -->
-
-    <!-- Color Editor Modal -->
     <div id="colorEditorModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -952,8 +946,7 @@
                 <button class="modal-close" onclick="closeColorEditor()">✕</button>
             </div>
             <div class="modal-body" id="colorEditorBody">
-                <!-- Color pickers will be dynamically added here -->
-            </div>
+                </div>
             <div class="modal-footer">
                 <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
                 <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
@@ -961,7 +954,6 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1811,18 +1803,15 @@
                 // If category is now empty, ask if user wants to delete the whole category
                 if (expenses[category].length === 0) {
                     if (confirm('This was the last item in this category. Delete the entire category?')) {
-                        delete expenses[category];
-                        categoryOrder = categoryOrder.filter(c => c !== category);
-                        const section = document.getElementById(`category-${category}`);
-                        if (section) {
-                            section.style.display = 'none';
-                        }
+                        // N'appelle plus deleteCategory() d'ici, appelle la nouvelle logique
+                        deleteCategory(category); // L'utilisateur a déjà confirmé
                     }
+                } else {
+                    // S'il reste des items, sauvegarde simplement les changements
+                     saveUserData().then(() => {
+                        updateDisplay();
+                    });
                 }
-                
-                saveUserData().then(() => {
-                    updateDisplay();
-                });
             }
         }
 
@@ -1886,10 +1875,12 @@
             });
         }
 
+        // ============================================
+        // == DÉBUT DU CODE CORRIGÉ ==
+        // ============================================
         async function deleteCategory(categoryKey) {
             if (!confirm('Delete this entire category? This cannot be undone.')) return;
             
-            // Delete from expenses object
             if (!expenses.hasOwnProperty(categoryKey)) {
                 alert('Category not found!');
                 return;
@@ -1897,35 +1888,50 @@
             
             console.log(`Deleting category: ${categoryKey}`);
             
-            // Delete from expenses
+            // [1] Supprime la catégorie de l'état local immédiatement
             delete expenses[categoryKey];
-            
-            // Remove from categoryOrder
             categoryOrder = categoryOrder.filter(c => c !== categoryKey);
-            
-            // Remove from categoryMetadata
             if (categoryMetadata[categoryKey]) {
                 delete categoryMetadata[categoryKey];
             }
             
-            // Hide from DOM immediately
+            // [2] Cache la section dans l'interface
             const section = document.getElementById(`category-${categoryKey}`);
             if (section) {
                 section.style.display = 'none';
             }
             
-            // Save to Firebase and wait for completion
+            // [3] Prépare la mise à jour pour Firestore
             try {
-                await saveUserData();
+                if (!currentUser) throw new Error("User not logged in");
+                
+                // Utilise la "dot notation" pour cibler les champs à supprimer
+                const fieldToDelete = `expenses.${categoryKey}`;
+                const metaToDelete = `categoryMetadata.${categoryKey}`;
+                
+                // Crée un objet de mise à jour
+                const updates = {
+                    [fieldToDelete]: firebase.firestore.FieldValue.delete(), // C'est la correction clé !
+                    [metaToDelete]: firebase.firestore.FieldValue.delete(), // Supprime aussi les métadonnées
+                    'categoryOrder': categoryOrder // Sauvegarde la nouvelle liste d'ordre
+                };
+                
+                // Utilise .update() pour appliquer les suppressions et les changements
+                await db.collection('users').doc(currentUser.uid).update(updates);
+                
                 console.log(`Category ${categoryKey} deleted and saved successfully`);
-                updateDisplay();
+                updateDisplay(); // Met à jour l'interface (graphique, totaux, etc.)
+                
             } catch (error) {
                 console.error('Error deleting category:', error);
                 alert('Error deleting category: ' + error.message);
-                // Reload page to restore original state
+                // En cas d'erreur, recharge la page pour rétablir l'état d'origine
                 location.reload();
             }
         }
+        // ============================================
+        // == FIN DU CODE CORRIGÉ ==
+        // ============================================
 
         function addItemToCategory(categoryKey) {
             const itemName = prompt('Enter new expense item name:');
