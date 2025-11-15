@@ -106,7 +106,7 @@
 
         .chart-container {
             position: relative;
-            height: 280px;
+            height: 350px;
             margin-bottom: 20px;
         }
 
@@ -472,11 +472,28 @@
                     }
                 });
             } else {
+                // Sort data for bar chart (descending order)
+                let sortedLabels = [...labels];
+                let sortedData = [...data];
+                let sortedColors = [...backgroundColors];
+                
+                if (currentChartType === 'bar') {
+                    // Create array of indices and sort by data values (descending)
+                    const indices = data.map((_, i) => i);
+                    indices.sort((a, b) => data[b] - data[a]);
+                    
+                    // Reorder all arrays based on sorted indices
+                    sortedLabels = indices.map(i => labels[i]);
+                    sortedData = indices.map(i => data[i]);
+                    sortedColors = indices.map(i => backgroundColors[i]);
+                }
+
                 const commonOptions = {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
+                            display: true,
                             position: 'bottom',
                             labels: {
                                 padding: 10,
@@ -519,10 +536,10 @@
                     chart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
-                            labels: labels,
+                            labels: sortedLabels,
                             datasets: [{
-                                data: data,
-                                backgroundColor: backgroundColors,
+                                data: sortedData,
+                                backgroundColor: sortedColors,
                                 borderWidth: 2,
                                 borderColor: '#fff'
                             }]
@@ -533,11 +550,11 @@
                     chart = new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: labels,
+                            labels: sortedLabels,
                             datasets: [{
-                                label: 'Amount (₪)',
-                                data: data,
-                                backgroundColor: backgroundColors,
+                                label: 'Expenses',
+                                data: sortedData,
+                                backgroundColor: sortedColors,
                                 borderWidth: 0,
                                 borderRadius: 8
                             }]
