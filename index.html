@@ -622,6 +622,114 @@
             color: white;
         }
 
+        .rename-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 2px 6px;
+            margin-left: 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .rename-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .settings-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .settings-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .settings-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .settings-description {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        .item-move-btns {
+            display: none;
+            gap: 5px;
+            margin-left: 8px;
+        }
+
+        .item-move-btns.show {
+            display: flex;
+        }
+
+        .item-move-btn {
+            background: none;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .item-move-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .item-rename-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 2px 6px;
+            margin-left: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .item-rename-btn.show {
+            display: inline-block;
+        }
+
+        .item-rename-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
         #appScreen {
             display: none;
         }
@@ -688,11 +796,22 @@
                 <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
                     ➕ Add Category
                 </button>
+                <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
+                    ⚙️ Settings
+                </button>
             </div>
 
             <div class="total-section">
+                <div id="incomeDisplay" style="display: none; margin-bottom: 15px; opacity: 0.9;">
+                    <h3 style="font-size: 1em; margin-bottom: 5px;">Total Income</h3>
+                    <div style="font-size: 1.8em; font-weight: 600;" id="totalIncome">₪0</div>
+                </div>
                 <h2>Total Monthly Expenses</h2>
                 <div class="total-amount" id="totalAmount">₪0</div>
+                <div id="remainingDisplay" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.3);">
+                    <h3 style="font-size: 1em; margin-bottom: 5px;">Remaining</h3>
+                    <div style="font-size: 2em; font-weight: 700;" id="remainingAmount">₪0</div>
+                </div>
             </div>
 
             <div class="chart-section">
@@ -707,8 +826,25 @@
             </div>
 
             <div class="expenses-list">
+                <div class="category-section income-category" id="category-income" style="display: none;">
+                    <div class="category-title" style="color: #28a745; border-color: #28a745;">
+                        💰 Income
+                        <button class="rename-btn" onclick="renameCategory('income')" style="display: none;">✏️</button>
+                    </div>
+                    <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
+                    <div class="category-controls">
+                        <button class="category-btn" onclick="moveCategoryUp('income')">↑ Move Up</button>
+                        <button class="category-btn" onclick="moveCategoryDown('income')">↓ Move Down</button>
+                        <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>
+                    </div>
+                    <div id="incomeExpenses"></div>
+                </div>
+
                 <div class="category-section" id="category-housing">
-                    <div class="category-title">🏠 Housing</div>
+                    <div class="category-title">
+                        🏠 Housing
+                        <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="housingStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('housing')">↑ Move Up</button>
@@ -720,7 +856,10 @@
                 </div>
 
                 <div class="category-section" id="category-tech">
-                    <div class="category-title">📱 Communications & Tech</div>
+                    <div class="category-title">
+                        📱 Communications & Tech
+                        <button class="rename-btn" onclick="renameCategory('tech')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="techStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('tech')">↑ Move Up</button>
@@ -732,7 +871,10 @@
                 </div>
 
                 <div class="category-section" id="category-pet">
-                    <div class="category-title">🐱 Pet Care</div>
+                    <div class="category-title">
+                        🐱 Pet Care
+                        <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="petStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('pet')">↑ Move Up</button>
@@ -744,7 +886,10 @@
                 </div>
 
                 <div class="category-section" id="category-subscriptions">
-                    <div class="category-title">🎬 Subscriptions</div>
+                    <div class="category-title">
+                        🎬 Subscriptions
+                        <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="subscriptionStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('subscriptions')">↑ Move Up</button>
@@ -756,7 +901,10 @@
                 </div>
 
                 <div class="category-section" id="category-groceries">
-                    <div class="category-title">🛒 Groceries</div>
+                    <div class="category-title">
+                        🛒 Groceries
+                        <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="groceryStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('groceries')">↑ Move Up</button>
@@ -768,7 +916,10 @@
                 </div>
 
                 <div class="category-section" id="category-other">
-                    <div class="category-title">💸 Other Expenses</div>
+                    <div class="category-title">
+                        💸 Other Expenses
+                        <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
+                    </div>
                     <div class="category-stats" id="otherStats"></div>
                     <div class="category-controls">
                         <button class="category-btn" onclick="moveCategoryUp('other')">↑ Move Up</button>
@@ -799,6 +950,40 @@
             <div class="modal-footer">
                 <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
                 <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Currency</h3>
+                    <select id="currencySelect" class="settings-select" onchange="updateCurrency(this.value)">
+                        <option value="ILS">₪ Israeli Shekel (ILS)</option>
+                        <option value="USD">$ US Dollar (USD)</option>
+                        <option value="EUR">€ Euro (EUR)</option>
+                        <option value="GBP">£ British Pound (GBP)</option>
+                        <option value="JPY">¥ Japanese Yen (JPY)</option>
+                    </select>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Income Tracking</h3>
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)">
+                        <span>Track income and calculate remaining balance</span>
+                    </label>
+                    <p class="settings-description">When enabled, you can track your income sources and see how much money remains after expenses.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button primary" onclick="closeSettings()">Done</button>
             </div>
         </div>
     </div>
@@ -836,7 +1021,16 @@
         let currentUser = null;
         let isSignUpMode = false;
         let isEditMode = false;
-        let categoryOrder = ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+        let categoryOrder = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+        let useIncome = true;
+        let currency = '₪'; // Default currency symbol
+        let currencyOptions = {
+            'ILS': '₪',
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'JPY': '¥'
+        };
 
         // Authentication functions
         function toggleAuthMode() {
@@ -925,6 +1119,9 @@
         });
 
         const defaultExpenses = {
+            income: [
+                { name: 'Salary', amount: 0 }
+            ],
             housing: [
                 { name: 'Rent', amount: 0 },
                 { name: 'Arnona', amount: 0 },
@@ -976,11 +1173,16 @@
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
                     currentChartType = data.chartType || 'doughnut';
-                    categoryOrder = data.categoryOrder || ['housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    useIncome = data.useIncome !== undefined ? data.useIncome : true;
+                    currency = data.currency || '₪';
                     
                     // Migration: ensure all default categories exist
                     if (!expenses.other) {
                         expenses.other = [{ name: 'Other Expenses', amount: 0 }];
+                    }
+                    if (!expenses.income) {
+                        expenses.income = [{ name: 'Salary', amount: 0 }];
                     }
                 } else {
                     // First time user - use defaults
@@ -1003,6 +1205,8 @@
                     customColors: customColors,
                     chartType: currentChartType,
                     categoryOrder: categoryOrder,
+                    useIncome: useIncome,
+                    currency: currency,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             } catch (error) {
@@ -1024,10 +1228,22 @@
 
         function calculateTotal() {
             let total = 0;
-            Object.values(expenses).forEach(category => {
-                category.forEach(expense => {
+            Object.keys(expenses).forEach(categoryKey => {
+                // Skip income category when calculating expenses
+                if (categoryKey === 'income') return;
+                
+                expenses[categoryKey].forEach(expense => {
                     total += parseFloat(expense.amount) || 0;
                 });
+            });
+            return total;
+        }
+
+        function calculateIncome() {
+            if (!expenses.income) return 0;
+            let total = 0;
+            expenses.income.forEach(item => {
+                total += parseFloat(item.amount) || 0;
             });
             return total;
         }
@@ -1074,9 +1290,25 @@
             const deleteBtn = isEditMode ? 
                 `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
             
+            const moveUpBtn = isEditMode ? 
+                `<button class="item-move-btn" onclick="moveItemUp('${category}', ${index})" title="Move up">↑</button>` : '';
+            
+            const moveDownBtn = isEditMode ? 
+                `<button class="item-move-btn" onclick="moveItemDown('${category}', ${index})" title="Move down">↓</button>` : '';
+            
+            const renameBtn = isEditMode ? 
+                `<button class="item-rename-btn show" onclick="renameItem('${category}', ${index})" title="Rename">✏️</button>` : '';
+            
             return `
                 <div class="expense-item">
-                    <span class="expense-name">${expense.name}</span>
+                    <span class="expense-name">
+                        ${expense.name}
+                        ${renameBtn}
+                        <span class="item-move-btns ${isEditMode ? 'show' : ''}">
+                            ${moveUpBtn}
+                            ${moveDownBtn}
+                        </span>
+                    </span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input 
                             type="number" 
@@ -1086,7 +1318,7 @@
                             step="0.01"
                             min="0"
                         />
-                        <span class="currency">₪</span>
+                        <span class="currency">${currency}</span>
                         ${deleteBtn}
                     </div>
                 </div>
@@ -1100,50 +1332,81 @@
 
         function updateDisplay() {
             try {
-                // Update total
-                const total = calculateTotal();
-                document.getElementById('totalAmount').textContent = `₪${total.toFixed(2)}`;
+                // Update income section visibility
+                const incomeSection = document.getElementById('category-income');
+                const incomeDisplaySection = document.getElementById('incomeDisplay');
+                const remainingDisplaySection = document.getElementById('remainingDisplay');
+                
+                if (useIncome && incomeSection) {
+                    incomeSection.style.display = 'block';
+                    incomeDisplaySection.style.display = 'block';
+                    remainingDisplaySection.style.display = 'block';
+                } else if (incomeSection) {
+                    incomeSection.style.display = 'none';
+                    incomeDisplaySection.style.display = 'none';
+                    remainingDisplaySection.style.display = 'none';
+                }
+                
+                // Calculate totals
+                const totalExpenses = calculateTotal();
+                const totalIncome = calculateIncome();
+                const remaining = totalIncome - totalExpenses;
+                
+                // Update displays
+                document.getElementById('totalAmount').textContent = `${currency}${totalExpenses.toFixed(2)}`;
+                document.getElementById('totalIncome').textContent = `${currency}${totalIncome.toFixed(2)}`;
+                document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
+                document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
+
+                // Render income if enabled
+                if (expenses.income && useIncome) {
+                    const stats = getCategoryStats('income');
+                    document.getElementById('incomeStats').innerHTML = 
+                        stats.total > 0 ? `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
+                    document.getElementById('incomeExpenses').innerHTML = 
+                        expenses.income.map((exp, i) => renderExpenseItem(exp, 'income', i)).join('');
+                }
 
                 // Render expense lists and category stats
                 if (expenses.housing) {
                     const stats = getCategoryStats('housing');
                     document.getElementById('housingStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('housingExpenses').innerHTML = 
                         expenses.housing.map((exp, i) => renderExpenseItem(exp, 'housing', i)).join('');
                 }
                 if (expenses.tech) {
                     const stats = getCategoryStats('tech');
                     document.getElementById('techStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('techExpenses').innerHTML = 
                         expenses.tech.map((exp, i) => renderExpenseItem(exp, 'tech', i)).join('');
                 }
                 if (expenses.pet) {
                     const stats = getCategoryStats('pet');
                     document.getElementById('petStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('petExpenses').innerHTML = 
                         expenses.pet.map((exp, i) => renderExpenseItem(exp, 'pet', i)).join('');
                 }
                 if (expenses.subscriptions) {
                     const stats = getCategoryStats('subscriptions');
                     document.getElementById('subscriptionStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('subscriptionExpenses').innerHTML = 
                         expenses.subscriptions.map((exp, i) => renderExpenseItem(exp, 'subscriptions', i)).join('');
                 }
                 if (expenses.groceries) {
                     const stats = getCategoryStats('groceries');
                     document.getElementById('groceryStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('groceryExpenses').innerHTML = 
                         expenses.groceries.map((exp, i) => renderExpenseItem(exp, 'groceries', i)).join('');
                 }
                 if (expenses.other) {
                     const stats = getCategoryStats('other');
                     document.getElementById('otherStats').innerHTML = 
-                        stats.total > 0 ? `<span class="amount">₪${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                        stats.total > 0 ? `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                     document.getElementById('otherExpenses').innerHTML = 
                         expenses.other.map((exp, i) => renderExpenseItem(exp, 'other', i)).join('');
                 }
@@ -1405,17 +1668,20 @@
             const editBtn = document.getElementById('editModeBtn');
             const addCategoryBtn = document.getElementById('addCategoryBtn');
             const categoryControls = document.querySelectorAll('.category-controls');
+            const renameButtons = document.querySelectorAll('.rename-btn');
             
             if (isEditMode) {
                 editBtn.classList.add('active');
                 editBtn.textContent = '✓ Done Editing';
                 addCategoryBtn.style.display = 'block';
                 categoryControls.forEach(c => c.classList.add('show'));
+                renameButtons.forEach(btn => btn.style.display = 'inline-block');
             } else {
                 editBtn.classList.remove('active');
                 editBtn.textContent = '✏️ Edit Categories';
                 addCategoryBtn.style.display = 'none';
                 categoryControls.forEach(c => c.classList.remove('show'));
+                renameButtons.forEach(btn => btn.style.display = 'none');
             }
             
             // Refresh display to show/hide delete buttons
@@ -1520,6 +1786,84 @@
             updateDisplay();
         }
 
+        // Settings Functions
+        function openSettings() {
+            const modal = document.getElementById('settingsModal');
+            const currencySelect = document.getElementById('currencySelect');
+            const useIncomeCheckbox = document.getElementById('useIncomeCheckbox');
+            
+            // Set current values
+            const currencyCode = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
+            currencySelect.value = currencyCode;
+            useIncomeCheckbox.checked = useIncome;
+            
+            modal.classList.add('show');
+        }
+
+        function closeSettings() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('show');
+        }
+
+        function updateCurrency(currencyCode) {
+            currency = currencyOptions[currencyCode];
+            saveUserData();
+            updateDisplay();
+        }
+
+        function toggleIncomeFeature(enabled) {
+            useIncome = enabled;
+            saveUserData();
+            updateDisplay();
+        }
+
+        // Rename Functions
+        function renameCategory(categoryKey) {
+            const newName = prompt('Enter new category name:');
+            if (!newName) return;
+            
+            const categoryTitleElement = document.querySelector(`#category-${categoryKey} .category-title`);
+            if (categoryTitleElement) {
+                const emoji = categoryTitleElement.textContent.trim().split(' ')[0];
+                categoryTitleElement.innerHTML = `
+                    ${emoji} ${newName}
+                    <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
+                `;
+            }
+        }
+
+        function renameItem(category, index) {
+            const newName = prompt('Enter new name for this item:', expenses[category][index].name);
+            if (!newName) return;
+            
+            expenses[category][index].name = newName;
+            saveUserData();
+            updateDisplay();
+        }
+
+        // Item Movement Functions
+        function moveItemUp(category, index) {
+            if (index === 0) return; // Already at top
+            
+            const temp = expenses[category][index];
+            expenses[category][index] = expenses[category][index - 1];
+            expenses[category][index - 1] = temp;
+            
+            saveUserData();
+            updateDisplay();
+        }
+
+        function moveItemDown(category, index) {
+            if (index === expenses[category].length - 1) return; // Already at bottom
+            
+            const temp = expenses[category][index];
+            expenses[category][index] = expenses[category][index + 1];
+            expenses[category][index + 1] = temp;
+            
+            saveUserData();
+            updateDisplay();
+        }
+
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             if (typeof Chart !== 'undefined') {
@@ -1552,6 +1896,13 @@
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
                         closeColorEditor();
+                    }
+                });
+                
+                const settingsModal = document.getElementById('settingsModal');
+                settingsModal.addEventListener('click', function(e) {
+                    if (e.target === settingsModal) {
+                        closeSettings();
                     }
                 });
                 
