@@ -320,6 +320,7 @@
         
         let chart = null;
         let currentChartType = localStorage.getItem('chartType') || 'doughnut';
+        let hiddenItems = {}; // Track which items are hidden by label name
 
         const colors = [
             '#667eea', '#764ba2', '#f093fb', '#4facfe',
@@ -505,7 +506,7 @@
                                                 fillStyle: style.backgroundColor,
                                                 strokeStyle: style.borderColor,
                                                 lineWidth: style.borderWidth,
-                                                hidden: meta.data[i].hidden,
+                                                hidden: meta.data[i] && meta.data[i].hidden,
                                                 index: i
                                             };
                                         });
@@ -516,10 +517,17 @@
                             onClick: function(e, legendItem, legend) {
                                 const index = legendItem.index;
                                 const chart = legend.chart;
-                                const meta = chart.getDatasetMeta(0);
+                                const label = chart.data.labels[index];
                                 
-                                // Toggle visibility
-                                meta.data[index].hidden = !meta.data[index].hidden;
+                                // Toggle hidden state in our tracking object
+                                hiddenItems[label] = !hiddenItems[label];
+                                
+                                // Update chart visibility
+                                const meta = chart.getDatasetMeta(0);
+                                if (meta.data[index]) {
+                                    meta.data[index].hidden = hiddenItems[label];
+                                }
+                                
                                 chart.update();
                                 
                                 // Update the total amount display
@@ -586,6 +594,21 @@
                         }
                     });
                 }
+                
+                // Restore hidden state after chart creation
+                if (chart && chart.data) {
+                    const meta = chart.getDatasetMeta(0);
+                    chart.data.labels.forEach((label, index) => {
+                        if (hiddenItems[label] && meta.data[index]) {
+                            meta.data[index].hidden = true;
+                        }
+                    });
+                    chart.update();
+                    
+                    // Update total to reflect hidden items
+                    const visibleTotal = calculateVisibleTotal(chart);
+                    document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
+                }
             }
         }
 
@@ -595,6 +618,10 @@
                 localStorage.removeItem('expenses');
                 expenses = JSON.parse(JSON.stringify(defaultExpenses));
                 localStorage.setItem('expenses', JSON.stringify(expenses));
+                
+                // Clear hidden items state
+                hiddenItems = {};
+                
                 updateDisplay();
             }
         }
