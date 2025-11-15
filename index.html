@@ -791,9 +791,6 @@
                 <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
                     ➕ Add Category
                 </button>
-                <button class="edit-mode-btn" onclick="cleanDatabase()" style="border-color: #dc3545; color: #dc3545;">
-                    🧹 Clean Database
-                </button>
                 <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
                     ⚙️ Settings
                 </button>
@@ -970,6 +967,14 @@
                     <button class="modal-button secondary" onclick="handleLogout()" style="width: 100%;">
                         Logout
                     </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Database Maintenance</h3>
+                    <button class="modal-button secondary" onclick="cleanDatabase()" style="width: 100%; background: #dc3545; color: white;">
+                        🧹 Clean Ghost Categories
+                    </button>
+                    <p class="settings-description">Remove categories that exist in your data but are not displayed properly. Use this if you have issues with categories that won't show up or can't be created.</p>
                 </div>
                 
                 <div class="settings-section">
@@ -1200,6 +1205,51 @@
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
+                    
+                    // Recreate HTML for custom categories that don't exist in the default list
+                    const defaultCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    const expensesList = document.getElementById('expensesList');
+                    
+                    Object.keys(expenses).forEach(categoryKey => {
+                        // Skip default categories - they already have HTML
+                        if (defaultCategories.includes(categoryKey)) return;
+                        
+                        // Check if HTML element exists
+                        if (document.getElementById(`category-${categoryKey}`)) return;
+                        
+                        // Get metadata for this category
+                        const meta = categoryMetadata[categoryKey] || {
+                            emoji: '📋',
+                            displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+                        };
+                        
+                        // Create HTML for this custom category
+                        const statsId = `${categoryKey}Stats`;
+                        const expensesId = `${categoryKey}Expenses`;
+                        
+                        const categorySection = document.createElement('div');
+                        categorySection.className = 'category-section';
+                        categorySection.id = `category-${categoryKey}`;
+                        categorySection.innerHTML = `
+                            <div class="category-title">
+                                ${meta.emoji} ${meta.displayName}
+                                <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="${statsId}"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
+                                <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
+                                <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
+                                <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
+                            </div>
+                            <div id="${expensesId}"></div>
+                        `;
+                        
+                        expensesList.appendChild(categorySection);
+                    });
+                    
+                    // Reorder categories according to categoryOrder
+                    renderCategoriesInOrder();
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
@@ -1751,7 +1801,7 @@
             const emoji = prompt('Enter emoji for this category (e.g., 🎮):') || '📋';
             const itemName = prompt('Enter first expense item name:') || 'Item';
             
-            // Create the new category
+            // Create the new category with the first item
             expenses[categoryKey] = [{ name: itemName, amount: 0 }];
             categoryOrder.push(categoryKey);
             
@@ -1761,7 +1811,7 @@
                 displayName: categoryName
             };
             
-            // Generate the stats ID
+            // Generate the stats ID and expenses ID
             const statsId = `${categoryKey}Stats`;
             const expensesId = `${categoryKey}Expenses`;
             
@@ -1787,9 +1837,15 @@
             // Add to the expenses list
             document.getElementById('expensesList').appendChild(categorySection);
             
-            // Save and update display
-            saveUserData();
-            updateDisplay();
+            // IMPORTANT: Save to Firebase FIRST before calling updateDisplay
+            // This ensures the data is persisted before any UI updates
+            saveUserData().then(() => {
+                // Now update the display which will populate the first item
+                updateDisplay();
+            }).catch(error => {
+                console.error('Error saving new category:', error);
+                alert('Error creating category. Please try again.');
+            });
         }
 
         function deleteCategory(categoryKey) {
