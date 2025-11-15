@@ -1217,6 +1217,11 @@
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
                     
+                    console.log('Loaded from Firebase:', {
+                        expenseCategories: Object.keys(expenses),
+                        categoryOrder: categoryOrder
+                    });
+                    
                     // Hide default categories that were deleted by the user
                     const defaultCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
                     defaultCategories.forEach(categoryKey => {
@@ -1224,6 +1229,7 @@
                         if (section) {
                             if (!expenses[categoryKey]) {
                                 // Category was deleted - hide it
+                                console.log(`Hiding deleted default category: ${categoryKey}`);
                                 section.style.display = 'none';
                             } else {
                                 // Category exists - show it
@@ -1241,6 +1247,8 @@
                         
                         // Check if HTML element exists
                         if (document.getElementById(`category-${categoryKey}`)) return;
+                        
+                        console.log(`Creating HTML for custom category: ${categoryKey}`);
                         
                         // Get metadata for this category
                         const meta = categoryMetadata[categoryKey] || {
@@ -1291,7 +1299,7 @@
             if (!currentUser) return;
             
             try {
-                await db.collection('users').doc(currentUser.uid).set({
+                const dataToSave = {
                     expenses: expenses,
                     customColors: customColors,
                     chartType: currentChartType,
@@ -1301,9 +1309,18 @@
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                };
+                
+                console.log('Saving to Firebase:', {
+                    expenseCategories: Object.keys(expenses),
+                    categoryOrder: categoryOrder
+                });
+                
+                await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
+                console.log('Save successful');
             } catch (error) {
                 console.error('Error saving user data:', error);
+                throw error; // Re-throw so calling functions can handle it
             }
         }
 
@@ -1869,7 +1886,7 @@
             });
         }
 
-        function deleteCategory(categoryKey) {
+        async function deleteCategory(categoryKey) {
             if (!confirm('Delete this entire category? This cannot be undone.')) return;
             
             // Delete from expenses object
@@ -1878,6 +1895,9 @@
                 return;
             }
             
+            console.log(`Deleting category: ${categoryKey}`);
+            
+            // Delete from expenses
             delete expenses[categoryKey];
             
             // Remove from categoryOrder
@@ -1891,11 +1911,20 @@
             // Hide from DOM immediately
             const section = document.getElementById(`category-${categoryKey}`);
             if (section) {
-                section.remove();
+                section.style.display = 'none';
             }
             
-            // Save to Firebase
-            saveUserData();
+            // Save to Firebase and wait for completion
+            try {
+                await saveUserData();
+                console.log(`Category ${categoryKey} deleted and saved successfully`);
+                updateDisplay();
+            } catch (error) {
+                console.error('Error deleting category:', error);
+                alert('Error deleting category: ' + error.message);
+                // Reload page to restore original state
+                location.reload();
+            }
         }
 
         function addItemToCategory(categoryKey) {
