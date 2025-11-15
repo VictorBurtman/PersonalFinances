@@ -72,10 +72,42 @@
             margin-bottom: 5px;
         }
 
+        .chart-section {
+            margin-bottom: 20px;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .chart-toggle-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-toggle-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .chart-toggle-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
         .chart-container {
             position: relative;
-            height: 250px;
-            margin: 20px 0;
+            height: 280px;
+            margin-bottom: 20px;
         }
 
         .expenses-list {
@@ -192,8 +224,14 @@
                 <div class="total-amount" id="totalAmount">₪0</div>
             </div>
 
-            <div class="chart-container">
-                <canvas id="expensesChart"></canvas>
+            <div class="chart-section">
+                <div class="chart-controls">
+                    <button class="chart-toggle-btn active" data-type="doughnut">🍩 Pie Chart</button>
+                    <button class="chart-toggle-btn" data-type="bar">📊 Bar Chart</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expensesChart"></canvas>
+                </div>
             </div>
 
             <div class="expenses-list">
@@ -281,6 +319,7 @@
         localStorage.setItem('expenses', JSON.stringify(expenses));
         
         let chart = null;
+        let currentChartType = localStorage.getItem('chartType') || 'doughnut';
 
         const colors = [
             '#667eea', '#764ba2', '#f093fb', '#4facfe',
@@ -301,6 +340,24 @@
                 });
             });
             return total;
+        }
+
+        function calculateVisibleTotal(chartInstance) {
+            if (!chartInstance || !chartInstance.data) return calculateTotal();
+            
+            let visibleTotal = 0;
+            const data = chartInstance.data.datasets[0].data;
+            const labels = chartInstance.data.labels;
+            
+            data.forEach((value, index) => {
+                // Check if this data point is visible
+                const meta = chartInstance.getDatasetMeta(0);
+                if (meta.data[index] && !meta.data[index].hidden) {
+                    visibleTotal += value;
+                }
+            });
+            
+            return visibleTotal;
         }
 
         function renderExpenseItem(expense, category, index) {
@@ -395,7 +452,7 @@
             if (data.length === 0) {
                 // Show placeholder when no data
                 chart = new Chart(ctx, {
-                    type: 'doughnut',
+                    type: currentChartType,
                     data: {
                         labels: ['No expenses yet'],
                         datasets: [{
@@ -415,44 +472,91 @@
                     }
                 });
             } else {
-                chart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: backgroundColors,
-                            borderWidth: 2,
-                            borderColor: '#fff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    font: {
-                                        size: 12
-                                    }
-                                }
+                const commonOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 10,
+                                font: {
+                                    size: 11
+                                },
+                                boxWidth: 15,
+                                boxHeight: 15
                             },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.parsed || 0;
-                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${label}: ₪${value.toFixed(2)} (${percentage}%)`;
-                                    }
+                            onClick: function(e, legendItem, legend) {
+                                const index = legendItem.index;
+                                const chart = legend.chart;
+                                const meta = chart.getDatasetMeta(0);
+                                
+                                // Toggle visibility
+                                meta.data[index].hidden = !meta.data[index].hidden;
+                                chart.update();
+                                
+                                // Update the total amount display
+                                const visibleTotal = calculateVisibleTotal(chart);
+                                document.getElementById('totalAmount').textContent = `₪${visibleTotal.toFixed(2)}`;
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || context.parsed.y || 0;
+                                    const actualValue = currentChartType === 'bar' ? context.parsed.y : value;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((actualValue / total) * 100).toFixed(1);
+                                    return `${label}: ₪${actualValue.toFixed(2)} (${percentage}%)`;
                                 }
                             }
                         }
                     }
-                });
+                };
+
+                if (currentChartType === 'doughnut') {
+                    chart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColors,
+                                borderWidth: 2,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: commonOptions
+                    });
+                } else {
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Amount (₪)',
+                                data: data,
+                                backgroundColor: backgroundColors,
+                                borderWidth: 0,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            ...commonOptions,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '₪' + value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }
         }
 
@@ -469,6 +573,30 @@
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             if (typeof Chart !== 'undefined') {
+                // Set up chart type toggle buttons
+                const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
+                toggleButtons.forEach(btn => {
+                    // Set initial active state
+                    if (btn.dataset.type === currentChartType) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                    
+                    // Add click handler
+                    btn.addEventListener('click', function() {
+                        currentChartType = this.dataset.type;
+                        localStorage.setItem('chartType', currentChartType);
+                        
+                        // Update button states
+                        toggleButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Redraw chart
+                        updateChart();
+                    });
+                });
+                
                 updateDisplay();
             } else {
                 console.warn('Chart.js not loaded, waiting...');
