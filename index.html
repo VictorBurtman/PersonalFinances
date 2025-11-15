@@ -1686,8 +1686,22 @@
             
             if (expenses[category] && expenses[category][index]) {
                 expenses[category].splice(index, 1);
-                saveUserData();
-                updateDisplay();
+                
+                // If category is now empty, ask if user wants to delete the whole category
+                if (expenses[category].length === 0) {
+                    if (confirm('This was the last item in this category. Delete the entire category?')) {
+                        delete expenses[category];
+                        categoryOrder = categoryOrder.filter(c => c !== category);
+                        const section = document.getElementById(`category-${category}`);
+                        if (section) {
+                            section.style.display = 'none';
+                        }
+                    }
+                }
+                
+                saveUserData().then(() => {
+                    updateDisplay();
+                });
             }
         }
 
@@ -1732,21 +1746,28 @@
         function deleteCategory(categoryKey) {
             if (!confirm('Delete this entire category? This cannot be undone.')) return;
             
-            // Delete from expenses
-            delete expenses[categoryKey];
+            // Delete from expenses object
+            if (expenses[categoryKey]) {
+                delete expenses[categoryKey];
+            }
             
             // Remove from categoryOrder
             categoryOrder = categoryOrder.filter(c => c !== categoryKey);
             
-            // Remove from DOM
+            // Hide from DOM immediately
             const section = document.getElementById(`category-${categoryKey}`);
             if (section) {
-                section.remove();
+                section.style.display = 'none';
             }
             
-            // Save to Firebase
-            saveUserData();
-            updateDisplay();
+            // Force save to Firebase and wait for it to complete
+            saveUserData().then(() => {
+                console.log(`Category ${categoryKey} deleted and saved to Firebase`);
+                updateDisplay();
+            }).catch(error => {
+                console.error('Error saving after category deletion:', error);
+                alert('Error saving changes. Please try again.');
+            });
         }
 
         function addItemToCategory(categoryKey) {
