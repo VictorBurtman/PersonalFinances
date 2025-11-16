@@ -1946,7 +1946,10 @@
 
         function moveCategoryUp(categoryKey) {
             const index = categoryOrder.indexOf(categoryKey);
-            if (index > 0) {
+            
+            // MODIFICATION : On change (index > 0) en (index > 1)
+            // Cela empêche la catégorie en position 1 de tenter de monter à la position 0 (la place de 'income')
+            if (index > 1) { 
                 // Swap in the order array
                 [categoryOrder[index - 1], categoryOrder[index]] = [categoryOrder[index], categoryOrder[index - 1]];
                 
@@ -1963,6 +1966,12 @@
 
         function moveCategoryDown(categoryKey) {
             const index = categoryOrder.indexOf(categoryKey);
+
+            // MODIFICATION : Ajout d'une sécurité pour empêcher 'income' (index 0) de descendre
+            if (categoryKey === 'income' || index === 0) {
+                return;
+            }
+
             if (index < categoryOrder.length - 1 && index !== -1) {
                 // Swap in the order array
                 [categoryOrder[index], categoryOrder[index + 1]] = [categoryOrder[index + 1], categoryOrder[index]];
