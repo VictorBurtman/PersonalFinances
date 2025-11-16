@@ -990,6 +990,19 @@
                         <option value="JPY">¥ Japanese Yen (JPY)</option>
                     </select>
                 </div>
+
+                <div class="settings-section">
+                    <h3 id="languageTitle">Language</h3>
+                    <select id="languageSelect" class="settings-select" onchange="changeLanguage(this.value)">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="he">עברית</option>
+                        <option value="ar">العربية</option>
+                        <option value="es">Español</option>
+                        <option value="ru">Русский</option>
+                    </select>
+                </div>
+
                 
                 <div class="settings-section">
                     <h3>Income Tracking</h3>
@@ -1293,6 +1306,20 @@
                 await loadUserData();
             } else {
                 currentUser = null;
+                
+                // Charger la langue préférée même sans connexion
+                const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+                currentLanguage = savedLang;
+                document.getElementById('languageSelect').value = savedLang;
+                
+                if (currentLanguage === 'ar' || currentLanguage === 'he') {
+                    document.documentElement.setAttribute('dir', 'rtl');
+                } else {
+                    document.documentElement.setAttribute('dir', 'ltr');
+                }
+                
+                updateUILanguage();
+                
                 document.getElementById('authScreen').style.display = 'flex';
                 document.getElementById('appScreen').classList.remove('show');
             }
@@ -1359,6 +1386,19 @@
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
                     
+                    // Charger la langue préférée
+                    currentLanguage = data.language || localStorage.getItem('preferredLanguage') || 'en';
+                    document.getElementById('languageSelect').value = currentLanguage;
+                    
+                    // Appliquer RTL si nécessaire
+                    if (currentLanguage === 'ar' || currentLanguage === 'he') {
+                        document.documentElement.setAttribute('dir', 'rtl');
+                    } else {
+                        document.documentElement.setAttribute('dir', 'ltr');
+                    }
+                    
+                    // Mettre à jour l'interface avec la langue chargée
+                    updateUILanguage();
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
                     
