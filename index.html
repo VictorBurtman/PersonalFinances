@@ -1595,9 +1595,14 @@
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: {
-                    duration: 750, // Durée de l'animation en ms
-                    easing: 'easeInOutQuart' // Type d'animation fluide
+                animation: currentChartType === 'doughnut' ? {
+                    duration: 400,
+                    easing: 'easeOutQuart',
+                    animateRotate: false, // Désactive la rotation pendant l'animation
+                    animateScale: true    // Garde l'animation de taille
+                } : {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
                 },
                 plugins: {
                     legend: {
@@ -1611,7 +1616,6 @@
                             boxWidth: 15,
                             boxHeight: 15,
                             generateLabels: function(chart) {
-                                // Always show ALL labels in the legend, even hidden ones
                                 return sortedLabels.map((label, i) => {
                                     return {
                                         text: label,
@@ -1627,11 +1631,7 @@
                         },
                         onClick: function(e, legendItem, legend) {
                             const label = sortedLabels[legendItem.index];
-                            
-                            // Toggle hidden state
                             hiddenItems[label] = !hiddenItems[label];
-                            
-                            // Redraw the entire chart
                             updateChart();
                         }
                     },
