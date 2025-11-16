@@ -1951,8 +1951,15 @@
             if (index > 0) {
                 // Swap in the order array
                 [categoryOrder[index - 1], categoryOrder[index]] = [categoryOrder[index], categoryOrder[index - 1]];
-                saveUserData();
-                renderCategoriesInOrder();
+                
+                // Save to Firebase first
+                saveUserData().then(() => {
+                    // Then update the visual order
+                    renderCategoriesInOrder();
+                }).catch(error => {
+                    console.error('Error moving category:', error);
+                    alert('Error moving category. Please try again.');
+                });
             }
         }
 
@@ -1961,27 +1968,44 @@
             if (index < categoryOrder.length - 1 && index !== -1) {
                 // Swap in the order array
                 [categoryOrder[index], categoryOrder[index + 1]] = [categoryOrder[index + 1], categoryOrder[index]];
-                saveUserData();
-                renderCategoriesInOrder();
+                
+                // Save to Firebase first
+                saveUserData().then(() => {
+                    // Then update the visual order
+                    renderCategoriesInOrder();
+                }).catch(error => {
+                    console.error('Error moving category:', error);
+                    alert('Error moving category. Please try again.');
+                });
             }
         }
 
         function renderCategoriesInOrder() {
             const expensesList = document.getElementById('expensesList');
             
+            // Log for debugging
+            console.log('Rendering categories in order:', categoryOrder);
+            console.log('Available categories in expenses:', Object.keys(expenses));
+            
             // Create a document fragment for better performance
             const fragment = document.createDocumentFragment();
             
             // Re-append categories in the correct order, but ONLY if they exist in expenses
             categoryOrder.forEach(categoryKey => {
-                // Skip if category was deleted
-                if (!expenses[categoryKey]) return;
+                // Skip if category was deleted or doesn't exist
+                if (!expenses[categoryKey]) {
+                    console.log(`Skipping category ${categoryKey} - not in expenses`);
+                    return;
+                }
                 
                 const section = document.getElementById(`category-${categoryKey}`);
                 if (section) {
                     // Remove from current position and add to fragment
                     section.parentNode.removeChild(section);
                     fragment.appendChild(section);
+                    console.log(`Added category ${categoryKey} to fragment`);
+                } else {
+                    console.log(`Warning: Section not found for category ${categoryKey}`);
                 }
             });
             
