@@ -1546,7 +1546,7 @@
                 console.warn('Chart.js is not available');
                 return;
             }
-
+        
             const ctx = document.getElementById('expensesChart').getContext('2d');
             
             // Prepare data for chart - EXCLUDE income category
@@ -1554,7 +1554,7 @@
             const allData = [];
             const allBackgroundColors = [];
             let colorIndex = 0;
-
+        
             Object.keys(expenses).forEach(categoryKey => {
                 // Skip income category in charts
                 if (categoryKey === 'income') return;
@@ -1570,112 +1570,142 @@
                     }
                 });
             });
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            if (allLabels.length === 0) {
-                // Show placeholder when no data
-                chart = new Chart(ctx, {
-                    type: currentChartType,
-                    data: {
-                        labels: ['No expenses yet'],
-                        datasets: [{
-                            data: [1],
-                            backgroundColor: ['#e9ecef'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-            } else {
-                // Sort data in descending order for both chart types
-                const indices = allData.map((_, i) => i);
-                indices.sort((a, b) => allData[b] - allData[a]);
-                
-                const sortedLabels = indices.map(i => allLabels[i]);
-                const sortedData = indices.map(i => allData[i]);
-                const sortedColors = indices.map(i => allBackgroundColors[i]);
-
-                // Filter out hidden items for display
-                const displayLabels = [];
-                const displayData = [];
-                const displayColors = [];
-                const displayIndices = []; // Track original indices
-                
-                sortedLabels.forEach((label, i) => {
-                    if (!hiddenItems[label]) {
-                        displayLabels.push(label);
-                        displayData.push(sortedData[i]);
-                        displayColors.push(sortedColors[i]);
-                        displayIndices.push(i);
-                    }
-                });
-
-                const commonOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom',
-                            labels: {
-                                padding: 10,
-                                font: {
-                                    size: 11
-                                },
-                                boxWidth: 15,
-                                boxHeight: 15,
-                                generateLabels: function(chart) {
-                                    // Always show ALL labels in the legend, even hidden ones
-                                    return sortedLabels.map((label, i) => {
-                                        return {
-                                            text: label,
-                                            fillStyle: sortedColors[i],
-                                            strokeStyle: sortedColors[i],
-                                            lineWidth: 0,
-                                            hidden: hiddenItems[label] || false,
-                                            index: i,
-                                            // Store the label for onClick handler
-                                            datasetIndex: 0
-                                        };
-                                    });
-                                }
+        
+            // Sort data in descending order for both chart types
+            const indices = allData.map((_, i) => i);
+            indices.sort((a, b) => allData[b] - allData[a]);
+            
+            const sortedLabels = indices.map(i => allLabels[i]);
+            const sortedData = indices.map(i => allData[i]);
+            const sortedColors = indices.map(i => allBackgroundColors[i]);
+        
+            // Filter out hidden items for display
+            const displayLabels = [];
+            const displayData = [];
+            const displayColors = [];
+            
+            sortedLabels.forEach((label, i) => {
+                if (!hiddenItems[label]) {
+                    displayLabels.push(label);
+                    displayData.push(sortedData[i]);
+                    displayColors.push(sortedColors[i]);
+                }
+            });
+        
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 750, // Durée de l'animation en ms
+                    easing: 'easeInOutQuart' // Type d'animation fluide
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: {
+                                size: 11
                             },
-                            onClick: function(e, legendItem, legend) {
-                                const label = sortedLabels[legendItem.index];
-                                
-                                // Toggle hidden state
-                                hiddenItems[label] = !hiddenItems[label];
-                                
-                                // Redraw the entire chart
-                                updateChart();
+                            boxWidth: 15,
+                            boxHeight: 15,
+                            generateLabels: function(chart) {
+                                // Always show ALL labels in the legend, even hidden ones
+                                return sortedLabels.map((label, i) => {
+                                    return {
+                                        text: label,
+                                        fillStyle: sortedColors[i],
+                                        strokeStyle: sortedColors[i],
+                                        lineWidth: 0,
+                                        hidden: hiddenItems[label] || false,
+                                        index: i,
+                                        datasetIndex: 0
+                                    };
+                                });
                             }
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
-                                    const total = displayData.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
+                        onClick: function(e, legendItem, legend) {
+                            const label = sortedLabels[legendItem.index];
+                            
+                            // Toggle hidden state
+                            hiddenItems[label] = !hiddenItems[label];
+                            
+                            // Redraw the entire chart
+                            updateChart();
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
+                                const total = displayData.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            };
+        
+            // SI le graphique existe déjà, on met juste à jour les données
+            if (chart && chart.config.type === currentChartType) {
+                // Mise à jour des données existantes
+                chart.data.labels = displayLabels;
+                chart.data.datasets[0].data = displayData;
+                chart.data.datasets[0].backgroundColor = displayColors;
+                
+                // Mise à jour des options si nécessaire
+                chart.options = currentChartType === 'bar' ? {
+                    ...commonOptions,
+                    scales: {
+                        x: {
+                            display: false
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return currency + value;
                                 }
                             }
                         }
                     }
-                };
-
-                if (currentChartType === 'doughnut') {
+                } : commonOptions;
+                
+                // Rafraîchir le graphique avec animation
+                chart.update('active'); // 'active' permet une animation fluide
+                
+            } else {
+                // Le graphique n'existe pas OU le type a changé : on le recrée
+                if (chart) {
+                    chart.destroy();
+                }
+                
+                if (allLabels.length === 0) {
+                    // Show placeholder when no data
+                    chart = new Chart(ctx, {
+                        type: currentChartType,
+                        data: {
+                            labels: ['No expenses yet'],
+                            datasets: [{
+                                data: [1],
+                                backgroundColor: ['#e9ecef'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                } else if (currentChartType === 'doughnut') {
                     chart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
@@ -1705,7 +1735,7 @@
                             ...commonOptions,
                             scales: {
                                 x: {
-                                    display: false  // Hide X-axis labels
+                                    display: false
                                 },
                                 y: {
                                     beginAtZero: true,
@@ -1719,13 +1749,13 @@
                         }
                     });
                 }
-                
-                // Update total to reflect visible items
-                const visibleTotal = displayData.reduce((a, b) => a + b, 0);
-                document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
             }
+            
+            // Update total to reflect visible items
+            const visibleTotal = displayData.reduce((a, b) => a + b, 0);
+            document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
         }
-
+    
         function resetExpenses() {
             if (confirm('Are you sure you want to reset all expenses to 0?')) {
                 expenses = JSON.parse(JSON.stringify(defaultExpenses));
