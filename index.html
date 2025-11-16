@@ -1060,6 +1060,26 @@
 
         // Store category metadata (emoji, display name)
         let categoryMetadata = {};
+        
+        // NOUVELLE FONCTION - Cleanup category order
+        function cleanupCategoryOrder() {
+            // Enlever les catégories qui n'existent plus dans expenses
+            categoryOrder = categoryOrder.filter(categoryKey => expenses.hasOwnProperty(categoryKey));
+            
+            // Ajouter les catégories manquantes
+            Object.keys(expenses).forEach(categoryKey => {
+                if (!categoryOrder.includes(categoryKey)) {
+                    categoryOrder.push(categoryKey);
+                }
+            });
+            
+            // S'assurer qu'income est toujours en premier si elle existe
+            if (categoryOrder.includes('income') && categoryOrder[0] !== 'income') {
+                categoryOrder = ['income', ...categoryOrder.filter(c => c !== 'income')];
+            }
+            
+            console.log('Category order cleaned:', categoryOrder);
+        }
 
         // Authentication functions
         function toggleAuthMode() {
@@ -1206,6 +1226,9 @@
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
+                    
+                    // NOUVEAU : Nettoyer et synchroniser categoryOrder
+                    cleanupCategoryOrder();
                     
                     console.log('Loaded from Firebase:', {
                         expenseCategories: Object.keys(expenses),
@@ -1440,6 +1463,7 @@
 
         function updateDisplay() {
             try {
+                cleanupCategoryOrder();
                 // Update income section visibility
                 const incomeSection = document.getElementById('category-income');
                 const incomeDisplaySection = document.getElementById('incomeDisplay');
@@ -1801,15 +1825,15 @@
                 // If category is now empty, ask if user wants to delete the whole category
                 if (expenses[category].length === 0) {
                     if (confirm('This was the last item in this category. Delete the entire category?')) {
-                        // N'appelle plus deleteCategory() d'ici, appelle la nouvelle logique
-                        deleteCategory(category); // L'utilisateur a déjà confirmé
+                        deleteCategory(category);
+                        return; // NOUVEAU : Important pour arrêter l'exécution ici
                     }
-                } else {
-                    // S'il reste des items, sauvegarde simplement les changements
-                     saveUserData().then(() => {
-                        updateDisplay();
-                    });
                 }
+                
+                // S'il reste des items, sauvegarde simplement les changements
+                saveUserData().then(() => {
+                    updateDisplay();
+                });
             }
         }
 
