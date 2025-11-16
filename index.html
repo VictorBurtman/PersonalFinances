@@ -1309,11 +1309,16 @@
                 await loadUserData();
             } else {
                 currentUser = null;
-                
+    
                 // Charger la langue préférée même sans connexion
                 const savedLang = localStorage.getItem('preferredLanguage') || 'en';
                 currentLanguage = savedLang;
-                document.getElementById('languageSelect').value = savedLang;
+                
+                // ✅ Vérifier que l'élément existe avant de le modifier
+                const langSelect = document.getElementById('languageSelect');
+                if (langSelect) {
+                    langSelect.value = savedLang;
+                }
                 
                 if (currentLanguage === 'ar' || currentLanguage === 'he') {
                     document.documentElement.setAttribute('dir', 'rtl');
@@ -1321,7 +1326,10 @@
                     document.documentElement.setAttribute('dir', 'ltr');
                 }
                 
-                updateUILanguage();
+                // ✅ Appeler updateUILanguage() avec un petit délai pour être sûr que le DOM est prêt
+                setTimeout(() => {
+                    updateUILanguage();
+                }, 100);
                 
                 document.getElementById('authScreen').style.display = 'flex';
                 document.getElementById('appScreen').classList.remove('show');
@@ -1400,8 +1408,6 @@
                         document.documentElement.setAttribute('dir', 'ltr');
                     }
                     
-                    // Mettre à jour l'interface avec la langue chargée
-                    updateUILanguage();
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
                     
@@ -1476,7 +1482,8 @@
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
                     await saveUserData();
                 }
-                
+                // Mettre à jour l'interface avec la langue chargée
+                updateUILanguage();
                 updateDisplay();
             } catch (error) {
                 console.error('Error loading user data:', error);
