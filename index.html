@@ -1109,6 +1109,9 @@
         
         // Fonction pour mettre à jour toute l'interface
         function updateUILanguage() {
+            // Vérifier que les éléments existent avant de les modifier
+            const authTitle = document.querySelector('.auth-title');
+            if (!authTitle) return; // Sortir si les éléments ne sont pas encore chargés
             // Auth screen
             document.querySelector('.auth-title').textContent = t('appTitle');
             document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
@@ -1493,6 +1496,7 @@
                     currency: currency,
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
+                    language: currentLanguage, // ✅ AJOUTER CETTE LIGNE
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
