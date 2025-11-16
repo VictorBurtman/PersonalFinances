@@ -1065,6 +1065,134 @@
 
         let currentLanguage = 'en'; // Variable pour la langue actuelle
 
+        // Fonction pour obtenir une traduction
+        function t(key) {
+            return translations[currentLanguage][key] || key;
+        }
+        
+        // Fonction pour changer de langue
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Sauvegarder la langue choisie
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).set({
+                    language: lang
+                }, { merge: true });
+            } else {
+                localStorage.setItem('preferredLanguage', lang);
+            }
+            
+            // Mettre à jour l'attribut dir pour RTL (arabe et hébreu)
+            if (lang === 'ar' || lang === 'he') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+            
+            // Recharger l'interface avec les nouvelles traductions
+            updateUILanguage();
+        }
+        
+        // Fonction pour mettre à jour toute l'interface
+        function updateUILanguage() {
+            // Auth screen
+            document.querySelector('.auth-title').textContent = t('appTitle');
+            document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
+            document.getElementById('authEmail').placeholder = t('email');
+            document.getElementById('authPassword').placeholder = t('password');
+            
+            const isSignUp = document.getElementById('authSubmitBtn').textContent.includes('Sign Up') || 
+                             document.getElementById('authSubmitBtn').textContent.includes('S\'inscrire') ||
+                             document.getElementById('authSubmitBtn').textContent.includes('Зарегистрироваться') ||
+                             document.getElementById('authSubmitBtn').textContent.includes('הירשם') ||
+                             document.getElementById('authSubmitBtn').textContent.includes('Registrarse') ||
+                             document.getElementById('authSubmitBtn').textContent.includes('إنشاء حساب');
+            
+            document.getElementById('authSubmitBtn').textContent = isSignUp ? t('signUp') : t('signIn');
+            document.getElementById('authToggleText').textContent = isSignUp ? t('hasAccount') : t('noAccount');
+            document.getElementById('authToggleBtn').textContent = isSignUp ? t('signIn') : t('signUp');
+            
+            // Main app header
+            document.querySelector('.header h1').textContent = t('monthlyExpenses');
+            
+            // Edit mode buttons
+            const editBtn = document.getElementById('editModeBtn');
+            if (editBtn.classList.contains('active')) {
+                editBtn.textContent = t('doneEditing');
+            } else {
+                editBtn.textContent = t('editCategories');
+            }
+            
+            document.querySelector('[onclick="addNewCategory()"]').textContent = t('addCategory');
+            document.querySelector('[onclick="openSettings()"]').textContent = t('settings');
+            
+            // Total section
+            document.querySelector('.total-section h2').textContent = t('totalExpenses');
+            const incomeH3 = document.querySelector('#incomeDisplay h3');
+            if (incomeH3) incomeH3.textContent = t('totalIncome');
+            const remainingH3 = document.querySelector('#remainingDisplay h3');
+            if (remainingH3) remainingH3.textContent = t('remaining');
+            
+            // Chart buttons
+            const chartButtons = document.querySelectorAll('.chart-toggle-btn');
+            chartButtons[0].textContent = t('pieChart');
+            chartButtons[1].textContent = t('barChart');
+            document.querySelector('.color-customize-btn').textContent = t('colors');
+            
+            // Reset button
+            document.querySelector('.reset-button').textContent = t('resetAll');
+            
+            // Modals
+            document.querySelector('#colorEditorModal .modal-header h2').textContent = t('customizeColors');
+            document.querySelector('#colorEditorModal .modal-footer .secondary').textContent = t('resetToDefault');
+            document.querySelector('#colorEditorModal .modal-footer .primary').textContent = t('done');
+            
+            document.querySelector('#settingsModal .modal-header h2').textContent = t('settingsTitle');
+            document.querySelector('#settingsModal .modal-footer .primary').textContent = t('done');
+            
+            // Settings sections
+            const settingsSections = document.querySelectorAll('#settingsModal .settings-section h3');
+            settingsSections[0].textContent = t('account');
+            settingsSections[1].textContent = t('databaseMaintenance');
+            settingsSections[2].textContent = t('currency');
+            settingsSections[3].textContent = t('incomeTracking');
+            if (settingsSections[4]) settingsSections[4].textContent = t('percentageCalculation');
+            
+            document.querySelector('#settingsModal .settings-section button').textContent = t('logout');
+            document.querySelector('[onclick="cleanDatabase()"]').textContent = t('cleanGhostCategories');
+            
+            const settingsDescriptions = document.querySelectorAll('.settings-description');
+            settingsDescriptions[0].textContent = t('cleanDescription');
+            settingsDescriptions[1].textContent = t('trackIncomeDesc');
+            if (settingsDescriptions[2]) settingsDescriptions[2].textContent = t('percentageDesc');
+            
+            const trackIncomeLabel = document.querySelector('#useIncomeCheckbox').parentElement;
+            trackIncomeLabel.childNodes[2].textContent = t('trackIncome');
+            
+            // Percentage mode options
+            const percentageOptions = document.querySelectorAll('#percentageModeSelect option');
+            if (percentageOptions.length > 0) {
+                percentageOptions[0].textContent = t('basedOnExpenses');
+                percentageOptions[1].textContent = t('basedOnIncome');
+            }
+            
+            // Update category controls if in edit mode
+            if (isEditMode) {
+                document.querySelectorAll('.category-controls').forEach(controls => {
+                    const buttons = controls.querySelectorAll('.category-btn');
+                    if (buttons.length >= 4) {
+                        buttons[0].innerHTML = t('moveUp');
+                        buttons[1].innerHTML = t('moveDown');
+                        buttons[2].innerHTML = t('addItem');
+                        buttons[3].innerHTML = t('deleteCategory');
+                    }
+                });
+            }
+            
+            // Update display to refresh category names and stats
+            updateDisplay();
+        }
         // NOUVELLE FONCTION - Cleanup category order
         function cleanupCategoryOrder() {
             // Enlever les catégories qui n'existent plus dans expenses
