@@ -714,5 +714,3 @@ const translations = {
     }
 };
 
-
-let currentLanguage = 'en';
