@@ -593,7 +593,7 @@ const translations = {
         noExpensesYet: "Пока нет расходов",
         resetAll: "Сбросить Все Расходы",
         close: "✕"
-    }
+    },
     ar: {
         // Auth screen
         appTitle: "💰 متتبع المصروفات",
@@ -713,5 +713,6 @@ const translations = {
         close: "✕"
     }
 };
+
 
 let currentLanguage = 'en';
