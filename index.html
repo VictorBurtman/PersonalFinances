@@ -613,6 +613,31 @@
             transition: all 0.3s ease;
         }
 
+        @media (max-width: 768px) {
+            .edit-mode-btn {
+                padding: 6px 12px;
+                font-size: 0.75em;
+                white-space: nowrap;
+            }
+            
+            .edit-mode-controls {
+                gap: 6px;
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .edit-mode-btn {
+                padding: 5px 8px;
+                font-size: 0.7em;
+            }
+            
+            .edit-mode-controls {
+                gap: 4px;
+                padding: 8px 10px;
+            }
+        }
+
         .edit-mode-btn:hover {
             background: #fd7e14;
             color: white;
@@ -1036,7 +1061,6 @@
                         <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)">
                         <span>Track income and calculate remaining balance</span>
                     </label>
-                    <p class="settings-description">When enabled, you can track your income sources and see how much money remains after expenses.</p>
                 </div>
                 
                 <div class="settings-section" id="percentageModeSection" style="display: none;">
@@ -1211,8 +1235,7 @@
             document.querySelector('#settingsModal .settings-section button').textContent = t('logout');
             
             const settingsDescriptions = document.querySelectorAll('.settings-description');
-            if (settingsDescriptions[0]) settingsDescriptions[0].textContent = t('trackIncomeDesc');
-            if (settingsDescriptions[1]) settingsDescriptions[1].textContent = t('percentageDesc');
+            if (settingsDescriptions[0]) settingsDescriptions[0].textContent = t('percentageDesc');
             
             const trackIncomeLabel = document.querySelector('#useIncomeCheckbox').parentElement;
             trackIncomeLabel.childNodes[2].textContent = t('trackIncome');
