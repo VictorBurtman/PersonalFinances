@@ -575,6 +575,31 @@
             z-index: 100;
             align-items: center;
         }
+        
+        /* Groupe les boutons edit/add à gauche */
+        .edit-mode-controls > :nth-child(1),
+        .edit-mode-controls > :nth-child(2) {
+            flex-shrink: 0;
+        }
+        
+        /* Spacer flexible pour pousser Settings à droite */
+        .edit-mode-controls > :nth-child(3) {
+            flex: 1;
+            min-width: 20px;
+        }
+        
+        /* Settings reste toujours à droite */
+        .edit-mode-controls > :nth-child(4) {
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        
+        @media (max-width: 600px) {
+            .edit-mode-controls {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+        }
 
         .edit-mode-btn {
             padding: 8px 16px;
