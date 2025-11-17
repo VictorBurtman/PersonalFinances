@@ -2432,22 +2432,24 @@
         function renameCategory(categoryKey) {
             const currentMeta = categoryMetadata[categoryKey];
             const currentName = currentMeta ? currentMeta.displayName : categoryKey;
+            const currentEmoji = currentMeta ? currentMeta.emoji : '📋';
             
             const newName = prompt('Enter new category name:', currentName);
             if (!newName) return;
             
+            const newEmoji = prompt('Enter emoji for this category:', currentEmoji);
+            if (!newEmoji) return;
+            
             const categoryTitleElement = document.querySelector(`#category-${categoryKey} .category-title`);
             if (categoryTitleElement) {
-                const emoji = currentMeta ? currentMeta.emoji : categoryTitleElement.textContent.trim().split(' ')[0];
-                
                 // Update metadata
                 categoryMetadata[categoryKey] = {
-                    emoji: emoji,
+                    emoji: newEmoji,
                     displayName: newName
                 };
                 
                 categoryTitleElement.innerHTML = `
-                    ${emoji} ${newName}
+                    ${newEmoji} ${newName}
                     <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
                 `;
                 
