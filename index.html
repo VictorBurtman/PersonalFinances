@@ -1736,8 +1736,7 @@
             const allLabels = [];
             const allData = [];
             const allBackgroundColors = [];
-            let colorIndex = 0;
-        
+            
             Object.keys(expenses).forEach(categoryKey => {
                 // Skip income category in charts
                 if (categoryKey === 'income') return;
@@ -1746,10 +1745,18 @@
                     if (expense.amount > 0) {
                         allLabels.push(expense.name);
                         allData.push(expense.amount);
-                        // Use custom color if available, otherwise use default
-                        const customColor = customColors[expense.name];
-                        allBackgroundColors.push(customColor || colors[colorIndex % colors.length]);
-                        colorIndex++;
+                        
+                        // Use custom color if available
+                        if (customColors[expense.name]) {
+                            allBackgroundColors.push(customColors[expense.name]);
+                        } else {
+                            // Generate consistent color based on item name (hash)
+                            const hash = expense.name.split('').reduce((acc, char) => {
+                                return char.charCodeAt(0) + ((acc << 5) - acc);
+                            }, 0);
+                            const colorIdx = Math.abs(hash) % colors.length;
+                            allBackgroundColors.push(colors[colorIdx]);
+                        }
                     }
                 });
             });
