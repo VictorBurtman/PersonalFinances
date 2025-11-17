@@ -1237,8 +1237,10 @@
             const settingsDescriptions = document.querySelectorAll('.settings-description');
             if (settingsDescriptions[0]) settingsDescriptions[0].textContent = t('percentageDesc');
             
-            const trackIncomeLabel = document.querySelector('#useIncomeCheckbox').parentElement;
-            trackIncomeLabel.childNodes[2].textContent = t('trackIncome');
+            const trackIncomeSpan = document.querySelector('#useIncomeCheckbox + span');
+            if (trackIncomeSpan) {
+                trackIncomeSpan.textContent = t('trackIncome');
+            }
             
             // Percentage mode options
             const percentageOptions = document.querySelectorAll('#percentageModeSelect option');
