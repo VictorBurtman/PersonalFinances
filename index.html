@@ -1379,6 +1379,8 @@
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
+                window.currentUser = user;  // ← AJOUTE CETTE LIGNE
+
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').classList.add('show');
                 
@@ -1386,7 +1388,8 @@
                 await loadUserData();
             } else {
                 currentUser = null;
-    
+                window.currentUser = null;  // ← AJOUTE AUSSI ICI
+
                 // Charger la langue préférée même sans connexion
                 const savedLang = localStorage.getItem('preferredLanguage') || 'en';
                 currentLanguage = savedLang;
