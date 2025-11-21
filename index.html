@@ -1133,6 +1133,8 @@
             functions = firebase.functions();
             window.functions = functions;
             console.log('Firebase initialized successfully');
+        } catch (error) {  // ← AJOUTE CETTE LIGNE
+            console.error('Firebase initialization error:', error);
         }
 
         // Global variables
