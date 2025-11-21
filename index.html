@@ -1113,6 +1113,7 @@
         };
 
         // Initialize Firebase
+// Initialize Firebase
         let app, auth, db;
         try {
             app = firebase.initializeApp(firebaseConfig);
@@ -1124,6 +1125,7 @@
         }
 
         // Global variables
+        window.functions = functions;
         let currentUser = null;
         let isSignUpMode = false;
         let isEditMode = false;
