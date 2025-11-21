@@ -799,6 +799,7 @@
             display: block;
         }
     </style>
+    <link rel="stylesheet" href="css/tabs.css">
 </head>
 <body>
     <div id="authScreen">
@@ -842,7 +843,19 @@
             <h1>💰 Monthly Expenses</h1>
         </div>
 
+        <!-- NOUVEAU -->
+        <div class="app-tabs">
+            <button class="app-tab active" data-tab="budget" onclick="switchTab('budget')">
+                💰 Budget
+            </button>
+            <button class="app-tab" data-tab="transactions" onclick="switchTab('transactions')">
+                💳 Transactions
+            </button>
+        </div>
+
         <div class="dashboard">
+                <!-- ONGLET BUDGET -->
+            <div id="budgetTab" class="tab-content active">
             <div class="edit-mode-controls">
                 <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
                     ✏️ Edit Categories
@@ -986,6 +999,9 @@
             </div>
 
             <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
+             <div id="transactionsTab" class="tab-content">
+            <!-- Chargé dynamiquement -->
+            </div>
         </div>
     </div>
     </div>
@@ -2545,5 +2561,8 @@
             initializeApp();
         }
     </script>
+    <!-- Scripts pour les onglets -->
+    <script src="js/tabs-manager.js"></script>
+    <script src="js/transactions-manager.js"></script>
 </body>
 </html>
