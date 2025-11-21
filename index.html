@@ -1019,6 +1019,93 @@
         </div> <!-- Fin container -->
     </div> <!-- Fin appScreen -->
 
+    <!-- Color Editor Modal -->
+    <div id="colorEditorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎨 Customize Colors</h2>
+                <button class="modal-close" onclick="closeColorEditor()">✕</button>
+            </div>
+            <div class="modal-body" id="colorEditorBody">
+                <!-- Color items will be generated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
+                <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Account</h3>
+                    <p id="settingsUserEmail" style="color: #6c757d; margin-bottom: 10px;"></p>
+                    <button class="modal-button secondary" onclick="handleLogout()">Logout</button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Language / Langue / Idioma / Язык / שפה / لغة</h3>
+                    <select class="settings-select" id="languageSelect" onchange="changeLanguage(this.value)">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                        <option value="ru">Русский</option>
+                        <option value="he">עברית</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Currency</h3>
+                    <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
+                        <option value="ILS">Israeli Shekel (₪)</option>
+                        <option value="USD">US Dollar ($)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="GBP">British Pound (£)</option>
+                        <option value="JPY">Japanese Yen (¥)</option>
+                        <option value="RUB">Russian Ruble (₽)</option>
+                        <option value="CNY">Chinese Yuan (¥)</option>
+                        <option value="EGP">Egyptian Pound (E£)</option>
+                        <option value="LBP">Lebanese Pound (L£)</option>
+                        <option value="SYP">Syrian Pound (S£)</option>
+                        <option value="JOD">Jordanian Dinar (د.ا)</option>
+                        <option value="INR">Indian Rupee (₹)</option>
+                        <option value="THB">Thai Baht (฿)</option>
+                    </select>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Income Tracking</h3>
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)" />
+                        <span>Track monthly income</span>
+                    </label>
+                </div>
+                
+                <div class="settings-section" id="percentageModeSection" style="display: none;">
+                    <h3>Percentage Calculation</h3>
+                    <select class="settings-select" id="percentageModeSelect" onchange="updatePercentageMode(this.value)">
+                        <option value="expenses">Based on total expenses</option>
+                        <option value="income">Based on total income</option>
+                    </select>
+                    <p class="settings-description">Choose how category percentages are calculated</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button primary" onclick="closeSettings()">Done</button>
+            </div>
+        </div>
+    </div>
+
+
+    
     <script>
         // Global error handler
         window.addEventListener('error', function(e) {
