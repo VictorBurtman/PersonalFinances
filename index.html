@@ -1113,12 +1113,12 @@
         };
 
         // Initialize Firebase
-// Initialize Firebase
-        let app, auth, db;
+        let app, auth, db, functions;  // ← AJOUTE functions ICI
         try {
             app = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
+            functions = firebase.functions();  // ← AJOUTE CETTE LIGNE
             window.functions = functions;
             console.log('Firebase initialized successfully');
                
