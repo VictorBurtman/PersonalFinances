@@ -842,6 +842,16 @@
         <div class="header">
             <h1>💰 Monthly Expenses</h1>
         </div>
+        
+        <!-- ONGLETS -->
+        <div class="app-tabs">
+            <button class="app-tab active" data-tab="budget" onclick="switchTab('budget')">
+                💰 Budget
+            </button>
+            <button class="app-tab" data-tab="transactions" onclick="switchTab('transactions')">
+                💳 Transactions
+            </button>
+        </div>
 
             <div class="dashboard">
                 <!-- ========================================
@@ -1005,12 +1015,9 @@
             </div>
             <!-- FIN DE DASHBOARD -->
 
-            
-            <div class="modal-footer">
-                <button class="modal-button primary" onclick="closeSettings()">Done</button>
-            </div>
-        </div>
-    </div>
+                
+        </div> <!-- Fin container -->
+    </div> <!-- Fin appScreen -->
 
     <script>
         // Global error handler
@@ -1031,14 +1038,14 @@
         };
 
         // Initialize Firebase
-        let app, auth, db;
+        let app, auth, db, functions;
         try {
             app = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
+            functions = firebase.functions();
+            window.functions = functions;
             console.log('Firebase initialized successfully');
-        } catch (error) {
-            console.error('Firebase initialization error:', error);
         }
 
         // Global variables
@@ -1292,6 +1299,7 @@
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
+                window.currentUser = user;  // ← AJOUTE
                 document.getElementById('authScreen').style.display = 'none';
                 document.getElementById('appScreen').classList.add('show');
                 
@@ -1299,6 +1307,7 @@
                 await loadUserData();
             } else {
                 currentUser = null;
+                window.currentUser = null;  // ← AJOUTE
     
                 // Charger la langue préférée même sans connexion
                 const savedLang = localStorage.getItem('preferredLanguage') || 'en';
@@ -2479,5 +2488,7 @@
             initializeApp();
         }
     </script>
+    <script src="js/tabs-manager.js"></script>
+    <script src="js/transactions-manager.js"></script>
 </body>
 </html>
