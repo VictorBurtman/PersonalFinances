@@ -44,13 +44,10 @@ async function loadTransactions() {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
-            // Update credentials status
+            // Update credentials status silently
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
-                const alertEl = document.getElementById('credentialsAlert');
-                if (alertEl) {
-                    alertEl.textContent = 'Credentials configured ✓';
-                    alertEl.className = 'alert-trans alert-success-trans';
-                }
+                // Don't update DOM here - will be updated when menu is opened
+                console.log('✓ Max credentials configured');
             }
             
             // Update last sync status
