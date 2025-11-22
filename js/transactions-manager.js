@@ -110,28 +110,30 @@ function renderTransactions() {
  * Render a single unlabeled transaction
  */
 function renderUnlabeledTransaction(txn) {
-    // Get categories from budget (exclude income)
     // Récupère les catégories depuis le DOM (plus fiable)
     const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
     const categories = Array.from(categorySections)
         .map(section => section.id.replace('category-', ''))
         .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
+    
     const date = new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     
     return `
         <div class="transaction-item">
             <div class="transaction-info">
                 <div class="transaction-date">${date}</div>
-                <div class="transaction-desc">${escapeHtml(txn.description)}</div>
+                <div class="transaction-desc" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
+                    ${escapeHtml(txn.description)}
+                </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="transaction-amount">
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                <div class="transaction-amount" style="min-width: 80px; text-align: right;">
                     ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
                 </div>
                 <select 
                     class="transaction-category-select" 
                     onchange="labelTransaction('${txn.id}', this.value)"
-                    style="padding: 8px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;"
+                    style="padding: 6px 8px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.85em; cursor: pointer; min-width: 120px; max-width: 150px;"
                 >
                     <option value="">Select category...</option>
                     ${categories.map(cat => `
