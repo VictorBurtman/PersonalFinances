@@ -1,42 +1,46 @@
-<!-- Credentials Setup Section - Collapsible -->
+<!-- Max.co.il Configuration - Collapsible -->
 <div class="transactions-section">
-    <div class="section-title-trans" onclick="toggleSection('credentialsSection')" style="cursor: pointer; user-select: none;">
-        <span id="credentialsToggle">▼</span> ⚙️ Max Configuration
+    <div class="section-title-trans" onclick="toggleSection('maxConfigSection')" style="cursor: pointer; user-select: none;">
+        <span id="maxConfigToggle">▶</span> 💳 Max.co.il Config
     </div>
-    <div id="credentialsContent" style="display: block;">
-        <div class="alert-trans alert-info-trans" id="credentialsAlert">
-            Configure your Max credentials to start syncing transactions.
-        </div>
-        <button class="btn btn-primary" onclick="openCredentialsModal()">
-            🔐 Setup Max Credentials
-        </button>
-    </div>
-</div>
-
-<!-- Sync Section -->
-<div class="transactions-section">
-    <div class="section-title-trans">🔄 Sync Transactions</div>
-    <div class="sync-status">
-        <div class="sync-info">
-            <div>Last sync: <strong id="lastSyncTime">Never</strong></div>
-            <div id="lastSyncCount"></div>
-        </div>
-        <div class="sync-buttons">
-            <button class="btn btn-primary" onclick="syncTransactions()" id="syncBtn">
-                🔄 Sync Now
-            </button>
-            <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn">
-                🏷️ Auto-label
+    <div id="maxConfigContent" style="display: none;">
+        <!-- Credentials Setup -->
+        <div style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">⚙️ Credentials</h4>
+            <div class="alert-trans alert-info-trans" id="credentialsAlert">
+                Configure your Max credentials to start syncing transactions.
+            </div>
+            <button class="btn btn-primary" onclick="openCredentialsModal()">
+                🔐 Setup Max Credentials
             </button>
         </div>
-    </div>
-    
-    <div class="loading-trans" id="syncLoading">
-        <div class="spinner-trans"></div>
-        <div>Syncing with Max...</div>
-    </div>
+        
+        <!-- Sync Section -->
+        <div>
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">🔄 Sync Transactions</h4>
+            <div class="sync-status">
+                <div class="sync-info">
+                    <div>Last sync: <strong id="lastSyncTime">Never</strong></div>
+                    <div id="lastSyncCount"></div>
+                </div>
+                <div class="sync-buttons">
+                    <button class="btn btn-primary" onclick="syncTransactions()" id="syncBtn">
+                        🔄 Sync Now
+                    </button>
+                    <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn">
+                        🏷️ Auto-label
+                    </button>
+                </div>
+            </div>
+            
+            <div class="loading-trans" id="syncLoading">
+                <div class="spinner-trans"></div>
+                <div>Syncing with Max...</div>
+            </div>
 
-    <div id="syncResult"></div>
+            <div id="syncResult"></div>
+        </div>
+    </div>
 </div>
 
 <!-- Filters Section - Collapsible -->
