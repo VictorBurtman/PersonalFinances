@@ -625,18 +625,79 @@ document.addEventListener('tabActivated', (event) => {
 /**
  * Toggle collapsible sections
  */
-function toggleSection(sectionId) {
-    const content = document.getElementById(`${sectionId === 'credentialsSection' ? 'credentials' : 'filters'}Content`);
-    const toggle = document.getElementById(`${sectionId === 'credentialsSection' ? 'credentials' : 'filters'}Toggle`);
+async function toggleSection(sectionId) {
+    let contentId, toggleId;
+    
+    if (sectionId === 'maxConfigSection') {
+        contentId = 'maxConfigContent';
+        toggleId = 'maxConfigToggle';
+    } else if (sectionId === 'filtersSection') {
+        contentId = 'filtersContent';
+        toggleId = 'filtersToggle';
+    }
+    
+    const content = document.getElementById(contentId);
+    const toggle = document.getElementById(toggleId);
     
     if (content && toggle) {
-        if (content.style.display === 'none') {
+        const isCollapsed = content.style.display === 'none';
+        
+        if (isCollapsed) {
             content.style.display = 'block';
             toggle.textContent = '▼';
         } else {
             content.style.display = 'none';
             toggle.textContent = '▶';
         }
+        
+        // Save state to Firebase
+        if (window.currentUser && db) {
+            try {
+                await db.collection('users').doc(window.currentUser.uid).set({
+                    uiPreferences: {
+                        [sectionId]: !isCollapsed
+                    }
+                }, { merge: true });
+            } catch (error) {
+                console.error('Error saving section state:', error);
+            }
+        }
+    }
+}
+
+// Expose globally for onclick
+window.toggleSection = toggleSection;
+
+/**
+ * Load saved section states
+ */
+async function loadSectionStates() {
+    if (!window.currentUser || !db) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        const prefs = userDoc.data()?.uiPreferences || {};
+        
+        // Apply saved states
+        if (prefs.maxConfigSection !== undefined) {
+            const content = document.getElementById('maxConfigContent');
+            const toggle = document.getElementById('maxConfigToggle');
+            if (content && toggle) {
+                content.style.display = prefs.maxConfigSection ? 'block' : 'none';
+                toggle.textContent = prefs.maxConfigSection ? '▼' : '▶';
+            }
+        }
+        
+        if (prefs.filtersSection !== undefined) {
+            const content = document.getElementById('filtersContent');
+            const toggle = document.getElementById('filtersToggle');
+            if (content && toggle) {
+                content.style.display = prefs.filtersSection ? 'block' : 'none';
+                toggle.textContent = prefs.filtersSection ? '▼' : '▶';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading section states:', error);
     }
 }
 
