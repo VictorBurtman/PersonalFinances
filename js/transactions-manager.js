@@ -3,6 +3,7 @@
 
 // Global state for transactions
 let transactionsData = [];
+let filteredTransactionsData = [];
 let transactionsFunctions = null;
 
 /**
@@ -27,12 +28,22 @@ async function loadTransactions() {
         return;
     }
     
+    // Show loading state
+    const emptyState = document.getElementById('emptyState');
+    if (emptyState) {
+        emptyState.innerHTML = `
+            <div class="spinner-trans"></div>
+            <div>Loading transactions...</div>
+        `;
+        emptyState.style.display = 'block';
+    }
+    
     try {
-        // NOUVEAU : Vérifier si les credentials existent
+        // Check if credentials exist
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
-            // Mettre à jour l'état des credentials
+            // Update credentials status
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
                 const alertEl = document.getElementById('credentialsAlert');
                 if (alertEl) {
@@ -41,7 +52,7 @@ async function loadTransactions() {
                 }
             }
             
-            // Mettre à jour le statut de dernière sync
+            // Update last sync status
             if (userDoc.data().lastMaxSync) {
                 const lastSync = userDoc.data().lastMaxSync.toDate();
                 const count = userDoc.data().lastSyncTransactionCount;
@@ -49,174 +60,222 @@ async function loadTransactions() {
             }
         }
         
-        // Charger les transactions avec limite augmentée
+        // Load transactions with increased limit
         const getTransactions = transactionsFunctions.httpsCallable('getTransactions');
         const result = await getTransactions({ limit: 1000 });
         
         transactionsData = result.data.transactions || [];
-        renderTransactions();
+        
+        // Populate month filter
+        populateMonthFilter();
+        
+        // Apply filters and render
+        applyFilters();
         
     } catch (error) {
         console.error('Error loading transactions:', error);
         showTransactionAlert('Error loading transactions: ' + error.message, 'error');
-    }
-}
-/**
- * Render all transactions in the UI
- */
-function renderTransactions() {
-    const unlabeled = transactionsData.filter(t => !t.isLabeled);
-    const labeled = transactionsData.filter(t => t.isLabeled);
-    
-    // Show/hide empty state
-    const emptyState = document.getElementById('emptyState');
-    if (emptyState) {
-        emptyState.style.display = transactionsData.length === 0 ? 'block' : 'none';
-    }
-    
-    // Render unlabeled transactions
-    const unlabeledSection = document.getElementById('unlabeledSection');
-    if (unlabeledSection) {
-        if (unlabeled.length > 0) {
-            unlabeledSection.style.display = 'block';
-            const countEl = document.getElementById('unlabeledCount');
-            if (countEl) countEl.textContent = unlabeled.length;
-            
-            const listEl = document.getElementById('unlabeledList');
-            if (listEl) {
-                listEl.innerHTML = unlabeled.map(t => renderUnlabeledTransaction(t)).join('');
-            }
-        } else {
-            unlabeledSection.style.display = 'none';
-        }
-    }
-    
-    // Render categorized transactions
-    const categorizedSection = document.getElementById('categorizedSection');
-    if (categorizedSection) {
-        if (labeled.length > 0) {
-            categorizedSection.style.display = 'block';
-            const listEl = document.getElementById('categorizedList');
-            if (listEl) {
-                listEl.innerHTML = renderCategorized(labeled);
-            }
-        } else {
-            categorizedSection.style.display = 'none';
+        
+        // Show error in emptyState
+        if (emptyState) {
+            emptyState.innerHTML = `
+                <div class="empty-state-icon">⚠️</div>
+                <div>Error loading transactions</div>
+                <div style="margin-top: 10px; font-size: 0.9em;">${error.message}</div>
+            `;
         }
     }
 }
 
 /**
- * Render a single unlabeled transaction
+ * Populate month filter dropdown with available months
  */
-function renderUnlabeledTransaction(txn) {
-    // Récupère les catégories depuis le DOM (plus fiable)
+function populateMonthFilter() {
+    const monthFilter = document.getElementById('monthFilter');
+    if (!monthFilter) return;
+    
+    // Get unique months from transactions
+    const months = new Set();
+    transactionsData.forEach(txn => {
+        const date = new Date(txn.date);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        months.add(monthKey);
+    });
+    
+    // Sort months (newest first)
+    const sortedMonths = Array.from(months).sort().reverse();
+    
+    // Clear and populate dropdown
+    monthFilter.innerHTML = '<option value="">All months</option>';
+    sortedMonths.forEach(monthKey => {
+        const [year, month] = monthKey.split('-');
+        const date = new Date(year, month - 1);
+        const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        
+        const option = document.createElement('option');
+        option.value = monthKey;
+        option.textContent = monthName;
+        monthFilter.appendChild(option);
+    });
+}
+
+/**
+ * Apply filters and render transactions
+ */
+function applyFilters() {
+    const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled')?.checked || false;
+    const monthFilter = document.getElementById('monthFilter')?.value || '';
+    
+    // Filter transactions
+    filteredTransactionsData = transactionsData.filter(txn => {
+        // Filter by labeled status
+        if (showOnlyUnlabeled && txn.isLabeled) {
+            return false;
+        }
+        
+        // Filter by month
+        if (monthFilter) {
+            const date = new Date(txn.date);
+            const txnMonthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            if (txnMonthKey !== monthFilter) {
+                return false;
+            }
+        }
+        
+        return true;
+    });
+    
+    renderTransactions();
+}
+
+/**
+ * Clear all filters
+ */
+function clearFilters() {
+    const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled');
+    const monthFilter = document.getElementById('monthFilter');
+    
+    if (showOnlyUnlabeled) showOnlyUnlabeled.checked = false;
+    if (monthFilter) monthFilter.value = '';
+    
+    applyFilters();
+}
+
+/**
+ * Render all transactions
+ */
+function renderTransactions() {
+    const emptyState = document.getElementById('emptyState');
+    const allTransactionsSection = document.getElementById('allTransactionsSection');
+    const filtersSection = document.getElementById('filtersSection');
+    const transactionCount = document.getElementById('transactionCount');
+    const allTransactionsList = document.getElementById('allTransactionsList');
+    
+    if (transactionsData.length === 0) {
+        // No transactions at all
+        if (emptyState) {
+            emptyState.innerHTML = `
+                <div class="empty-state-icon">📭</div>
+                <div>No transactions yet</div>
+                <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync Now" to get started</div>
+            `;
+            emptyState.style.display = 'block';
+        }
+        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        if (filtersSection) filtersSection.style.display = 'none';
+        return;
+    }
+    
+    // Hide empty state, show transactions
+    if (emptyState) emptyState.style.display = 'none';
+    if (filtersSection) filtersSection.style.display = 'block';
+    if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+    
+    // Update count
+    if (transactionCount) {
+        transactionCount.textContent = filteredTransactionsData.length;
+    }
+    
+    // Render transactions
+    if (allTransactionsList) {
+        if (filteredTransactionsData.length === 0) {
+            allTransactionsList.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #6c757d;">
+                    No transactions match the current filters
+                </div>
+            `;
+        } else {
+            allTransactionsList.innerHTML = filteredTransactionsData
+                .map(txn => renderTransaction(txn))
+                .join('');
+        }
+    }
+}
+
+/**
+ * Render a single transaction with improved layout
+ */
+function renderTransaction(txn) {
+    // Get categories from DOM
     const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
     const categories = Array.from(categorySections)
         .map(section => section.id.replace('category-', ''))
         .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
     
-    const date = new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    
-    return `
-        <div class="transaction-item">
-            <div class="transaction-info">
-                <div class="transaction-date">${date}</div>
-                <div class="transaction-desc" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">
-                    ${escapeHtml(txn.description)}
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                <div class="transaction-amount" style="min-width: 80px; text-align: right;">
-                    ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
-                </div>
-                <select 
-                    class="transaction-category-select" 
-                    onchange="labelTransaction('${txn.id}', this.value)"
-                    style="padding: 6px 8px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.85em; cursor: pointer; min-width: 120px; max-width: 150px;"
-                >
-                    <option value="">Select category...</option>
-                    ${categories.map(cat => `
-                        <option value="${cat}">${getCategoryDisplayName(cat)}</option>
-                    `).join('')}
-                </select>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Render categorized transactions grouped by category
- */
-function renderCategorized(transactions) {
-    // Group by category
-    const byCategory = {};
-    transactions.forEach(t => {
-        if (!byCategory[t.category]) {
-            byCategory[t.category] = [];
-        }
-        byCategory[t.category].push(t);
+    const date = new Date(txn.date).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
     });
     
-    // Render each category
-    return Object.keys(byCategory).map(category => {
-        const txns = byCategory[category];
-        const total = txns.reduce((sum, t) => sum + t.chargedAmount, 0);
-        const budget = calculateCategoryBudget(category);
-        const diff = total - budget;
-        const isOver = diff > 0;
-        
-        return `
-            <div class="category-section-trans">
-                <div class="category-header-trans">
-                    <div>
-                        <div class="category-name-trans">
-                            ${getCategoryEmoji(category)} ${getCategoryDisplayName(category)}
-                        </div>
-                        <div class="budget-comparison">
-                            Budget: ${window.currency || '₪'}${budget.toFixed(2)} | 
-                            Spent: ${window.currency || '₪'}${total.toFixed(2)} | 
-                            <span class="${isOver ? 'over-budget' : 'under-budget'}">
-                                ${isOver ? '+' : ''}${window.currency || '₪'}${Math.abs(diff).toFixed(2)} 
-                                (${budget > 0 ? ((diff/budget)*100).toFixed(0) : '0'}%)
-                            </span>
-                        </div>
-                    </div>
-                    <div class="category-total-trans">
-                        ${window.currency || '₪'}${total.toFixed(2)}
-                    </div>
-                </div>
-                ${txns.map(t => renderCategorizedTransaction(t)).join('')}
-            </div>
-        `;
-    }).join('');
-}
-
-/**
- * Render a single categorized transaction
- */
-function renderCategorizedTransaction(txn) {
-    const date = new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const isLabeled = txn.isLabeled && txn.category;
+    
     return `
-        <div class="transaction-item">
-            <div class="transaction-info">
-                <div class="transaction-date">${date}</div>
-                <div class="transaction-desc">${escapeHtml(txn.description)}</div>
+        <div class="transaction-item" style="display: block; padding: 15px;">
+            <!-- Top row: Date, Description, Amount -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                <div style="flex: 1; min-width: 0;">
+                    <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
+                        ${date}
+                    </div>
+                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">
+                        ${escapeHtml(txn.description)}
+                    </div>
+                    ${txn.memo ? `<div style="font-size: 0.85em; color: #999; margin-top: 2px;">${escapeHtml(txn.memo)}</div>` : ''}
+                </div>
+                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
+                    ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
+                </div>
             </div>
-            <div class="transaction-amount">
-                ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
+            
+            <!-- Bottom row: Category selector or label -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                ${isLabeled ? `
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em;">
+                        <span style="font-weight: 600; color: #667eea;">
+                            ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
+                        </span>
+                        <button 
+                            onclick="unlabelTransaction('${txn.id}')" 
+                            style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
+                            title="Remove label"
+                        >✕</button>
+                    </div>
+                ` : `
+                    <select 
+                        class="transaction-category-select" 
+                        onchange="labelTransaction('${txn.id}', this.value)"
+                        style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; max-width: 250px;"
+                    >
+                        <option value="">Select category...</option>
+                        ${categories.map(cat => `
+                            <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
+                        `).join('')}
+                    </select>
+                `}
             </div>
         </div>
     `;
-}
-
-/**
- * Calculate budget total for a category
- */
-function calculateCategoryBudget(category) {
-    const expenses = window.expenses || {};
-    if (!expenses[category]) return 0;
-    return expenses[category].reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
 }
 
 /**
@@ -453,6 +512,8 @@ async function labelTransaction(transactionId, category) {
         return;
     }
     
+    if (!category) return; // User selected "Select category..."
+    
     try {
         const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
         await labelTransactionFunc({ transactionId, category });
@@ -461,6 +522,27 @@ async function labelTransaction(transactionId, category) {
         await loadTransactions();
     } catch (error) {
         console.error('Error labeling:', error);
+        showTransactionAlert('Error: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Remove label from a transaction
+ */
+async function unlabelTransaction(transactionId) {
+    if (!transactionsFunctions) {
+        showTransactionAlert('Firebase Functions not initialized', 'error');
+        return;
+    }
+    
+    try {
+        const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
+        await labelTransactionFunc({ transactionId, category: null });
+        
+        showTransactionAlert('Label removed! ✓', 'success');
+        await loadTransactions();
+    } catch (error) {
+        console.error('Error removing label:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     }
 }
