@@ -1781,13 +1781,13 @@
                 document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% of income)`;
-
+        
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');
                 allSections.forEach(section => {
                     section.style.display = 'none';
                 });
-
+        
                 // Then, update ONLY categories that exist in expenses
                 Object.keys(expenses).forEach(categoryKey => {
                     const section = document.getElementById(`category-${categoryKey}`);
@@ -1808,8 +1808,16 @@
                             statsElement.innerHTML = stats.total > 0 ? 
                                 `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
                         } else {
-                            statsElement.innerHTML = stats.total > 0 ? 
+                            // NOUVEAU : Ajouter la comparaison si le mode est activé
+                            let statsHTML = stats.total > 0 ? 
                                 `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                            
+                            // Ajouter les infos de comparaison
+                            if (compareMode && stats.total > 0) {
+                                statsHTML += renderComparisonInfo(categoryKey, stats.total);
+                            }
+                            
+                            statsElement.innerHTML = statsHTML;
                         }
                     }
                     
@@ -1820,7 +1828,7 @@
                             renderExpenseItem(exp, categoryKey, i)).join('');
                     }
                 });
-
+        
                 // Update chart
                 updateChart();
             } catch (error) {
@@ -2140,6 +2148,188 @@
             // Refresh display to show/hide delete buttons
             updateDisplay();
         }
+
+
+        // ============================================
+        // COMPARE MODE - Real Spending vs Budget
+        // ============================================
+        
+        let compareMode = false;
+        let realSpendingData = {};
+        
+        /**
+         * Toggle compare mode on/off
+         */
+        function toggleCompareMode() {
+            compareMode = document.getElementById('compareToggle').checked;
+            const monthSelector = document.getElementById('monthSelector');
+            
+            if (compareMode) {
+                // Show month selector
+                monthSelector.style.display = 'block';
+                
+                // Populate month dropdown
+                populateMonthDropdown();
+                
+                // Load real spending for current month
+                loadRealSpending();
+            } else {
+                // Hide month selector
+                monthSelector.style.display = 'none';
+                
+                // Clear real spending data
+                realSpendingData = {};
+                
+                // Refresh display to remove comparison
+                updateDisplay();
+            }
+        }
+        
+        /**
+         * Populate month dropdown with last 12 months
+         */
+        function populateMonthDropdown() {
+            const select = document.getElementById('compareMonth');
+            if (!select) return;
+            
+            select.innerHTML = '';
+            
+            const now = new Date();
+            
+            // Generate last 12 months
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const monthKey = `${year}-${String(month).padStart(2, '0')}`;
+                const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                
+                const option = document.createElement('option');
+                option.value = monthKey;
+                option.textContent = monthName;
+                
+                if (i === 0) option.selected = true; // Current month selected by default
+                
+                select.appendChild(option);
+            }
+        }
+        
+        /**
+         * Load real spending data from transactions
+         */
+        async function loadRealSpending() {
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
+                return;
+            }
+            
+            const monthKey = document.getElementById('compareMonth')?.value;
+            if (!monthKey) return;
+            
+            const [year, month] = monthKey.split('-');
+            
+            // Calculate start and end dates for the month
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+            
+            try {
+                const getTransactions = firebase.functions().httpsCallable('getTransactions');
+                const result = await getTransactions({
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    isLabeled: true, // Only labeled transactions
+                    limit: 1000
+                });
+                
+                const transactions = result.data.transactions || [];
+                
+                // Group by category and sum amounts
+                realSpendingData = {};
+                
+                transactions.forEach(txn => {
+                    if (txn.category && txn.category !== 'income') {
+                        if (!realSpendingData[txn.category]) {
+                            realSpendingData[txn.category] = 0;
+                        }
+                        realSpendingData[txn.category] += txn.chargedAmount;
+                    }
+                });
+                
+                console.log('Real spending loaded:', realSpendingData);
+                
+                // Refresh display with comparison
+                updateDisplay();
+                
+            } catch (error) {
+                console.error('Error loading real spending:', error);
+            }
+        }
+        
+        /**
+         * Get comparison info for a category
+         */
+        function getComparisonInfo(category, budget) {
+            if (!compareMode || !realSpendingData[category]) {
+                return null;
+            }
+            
+            const real = realSpendingData[category];
+            const diff = real - budget;
+            const diffPercent = budget > 0 ? ((diff / budget) * 100).toFixed(0) : 0;
+            
+            let status = 'neutral';
+            if (Math.abs(diffPercent) <= 10) {
+                status = 'neutral'; // Within 10%
+            } else if (diff > 0) {
+                status = 'positive'; // Over budget (bad)
+            } else {
+                status = 'negative'; // Under budget (good)
+            }
+            
+            return {
+                real: real,
+                budget: budget,
+                diff: diff,
+                diffPercent: diffPercent,
+                status: status
+            };
+        }
+        
+        /**
+         * Render comparison info HTML
+         */
+        function renderComparisonInfo(category, budget) {
+            const info = getComparisonInfo(category, budget);
+            if (!info) return '';
+            
+            const sign = info.diff > 0 ? '+' : '';
+            const emoji = info.status === 'negative' ? '🟢' : info.status === 'positive' ? '🔴' : '🟡';
+            
+            const progressPercent = Math.min((info.real / info.budget) * 100, 150); // Cap at 150%
+            
+            return `
+                <div class="compare-info">
+                    <div class="budget-label">Budget: ${currency}${info.budget.toFixed(0)}</div>
+                    <div class="real-label">Real: ${currency}${info.real.toFixed(0)}</div>
+                    <div class="diff ${info.status}">${sign}${info.diffPercent}% ${emoji}</div>
+                </div>
+                <div class="compare-progress">
+                    <div class="compare-progress-bar ${info.status === 'positive' ? 'over-budget' : info.status === 'negative' ? 'under-budget' : 'near-budget'}" 
+                         style="width: ${progressPercent}%">
+                    </div>
+                </div>
+            `;
+        }
+
+
+
+
+
+
+
+
+
+        
 
         function deleteExpenseItem(category, index) {
             if (!confirm('Delete this expense item?')) return;
