@@ -40,6 +40,7 @@ async function loadTransactions() {
     
     try {
         // Check if credentials exist
+        await loadSectionStates();
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
@@ -69,7 +70,7 @@ async function loadTransactions() {
         // Populate month filter
         populateMonthFilter();
         populateCategoryFilter(); // NOUVEAU
-        await loadSectionStates();
+        
 
         // Apply filters and render
         applyFilters();
