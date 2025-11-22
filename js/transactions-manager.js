@@ -28,25 +28,35 @@ async function loadTransactions() {
         return;
     }
     
-    // Show loading state
+    // Show global loading (outside menus)
+    const globalLoading = document.getElementById('globalLoading');
+    const allTransactionsSection = document.getElementById('allTransactionsSection');
+    const filtersSection = document.getElementById('filtersSection');
     const emptyState = document.getElementById('emptyState');
-    if (emptyState) {
-        emptyState.innerHTML = `
-            <div class="spinner-trans"></div>
-            <div>Loading transactions...</div>
-        `;
-        emptyState.style.display = 'block';
-    }
+
+    if (globalLoading) globalLoading.style.display = 'block';
+    if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+    if (filtersSection) filtersSection.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'none';
     
     try {
-        // Check if credentials exist
+        // IMPORTANT : Load saved UI states FIRST
         await loadSectionStates();
+        
+        // Force filters to stay collapsed if no saved preference
+        const filtersContent = document.getElementById('filtersContent');
+        const filtersToggle = document.getElementById('filtersToggle');
+        if (filtersContent && filtersToggle && filtersContent.style.display !== 'block') {
+            filtersContent.style.display = 'none';
+            filtersToggle.textContent = '▶';
+        }
+        
+        // Check if credentials exist (without forcing menu open)
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
             // Update credentials status silently
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
-                // Don't update DOM here - will be updated when menu is opened
                 console.log('✓ Max credentials configured');
             }
             
@@ -64,17 +74,24 @@ async function loadTransactions() {
         
         transactionsData = result.data.transactions || [];
         
-        // Populate month filter
+        // Populate filters
         populateMonthFilter();
-        populateCategoryFilter(); // NOUVEAU
+        populateCategoryFilter();
+        console.log('Filters populated');
         
-
         // Apply filters and render
         applyFilters();
+        
+        // Hide global loading, show content
+        if (globalLoading) globalLoading.style.display = 'none';
+        if (filtersSection) filtersSection.style.display = 'block';
         
     } catch (error) {
         console.error('Error loading transactions:', error);
         showTransactionAlert('Error loading transactions: ' + error.message, 'error');
+        
+        // Hide global loading
+        if (globalLoading) globalLoading.style.display = 'none';
         
         // Show error in emptyState
         if (emptyState) {
@@ -83,10 +100,10 @@ async function loadTransactions() {
                 <div>Error loading transactions</div>
                 <div style="margin-top: 10px; font-size: 0.9em;">${error.message}</div>
             `;
+            emptyState.style.display = 'block';
         }
     }
 }
-
 
 /**
  * Update credentials alert when Max Config menu is opened
