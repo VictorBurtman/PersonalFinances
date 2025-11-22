@@ -87,6 +87,28 @@ async function loadTransactions() {
     }
 }
 
+
+/**
+ * Update credentials alert when Max Config menu is opened
+ */
+async function updateCredentialsStatus() {
+    if (!window.currentUser || !db) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        const alertEl = document.getElementById('credentialsAlert');
+        
+        if (alertEl && userDoc.exists && userDoc.data().maxCredentials?.encrypted) {
+            alertEl.textContent = 'Credentials configured ✓';
+            alertEl.className = 'alert-trans alert-success-trans';
+        }
+    } catch (error) {
+        console.error('Error checking credentials:', error);
+    }
+}
+
+
+
 /**
  * Populate month filter dropdown with available months
  */
@@ -649,6 +671,11 @@ async function toggleSection(sectionId) {
         if (isCollapsed) {
             content.style.display = 'block';
             toggle.textContent = '▼';
+            
+            // Update credentials status when opening Max Config
+            if (sectionId === 'maxConfigSection') {
+                await updateCredentialsStatus();
+            }
         } else {
             content.style.display = 'none';
             toggle.textContent = '▶';
