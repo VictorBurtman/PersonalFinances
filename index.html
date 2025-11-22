@@ -2262,7 +2262,11 @@
                         if (!realSpendingData[txn.category]) {
                             realSpendingData[txn.category] = 0;
                         }
-                        realSpendingData[txn.category] += txn.chargedAmount;
+                        // Prendre la valeur absolue (ignorer le signe négatif)
+                        // Et ignorer les montants positifs (remboursements/revenus)
+                        if (txn.chargedAmount < 0) {
+                            realSpendingData[txn.category] += Math.abs(txn.chargedAmount);
+                        }
                     }
                 });
                 
