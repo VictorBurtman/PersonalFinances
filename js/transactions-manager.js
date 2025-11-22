@@ -292,7 +292,10 @@ function renderTransaction(txn) {
                     <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
                         ${date}
                     </div>
-                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis;">
+                    <div class="transaction-desc" 
+                         style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" 
+                         onclick="showTransactionDetails('${escapeHtml(txn.description)}', '${escapeHtml(txn.memo || '')}', ${txn.chargedAmount})"
+                         title="${escapeHtml(txn.description)}">
                         ${escapeHtml(txn.description)}
                     </div>
                     ${txn.memo ? `<div style="font-size: 0.85em; color: #999; margin-top: 2px;">${escapeHtml(txn.memo)}</div>` : ''}
@@ -704,3 +707,19 @@ async function loadSectionStates() {
 
 // Expose globally for onclick
 window.toggleSection = toggleSection;
+
+
+/**
+ * Show transaction details in a popup
+ */
+function showTransactionDetails(description, memo, amount) {
+    const message = `
+📝 ${description}
+${memo ? `\n💬 ${memo}` : ''}
+💰 ${window.currency || '₪'}${amount.toFixed(2)}
+    `.trim();
+    
+    alert(message);
+}
+
+window.showTransactionDetails = showTransactionDetails;
