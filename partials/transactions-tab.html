@@ -39,14 +39,30 @@
 <div class="transactions-section" id="filtersSection" style="display: none;">
     <div class="section-title-trans">🔍 Filters</div>
     <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+        <!-- Unlabeled checkbox -->
         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
             <span>Show only unlabeled</span>
         </label>
         
+        <!-- Month filter -->
         <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
             <option value="">All months</option>
         </select>
+        
+        <!-- NEW: Category filter -->
+        <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+            <option value="">All categories</option>
+        </select>
+        
+        <!-- NEW: Search by name -->
+        <input 
+            type="text" 
+            id="searchFilter" 
+            placeholder="Search transactions..." 
+            oninput="applyFilters()"
+            style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 200px;"
+        />
         
         <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
             Clear filters
