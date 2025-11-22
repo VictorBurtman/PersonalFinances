@@ -621,3 +621,24 @@ document.addEventListener('tabActivated', (event) => {
         loadTransactions();
     }
 });
+
+/**
+ * Toggle collapsible sections
+ */
+function toggleSection(sectionId) {
+    const content = document.getElementById(`${sectionId === 'credentialsSection' ? 'credentials' : 'filters'}Content`);
+    const toggle = document.getElementById(`${sectionId === 'credentialsSection' ? 'credentials' : 'filters'}Toggle`);
+    
+    if (content && toggle) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '▼';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '▶';
+        }
+    }
+}
+
+// Expose globally for onclick
+window.toggleSection = toggleSection;
