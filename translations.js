@@ -14,7 +14,7 @@ const translations = {
         creatingAccount: "Creating account...",
         
         // Main app
-        monthlyExpenses: "💰 Monthly Expenses",
+        monthlyExpenses: "Monthly Expenses",
         totalIncome: "Total Income",
         totalExpenses: "Total Monthly Expenses",
         remaining: "Remaining",
@@ -713,4 +713,5 @@ const translations = {
         close: "✕"
     }
 };
+
 
