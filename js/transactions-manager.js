@@ -119,16 +119,21 @@ function renderUnlabeledTransaction(txn) {
             <div class="transaction-info">
                 <div class="transaction-date">${date}</div>
                 <div class="transaction-desc">${escapeHtml(txn.description)}</div>
-                <div class="category-buttons">
-                    ${categories.map(cat => `
-                        <button class="category-btn-trans" onclick="labelTransaction('${txn.id}', '${cat}')">
-                            ${getCategoryDisplayName(cat)}
-                        </button>
-                    `).join('')}
-                </div>
             </div>
-            <div class="transaction-amount">
-                ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="transaction-amount">
+                    ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
+                </div>
+                <select 
+                    class="transaction-category-select" 
+                    onchange="labelTransaction('${txn.id}', this.value)"
+                    style="padding: 8px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;"
+                >
+                    <option value="">Select category...</option>
+                    ${categories.map(cat => `
+                        <option value="${cat}">${getCategoryDisplayName(cat)}</option>
+                    `).join('')}
+                </select>
             </div>
         </div>
     `;
