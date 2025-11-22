@@ -703,9 +703,13 @@ async function toggleSection(sectionId) {
         // Save state to Firebase
         if (window.currentUser && db) {
             try {
+                const newState = !isCollapsed; // true = déplié, false = replié
+                
+                console.log(`Saving ${sectionId} state:`, newState);
+                
                 await db.collection('users').doc(window.currentUser.uid).set({
                     uiPreferences: {
-                        [sectionId]: !isCollapsed
+                        [sectionId]: newState
                     }
                 }, { merge: true });
             } catch (error) {
