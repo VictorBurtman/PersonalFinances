@@ -1,12 +1,16 @@
-<!-- Credentials Setup Section -->
+<!-- Credentials Setup Section - Collapsible -->
 <div class="transactions-section">
-    <div class="section-title-trans">⚙️ Max Configuration</div>
-    <div class="alert-trans alert-info-trans" id="credentialsAlert">
-        Configure your Max credentials to start syncing transactions.
+    <div class="section-title-trans" onclick="toggleSection('credentialsSection')" style="cursor: pointer; user-select: none;">
+        <span id="credentialsToggle">▼</span> ⚙️ Max Configuration
     </div>
-    <button class="btn btn-primary" onclick="openCredentialsModal()">
-        🔐 Setup Max Credentials
-    </button>
+    <div id="credentialsContent" style="display: block;">
+        <div class="alert-trans alert-info-trans" id="credentialsAlert">
+            Configure your Max credentials to start syncing transactions.
+        </div>
+        <button class="btn btn-primary" onclick="openCredentialsModal()">
+            🔐 Setup Max Credentials
+        </button>
+    </div>
 </div>
 
 <!-- Sync Section -->
@@ -35,46 +39,50 @@
     <div id="syncResult"></div>
 </div>
 
-<!-- Filters Section -->
+<!-- Filters Section - Collapsible -->
 <div class="transactions-section" id="filtersSection" style="display: none;">
-    <div class="section-title-trans">🔍 Filters</div>
-    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-        <!-- Unlabeled checkbox -->
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
-            <span>Show only unlabeled</span>
-        </label>
-        
-        <!-- Month filter -->
-        <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-            <option value="">All months</option>
-        </select>
-        
-        <!-- NEW: Category filter -->
-        <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-            <option value="">All categories</option>
-        </select>
-        
-        <!-- NEW: Search by name -->
-        <input 
-            type="text" 
-            id="searchFilter" 
-            placeholder="Search transactions..." 
-            oninput="applyFilters()"
-            style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 200px;"
-        />
-        
-        <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
-            Clear filters
-        </button>
+    <div class="section-title-trans" onclick="toggleSection('filtersSection')" style="cursor: pointer; user-select: none;">
+        <span id="filtersToggle">▼</span> 🔍 Filters
+    </div>
+    <div id="filtersContent" style="display: block;">
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+            <!-- Unlabeled checkbox -->
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
+                <span>Show only unlabeled</span>
+            </label>
+            
+            <!-- Month filter -->
+            <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+                <option value="">All months</option>
+            </select>
+            
+            <!-- Category filter -->
+            <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+                <option value="">All categories</option>
+            </select>
+            
+            <!-- Search by name -->
+            <input 
+                type="text" 
+                id="searchFilter" 
+                placeholder="Search..." 
+                oninput="applyFilters()"
+                style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 150px;"
+            />
+            
+            <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
+                Clear
+            </button>
+        </div>
     </div>
 </div>
 
 <!-- All Transactions -->
 <div class="transactions-section" id="allTransactionsSection" style="display: none;">
-    <div class="section-title-trans">
-        📋 All Transactions (<span id="transactionCount">0</span>)
-        <span style="margin-left: 15px; color: #667eea; font-weight: 600;">
+    <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <span>📋 All Transactions (<span id="transactionCount">0</span>)</span>
+        <span style="color: #667eea; font-weight: 600; white-space: nowrap;">
             Total: <span id="transactionTotal">₪0</span>
         </span>
     </div>
