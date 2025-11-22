@@ -868,10 +868,9 @@
                         </button>
                         
                         <!-- NEW: Compare toggle -->
-                        <label class="compare-toggle" style="...">
-                            <input type="checkbox" id="compareToggle" onchange="toggleCompareMode()" style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>📊 Compare</span>
-                        </label>
+                        <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
+                            📊 Compare
+                        </button>
                         
                         <div style="flex: 1;"></div>
                         <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
@@ -2162,6 +2161,8 @@
          */
         function toggleCompareMode() {
             const compareBtn = document.getElementById('compareBtn');
+            const monthSelector = document.getElementById('monthSelector');
+            
             compareMode = !compareMode;
             
             // Update button style
