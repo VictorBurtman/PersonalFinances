@@ -35,22 +35,36 @@
     <div id="syncResult"></div>
 </div>
 
-<!-- Unlabeled Transactions -->
-<div class="transactions-section" id="unlabeledSection" style="display: none;">
-    <div class="section-title-trans">⚠️ Unlabeled Transactions (<span id="unlabeledCount">0</span>)</div>
-    <div id="unlabeledList"></div>
+<!-- Filters Section -->
+<div class="transactions-section" id="filtersSection" style="display: none;">
+    <div class="section-title-trans">🔍 Filters</div>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
+            <span>Show only unlabeled</span>
+        </label>
+        
+        <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+            <option value="">All months</option>
+        </select>
+        
+        <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
+            Clear filters
+        </button>
+    </div>
 </div>
 
-<!-- Categorized Transactions -->
-<div class="transactions-section" id="categorizedSection" style="display: none;">
-    <div class="section-title-trans">📊 Transactions by Category</div>
-    <div id="categorizedList"></div>
+<!-- All Transactions -->
+<div class="transactions-section" id="allTransactionsSection" style="display: none;">
+    <div class="section-title-trans">
+        📋 All Transactions (<span id="transactionCount">0</span>)
+    </div>
+    <div id="allTransactionsList"></div>
 </div>
 
 <div class="empty-state-trans" id="emptyState">
-    <div class="empty-state-icon">📭</div>
-    <div>No transactions yet</div>
-    <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync Now" to get started</div>
+    <div class="spinner-trans"></div>
+    <div>Loading transactions...</div>
 </div>
 
 <!-- Credentials Modal -->
