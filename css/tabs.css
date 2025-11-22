@@ -282,6 +282,86 @@
     background: #218838;
 }
 
+/* Compare Mode Styles */
+.compare-toggle {
+    padding: 8px 12px;
+    background: #fff;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.compare-toggle:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.compare-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+.compare-info .budget-label {
+    color: #6c757d;
+}
+
+.compare-info .real-label {
+    font-weight: 600;
+}
+
+.compare-info .diff {
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.compare-info .diff.positive {
+    color: #dc3545;
+    background: #ffe5e8;
+}
+
+.compare-info .diff.negative {
+    color: #28a745;
+    background: #e8f5e9;
+}
+
+.compare-info .diff.neutral {
+    color: #ffc107;
+    background: #fff8e1;
+}
+
+.compare-progress {
+    margin-top: 8px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.compare-progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.compare-progress-bar.over-budget {
+    background: linear-gradient(90deg, #dc3545, #ff6b6b);
+}
+
+.compare-progress-bar.under-budget {
+    background: linear-gradient(90deg, #28a745, #5cb85c);
+}
+
+.compare-progress-bar.near-budget {
+    background: linear-gradient(90deg, #ffc107, #ffcd38);
+}
+
+
 @media (max-width: 600px) {
     .app-tabs {
         width: 100%;
