@@ -121,7 +121,7 @@ const translations = {
     
     fr: {
         // Auth screen
-        appTitle: "💰 Suivi des Dépenses",
+        appTitle: "Suivi des Dépenses",
         authSubtitle: "Connectez-vous pour synchroniser vos dépenses",
         email: "Email",
         password: "Mot de passe (min 6 caractères)",
@@ -133,7 +133,7 @@ const translations = {
         creatingAccount: "Création du compte...",
         
         // Main app
-        monthlyExpenses: "💰 Dépenses Mensuelles",
+        monthlyExpenses: "Dépenses Mensuelles",
         totalIncome: "Revenu Total",
         totalExpenses: "Total des Dépenses Mensuelles",
         remaining: "Restant",
@@ -252,7 +252,7 @@ const translations = {
         creatingAccount: "יוצר חשבון...",
         
         // Main app
-        monthlyExpenses: "💰 הוצאות חודשיות",
+        monthlyExpenses: "הוצאות חודשיות",
         totalIncome: "הכנסה כוללת",
         totalExpenses: "סך כל ההוצאות החודשיות",
         remaining: "נותר",
@@ -371,7 +371,7 @@ const translations = {
         creatingAccount: "Creando cuenta...",
         
         // Main app
-        monthlyExpenses: "💰 Gastos Mensuales",
+        monthlyExpenses: "Gastos Mensuales",
         totalIncome: "Ingresos Totales",
         totalExpenses: "Total de Gastos Mensuales",
         remaining: "Restante",
@@ -490,7 +490,7 @@ const translations = {
         creatingAccount: "Создание аккаунта...",
         
         // Main app
-        monthlyExpenses: "💰 Ежемесячные Расходы",
+        monthlyExpenses: "Ежемесячные Расходы",
         totalIncome: "Общий Доход",
         totalExpenses: "Общие Ежемесячные Расходы",
         remaining: "Остаток",
@@ -608,7 +608,7 @@ const translations = {
         creatingAccount: "جاري إنشاء الحساب...",
         
         // Main app
-        monthlyExpenses: "💰 المصروفات الشهرية",
+        monthlyExpenses: "المصروفات الشهرية",
         totalIncome: "إجمالي الدخل",
         totalExpenses: "إجمالي المصروفات الشهرية",
         remaining: "المتبقي",
@@ -713,5 +713,6 @@ const translations = {
         close: "✕"
     }
 };
+
 
 
