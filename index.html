@@ -2317,16 +2317,31 @@
             const info = getComparisonInfo(category, budget);
             if (!info) return '';
             
-            const sign = info.diff > 0 ? '+' : '';
             const emoji = info.status === 'negative' ? '🟢' : info.status === 'positive' ? '🔴' : '🟡';
             
-            const progressPercent = Math.min((info.real / info.budget) * 100, 150); // Cap at 150%
+            // Calculer le pourcentage utilisé
+            const usedPercent = budget > 0 ? Math.round((info.real / budget) * 100) : 0;
+            
+            // Message selon si over ou under budget
+            let message;
+            if (info.diff > 0) {
+                // Over budget
+                message = `Over by ${currency}${Math.abs(info.diff).toFixed(0)} (${usedPercent}% used)`;
+            } else if (info.diff < 0) {
+                // Under budget
+                message = `Under by ${currency}${Math.abs(info.diff).toFixed(0)} (${usedPercent}% used)`;
+            } else {
+                // Exact
+                message = `Exact match (100% used)`;
+            }
+            
+            const progressPercent = Math.min((info.real / info.budget) * 100, 150);
             
             return `
                 <div class="compare-info">
                     <div class="budget-label">Budget: ${currency}${info.budget.toFixed(0)}</div>
                     <div class="real-label">Real: ${currency}${info.real.toFixed(0)}</div>
-                    <div class="diff ${info.status}">${sign}${info.diffPercent}% ${emoji}</div>
+                    <div class="diff ${info.status}">${message} ${emoji}</div>
                 </div>
                 <div class="compare-progress">
                     <div class="compare-progress-bar ${info.status === 'positive' ? 'over-budget' : info.status === 'negative' ? 'under-budget' : 'near-budget'}" 
