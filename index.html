@@ -866,10 +866,26 @@
                         <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
                             ➕ Add Category
                         </button>
+                        
+                        <!-- NEW: Compare toggle -->
+                        <label class="compare-toggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: #fff; border: 2px solid #dee2e6; border-radius: 8px; transition: all 0.3s ease; font-size: 0.9em;">
+                            <input type="checkbox" id="compareToggle" onchange="toggleCompareMode()" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>📊 Compare</span>
+                        </label>
+                        
                         <div style="flex: 1;"></div>
                         <button class="edit-mode-btn" onclick="openSettings()" style="border-color: #6c757d; color: #6c757d;">
                             ⚙️ Settings
                         </button>
+                    </div>
+                    
+                    <!-- NEW: Month selector (hidden by default) -->
+                    <div id="monthSelector" style="display: none; margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 12px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-weight: 500;">Compare month:</span>
+                            <select id="compareMonth" onchange="loadRealSpending()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; flex: 1; max-width: 200px;">
+                            </select>
+                        </label>
                     </div>
 
                     <div class="total-section">
