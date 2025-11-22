@@ -82,29 +82,31 @@
     </div>
 </div>
 
-<!-- Global Loading State (outside menus) -->
-<div class="transactions-section" id="globalLoading" style="display: none;">
-    <div style="text-align: center; padding: 40px;">
-        <div class="spinner-trans"></div>
-        <div style="margin-top: 15px; color: #6c757d;">Loading transactions...</div>
-    </div>
-</div>
 
-<!-- Filters Section - Collapsible -->
-<div class="transactions-section" id="filtersSection">
-    <!-- ... reste du code filters ... -->
-</div>
-
-
-<!-- All Transactions -->
-<div class="transactions-section" id="allTransactionsSection" style="display: none;">
+<!-- All Transactions - Always visible -->
+<div class="transactions-section" id="allTransactionsSection">
     <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <span>📋 All Transactions (<span id="transactionCount">0</span>)</span>
         <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; font-size: 0.9em;">
             💰 <span id="transactionTotal">₪0</span>
         </span>
     </div>
+    
+    <!-- Loading state inside All Transactions -->
+    <div id="transactionsLoading" style="display: none; text-align: center; padding: 40px;">
+        <div class="spinner-trans"></div>
+        <div style="margin-top: 15px; color: #6c757d;">Loading transactions...</div>
+    </div>
+    
+    <!-- Transactions list -->
     <div id="allTransactionsList"></div>
+    
+    <!-- Empty state -->
+    <div class="empty-state-trans" id="emptyState" style="display: none;">
+        <div class="empty-state-icon">📭</div>
+        <div>No transactions yet</div>
+        <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync Now" to get started</div>
+    </div>
 </div>
 
 <!-- Credentials Modal -->
