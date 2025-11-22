@@ -410,4 +410,10 @@
     .edit-mode-controls {
         gap: 8px;
     }
+       /* NOUVEAU : Fix pour bouton Compare */
+    #compareBtn {
+        min-width: 100px;
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
 }
