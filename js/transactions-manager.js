@@ -28,25 +28,39 @@ async function loadTransactions() {
     }
     
     try {
+        // NOUVEAU : Vérifier si les credentials existent
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        
+        if (userDoc.exists) {
+            // Mettre à jour l'état des credentials
+            if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
+                const alertEl = document.getElementById('credentialsAlert');
+                if (alertEl) {
+                    alertEl.textContent = 'Credentials configured ✓';
+                    alertEl.className = 'alert-trans alert-success-trans';
+                }
+            }
+            
+            // Mettre à jour le statut de dernière sync
+            if (userDoc.data().lastMaxSync) {
+                const lastSync = userDoc.data().lastMaxSync.toDate();
+                const count = userDoc.data().lastSyncTransactionCount;
+                updateSyncStatus(lastSync, count);
+            }
+        }
+        
+        // Charger les transactions avec limite augmentée
         const getTransactions = transactionsFunctions.httpsCallable('getTransactions');
-        const result = await getTransactions({ limit: 100 });
+        const result = await getTransactions({ limit: 1000 });
         
         transactionsData = result.data.transactions || [];
         renderTransactions();
         
-        // Update last sync info from Firestore
-        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
-        if (userDoc.exists && userDoc.data().lastMaxSync) {
-            const lastSync = userDoc.data().lastMaxSync.toDate();
-            const count = userDoc.data().lastSyncTransactionCount;
-            updateSyncStatus(lastSync, count);
-        }
     } catch (error) {
         console.error('Error loading transactions:', error);
         showTransactionAlert('Error loading transactions: ' + error.message, 'error');
     }
 }
-
 /**
  * Render all transactions in the UI
  */
