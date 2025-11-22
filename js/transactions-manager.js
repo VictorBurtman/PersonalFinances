@@ -281,8 +281,14 @@ function renderTransactions() {
         transactionCount.textContent = filteredTransactionsData.length;
     }
     
-    // Calculate and display total amount
-    const totalAmount = filteredTransactionsData.reduce((sum, txn) => sum + txn.chargedAmount, 0);
+    // Calculate and display total amount (valeurs absolues uniquement des dépenses)
+    const totalAmount = filteredTransactionsData.reduce((sum, txn) => {
+        // Ignorer les montants positifs (revenus/remboursements)
+        if (txn.chargedAmount < 0) {
+            return sum + Math.abs(txn.chargedAmount);
+        }
+        return sum;
+    }, 0);
     const transactionTotal = document.getElementById('transactionTotal');
     if (transactionTotal) {
         transactionTotal.textContent = `${window.currency || '₪'}${totalAmount.toFixed(2)}`;
@@ -338,11 +344,11 @@ function renderTransaction(txn) {
                     <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
                         <div style="margin-bottom: 5px;"><strong>Full name:</strong> ${escapeHtml(txn.description)}</div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>Memo:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
-                        <div><strong>Amount:</strong> ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}</div>
+                        <div><strong>Amount:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
                     </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
-                    ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
+                    ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}
                 </div>
             </div>
             
