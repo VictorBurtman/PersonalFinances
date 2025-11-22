@@ -111,7 +111,11 @@ function renderTransactions() {
  */
 function renderUnlabeledTransaction(txn) {
     // Get categories from budget (exclude income)
-    const categories = Object.keys(window.expenses || {}).filter(c => c !== 'income');
+    // Récupère les catégories depuis le DOM (plus fiable)
+    const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
+    const categories = Array.from(categorySections)
+        .map(section => section.id.replace('category-', ''))
+        .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
     const date = new Date(txn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     
     return `
