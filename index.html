@@ -2161,7 +2161,17 @@
          * Toggle compare mode on/off
          */
         function toggleCompareMode() {
-            compareMode = document.getElementById('compareToggle').checked;
+            const compareBtn = document.getElementById('compareBtn');
+            compareMode = !compareMode;
+            
+            // Update button style
+            if (compareMode) {
+                compareBtn.style.background = '#667eea';
+                compareBtn.style.color = 'white';
+            } else {
+                compareBtn.style.background = '';
+                compareBtn.style.color = '#667eea';
+            }
             const monthSelector = document.getElementById('monthSelector');
             
             if (compareMode) {
