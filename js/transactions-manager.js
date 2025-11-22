@@ -28,15 +28,17 @@ async function loadTransactions() {
         return;
     }
     
-    // Show global loading (outside menus)
-    const globalLoading = document.getElementById('globalLoading');
+    // Show loading inside All Transactions section
+    const transactionsLoading = document.getElementById('transactionsLoading');
+    const allTransactionsList = document.getElementById('allTransactionsList');
+    const emptyState = document.getElementById('emptyState');
     const allTransactionsSection = document.getElementById('allTransactionsSection');
     const filtersSection = document.getElementById('filtersSection');
-    const emptyState = document.getElementById('emptyState');
-
-    if (globalLoading) globalLoading.style.display = 'block';
-    if (allTransactionsSection) allTransactionsSection.style.display = 'none';
-    if (filtersSection) filtersSection.style.display = 'none';
+    
+    // Show All Transactions section with loading
+    if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+    if (transactionsLoading) transactionsLoading.style.display = 'block';
+    if (allTransactionsList) allTransactionsList.innerHTML = '';
     if (emptyState) emptyState.style.display = 'none';
     
     try {
@@ -82,18 +84,18 @@ async function loadTransactions() {
         // Apply filters and render
         applyFilters();
         
-        // Hide global loading, show content
-        if (globalLoading) globalLoading.style.display = 'none';
+        // Hide loading
+        if (transactionsLoading) transactionsLoading.style.display = 'none';
         if (filtersSection) filtersSection.style.display = 'block';
         
     } catch (error) {
         console.error('Error loading transactions:', error);
         showTransactionAlert('Error loading transactions: ' + error.message, 'error');
         
-        // Hide global loading
-        if (globalLoading) globalLoading.style.display = 'none';
+        // Hide loading
+        if (transactionsLoading) transactionsLoading.style.display = 'none';
         
-        // Show error in emptyState
+        // Show error
         if (emptyState) {
             emptyState.innerHTML = `
                 <div class="empty-state-icon">⚠️</div>
@@ -720,28 +722,36 @@ window.toggleSection = toggleSection;
  * Load saved section states
  */
 async function loadSectionStates() {
-    if (!window.currentUser || !db) return;
+    if (!window.currentUser || !db) {
+        console.log('Cannot load section states: user not logged in');
+        return;
+    }
     
     try {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         const prefs = userDoc.data()?.uiPreferences || {};
         
-        // Apply saved states
+        console.log('Loaded UI preferences:', prefs);
+        
+        // Apply saved states for Max Config
         if (prefs.maxConfigSection !== undefined) {
             const content = document.getElementById('maxConfigContent');
             const toggle = document.getElementById('maxConfigToggle');
             if (content && toggle) {
                 content.style.display = prefs.maxConfigSection ? 'block' : 'none';
                 toggle.textContent = prefs.maxConfigSection ? '▼' : '▶';
+                console.log('Applied maxConfigSection state:', prefs.maxConfigSection);
             }
         }
         
+        // Apply saved states for Filters
         if (prefs.filtersSection !== undefined) {
             const content = document.getElementById('filtersContent');
             const toggle = document.getElementById('filtersToggle');
             if (content && toggle) {
                 content.style.display = prefs.filtersSection ? 'block' : 'none';
                 toggle.textContent = prefs.filtersSection ? '▼' : '▶';
+                console.log('Applied filtersSection state:', prefs.filtersSection);
             }
         }
     } catch (error) {
