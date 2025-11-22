@@ -68,7 +68,8 @@ async function loadTransactions() {
         
         // Populate month filter
         populateMonthFilter();
-        
+        populateCategoryFilter(); // NOUVEAU
+
         // Apply filters and render
         applyFilters();
         
@@ -120,11 +121,36 @@ function populateMonthFilter() {
 }
 
 /**
+ * Populate category filter dropdown with available categories
+ */
+function populateCategoryFilter() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (!categoryFilter) return;
+    
+    // Get categories from DOM
+    const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
+    const categories = Array.from(categorySections)
+        .map(section => section.id.replace('category-', ''))
+        .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
+    
+    // Clear and populate dropdown
+    categoryFilter.innerHTML = '<option value="">All categories</option>';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = `${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}`;
+        categoryFilter.appendChild(option);
+    });
+}
+
+/**
  * Apply filters and render transactions
  */
 function applyFilters() {
     const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled')?.checked || false;
     const monthFilter = document.getElementById('monthFilter')?.value || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase().trim() || '';
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
@@ -142,6 +168,22 @@ function applyFilters() {
             }
         }
         
+        // Filter by category
+        if (categoryFilter && txn.category !== categoryFilter) {
+            return false;
+        }
+        
+        // Filter by search text (works with Hebrew and English)
+        if (searchFilter) {
+            const description = (txn.description || '').toLowerCase();
+            const memo = (txn.memo || '').toLowerCase();
+            
+            // Check if search term is in description or memo
+            if (!description.includes(searchFilter) && !memo.includes(searchFilter)) {
+                return false;
+            }
+        }
+        
         return true;
     });
     
@@ -154,9 +196,13 @@ function applyFilters() {
 function clearFilters() {
     const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled');
     const monthFilter = document.getElementById('monthFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const searchFilter = document.getElementById('searchFilter');
     
     if (showOnlyUnlabeled) showOnlyUnlabeled.checked = false;
     if (monthFilter) monthFilter.value = '';
+    if (categoryFilter) categoryFilter.value = '';
+    if (searchFilter) searchFilter.value = '';
     
     applyFilters();
 }
@@ -191,9 +237,16 @@ function renderTransactions() {
     if (filtersSection) filtersSection.style.display = 'block';
     if (allTransactionsSection) allTransactionsSection.style.display = 'block';
     
-    // Update count
+    // Update count and total
     if (transactionCount) {
         transactionCount.textContent = filteredTransactionsData.length;
+    }
+    
+    // Calculate and display total amount
+    const totalAmount = filteredTransactionsData.reduce((sum, txn) => sum + txn.chargedAmount, 0);
+    const transactionTotal = document.getElementById('transactionTotal');
+    if (transactionTotal) {
+        transactionTotal.textContent = `${window.currency || '₪'}${totalAmount.toFixed(2)}`;
     }
     
     // Render transactions
