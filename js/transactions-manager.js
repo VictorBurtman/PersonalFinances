@@ -69,6 +69,7 @@ async function loadTransactions() {
         // Populate month filter
         populateMonthFilter();
         populateCategoryFilter(); // NOUVEAU
+        await loadSectionStates();
 
         // Apply filters and render
         applyFilters();
