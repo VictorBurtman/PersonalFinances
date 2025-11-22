@@ -703,9 +703,10 @@ async function toggleSection(sectionId) {
         // Save state to Firebase
         if (window.currentUser && db) {
             try {
-                const newState = !isCollapsed; // true = déplié, false = replié
+                // L'état APRÈS le toggle (true = déplié, false = replié)
+                const newState = (content.style.display === 'block');
                 
-                console.log(`Saving ${sectionId} state:`, newState);
+                console.log(`Saving ${sectionId} state:`, newState, `(display: ${content.style.display})`);
                 
                 await db.collection('users').doc(window.currentUser.uid).set({
                     uiPreferences: {
