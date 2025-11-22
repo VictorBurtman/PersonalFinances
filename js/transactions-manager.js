@@ -229,7 +229,6 @@ function renderTransactions() {
             emptyState.style.display = 'block';
         }
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
-        if (filtersSection) filtersSection.style.display = 'none';
         return;
     }
     
@@ -270,7 +269,6 @@ function renderTransactions() {
  * Render a single transaction with improved layout
  */
 function renderTransaction(txn) {
-    // Get categories from DOM
     const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
     const categories = Array.from(categorySections)
         .map(section => section.id.replace('category-', ''))
@@ -283,22 +281,26 @@ function renderTransaction(txn) {
     });
     
     const isLabeled = txn.isLabeled && txn.category;
+    const txnId = txn.id.replace(/[^a-zA-Z0-9]/g, ''); // Safe ID for DOM
     
     return `
         <div class="transaction-item" style="display: block; padding: 15px;">
             <!-- Top row: Date, Description, Amount -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <div style="flex: 1; min-width: 0;">
+                <div style="flex: 1; min-width: 0;" onclick="showTransactionDetails('${txnId}')" style="cursor: pointer;">
                     <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
                         ${date}
                     </div>
-                    <div class="transaction-desc" 
-                         style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" 
-                         onclick="showTransactionDetails('${escapeHtml(txn.description)}', '${escapeHtml(txn.memo || '')}', ${txn.chargedAmount})"
-                         title="${escapeHtml(txn.description)}">
+                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">
                         ${escapeHtml(txn.description)}
                     </div>
-                    ${txn.memo ? `<div style="font-size: 0.85em; color: #999; margin-top: 2px;">${escapeHtml(txn.memo)}</div>` : ''}
+                    
+                    <!-- Expandable details -->
+                    <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                        <div style="margin-bottom: 5px;"><strong>Full name:</strong> ${escapeHtml(txn.description)}</div>
+                        ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>Memo:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
+                        <div><strong>Amount:</strong> ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}</div>
+                    </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
                     ${window.currency || '₪'}${txn.chargedAmount.toFixed(2)}
@@ -710,16 +712,17 @@ window.toggleSection = toggleSection;
 
 
 /**
- * Show transaction details in a popup
+ * Show/hide transaction details by expanding the card
  */
-function showTransactionDetails(description, memo, amount) {
-    const message = `
-📝 ${description}
-${memo ? `\n💬 ${memo}` : ''}
-💰 ${window.currency || '₪'}${amount.toFixed(2)}
-    `.trim();
-    
-    alert(message);
+function showTransactionDetails(txnId) {
+    const detailsDiv = document.getElementById(`details-${txnId}`);
+    if (detailsDiv) {
+        if (detailsDiv.style.display === 'none' || !detailsDiv.style.display) {
+            detailsDiv.style.display = 'block';
+        } else {
+            detailsDiv.style.display = 'none';
+        }
+    }
 }
 
 window.showTransactionDetails = showTransactionDetails;
