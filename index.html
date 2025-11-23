@@ -1607,7 +1607,7 @@
                     currency: currency,
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
-                    language: currentLanguage, // ✅ AJOUTER CETTE LIGNE
+                    language: currentLanguage,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
@@ -1616,11 +1616,12 @@
                     categoryOrder: categoryOrder
                 });
                 
-                await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
+                // IMPORTANT : Ne PAS utiliser merge pour que les clés supprimées disparaissent vraiment
+                await db.collection('users').doc(currentUser.uid).set(dataToSave);
                 console.log('Save successful');
             } catch (error) {
                 console.error('Error saving user data:', error);
-                throw error; // Re-throw so calling functions can handle it
+                throw error;
             }
         }
 
