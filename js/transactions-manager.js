@@ -517,41 +517,61 @@ function escapeHtml(text) {
 // ============================================
 
 /**
- * Open credentials modal
- */
-/**
  * Open credentials modal for Max or Isracard
  */
 function openCredentialsModal(bankType = 'max') {
     const modal = document.getElementById('credentialsModal');
     const modalTitle = document.getElementById('credentialsModalTitle');
     const bankTypeInput = document.getElementById('bankType');
-    const usernameLabel = document.getElementById('usernameLabel');
-    const passwordLabel = document.getElementById('passwordLabel');
-    const usernameInput = document.getElementById('bankUsername');
-    const passwordInput = document.getElementById('bankPassword');
+    
+    const maxFields = document.getElementById('maxFields');
+    const isracardFields = document.getElementById('isracardFields');
     
     if (modal) {
         // Configure modal based on bank type
         bankTypeInput.value = bankType;
         
         if (bankType === 'max') {
-            modalTitle.textContent = '🔐 Max.co.il Credentials';
-            usernameLabel.textContent = 'Max Username';
-            passwordLabel.textContent = 'Max Password';
-            usernameInput.placeholder = 'Your Max username';
-            passwordInput.placeholder = 'Your Max password';
+            modalTitle.innerHTML = '<span data-translate="setupMaxCredentials">🔐 Max.co.il Credentials</span>';
+            
+            // Show Max fields, hide Isracard fields
+            maxFields.style.display = 'block';
+            isracardFields.style.display = 'none';
+            
+            // Clear Max inputs
+            document.getElementById('maxUsername').value = '';
+            document.getElementById('maxPassword').value = '';
+            
+            // Set Max fields as required
+            document.getElementById('maxUsername').required = true;
+            document.getElementById('maxPassword').required = true;
+            
+            // Remove required from Isracard fields
+            document.getElementById('isracardId').required = false;
+            document.getElementById('isracardCard6').required = false;
+            document.getElementById('isracardPassword').required = false;
+            
         } else if (bankType === 'isracard') {
-            modalTitle.textContent = '🔐 Isracard Credentials';
-            usernameLabel.textContent = 'Isracard ID';
-            passwordLabel.textContent = 'Isracard Password';
-            usernameInput.placeholder = 'Your Isracard ID';
-            passwordInput.placeholder = 'Your Isracard password';
+            modalTitle.innerHTML = '<span data-translate="setupIsracardCredentials">🔐 Isracard Credentials</span>';
+            
+            // Show Isracard fields, hide Max fields
+            maxFields.style.display = 'none';
+            isracardFields.style.display = 'block';
+            
+            // Clear Isracard inputs
+            document.getElementById('isracardId').value = '';
+            document.getElementById('isracardCard6').value = '';
+            document.getElementById('isracardPassword').value = '';
+            
+            // Set Isracard fields as required
+            document.getElementById('isracardId').required = true;
+            document.getElementById('isracardCard6').required = true;
+            document.getElementById('isracardPassword').required = true;
+            
+            // Remove required from Max fields
+            document.getElementById('maxUsername').required = false;
+            document.getElementById('maxPassword').required = false;
         }
-        
-        // Clear previous values
-        usernameInput.value = '';
-        passwordInput.value = '';
         
         modal.classList.add('show');
     }
@@ -581,12 +601,36 @@ async function saveCredentials(event) {
     }
     
     const bankType = document.getElementById('bankType')?.value || 'max';
-    const username = document.getElementById('bankUsername')?.value;
-    const password = document.getElementById('bankPassword')?.value;
     
-    if (!username || !password) {
-        showTransactionAlert('Please enter username and password', 'error');
-        return;
+    let credentials = {};
+    
+    if (bankType === 'max') {
+        const username = document.getElementById('maxUsername')?.value;
+        const password = document.getElementById('maxPassword')?.value;
+        
+        if (!username || !password) {
+            showTransactionAlert('Please enter username and password', 'error');
+            return;
+        }
+        
+        credentials = { username, password };
+        
+    } else if (bankType === 'isracard') {
+        const id = document.getElementById('isracardId')?.value;
+        const card6Digits = document.getElementById('isracardCard6')?.value;
+        const password = document.getElementById('isracardPassword')?.value;
+        
+        if (!id || !card6Digits || !password) {
+            showTransactionAlert('Please fill all Isracard fields', 'error');
+            return;
+        }
+        
+        if (card6Digits.length !== 6 || !/^\d+$/.test(card6Digits)) {
+            showTransactionAlert('Card digits must be exactly 6 numbers', 'error');
+            return;
+        }
+        
+        credentials = { id, card6Digits, password };
     }
     
     const btn = document.getElementById('saveCredentialsBtn');
@@ -596,9 +640,11 @@ async function saveCredentials(event) {
     }
     
     try {
-        const functionName = bankType === 'max' ? 'saveMaxCredentials' : 'saveIsracardCredentials';
-        const saveFunc = transactionsFunctions.httpsCallable(functionName);
-        await saveFunc({ username, password });
+        const saveFunc = transactionsFunctions.httpsCallable('saveCredentials');
+        await saveFunc({ 
+            accountType: bankType, 
+            credentials: credentials 
+        });
         
         const bankName = bankType === 'max' ? 'Max' : 'Isracard';
         showTransactionAlert(`${bankName} credentials saved successfully! ✓`, 'success');
@@ -607,7 +653,7 @@ async function saveCredentials(event) {
         // Update alert
         const alertEl = document.getElementById(`${bankType}CredentialsAlert`);
         if (alertEl) {
-            alertEl.textContent = 'Credentials configured ✓';
+            alertEl.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
             alertEl.className = 'alert-trans alert-success-trans';
         }
     } catch (error) {
@@ -620,7 +666,6 @@ async function saveCredentials(event) {
         }
     }
 }
-
 
 /**
  * Sync transactions from all configured banks
