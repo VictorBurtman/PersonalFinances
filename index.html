@@ -2387,6 +2387,7 @@
             if (!categoryName) return;
             
             const categoryKey = categoryName.toLowerCase().replace(/\s+/g, '_');
+            
             if (expenses[categoryKey]) {
                 alert('A category with this name already exists!');
                 return;
@@ -2446,54 +2447,50 @@
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
         async function deleteCategory(categoryKey) {
-            if (!confirm('Delete this entire category? This cannot be undone.')) return;
-            
-            if (!expenses.hasOwnProperty(categoryKey)) {
-                alert('Category not found!');
+            // Empêcher de supprimer les catégories système
+            const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+            if (systemCategories.includes(categoryKey)) {
+                alert('Cannot delete system categories. You can hide them in settings instead.');
                 return;
             }
             
-            console.log(`Deleting category: ${categoryKey}`);
+            const displayName = getCategoryDisplayName(categoryKey);
+            const total = getCategoryStats(categoryKey).total;
             
-            // [1] Supprime la catégorie de l'état local immédiatement
-            delete expenses[categoryKey];
-            categoryOrder = categoryOrder.filter(c => c !== categoryKey);
-            if (categoryMetadata[categoryKey]) {
-                delete categoryMetadata[categoryKey];
+            if (!confirm(`Delete category "${displayName}" (₪${total.toFixed(2)})?\n\nAll transactions labeled with this category will be unlabeled.`)) {
+                return;
             }
             
-            // [2] Cache la section dans l'interface
-            const section = document.getElementById(`category-${categoryKey}`);
-            if (section) {
-                section.style.display = 'none';
-            }
-            
-            // [3] Prépare la mise à jour pour Firestore
             try {
-                if (!currentUser) throw new Error("User not logged in");
+                // Appeler la Cloud Function pour unlabel les transactions
+                const deleteCategoryFunc = firebase.functions().httpsCallable('deleteCategory');
+                const result = await deleteCategoryFunc({
+                    categoryName: categoryKey
+                });
                 
-                // Utilise la "dot notation" pour cibler les champs à supprimer
-                const fieldToDelete = `expenses.${categoryKey}`;
-                const metaToDelete = `categoryMetadata.${categoryKey}`;
+                console.log(`Deleted category: ${result.data.message}`);
                 
-                // Crée un objet de mise à jour
-                const updates = {
-                    [fieldToDelete]: firebase.firestore.FieldValue.delete(), // C'est la correction clé !
-                    [metaToDelete]: firebase.firestore.FieldValue.delete(), // Supprime aussi les métadonnées
-                    'categoryOrder': categoryOrder // Sauvegarde la nouvelle liste d'ordre
-                };
+                // Supprimer localement
+                delete expenses[categoryKey];
+                delete categoryMetadata[categoryKey];
                 
-                // Utilise .update() pour appliquer les suppressions et les changements
-                await db.collection('users').doc(currentUser.uid).update(updates);
+                // Retirer de l'ordre
+                const index = categoryOrder.indexOf(categoryKey);
+                if (index !== -1) {
+                    categoryOrder.splice(index, 1);
+                }
                 
-                console.log(`Category ${categoryKey} deleted and saved successfully`);
-                updateDisplay(); // Met à jour l'interface (graphique, totaux, etc.)
+                // Sauvegarder dans Firebase
+                await saveToFirebase();
+                
+                // Actualiser l'affichage
+                updateDisplay();
+                
+                alert(`Category deleted! ${result.data.unlabeledCount} transaction(s) unlabeled.`);
                 
             } catch (error) {
                 console.error('Error deleting category:', error);
                 alert('Error deleting category: ' + error.message);
-                // En cas d'erreur, recharge la page pour rétablir l'état d'origine
-                location.reload();
             }
         }
         // ============================================
@@ -2698,31 +2695,72 @@
         }
 
         // Rename Functions
-        function renameCategory(categoryKey) {
-            const currentMeta = categoryMetadata[categoryKey];
-            const currentName = currentMeta ? currentMeta.displayName : categoryKey;
-            const currentEmoji = currentMeta ? currentMeta.emoji : '📋';
+        async function renameCategory(categoryKey) {
+            const currentDisplayName = getCategoryDisplayName(categoryKey);
+            const newName = prompt(`Enter new name for "${currentDisplayName}":`, currentDisplayName);
             
-            const newName = prompt('Enter new category name:', currentName);
-            if (!newName) return;
+            if (!newName || newName.trim() === '') return;
+            if (newName.trim() === currentDisplayName) return;
             
-            const newEmoji = prompt('Enter emoji for this category:', currentEmoji);
-            if (!newEmoji) return;
+            const newKey = newName.toLowerCase().replace(/\s+/g, '-');
             
-            const categoryTitleElement = document.querySelector(`#category-${categoryKey} .category-title`);
-            if (categoryTitleElement) {
-                // Update metadata
-                categoryMetadata[categoryKey] = {
-                    emoji: newEmoji,
-                    displayName: newName
-                };
+            // Vérifier les doublons
+            if (expenses[newKey] && newKey !== categoryKey) {
+                alert(`A category named "${newName}" already exists! Please choose a different name.`);
+                return;
+            }
+            
+            // Empêcher de renommer en catégories système
+            const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+            if (systemCategories.includes(newKey) && newKey !== categoryKey) {
+                alert(`Cannot use "${newName}" as it's a system category name.`);
+                return;
+            }
+            
+            try {
+                // Appeler la Cloud Function pour mettre à jour les transactions
+                const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
+                const result = await renameCategoryFunc({
+                    oldName: categoryKey,
+                    newName: newKey
+                });
                 
-                categoryTitleElement.innerHTML = `
-                    ${newEmoji} ${newName}
-                    <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
-                `;
+                console.log(`Renamed category: ${result.data.message}`);
                 
-                saveUserData();
+                // Mettre à jour localement
+                expenses[newKey] = expenses[categoryKey];
+                delete expenses[categoryKey];
+                
+                // Mettre à jour les métadonnées
+                if (!categoryMetadata[newKey]) {
+                    categoryMetadata[newKey] = {};
+                }
+                categoryMetadata[newKey].displayName = newName;
+                
+                // Si custom category, garder l'emoji
+                if (categoryMetadata[categoryKey]) {
+                    categoryMetadata[newKey].emoji = categoryMetadata[categoryKey].emoji;
+                    categoryMetadata[newKey].color = categoryMetadata[categoryKey].color;
+                    delete categoryMetadata[categoryKey];
+                }
+                
+                // Mettre à jour l'ordre des catégories
+                const index = categoryOrder.indexOf(categoryKey);
+                if (index !== -1) {
+                    categoryOrder[index] = newKey;
+                }
+                
+                // Sauvegarder dans Firebase
+                await saveToFirebase();
+                
+                // Actualiser l'affichage
+                updateDisplay();
+                
+                alert(`Category renamed successfully! ${result.data.updatedCount} transaction(s) updated.`);
+                
+            } catch (error) {
+                console.error('Error renaming category:', error);
+                alert('Error renaming category: ' + error.message);
             }
         }
 
