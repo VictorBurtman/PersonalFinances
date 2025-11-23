@@ -386,10 +386,17 @@ function renderTransaction(txn) {
  * Get category emoji
  */
 function getCategoryEmoji(category) {
+    // Essayer de récupérer depuis index.html
+    if (typeof categoryMetadata !== 'undefined' && categoryMetadata[category]?.emoji) {
+        return categoryMetadata[category].emoji;
+    }
+    
+    // Sinon, chercher dans window
     const meta = (window.categoryMetadata || {})[category];
     if (meta && meta.emoji) return meta.emoji;
     
     const defaultEmojis = {
+        'income': '💰',
         'housing': '🏠',
         'tech': '📱',
         'pet': '🐱',
@@ -404,8 +411,15 @@ function getCategoryEmoji(category) {
  * Get category display name
  */
 function getCategoryDisplayName(category) {
+    // Essayer de récupérer depuis index.html
+    if (typeof categoryMetadata !== 'undefined' && categoryMetadata[category]?.displayName) {
+        return categoryMetadata[category].displayName;
+    }
+    
+    // Sinon, chercher dans window
     const meta = (window.categoryMetadata || {})[category];
     if (meta && meta.displayName) return meta.displayName;
+    
     return category.charAt(0).toUpperCase() + category.slice(1);
 }
 
