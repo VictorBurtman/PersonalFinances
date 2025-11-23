@@ -1,17 +1,28 @@
-<!-- Max.co.il Configuration - Collapsible -->
+<!-- Bank Accounts Configuration - Collapsible -->
 <div class="transactions-section">
-    <div class="section-title-trans" onclick="toggleSection('maxConfigSection')" style="cursor: pointer; user-select: none;">
-        <span id="maxConfigToggle">▶</span> 💳 Max.co.il Config
+    <div class="section-title-trans" onclick="toggleSection('bankConfigSection')" style="cursor: pointer; user-select: none;">
+        <span id="bankConfigToggle">▶</span> 🏦 Bank Accounts Config
     </div>
-    <div id="maxConfigContent" style="display: none;">
-        <!-- Credentials Setup -->
+    <div id="bankConfigContent" style="display: none;">
+        <!-- Max.co.il Credentials -->
         <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">⚙️ Credentials</h4>
-            <div class="alert-trans alert-info-trans" id="credentialsAlert">
-                Configure your Max credentials to start syncing transactions.
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">💳 Max.co.il (Leumi Card)</h4>
+            <div class="alert-trans alert-info-trans" id="maxCredentialsAlert">
+                Configure your Max credentials to sync transactions.
             </div>
-            <button class="btn btn-primary" onclick="openCredentialsModal()">
+            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
                 🔐 Setup Max Credentials
+            </button>
+        </div>
+        
+        <!-- Isracard Credentials -->
+        <div style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">💳 Isracard</h4>
+            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlert">
+                Configure your Isracard credentials to sync transactions.
+            </div>
+            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
+                🔐 Setup Isracard Credentials
             </button>
         </div>
         
@@ -20,12 +31,14 @@
             <h4 style="margin-bottom: 10px; font-size: 0.95em;">🔄 Sync Transactions</h4>
             <div class="sync-status">
                 <div class="sync-info">
-                    <div>Last sync: <strong id="lastSyncTime">Never</strong></div>
-                    <div id="lastSyncCount"></div>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div>Max: <strong id="lastMaxSyncTime">Never</strong> <span id="lastMaxSyncCount"></span></div>
+                        <div>Isracard: <strong id="lastIsracardSyncTime">Never</strong> <span id="lastIsracardSyncCount"></span></div>
+                    </div>
                 </div>
                 <div class="sync-buttons">
-                    <button class="btn btn-primary" onclick="syncTransactions()" id="syncBtn">
-                        🔄 Sync Now
+                    <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtn">
+                        🔄 Sync All
                     </button>
                     <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn">
                         🏷️ Auto-label
@@ -33,9 +46,9 @@
                 </div>
             </div>
             
-            <div class="empty-state-trans" id="emptyState">
+            <div class="loading-trans" id="syncLoading">
                 <div class="spinner-trans"></div>
-                <div>Loading transactions...</div>
+                <div>Syncing with banks...</div>
             </div>
 
             <div id="syncResult"></div>
@@ -82,7 +95,6 @@
     </div>
 </div>
 
-
 <!-- All Transactions - Always visible -->
 <div class="transactions-section" id="allTransactionsSection">
     <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -105,15 +117,15 @@
     <div class="empty-state-trans" id="emptyState" style="display: none;">
         <div class="empty-state-icon">📭</div>
         <div>No transactions yet</div>
-        <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync Now" to get started</div>
+        <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync All" to get started</div>
     </div>
 </div>
 
-<!-- Credentials Modal -->
+<!-- Credentials Modal (supports both Max and Isracard) -->
 <div id="credentialsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>🔐 Max Credentials</h2>
+            <h2 id="credentialsModalTitle">🔐 Bank Credentials</h2>
             <button class="modal-close" onclick="closeCredentialsModal()">✕</button>
         </div>
         <div class="modal-body">
@@ -121,23 +133,25 @@
                 Your credentials will be encrypted and stored securely in Firebase.
             </div>
             <form id="credentialsForm" onsubmit="saveCredentials(event)">
+                <input type="hidden" id="bankType" value="max" />
+                
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Max Username</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="usernameLabel">Username</label>
                     <input 
                         type="text" 
                         class="auth-input" 
-                        id="maxUsername" 
-                        placeholder="Your Max username"
+                        id="bankUsername" 
+                        placeholder="Your username"
                         required
                     />
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Max Password</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="passwordLabel">Password</label>
                     <input 
                         type="password" 
                         class="auth-input" 
-                        id="maxPassword" 
-                        placeholder="Your Max password"
+                        id="bankPassword" 
+                        placeholder="Your password"
                         required
                     />
                 </div>
