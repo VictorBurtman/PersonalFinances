@@ -1622,6 +1622,34 @@
             }
         }
 
+
+        // AJOUTE ICI : Language change handler
+        document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
+            currentLanguage = e.target.value;
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            
+            // Appliquer RTL si nécessaire
+            if (currentLanguage === 'ar' || currentLanguage === 'he') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+            
+            updateUILanguage();
+            
+            // Traduire l'onglet Transactions si visible
+            if (typeof updateTransactionsLanguage === 'function') {
+                updateTransactionsLanguage();
+            }
+            
+            // Sauvegarder dans Firebase
+            if (currentUser) {
+                await saveUserData();
+            }
+        });
+
+
+        
         async function saveUserData() {
             if (!currentUser) return;
             
