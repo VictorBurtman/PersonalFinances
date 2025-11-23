@@ -2482,7 +2482,8 @@
                 
                 // Sauvegarder dans Firebase
                 await saveUserData();
-                
+                // Recharger depuis Firebase pour être sûr
+                await loadUserData();
                 // Actualiser l'affichage
                 updateDisplay();
                 
@@ -2775,7 +2776,8 @@
                 
                 // Sauvegarder dans Firebase
                 await saveUserData();
-                
+                // Recharger depuis Firebase pour être sûr
+                await loadUserData();
                 // Actualiser l'affichage
                 updateDisplay();
                 
