@@ -67,15 +67,15 @@ class TabsManager {
      * Show loading indicator
      */
     showLoading(tabName) {
-       // const tabContent = document.getElementById(`${tabName}Tab`);
-       // if (tabContent) {
-       //     tabContent.innerHTML = `
-       //         <div class="tab-loading">
-       //             <div class="tab-loading-spinner"></div>
-       //             <div>Loading ${tabName}...</div>
-       //         </div>
-       //     `;
-       // }
+        const tabContent = document.getElementById(`${tabName}Tab`);
+        if (tabContent) {
+            tabContent.innerHTML = `
+                <div class="tab-loading">
+                    <div class="tab-loading-spinner"></div>
+                    <div>Loading ${tabName}...</div>
+                </div>
+            `;
+        }
     }
 
     /**
