@@ -2738,9 +2738,13 @@
                 categoryMetadata[newKey].displayName = newName;
                 
                 // Si custom category, garder l'emoji
+                // Si custom category, garder l'emoji et couleur
                 if (categoryMetadata[categoryKey]) {
-                    categoryMetadata[newKey].emoji = categoryMetadata[categoryKey].emoji;
-                    categoryMetadata[newKey].color = categoryMetadata[categoryKey].color;
+                    Object.keys(categoryMetadata[categoryKey]).forEach(key => {
+                        if (categoryMetadata[categoryKey][key] !== undefined) {
+                            categoryMetadata[newKey][key] = categoryMetadata[categoryKey][key];
+                        }
+                    });
                     delete categoryMetadata[categoryKey];
                 }
                 
