@@ -2704,6 +2704,13 @@
             
             const newKey = newName.toLowerCase().replace(/\s+/g, '-');
             
+            console.log('Renaming:', {
+                oldKey: categoryKey,
+                newKey: newKey,
+                oldDisplayName: currentDisplayName,
+                newDisplayName: newName
+            });
+            
             // Vérifier les doublons
             if (expenses[newKey] && newKey !== categoryKey) {
                 alert(`A category named "${newName}" already exists! Please choose a different name.`);
@@ -2727,31 +2734,43 @@
                 
                 console.log(`Renamed category: ${result.data.message}`);
                 
-                // Mettre à jour localement
-                expenses[newKey] = expenses[categoryKey];
-                delete expenses[categoryKey];
-                
-                // Mettre à jour les métadonnées
-                if (!categoryMetadata[newKey]) {
-                    categoryMetadata[newKey] = {};
-                }
-                categoryMetadata[newKey].displayName = newName;
-                
-                // Si custom category, garder l'emoji
-                // Si custom category, garder l'emoji et couleur
-                if (categoryMetadata[categoryKey]) {
-                    Object.keys(categoryMetadata[categoryKey]).forEach(key => {
-                        if (categoryMetadata[categoryKey][key] !== undefined) {
-                            categoryMetadata[newKey][key] = categoryMetadata[categoryKey][key];
-                        }
-                    });
+                // Cas 1 : Changement de clé (ex: "mina" → "mina-the-poo")
+                if (newKey !== categoryKey) {
+                    // Copier les données
+                    expenses[newKey] = expenses[categoryKey];
+                    
+                    // Copier les métadonnées
+                    if (!categoryMetadata[newKey]) {
+                        categoryMetadata[newKey] = {};
+                    }
+                    
+                    if (categoryMetadata[categoryKey]) {
+                        Object.keys(categoryMetadata[categoryKey]).forEach(key => {
+                            if (categoryMetadata[categoryKey][key] !== undefined) {
+                                categoryMetadata[newKey][key] = categoryMetadata[categoryKey][key];
+                            }
+                        });
+                    }
+                    
+                    // Ajouter le nouveau displayName
+                    categoryMetadata[newKey].displayName = newName;
+                    
+                    // Supprimer l'ancien
+                    delete expenses[categoryKey];
                     delete categoryMetadata[categoryKey];
-                }
-                
-                // Mettre à jour l'ordre des catégories
-                const index = categoryOrder.indexOf(categoryKey);
-                if (index !== -1) {
-                    categoryOrder[index] = newKey;
+                    
+                    // Mettre à jour l'ordre
+                    const index = categoryOrder.indexOf(categoryKey);
+                    if (index !== -1) {
+                        categoryOrder[index] = newKey;
+                    }
+                } 
+                // Cas 2 : Changement de displayName uniquement (ex: "Mina" → "Mina the poo")
+                else {
+                    if (!categoryMetadata[categoryKey]) {
+                        categoryMetadata[categoryKey] = {};
+                    }
+                    categoryMetadata[categoryKey].displayName = newName;
                 }
                 
                 // Sauvegarder dans Firebase
