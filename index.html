@@ -1310,7 +1310,34 @@
             
             // Update display to refresh category names and stats
             updateDisplay();
+            updateTransactionsLanguage();
         }
+
+
+        /**
+         * Update translations for transactions tab
+         */
+        function updateTransactionsLanguage() {
+            // Traduire les éléments avec data-translate
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    el.textContent = translations[currentLanguage][key];
+                }
+            });
+            
+            // Traduire les placeholders
+            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+            placeholderElements.forEach(el => {
+                const key = el.getAttribute('data-translate-placeholder');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    el.placeholder = translations[currentLanguage][key];
+                }
+            });
+        }
+
+        
         // NOUVELLE FONCTION - Cleanup category order
         function cleanupCategoryOrder() {
             // Enlever les catégories qui n'existent plus dans expenses
