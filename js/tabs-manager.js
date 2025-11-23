@@ -125,9 +125,14 @@ class TabsManager {
         // Trigger custom events
         const event = new CustomEvent('tabActivated', { detail: { tabName } });
         document.dispatchEvent(event);
-
+        
         // Tab-specific initialization
         if (tabName === 'transactions') {
+            // Appliquer les traductions
+            if (typeof updateTransactionsLanguage === 'function') {
+                updateTransactionsLanguage();
+            }
+            
             // Load transactions if not already loaded
             if (typeof loadTransactions === 'function' && window.currentUser) {
                 loadTransactions();
