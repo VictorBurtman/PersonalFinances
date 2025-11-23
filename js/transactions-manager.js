@@ -60,6 +60,21 @@ async function loadTransactions() {
             // Update credentials status silently
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
                 console.log('✓ Max credentials configured');
+                const alertEl = document.getElementById('maxCredentialsAlert');
+                if (alertEl) {
+                    alertEl.textContent = 'Credentials configured ✓';
+                    alertEl.className = 'alert-trans alert-success-trans';
+                }
+            }
+            
+            // Check Isracard credentials
+            if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
+                console.log('✓ Isracard credentials configured');
+                const alertEl = document.getElementById('isracardCredentialsAlert');
+                if (alertEl) {
+                    alertEl.textContent = 'Credentials configured ✓';
+                    alertEl.className = 'alert-trans alert-success-trans';
+                }
             }
             
             // Update Max sync status
