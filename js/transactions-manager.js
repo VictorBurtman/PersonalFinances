@@ -58,22 +58,34 @@ async function loadTransactions() {
         
         if (userDoc.exists) {
             // Update credentials status silently
+            const maxAlertEl = document.getElementById('maxCredentialsAlert');
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
                 console.log('✓ Max credentials configured');
-                const alertEl = document.getElementById('maxCredentialsAlert');
-                if (alertEl) {
-                    alertEl.textContent = 'Credentials configured ✓';
-                    alertEl.className = 'alert-trans alert-success-trans';
+                if (maxAlertEl) {
+                    maxAlertEl.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
+                    maxAlertEl.className = 'alert-trans alert-success-trans';
+                }
+            } else {
+                // Pas de credentials
+                if (maxAlertEl) {
+                    maxAlertEl.innerHTML = '<span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>';
+                    maxAlertEl.className = 'alert-trans alert-info-trans';
                 }
             }
             
             // Check Isracard credentials
+            const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
             if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
                 console.log('✓ Isracard credentials configured');
-                const alertEl = document.getElementById('isracardCredentialsAlert');
-                if (alertEl) {
-                    alertEl.textContent = 'Credentials configured ✓';
-                    alertEl.className = 'alert-trans alert-success-trans';
+                if (isracardAlertEl) {
+                    isracardAlertEl.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
+                    isracardAlertEl.className = 'alert-trans alert-success-trans';
+                }
+            } else {
+                // Pas de credentials
+                if (isracardAlertEl) {
+                    isracardAlertEl.innerHTML = '<span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>';
+                    isracardAlertEl.className = 'alert-trans alert-info-trans';
                 }
             }
             
