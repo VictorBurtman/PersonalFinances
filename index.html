@@ -1396,6 +1396,7 @@
 
         function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
+                closeSettings();
                 auth.signOut();
             }
         }
@@ -2718,7 +2719,12 @@
                 alert(`A category named "${newName}" already exists! Please choose a different name.`);
                 return;
             }
-            
+
+            // Empêcher de renommer "income"
+            if (categoryKey === 'income') {
+                alert('Cannot rename the Income category.');
+                return;
+            }
             // Empêcher de renommer en catégories système
             const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
             if (systemCategories.includes(newKey) && newKey !== categoryKey) {
