@@ -1,54 +1,60 @@
 <!-- Bank Accounts Configuration - Collapsible -->
 <div class="transactions-section">
     <div class="section-title-trans" onclick="toggleSection('bankConfigSection')" style="cursor: pointer; user-select: none;">
-        <span id="bankConfigToggle">▶</span> 🏦 Bank Accounts Config
+        <span id="bankConfigToggle">▶</span> <span data-translate="bankAccountsConfig">🏦 Bank Accounts Config</span>
     </div>
     <div id="bankConfigContent" style="display: none;">
         <!-- Max.co.il Credentials -->
         <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">💳 Max.co.il (Leumi Card)</h4>
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
+                <span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span>
+            </h4>
             <div class="alert-trans alert-info-trans" id="maxCredentialsAlert">
-                Configure your Max credentials to sync transactions.
+                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
             </div>
             <button class="btn btn-primary" onclick="openCredentialsModal('max')">
-                🔐 Setup Max Credentials
+                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
             </button>
         </div>
         
         <!-- Isracard Credentials -->
         <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">💳 Isracard</h4>
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
+                <span data-translate="isracard">💳 Isracard</span>
+            </h4>
             <div class="alert-trans alert-info-trans" id="isracardCredentialsAlert">
-                Configure your Isracard credentials to sync transactions.
+                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
             </div>
             <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
-                🔐 Setup Isracard Credentials
+                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
             </button>
         </div>
         
         <!-- Sync Section -->
         <div>
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">🔄 Sync Transactions</h4>
+            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
+                <span data-translate="syncTransactions">🔄 Sync Transactions</span>
+            </h4>
             <div class="sync-status">
                 <div class="sync-info">
                     <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <div>Max: <strong id="lastMaxSyncTime">Never</strong> <span id="lastMaxSyncCount"></span></div>
-                        <div>Isracard: <strong id="lastIsracardSyncTime">Never</strong> <span id="lastIsracardSyncCount"></span></div>
+                        <div>Max: <strong id="lastMaxSyncTime" data-translate="never">Never</strong> <span id="lastMaxSyncCount"></span></div>
+                        <div>Isracard: <strong id="lastIsracardSyncTime" data-translate="never">Never</strong> <span id="lastIsracardSyncCount"></span></div>
                     </div>
                 </div>
                 <div class="sync-buttons">
                     <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtn">
-                        🔄 Sync All
+                        <span data-translate="syncAll">🔄 Sync All</span>
                     </button>
                     <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn">
-                        🏷️ Auto-label
+                        <span data-translate="autoLabel">🏷️ Auto-label</span>
                     </button>
                 </div>
             </div>
             
             <div class="loading-trans" id="syncLoading">
                 <div class="spinner-trans"></div>
-                <div>Syncing with banks...</div>
+                <div><span data-translate="syncingWithBanks">Syncing with banks...</span></div>
             </div>
 
             <div id="syncResult"></div>
@@ -59,37 +65,38 @@
 <!-- Filters Section - Collapsible -->
 <div class="transactions-section" id="filtersSection">
     <div class="section-title-trans" onclick="toggleSection('filtersSection')" style="cursor: pointer; user-select: none;">
-        <span id="filtersToggle">▶</span> 🔍 Filters
+        <span id="filtersToggle">▶</span> <span data-translate="filters">🔍 Filters</span>
     </div>
     <div id="filtersContent" style="display: none;">
         <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
             <!-- Unlabeled checkbox -->
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                 <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
-                <span>Show only unlabeled</span>
+                <span data-translate="showOnlyUnlabeled">Show only unlabeled</span>
             </label>
             
             <!-- Month filter -->
             <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-                <option value="">All months</option>
+                <option value="" data-translate="allMonths">All months</option>
             </select>
             
             <!-- Category filter -->
             <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-                <option value="">All categories</option>
+                <option value="" data-translate="allCategories">All categories</option>
             </select>
             
             <!-- Search by name -->
             <input 
                 type="text" 
                 id="searchFilter" 
+                data-translate-placeholder="search"
                 placeholder="Search..." 
                 oninput="applyFilters()"
                 style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 150px;"
             />
             
             <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
-                Clear
+                <span data-translate="clear">Clear</span>
             </button>
         </div>
     </div>
@@ -98,7 +105,7 @@
 <!-- All Transactions - Always visible -->
 <div class="transactions-section" id="allTransactionsSection">
     <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span>📋 All Transactions (<span id="transactionCount">0</span>)</span>
+        <span><span data-translate="allTransactions">📋 All Transactions</span> (<span id="transactionCount">0</span>)</span>
         <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; font-size: 0.9em;">
             💰 <span id="transactionTotal">₪0</span>
         </span>
@@ -107,7 +114,9 @@
     <!-- Loading state inside All Transactions -->
     <div id="transactionsLoading" style="display: none; text-align: center; padding: 40px;">
         <div class="spinner-trans"></div>
-        <div style="margin-top: 15px; color: #6c757d;">Loading transactions...</div>
+        <div style="margin-top: 15px; color: #6c757d;">
+            <span data-translate="loadingTransactions">Loading transactions...</span>
+        </div>
     </div>
     
     <!-- Transactions list -->
@@ -116,8 +125,10 @@
     <!-- Empty state -->
     <div class="empty-state-trans" id="emptyState" style="display: none;">
         <div class="empty-state-icon">📭</div>
-        <div>No transactions yet</div>
-        <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync All" to get started</div>
+        <div><span data-translate="noTransactionsYet">No transactions yet</span></div>
+        <div style="margin-top: 10px; font-size: 0.9em;">
+            <span data-translate="clickSyncToStart">Click "Sync All" to get started</span>
+        </div>
     </div>
 </div>
 
@@ -125,32 +136,38 @@
 <div id="credentialsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="credentialsModalTitle">🔐 Bank Credentials</h2>
+            <h2 id="credentialsModalTitle"><span data-translate="bankCredentials">🔐 Bank Credentials</span></h2>
             <button class="modal-close" onclick="closeCredentialsModal()">✕</button>
         </div>
         <div class="modal-body">
             <div class="alert-trans alert-info-trans">
-                Your credentials will be encrypted and stored securely in Firebase.
+                <span data-translate="credentialsSecure">Your credentials will be encrypted and stored securely in Firebase.</span>
             </div>
             <form id="credentialsForm" onsubmit="saveCredentials(event)">
                 <input type="hidden" id="bankType" value="max" />
                 
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="usernameLabel">Username</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="usernameLabel">
+                        <span data-translate="username">Username</span>
+                    </label>
                     <input 
                         type="text" 
                         class="auth-input" 
                         id="bankUsername" 
+                        data-translate-placeholder="yourUsername"
                         placeholder="Your username"
                         required
                     />
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="passwordLabel">Password</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;" id="passwordLabel">
+                        <span data-translate="password">Password</span>
+                    </label>
                     <input 
                         type="password" 
                         class="auth-input" 
                         id="bankPassword" 
+                        data-translate-placeholder="yourPassword"
                         placeholder="Your password"
                         required
                     />
@@ -160,10 +177,10 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="modal-button secondary" onclick="closeCredentialsModal()">
-                Cancel
+                <span data-translate="cancel">Cancel</span>
             </button>
             <button type="submit" form="credentialsForm" class="modal-button primary" id="saveCredentialsBtn">
-                Save Credentials
+                <span data-translate="saveCredentials">Save Credentials</span>
             </button>
         </div>
     </div>
