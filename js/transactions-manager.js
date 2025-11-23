@@ -62,11 +62,18 @@ async function loadTransactions() {
                 console.log('✓ Max credentials configured');
             }
             
-            // Update last sync status
+            // Update Max sync status
             if (userDoc.data().lastMaxSync) {
                 const lastSync = userDoc.data().lastMaxSync.toDate();
-                const count = userDoc.data().lastSyncTransactionCount;
-                updateSyncStatus(lastSync, count);
+                const count = userDoc.data().lastMaxSyncTransactionCount;
+                updateSyncStatus(lastSync, count, 'max');
+            }
+            
+            // Update Isracard sync status
+            if (userDoc.data().lastIsracardSync) {
+                const lastSync = userDoc.data().lastIsracardSync.toDate();
+                const count = userDoc.data().lastIsracardSyncTransactionCount;
+                updateSyncStatus(lastSync, count, 'isracard');
             }
         }
         
@@ -108,18 +115,26 @@ async function loadTransactions() {
 }
 
 /**
- * Update credentials alert when Max Config menu is opened
+ * Update credentials alert when Bank Config menu is opened
  */
 async function updateCredentialsStatus() {
     if (!window.currentUser || !db) return;
     
     try {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
-        const alertEl = document.getElementById('credentialsAlert');
         
-        if (alertEl && userDoc.exists && userDoc.data().maxCredentials?.encrypted) {
-            alertEl.textContent = 'Credentials configured ✓';
-            alertEl.className = 'alert-trans alert-success-trans';
+        // Check Max credentials
+        const maxAlertEl = document.getElementById('maxCredentialsAlert');
+        if (maxAlertEl && userDoc.exists && userDoc.data().maxCredentials?.encrypted) {
+            maxAlertEl.textContent = 'Credentials configured ✓';
+            maxAlertEl.className = 'alert-trans alert-success-trans';
+        }
+        
+        // Check Isracard credentials
+        const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
+        if (isracardAlertEl && userDoc.exists && userDoc.data().isracardCredentials?.encrypted) {
+            isracardAlertEl.textContent = 'Credentials configured ✓';
+            isracardAlertEl.className = 'alert-trans alert-success-trans';
         }
     } catch (error) {
         console.error('Error checking credentials:', error);
@@ -426,7 +441,7 @@ function getCategoryDisplayName(category) {
 /**
  * Update sync status display
  */
-function updateSyncStatus(date, count) {
+function updateSyncStatus(date, count, bankType = 'max') {
     const now = new Date();
     const diff = Math.floor((now - date) / (1000 * 60));
     
@@ -442,12 +457,15 @@ function updateSyncStatus(date, count) {
         }
     }
     
-    const timeEl = document.getElementById('lastSyncTime');
+    const timeElId = bankType === 'max' ? 'lastMaxSyncTime' : 'lastIsracardSyncTime';
+    const countElId = bankType === 'max' ? 'lastMaxSyncCount' : 'lastIsracardSyncCount';
+    
+    const timeEl = document.getElementById(timeElId);
     if (timeEl) timeEl.textContent = timeText;
     
     if (count) {
-        const countEl = document.getElementById('lastSyncCount');
-        if (countEl) countEl.textContent = `${count} transaction${count > 1 ? 's' : ''}`;
+        const countEl = document.getElementById(countElId);
+        if (countEl) countEl.textContent = `(${count} transaction${count > 1 ? 's' : ''})`;
     }
 }
 
@@ -486,9 +504,42 @@ function escapeHtml(text) {
 /**
  * Open credentials modal
  */
-function openCredentialsModal() {
+/**
+ * Open credentials modal for Max or Isracard
+ */
+function openCredentialsModal(bankType = 'max') {
     const modal = document.getElementById('credentialsModal');
-    if (modal) modal.classList.add('show');
+    const modalTitle = document.getElementById('credentialsModalTitle');
+    const bankTypeInput = document.getElementById('bankType');
+    const usernameLabel = document.getElementById('usernameLabel');
+    const passwordLabel = document.getElementById('passwordLabel');
+    const usernameInput = document.getElementById('bankUsername');
+    const passwordInput = document.getElementById('bankPassword');
+    
+    if (modal) {
+        // Configure modal based on bank type
+        bankTypeInput.value = bankType;
+        
+        if (bankType === 'max') {
+            modalTitle.textContent = '🔐 Max.co.il Credentials';
+            usernameLabel.textContent = 'Max Username';
+            passwordLabel.textContent = 'Max Password';
+            usernameInput.placeholder = 'Your Max username';
+            passwordInput.placeholder = 'Your Max password';
+        } else if (bankType === 'isracard') {
+            modalTitle.textContent = '🔐 Isracard Credentials';
+            usernameLabel.textContent = 'Isracard ID';
+            passwordLabel.textContent = 'Isracard Password';
+            usernameInput.placeholder = 'Your Isracard ID';
+            passwordInput.placeholder = 'Your Isracard password';
+        }
+        
+        // Clear previous values
+        usernameInput.value = '';
+        passwordInput.value = '';
+        
+        modal.classList.add('show');
+    }
 }
 
 /**
@@ -504,7 +555,7 @@ function closeCredentialsModal() {
 }
 
 /**
- * Save Max credentials
+ * Save credentials for Max or Isracard
  */
 async function saveCredentials(event) {
     event.preventDefault();
@@ -514,8 +565,9 @@ async function saveCredentials(event) {
         return;
     }
     
-    const username = document.getElementById('maxUsername')?.value;
-    const password = document.getElementById('maxPassword')?.value;
+    const bankType = document.getElementById('bankType')?.value || 'max';
+    const username = document.getElementById('bankUsername')?.value;
+    const password = document.getElementById('bankPassword')?.value;
     
     if (!username || !password) {
         showTransactionAlert('Please enter username and password', 'error');
@@ -529,13 +581,16 @@ async function saveCredentials(event) {
     }
     
     try {
-        const saveMaxCredentials = transactionsFunctions.httpsCallable('saveMaxCredentials');
-        await saveMaxCredentials({ username, password });
+        const functionName = bankType === 'max' ? 'saveMaxCredentials' : 'saveIsracardCredentials';
+        const saveFunc = transactionsFunctions.httpsCallable(functionName);
+        await saveFunc({ username, password });
         
-        showTransactionAlert('Credentials saved successfully! ✓', 'success');
+        const bankName = bankType === 'max' ? 'Max' : 'Isracard';
+        showTransactionAlert(`${bankName} credentials saved successfully! ✓`, 'success');
         closeCredentialsModal();
         
-        const alertEl = document.getElementById('credentialsAlert');
+        // Update alert
+        const alertEl = document.getElementById(`${bankType}CredentialsAlert`);
         if (alertEl) {
             alertEl.textContent = 'Credentials configured ✓';
             alertEl.className = 'alert-trans alert-success-trans';
@@ -550,6 +605,79 @@ async function saveCredentials(event) {
         }
     }
 }
+
+
+/**
+ * Sync transactions from all configured banks
+ */
+async function syncAllTransactions() {
+    if (!transactionsFunctions) {
+        showTransactionAlert('Firebase Functions not initialized', 'error');
+        return;
+    }
+    
+    const btn = document.getElementById('syncAllBtn');
+    const loading = document.getElementById('syncLoading');
+    
+    if (btn) btn.disabled = true;
+    if (loading) loading.classList.add('show');
+    
+    try {
+        let totalTransactions = 0;
+        const results = [];
+        
+        // Check which banks are configured
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        const hasMax = userDoc.exists && userDoc.data().maxCredentials;
+        const hasIsracard = userDoc.exists && userDoc.data().isracardCredentials;
+        
+        // Sync Max
+        if (hasMax) {
+            try {
+                const scrapeMax = transactionsFunctions.httpsCallable('scrapeMaxTransactions');
+                const maxResult = await scrapeMax({});
+                totalTransactions += maxResult.data.transactionCount;
+                results.push(`Max: ${maxResult.data.transactionCount} transactions`);
+                
+                // Update Max sync status
+                updateSyncStatus(new Date(), maxResult.data.transactionCount, 'max');
+            } catch (error) {
+                console.error('Error syncing Max:', error);
+                results.push(`Max: Error - ${error.message}`);
+            }
+        }
+        
+        // Sync Isracard
+        if (hasIsracard) {
+            try {
+                const scrapeIsracard = transactionsFunctions.httpsCallable('scrapeIsracardTransactions');
+                const isracardResult = await scrapeIsracard({});
+                totalTransactions += isracardResult.data.transactionCount;
+                results.push(`Isracard: ${isracardResult.data.transactionCount} transactions`);
+                
+                // Update Isracard sync status
+                updateSyncStatus(new Date(), isracardResult.data.transactionCount, 'isracard');
+            } catch (error) {
+                console.error('Error syncing Isracard:', error);
+                results.push(`Isracard: Error - ${error.message}`);
+            }
+        }
+        
+        if (!hasMax && !hasIsracard) {
+            showTransactionAlert('No bank credentials configured. Please set up at least one bank.', 'error');
+        } else {
+            showTransactionAlert(`Sync completed! ${totalTransactions} total transactions. ${results.join(' | ')}`, 'success');
+            await loadTransactions();
+        }
+    } catch (error) {
+        console.error('Error syncing:', error);
+        showTransactionAlert('Error: ' + error.message, 'error');
+    } finally {
+        if (btn) btn.disabled = false;
+        if (loading) loading.classList.remove('show');
+    }
+}
+
 
 /**
  * Sync transactions from Max
@@ -693,9 +821,9 @@ document.addEventListener('tabActivated', (event) => {
 async function toggleSection(sectionId) {
     let contentId, toggleId;
     
-    if (sectionId === 'maxConfigSection') {
-        contentId = 'maxConfigContent';
-        toggleId = 'maxConfigToggle';
+    if (sectionId === 'bankConfigSection') {
+        contentId = 'bankConfigContent';
+        toggleId = 'bankConfigToggle';
     } else if (sectionId === 'filtersSection') {
         contentId = 'filtersContent';
         toggleId = 'filtersToggle';
@@ -712,7 +840,7 @@ async function toggleSection(sectionId) {
             toggle.textContent = '▼';
             
             // Update credentials status when opening Max Config
-            if (sectionId === 'maxConfigSection') {
+            if (sectionId === 'bankConfigSection') {
                 await updateCredentialsStatus();
             }
         } else {
@@ -758,16 +886,17 @@ async function loadSectionStates() {
         
         console.log('Loaded UI preferences:', prefs);
         
-        // Apply saved states for Max Config
-        if (prefs.maxConfigSection !== undefined) {
-            const content = document.getElementById('maxConfigContent');
-            const toggle = document.getElementById('maxConfigToggle');
+        // Apply saved states for Bank Config
+        if (prefs.bankConfigSection !== undefined) {
+            const content = document.getElementById('bankConfigContent');
+            const toggle = document.getElementById('bankConfigToggle');
             if (content && toggle) {
-                content.style.display = prefs.maxConfigSection ? 'block' : 'none';
-                toggle.textContent = prefs.maxConfigSection ? '▼' : '▶';
-                console.log('Applied maxConfigSection state:', prefs.maxConfigSection);
+                content.style.display = prefs.bankConfigSection ? 'block' : 'none';
+                toggle.textContent = prefs.bankConfigSection ? '▼' : '▶';
+                console.log('Applied bankConfigSection state:', prefs.bankConfigSection);
             }
         }
+        
         
         // Apply saved states for Filters
         if (prefs.filtersSection !== undefined) {
