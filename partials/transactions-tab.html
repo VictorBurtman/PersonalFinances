@@ -3,41 +3,37 @@
     <button class="toolbar-btn" onclick="toggleFiltersPanel()">
         🔍 <span data-translate="filters">Filters</span> <span id="filterToggleIcon">▼</span>
     </button>
-    <button class="toolbar-btn toolbar-btn-success" onclick="autoLabelAll()">
-        🏷️ <span data-translate="autoLabel">Auto-label</span>
+    <button class="toolbar-btn" onclick="toggleSection('bankConfigSection')">
+        🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span>
     </button>
 </div>
 
-<!-- Filters Panel (collapsible) -->
-<div class="filters-panel" id="filtersPanel" style="display: none;">
-    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; padding: 15px;">
-        <!-- Unlabeled checkbox -->
+<!-- Filters Panel (sticky when open) -->
+<div class="filters-panel-sticky" id="filtersPanel" style="display: none;">
+    <div class="filters-panel-content">
         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
-            <span data-translate="showOnlyUnlabeled">Show only unlabeled</span>
+            <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
         </label>
         
-        <!-- Month filter -->
-        <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+        <select id="monthFilter" onchange="applyFilters()" class="filter-select">
             <option value="" data-translate="allMonths">All months</option>
         </select>
         
-        <!-- Category filter -->
-        <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+        <select id="categoryFilter" onchange="applyFilters()" class="filter-select">
             <option value="" data-translate="allCategories">All categories</option>
         </select>
         
-        <!-- Search by name -->
         <input 
             type="text" 
             id="searchFilter" 
             data-translate-placeholder="search"
             placeholder="Search..." 
             oninput="applyFilters()"
-            style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 150px;"
+            class="filter-search"
         />
         
-        <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
+        <button class="filter-clear-btn" onclick="clearFilters()">
             <span data-translate="clear">Clear</span>
         </button>
     </div>
