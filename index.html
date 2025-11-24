@@ -901,7 +901,7 @@
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
                     <div class="edit-mode-controls">
-                        <button class="edit-mode-btn" onclick="toggleEditMode()">
+                        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
                             ✏️ <span id="editBtnText">Edit Categories</span>
                         </button>
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
@@ -2219,20 +2219,21 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
+            const editBtnText = document.getElementById('editBtnText');
             const addCategoryBtn = document.getElementById('addCategoryBtn');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
             
             if (isEditMode) {
-                editBtn.classList.add('active');
-                editBtn.textContent = '✓ Done Editing';
-                addCategoryBtn.style.display = 'block';
+                if (editBtn) editBtn.classList.add('active');
+                if (editBtnText) editBtnText.textContent = 'Done Editing';
+                if (addCategoryBtn) addCategoryBtn.style.display = 'block';
                 categoryControls.forEach(c => c.classList.add('show'));
                 renameButtons.forEach(btn => btn.style.display = 'inline-block');
             } else {
-                editBtn.classList.remove('active');
-                editBtn.textContent = '✏️ Edit Categories';
-                addCategoryBtn.style.display = 'none';
+                if (editBtn) editBtn.classList.remove('active');
+                if (editBtnText) editBtnText.textContent = 'Edit Categories';
+                if (addCategoryBtn) addCategoryBtn.style.display = 'none';
                 categoryControls.forEach(c => c.classList.remove('show'));
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
