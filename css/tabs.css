@@ -420,7 +420,7 @@
 .transactions-sticky-toolbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 98;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     padding: 8px 15px;
@@ -454,7 +454,7 @@
 /* Filters Panel - Also sticky */
 .filters-panel-sticky {
     position: sticky;
-    top: 56px; /* Juste en dessous de la toolbar */
+    top: 52px; /* Juste en dessous de la toolbar */
     z-index: 99;
     background: rgba(248, 249, 250, 0.98);
     backdrop-filter: blur(10px);
