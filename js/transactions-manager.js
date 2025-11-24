@@ -1034,7 +1034,6 @@ let bankConfigOpen = false;
 function toggleBankConfigFromToolbar() {
     const content = document.getElementById('bankConfigContent');
     const toggle = document.getElementById('bankConfigToggle');
-    const btn = document.querySelector('.toolbar-btn[onclick*="bankConfig"]');
     
     bankConfigOpen = !bankConfigOpen;
     
@@ -1042,18 +1041,10 @@ function toggleBankConfigFromToolbar() {
         if (bankConfigOpen) {
             content.style.display = 'block';
             toggle.textContent = '▼';
-            if (btn) {
-                btn.style.background = '#667eea';
-                btn.style.color = 'white';
-            }
             updateCredentialsStatus();
         } else {
             content.style.display = 'none';
             toggle.textContent = '▶';
-            if (btn) {
-                btn.style.background = 'white';
-                btn.style.color = '#333';
-            }
         }
     }
 }
