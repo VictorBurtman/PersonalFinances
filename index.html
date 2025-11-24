@@ -2281,29 +2281,33 @@
          * Populate month dropdown with last 12 months
          */
         function populateMonthDropdown() {
-            const select = document.getElementById('compareMonth'); // ← Change ici
-            if (!select) return;
+            const select = document.getElementById('compareMonth');
+            if (!select) {
+                console.error('compareMonth select not found');
+                return;
+            }
             
-            select.innerHTML = '';
+            select.innerHTML = ''; // Clear
             
             const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
             
             // Generate last 12 months
             for (let i = 0; i < 12; i++) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const year = date.getFullYear();
-                const month = date.getMonth() + 1;
-                const monthKey = `${year}-${String(month).padStart(2, '0')}`;
-                const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                const date = new Date(currentYear, currentMonth - i, 1);
+                const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                 
                 const option = document.createElement('option');
-                option.value = monthKey;
+                option.value = value;
                 option.textContent = monthName;
-                
                 if (i === 0) option.selected = true; // Current month selected by default
                 
                 select.appendChild(option);
             }
+            
+            console.log('Month dropdown populated with', select.options.length, 'options');
         }
         
         /**
