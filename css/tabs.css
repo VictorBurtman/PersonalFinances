@@ -415,3 +415,78 @@
         min-width: 100px;
     }
 }
+
+
+/* Sticky Toolbar for Transactions */
+.transactions-sticky-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    padding: 12px 15px;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.toolbar-btn {
+    padding: 10px 18px;
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.toolbar-btn:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.toolbar-btn-success {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.toolbar-btn-success:hover {
+    background: #e8f5e9;
+}
+
+.filters-panel {
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .transactions-sticky-toolbar {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .toolbar-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+}
