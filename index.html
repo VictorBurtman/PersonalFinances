@@ -940,7 +940,7 @@
                         <div class="category-section income-category" id="category-income" style="display: none;">
                             <div class="category-title" style="color: #28a745; border-color: #28a745;">
                                 Income
-                                <button class="rename-btn" onclick="renameCategory('income')" style="display: none;">✏️</button>
+                                <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
                             <div class="category-controls">
@@ -2225,15 +2225,19 @@
             if (isEditMode) {
                 if (editBtn) {
                     editBtn.classList.add('active');
-                    editBtn.innerHTML = '✓ Done Editing'; // Change tout le HTML
+                    editBtn.innerHTML = '✓ Done Editing';
                 }
                 
-                // Afficher le bouton Add Category si il existe
                 const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
                 if (addBtn) addBtn.style.display = 'block';
                 
                 categoryControls.forEach(c => c.classList.add('show'));
-                renameButtons.forEach(btn => btn.style.display = 'inline-block');
+                renameButtons.forEach(btn => {
+                    // Ne pas afficher le bouton pour Income
+                    if (!btn.classList.contains('rename-btn-income')) {
+                        btn.style.display = 'inline-block';
+                    }
+                });
             } else {
                 if (editBtn) {
                     editBtn.classList.remove('active');
