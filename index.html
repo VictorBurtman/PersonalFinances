@@ -56,23 +56,34 @@
             right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 1.5em;
-            width: 45px;
-            height: 45px;
+            font-size: 1.3em;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
         }
         
         .settings-btn-header:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             transform: translateY(-50%) scale(1.1);
+        }
+        
+        @media (max-width: 600px) {
+            .settings-btn-header {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1em;
+                right: 5px;
+            }
         }
 
         .header h1 {
@@ -912,13 +923,10 @@
                         <div style="flex: 1;"></div>
                     </div>
                     
-                    <!-- NEW: Month selector (hidden by default) -->
-                    <div id="monthSelector" style="display: none; margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 12px;">
-                        <label style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-weight: 500;">Compare month:</span>
-                            <select id="compareMonth" onchange="loadRealSpending()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; flex: 1; max-width: 200px;">
-                            </select>
-                        </label>
+                    <!-- Month selector for Compare mode -->
+                    <div id="monthSelector" style="display: none; margin: 15px 0; text-align: center;">
+                        <select id="compareMonth" onchange="loadRealSpending()" style="padding: 10px 16px; border: 2px solid #667eea; border-radius: 10px; font-size: 1em; cursor: pointer; min-width: 180px; font-weight: 600; color: #667eea;">
+                        </select>
                     </div>
 
                     <div class="total-section">
@@ -1147,6 +1155,18 @@
                     </select>
                     <p class="settings-description">Choose how category percentages are calculated</p>
                 </div>
+
+                <!-- Clear Transactions -->
+                <div class="settings-section">
+                    <h3>🗑️ Clear Data</h3>
+                    <button class="settings-btn danger" onclick="clearAllTransactions()">
+                        Clear All Transactions
+                    </button>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;">
+                        Remove all synced transactions from the database. This cannot be undone.
+                    </p>
+                </div>
+                
             </div>
             <div class="modal-footer">
                 <button class="modal-button primary" onclick="closeSettings()">Done</button>
@@ -2779,6 +2799,43 @@
             saveUserData();
             updateDisplay();
         }
+
+
+        /**
+         * Clear all transactions
+         */
+        async function clearAllTransactions() {
+            if (!currentUser) return;
+            
+            if (!confirm('Are you sure you want to delete ALL transactions? This cannot be undone!')) {
+                return;
+            }
+            
+            try {
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('transactions')
+                    .get();
+                
+                const batch = db.batch();
+                snapshot.docs.forEach(doc => {
+                    batch.delete(doc.ref);
+                });
+                
+                await batch.commit();
+                
+                alert(`Deleted ${snapshot.size} transactions successfully`);
+                
+                // Reload if on transactions tab
+                if (typeof loadTransactions === 'function') {
+                    await loadTransactions();
+                }
+            } catch (error) {
+                console.error('Error clearing transactions:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
 
         function updatePercentageMode(mode) {
             percentageMode = mode;
