@@ -454,7 +454,7 @@
 /* Filters Panel - Also sticky */
 .filters-panel-sticky {
     position: sticky;
-    top: 48px; /* Juste en dessous de la toolbar */
+    top: 30px; /* Juste en dessous de la toolbar */
     z-index: 99;
     background: rgba(248, 249, 250, 0.98);
     backdrop-filter: blur(10px);
