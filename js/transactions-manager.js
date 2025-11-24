@@ -106,7 +106,7 @@ async function loadTransactions() {
         
         // Load transactions with increased limit
         const getTransactions = transactionsFunctions.httpsCallable('getTransactions');
-        const result = await getTransactions({ limit: 1000 });
+        const result = await getTransactions({ limit: 2000 });
         
         transactionsData = result.data.transactions || [];
         
