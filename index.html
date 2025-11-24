@@ -60,9 +60,9 @@
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 1.3em;
-            width: 40px;
-            height: 40px;
+            font-size: 1.5em; /* Plus gros */
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -70,6 +70,7 @@
             align-items: center;
             justify-content: center;
             padding: 0;
+            line-height: 1; /* Important pour centrer */
         }
         
         .settings-btn-header:hover {
@@ -889,7 +890,7 @@
     <div class="container">
         <div class="header">
             <h1 id="appTitle">💰 Monthly Expenses</h1>
-            <button class="settings-btn-header" onclick="openSettings()">⚙️</button>
+            <button class="settings-btn-header" onclick="openSettings()" title="Settings">⚙️</button>
         </div>
         
         <!-- ONGLETS -->
@@ -908,24 +909,13 @@
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
                     <div class="edit-mode-controls">
-                        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-                            ✏️ Edit Categories
+                        <button class="edit-mode-btn" onclick="toggleEditMode()">
+                            ✏️ <span id="editBtnText">Edit Categories</span>
                         </button>
-                        <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none;" id="addCategoryBtn">
-                            ➕ Add Category
-                        </button>
-                        
-                        <!-- NEW: Compare toggle -->
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
                             📊 Compare
                         </button>
-                        
-                        <div style="flex: 1;"></div>
-                    </div>
-                    
-                    <!-- Month selector for Compare mode -->
-                    <div id="monthSelector" style="display: none; margin: 15px 0; text-align: center;">
-                        <select id="compareMonth" onchange="loadRealSpending()" style="padding: 10px 16px; border: 2px solid #667eea; border-radius: 10px; font-size: 1em; cursor: pointer; min-width: 180px; font-weight: 600; color: #667eea;">
+                        <select id="compareMonth" onchange="loadRealSpending()" style="display: none; padding: 10px 14px; border: 2px solid #667eea; border-radius: 10px; font-size: 0.9em; cursor: pointer; font-weight: 600; color: #667eea; background: white;">
                         </select>
                     </div>
 
