@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Monthly Expenses Tracker</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -881,7 +881,7 @@
     <div id="appScreen">
     <div class="container">
         <div class="header">
-            <h1 id="appTitle">💰 Monthly Expenses</h1>
+            <h1 id="appTitle">Monthly Expenses</h1>
             <button class="settings-btn-header" onclick="openSettings()" title="Settings">⚙️</button>
         </div>
         
@@ -1148,7 +1148,12 @@
                         Remove all synced transactions from the database. This cannot be undone.
                     </p>
                 </div>
-                
+                <!-- About Section -->
+                <div class="settings-section" style="border-top: 2px solid #e9ecef; margin-top: 30px; padding-top: 20px; text-align: center; font-size: 0.85em; color: #6c757d;">
+                    <p style="margin: 5px 0; font-weight: 600;">Made by Victor Burtman</p>
+                    <p style="margin: 5px 0;">For any bug report, ideas or suggestions:</p>
+                    <a href="mailto:victorburtman@gmail.com" style="color: #667eea; text-decoration: none; font-weight: 600;">victorburtman@gmail.com</a>
+                </div>   
             </div>
             <div class="modal-footer">
                 <button class="modal-button primary" onclick="closeSettings()">Done</button>
