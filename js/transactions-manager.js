@@ -1004,3 +1004,23 @@ function showTransactionDetails(txnId) {
 }
 
 window.showTransactionDetails = showTransactionDetails;
+
+
+
+/**
+ * Toggle filters panel
+ */
+function toggleFiltersPanel() {
+    const panel = document.getElementById('filtersPanel');
+    const icon = document.getElementById('filterToggleIcon');
+    
+    if (panel && icon) {
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            icon.textContent = '▲';
+        } else {
+            panel.style.display = 'none';
+            icon.textContent = '▼';
+        }
+    }
+}
