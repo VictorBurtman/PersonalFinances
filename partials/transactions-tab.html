@@ -1,3 +1,49 @@
+<!-- Sticky Toolbar for Transactions -->
+<div class="transactions-sticky-toolbar">
+    <button class="toolbar-btn" onclick="toggleFiltersPanel()">
+        🔍 <span data-translate="filters">Filters</span> <span id="filterToggleIcon">▼</span>
+    </button>
+    <button class="toolbar-btn toolbar-btn-success" onclick="autoLabelAll()">
+        🏷️ <span data-translate="autoLabel">Auto-label</span>
+    </button>
+</div>
+
+<!-- Filters Panel (collapsible) -->
+<div class="filters-panel" id="filtersPanel" style="display: none;">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; padding: 15px;">
+        <!-- Unlabeled checkbox -->
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
+            <span data-translate="showOnlyUnlabeled">Show only unlabeled</span>
+        </label>
+        
+        <!-- Month filter -->
+        <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+            <option value="" data-translate="allMonths">All months</option>
+        </select>
+        
+        <!-- Category filter -->
+        <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
+            <option value="" data-translate="allCategories">All categories</option>
+        </select>
+        
+        <!-- Search by name -->
+        <input 
+            type="text" 
+            id="searchFilter" 
+            data-translate-placeholder="search"
+            placeholder="Search..." 
+            oninput="applyFilters()"
+            style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 150px;"
+        />
+        
+        <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
+            <span data-translate="clear">Clear</span>
+        </button>
+    </div>
+</div>
+
+
 <!-- Bank Accounts Configuration - Collapsible -->
 <div class="transactions-section">
     <div class="section-title-trans" onclick="toggleSection('bankConfigSection')" style="cursor: pointer; user-select: none;">
@@ -62,45 +108,6 @@
     </div>
 </div>
 
-<!-- Filters Section - Collapsible -->
-<div class="transactions-section" id="filtersSection">
-    <div class="section-title-trans" onclick="toggleSection('filtersSection')" style="cursor: pointer; user-select: none;">
-        <span id="filtersToggle">▶</span> <span data-translate="filters">🔍 Filters</span>
-    </div>
-    <div id="filtersContent" style="display: none;">
-        <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-            <!-- Unlabeled checkbox -->
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
-                <span data-translate="showOnlyUnlabeled">Show only unlabeled</span>
-            </label>
-            
-            <!-- Month filter -->
-            <select id="monthFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-                <option value="" data-translate="allMonths">All months</option>
-            </select>
-            
-            <!-- Category filter -->
-            <select id="categoryFilter" onchange="applyFilters()" style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer;">
-                <option value="" data-translate="allCategories">All categories</option>
-            </select>
-            
-            <!-- Search by name -->
-            <input 
-                type="text" 
-                id="searchFilter" 
-                data-translate-placeholder="search"
-                placeholder="Search..." 
-                oninput="applyFilters()"
-                style="padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; flex: 1; min-width: 150px;"
-            />
-            
-            <button class="btn btn-secondary" onclick="clearFilters()" style="padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em;">
-                <span data-translate="clear">Clear</span>
-            </button>
-        </div>
-    </div>
-</div>
 
 <!-- All Transactions - Always visible -->
 <div class="transactions-section" id="allTransactionsSection">
