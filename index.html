@@ -2257,22 +2257,36 @@
             const compareBtn = document.getElementById('compareBtn');
             const monthSelect = document.getElementById('compareMonth');
             
-            if (!window.compareMode) {
-                window.compareMode = true;
+            compareMode = !compareMode;
+            
+            // Update button style
+            if (compareMode) {
                 compareBtn.style.background = '#667eea';
                 compareBtn.style.color = 'white';
                 
-                if (monthSelect) monthSelect.style.display = 'inline-block'; // Afficher le select
+                // IMPORTANT : Afficher AVANT de peupler
+                if (monthSelect) {
+                    monthSelect.style.display = 'inline-block';
+                }
                 
-                loadRealSpending();
+                // Populate month dropdown APRÈS avoir affiché
+                setTimeout(() => {
+                    populateMonthDropdown();
+                    loadRealSpending();
+                }, 50);
+                
             } else {
-                window.compareMode = false;
                 compareBtn.style.background = 'white';
                 compareBtn.style.color = '#667eea';
                 compareBtn.style.borderColor = '#dee2e6';
                 
-                if (monthSelect) monthSelect.style.display = 'none'; // Cacher le select
+                // Hide month selector
+                if (monthSelect) monthSelect.style.display = 'none';
                 
+                // Clear real spending data
+                realSpendingData = {};
+                
+                // Refresh display to remove comparison
                 updateDisplay();
             }
         }
