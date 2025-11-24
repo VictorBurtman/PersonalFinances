@@ -1027,24 +1027,36 @@ function toggleFiltersPanel() {
 
 
 /**
- * Toggle Bank Config from toolbar (separate from click on title)
+ * Toggle Bank Config from toolbar (absolute show/hide, not toggle section)
  */
 let bankConfigOpen = false;
 
 function toggleBankConfigFromToolbar() {
+    const section = document.querySelector('.transactions-section:has(#bankConfigContent)'); // La section entière
     const content = document.getElementById('bankConfigContent');
     const toggle = document.getElementById('bankConfigToggle');
+    const btn = document.querySelector('.toolbar-btn[onclick*="toggleBankConfig"]');
     
     bankConfigOpen = !bankConfigOpen;
     
-    if (content && toggle) {
+    if (section) {
         if (bankConfigOpen) {
-            content.style.display = 'block';
-            toggle.textContent = '▼';
+            // Afficher toute la section
+            section.style.display = 'block';
+            if (content) content.style.display = 'block';
+            if (toggle) toggle.textContent = '▼';
+            if (btn) {
+                btn.style.background = '#667eea';
+                btn.style.color = 'white';
+            }
             updateCredentialsStatus();
         } else {
-            content.style.display = 'none';
-            toggle.textContent = '▶';
+            // Cacher toute la section
+            section.style.display = 'none';
+            if (btn) {
+                btn.style.background = 'white';
+                btn.style.color = '#333';
+            }
         }
     }
 }
