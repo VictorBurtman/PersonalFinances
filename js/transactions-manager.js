@@ -1027,36 +1027,30 @@ function toggleFiltersPanel() {
 
 
 /**
- * Toggle Bank Config from toolbar (absolute show/hide, not toggle section)
+ * Toggle Bank Config from toolbar with arrow indicator
  */
 let bankConfigOpen = false;
 
 function toggleBankConfigFromToolbar() {
-    const section = document.querySelector('.transactions-section:has(#bankConfigContent)'); // La section entière
-    const content = document.getElementById('bankConfigContent');
-    const toggle = document.getElementById('bankConfigToggle');
+    const section = document.getElementById('bankConfigSection');
     const btn = document.querySelector('.toolbar-btn[onclick*="toggleBankConfig"]');
     
     bankConfigOpen = !bankConfigOpen;
     
-    if (section) {
+    if (section && btn) {
         if (bankConfigOpen) {
-            // Afficher toute la section
+            // Afficher
             section.style.display = 'block';
-            if (content) content.style.display = 'block';
-            if (toggle) toggle.textContent = '▼';
-            if (btn) {
-                btn.style.background = '#667eea';
-                btn.style.color = 'white';
-            }
+            btn.innerHTML = '🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span> ▲';
+            btn.style.background = '#667eea';
+            btn.style.color = 'white';
             updateCredentialsStatus();
         } else {
-            // Cacher toute la section
+            // Cacher
             section.style.display = 'none';
-            if (btn) {
-                btn.style.background = 'white';
-                btn.style.color = '#333';
-            }
+            btn.innerHTML = '🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span> ▼';
+            btn.style.background = 'white';
+            btn.style.color = '#333';
         }
     }
 }
