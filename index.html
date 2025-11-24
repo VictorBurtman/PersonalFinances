@@ -2262,37 +2262,24 @@
          */
         function toggleCompareMode() {
             const compareBtn = document.getElementById('compareBtn');
-            const monthSelector = document.getElementById('monthSelector');
+            const monthSelect = document.getElementById('compareMonth');
             
-            compareMode = !compareMode;
-            
-            // Update button style
-            if (compareMode) {
+            if (!window.compareMode) {
+                window.compareMode = true;
                 compareBtn.style.background = '#667eea';
                 compareBtn.style.color = 'white';
+                
+                if (monthSelect) monthSelect.style.display = 'inline-block'; // Afficher le select
+                
+                loadRealSpending();
             } else {
+                window.compareMode = false;
                 compareBtn.style.background = 'white';
                 compareBtn.style.color = '#667eea';
                 compareBtn.style.borderColor = '#dee2e6';
-            }
-            
-            if (compareMode) {
-                // Show month selector
-                monthSelector.style.display = 'block';
                 
-                // Populate month dropdown
-                populateMonthDropdown();
+                if (monthSelect) monthSelect.style.display = 'none'; // Cacher le select
                 
-                // Load real spending for current month
-                loadRealSpending();
-            } else {
-                // Hide month selector
-                monthSelector.style.display = 'none';
-                
-                // Clear real spending data
-                realSpendingData = {};
-                
-                // Refresh display to remove comparison
                 updateDisplay();
             }
         }
