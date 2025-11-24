@@ -2219,27 +2219,33 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
-            const editBtnText = document.getElementById('editBtnText');
-            const addCategoryBtn = document.getElementById('addCategoryBtn');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
             
             if (isEditMode) {
-                if (editBtn) editBtn.classList.add('active');
-                if (editBtnText) editBtnText.textContent = 'Done Editing';
-                if (addCategoryBtn) addCategoryBtn.style.display = 'block';
+                if (editBtn) {
+                    editBtn.classList.add('active');
+                    editBtn.innerHTML = '✓ Done Editing'; // Change tout le HTML
+                }
+                
+                // Afficher le bouton Add Category si il existe
+                const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
+                if (addBtn) addBtn.style.display = 'block';
+                
                 categoryControls.forEach(c => c.classList.add('show'));
                 renameButtons.forEach(btn => btn.style.display = 'inline-block');
             } else {
-                if (editBtn) editBtn.classList.remove('active');
-                if (editBtnText) editBtnText.textContent = 'Edit Categories';
-                if (addCategoryBtn) addCategoryBtn.style.display = 'none';
+                if (editBtn) {
+                    editBtn.classList.remove('active');
+                    editBtn.innerHTML = '✏️ Edit Categories';
+                }
+                
+                const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
+                if (addBtn) addBtn.style.display = 'none';
+                
                 categoryControls.forEach(c => c.classList.remove('show'));
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
-            
-            // Refresh display to show/hide delete buttons
-            updateDisplay();
         }
 
 
