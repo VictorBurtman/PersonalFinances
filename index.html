@@ -907,7 +907,7 @@
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
                             📊 Compare
                         </button>
-                        <select id="compareMonth" onchange="loadRealSpending()" style="display: none; padding: 10px 14px; border: 2px solid #667eea; border-radius: 10px; font-size: 0.9em; cursor: pointer; font-weight: 600; color: #667eea; background: white;">
+                        <select id="compareMonth" onchange="loadRealSpending()" style="display: none; padding: 10px 14px; border: 2px solid #667eea; border-radius: 10px; font-size: 0.85em; cursor: pointer; font-weight: 600; color: #667eea; background: white;">
                         </select>
                     </div>
 
@@ -2310,7 +2310,7 @@
             // Generate last 12 months
             for (let i = 0; i < 12; i++) {
                 const date = new Date(currentYear, currentMonth - i, 1);
-                const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                const monthName = date.toLocaleString(currentLanguage || 'en', { month: 'long', year: 'numeric' });
                 const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                 
                 const option = document.createElement('option');
