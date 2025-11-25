@@ -386,7 +386,8 @@ function renderTransaction(txn) {
                     <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
                         <div style="margin-bottom: 5px;"><strong>Full name:</strong> ${escapeHtml(txn.description)}</div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>Memo:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
-                        <div><strong>Amount:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
+                        <div style="margin-bottom: 5px;"><strong>Amount:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
+                        <div style="color: #667eea; font-weight: 600;"><strong>Similar transactions:</strong> ${countSimilarTransactions(txn.description)}</div>
                     </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
@@ -1106,3 +1107,14 @@ setInterval(monitorCredentials, 30000);
 
 // Première vérification au chargement
 setTimeout(monitorCredentials, 5000);
+
+
+/**
+ * Count similar transactions
+ */
+function countSimilarTransactions(description) {
+    const cleanDesc = description.toLowerCase();
+    return transactionsData.filter(txn => 
+        txn.description.toLowerCase() === cleanDesc
+    ).length;
+}
