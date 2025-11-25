@@ -5,7 +5,8 @@
 let transactionsData = [];
 let filteredTransactionsData = [];
 let transactionsFunctions = null;
-
+// Ajoute cette ligne après la ligne 7 (après transactionsFunctions = null;)
+let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'
 /**
  * Initialize transactions system
  * Called after Firebase is initialized
@@ -226,7 +227,7 @@ function populateCategoryFilter() {
 }
 
 /**
- * Apply filters and render transactions
+ * Apply filters and sorting, then render transactions
  */
 function applyFilters() {
     // Get filter values
@@ -235,7 +236,7 @@ function applyFilters() {
     const categoryFilter = document.getElementById('categoryFilter')?.value;
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
     
-    console.log('Applying filters:', { labelFilter, monthFilter, categoryFilter, searchFilter }); // DEBUG
+    console.log('Applying filters:', { labelFilter, monthFilter, categoryFilter, searchFilter, currentSortOrder }); // DEBUG
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
@@ -275,9 +276,65 @@ function applyFilters() {
         return true;
     });
     
+    // Apply sorting
+    sortTransactions();
+    
     console.log('Filtered:', filteredTransactionsData.length, 'of', transactionsData.length); // DEBUG
     
     renderTransactions();
+}
+
+/**
+ * Sort filtered transactions based on current sort order
+ */
+function sortTransactions() {
+    switch(currentSortOrder) {
+        case 'date-desc':
+            // Most recent first (default)
+            filteredTransactionsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            break;
+            
+        case 'date-asc':
+            // Oldest first
+            filteredTransactionsData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            break;
+            
+        case 'amount-desc':
+            // Highest amount first
+            filteredTransactionsData.sort((a, b) => Math.abs(b.chargedAmount) - Math.abs(a.chargedAmount));
+            break;
+            
+        case 'amount-asc':
+            // Lowest amount first
+            filteredTransactionsData.sort((a, b) => Math.abs(a.chargedAmount) - Math.abs(b.chargedAmount));
+            break;
+            
+        case 'frequency-desc':
+            // Most frequent first
+            filteredTransactionsData.sort((a, b) => {
+                const freqA = getTransactionFrequency(a.description);
+                const freqB = getTransactionFrequency(b.description);
+                return freqB - freqA;
+            });
+            break;
+            
+        case 'frequency-asc':
+            // Least frequent first (unique transactions)
+            filteredTransactionsData.sort((a, b) => {
+                const freqA = getTransactionFrequency(a.description);
+                const freqB = getTransactionFrequency(b.description);
+                return freqA - freqB;
+            });
+            break;
+    }
+}
+
+/**
+ * Change sort order and reapply filters
+ */
+function changeSortOrder(sortOrder) {
+    currentSortOrder = sortOrder;
+    applyFilters();
 }
 
 /**
@@ -1128,5 +1185,15 @@ function countSimilarTransactions(description) {
     const cleanDesc = description.toLowerCase();
     return transactionsData.filter(txn => 
         txn.description.toLowerCase() === cleanDesc
+    ).length;
+}
+
+// Ajoute cette fonction après la fonction countSimilarTransactions (cherche où elle est définie)
+/**
+ * Get frequency count for a transaction
+ */
+function getTransactionFrequency(description) {
+    return transactionsData.filter(t => 
+        t.description.toLowerCase().trim() === description.toLowerCase().trim()
     ).length;
 }
