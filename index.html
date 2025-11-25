@@ -583,7 +583,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
+            padding: 15px;
         }
         
         .modal.show {
@@ -600,10 +600,11 @@
         
         .modal-content {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             width: 90%;
             max-width: 500px;
-            max-height: calc(100vh - 40px);
+            max-height: 75vh;
+            max-height: 75dvh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -623,7 +624,7 @@
         }
         
         .modal-header {
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-bottom: 2px solid #f0f0f0;
             display: flex;
             justify-content: space-between;
@@ -632,7 +633,7 @@
         }
         
         .modal-header h2 {
-            font-size: 1.3em;
+            font-size: 1.2em;
             color: #667eea;
             margin: 0;
         }
@@ -640,12 +641,12 @@
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.5em;
+            font-size: 1.3em;
             color: #999;
             cursor: pointer;
             padding: 0;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -660,7 +661,7 @@
         }
         
         .modal-body {
-            padding: 20px;
+            padding: 15px;
             overflow-y: auto;
             overflow-x: hidden;
             flex: 1;
@@ -668,19 +669,19 @@
         }
         
         .modal-footer {
-            padding: 15px 20px;
+            padding: 12px 15px;
             border-top: 2px solid #f0f0f0;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
             flex-shrink: 0;
         }
         
         .modal-button {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border: none;
             border-radius: 8px;
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -724,7 +725,7 @@
             font-weight: 500;
             color: #495057;
             flex: 1;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
         
         .color-picker-wrapper {
@@ -734,16 +735,16 @@
         }
         
         .color-preview {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 6px;
             border: 2px solid #dee2e6;
             cursor: pointer;
         }
         
         input[type="color"] {
-            width: 45px;
-            height: 32px;
+            width: 40px;
+            height: 30px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
@@ -874,19 +875,20 @@
                 white-space: nowrap;
             }
             
-            /* Modals */
+           /* Modals */
             .modal {
                 padding: 10px;
             }
             
             .modal-content {
-                width: 100%;
-                max-width: 100%;
-                max-height: calc(100vh - 20px);
+                width: 95%;
+                max-width: 95%;
+                max-height: 70vh;
+                max-height: 70dvh;
             }
             
             .modal-header {
-                padding: 12px 15px;
+                padding: 10px 12px;
             }
             
             .modal-header h2 {
@@ -894,17 +896,19 @@
             }
             
             .modal-body {
-                padding: 15px;
+                padding: 12px;
             }
             
             .modal-footer {
-                padding: 12px 15px;
+                padding: 10px 12px;
                 flex-direction: column;
+                gap: 6px;
             }
             
             .modal-button {
                 width: 100%;
-                padding: 12px;
+                padding: 10px;
+                font-size: 0.9em;
             }
         }
         
