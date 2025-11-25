@@ -923,6 +923,30 @@
                 padding: 8px 10px;
             }
         }
+            /* Compare month selector */
+        #compareMonth {
+            display: none;
+            padding: 10px 14px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            background: white;
+        }
+    
+        @media (max-width: 600px) {
+            #compareMonth {
+                font-size: 0.75em;
+                padding: 8px 10px;
+                max-width: 140px;
+            }
+            
+            .edit-mode-controls {
+                gap: 8px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="css/tabs.css">
 </head>
@@ -991,7 +1015,7 @@
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
                             📊 Compare
                         </button>
-                        <select id="compareMonth" onchange="loadRealSpending()" style="display: none; padding: 10px 14px; border: 2px solid #667eea; border-radius: 10px; font-size: 0.85em; cursor: pointer; font-weight: 600; color: #667eea; background: white;">
+                        <select id="compareMonth" onchange="loadRealSpending()">
                         </select>
                     </div>
 
