@@ -825,29 +825,37 @@ async function autoLabelAll() {
  * Label a single transaction
  */
 
+/**
+ * Label a transaction with a category
+ */
 async function labelTransaction(transactionId, category) {
     if (!transactionsFunctions) {
         showTransactionAlert('Firebase Functions not initialized', 'error');
         return;
     }
     
-    if (!category) return; // User selected "Select category..."
-    
     try {
-        const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
-        const result = await labelTransactionFunc({ transactionId, category });
+        const labelFunc = transactionsFunctions.httpsCallable('labelTransaction');
+        await labelFunc({ transactionId, category });
         
-        // Show smart message based on how many were labeled
-        const similarCount = result.data.similarCount || 0;
-        if (similarCount > 0) {
-            showTransactionAlert(`Labeled 1 transaction + ${similarCount} similar ones! ✓`, 'success');
-        } else {
-            showTransactionAlert('Transaction labeled! ✓', 'success');
+        showTransactionAlert('Transaction labeled! ✓', 'success');
+        
+        // Auto-label similar transactions silently
+        try {
+            const autoLabelFunc = transactionsFunctions.httpsCallable('autoLabelTransactions');
+            const autoResult = await autoLabelFunc({});
+            
+            if (autoResult.data.labeledCount > 0) {
+                showTransactionAlert(`Labeled 1 + auto-labeled ${autoResult.data.labeledCount} similar transaction(s)! ✓`, 'success');
+            }
+        } catch (autoError) {
+            console.log('Auto-label skipped:', autoError);
         }
         
+        // Reload transactions
         await loadTransactions();
     } catch (error) {
-        console.error('Error labeling:', error);
+        console.error('Error labeling transaction:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     }
 }
