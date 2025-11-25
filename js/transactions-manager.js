@@ -834,28 +834,23 @@ async function labelTransaction(transactionId, category) {
         return;
     }
     
+    if (!category) return; // User selected "Select category..."
+    
     try {
-        const labelFunc = transactionsFunctions.httpsCallable('labelTransaction');
-        await labelFunc({ transactionId, category });
+        const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
+        const result = await labelTransactionFunc({ transactionId, category });
         
-        showTransactionAlert('Transaction labeled! ✓', 'success');
-        
-        // Auto-label similar transactions silently
-        try {
-            const autoLabelFunc = transactionsFunctions.httpsCallable('autoLabelTransactions');
-            const autoResult = await autoLabelFunc({});
-            
-            if (autoResult.data.labeledCount > 0) {
-                showTransactionAlert(`Labeled 1 + auto-labeled ${autoResult.data.labeledCount} similar transaction(s)! ✓`, 'success');
-            }
-        } catch (autoError) {
-            console.log('Auto-label skipped:', autoError);
+        // Show smart message based on how many were labeled
+        const similarCount = result.data.similarCount || 0;
+        if (similarCount > 0) {
+            showTransactionAlert(`Labeled 1 transaction + ${similarCount} similar ones! ✓`, 'success');
+        } else {
+            showTransactionAlert('Transaction labeled! ✓', 'success');
         }
         
-        // Reload transactions
         await loadTransactions();
     } catch (error) {
-        console.error('Error labeling transaction:', error);
+        console.error('Error labeling:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     }
 }
