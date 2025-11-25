@@ -547,10 +547,6 @@
 
 @media (max-width: 600px) {
     .toolbar-row,
-    .filters-row {
-        flex-direction: column;
-    }
-    
     .toolbar-btn,
     .filter-select,
     .filter-search,
