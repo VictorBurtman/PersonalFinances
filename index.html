@@ -2281,12 +2281,18 @@
                 });
             });
             
+            // Prevent background scrolling
+            document.body.style.overflow = 'hidden';
+            
             modal.classList.add('show');
         }
 
         function closeColorEditor() {
             const modal = document.getElementById('colorEditorModal');
             modal.classList.remove('show');
+            
+            // Restore background scrolling
+            document.body.style.overflow = '';
         }
 
         function updateColor(expenseName, color) {
@@ -2860,12 +2866,18 @@
                 settingsUserEmail.textContent = currentUser.email;
             }
             
+            // Prevent background scrolling
+            document.body.style.overflow = 'hidden';
+            
             modal.classList.add('show');
         }
 
         function closeSettings() {
             const modal = document.getElementById('settingsModal');
             modal.classList.remove('show');
+            
+            // Restore background scrolling
+            document.body.style.overflow = '';
         }
 
         function updateCurrency(currencyCode) {
@@ -3061,6 +3073,19 @@
             updateDisplay();
         }
 
+        // Close modals on click outside and restore scroll
+        document.addEventListener('click', function(e) {
+            const colorModal = document.getElementById('colorEditorModal');
+            const settingsModal = document.getElementById('settingsModal');
+            
+            if (e.target === colorModal) {
+                closeColorEditor();
+            }
+            if (e.target === settingsModal) {
+                closeSettings();
+            }
+        });
+        
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             if (typeof Chart !== 'undefined') {
