@@ -2390,17 +2390,14 @@
             
             compareMode = !compareMode;
             
-            // Update button style
             if (compareMode) {
                 compareBtn.style.background = '#667eea';
                 compareBtn.style.color = 'white';
                 
-                // IMPORTANT : Afficher AVANT de peupler
                 if (monthSelect) {
                     monthSelect.style.display = 'inline-block';
                 }
                 
-                // Populate month dropdown APRÈS avoir affiché
                 setTimeout(() => {
                     populateMonthDropdown();
                     loadRealSpending();
@@ -2411,14 +2408,19 @@
                 compareBtn.style.color = '#667eea';
                 compareBtn.style.borderColor = '#dee2e6';
                 
-                // Hide month selector
                 if (monthSelect) monthSelect.style.display = 'none';
                 
-                // Clear real spending data
                 realSpendingData = {};
-                
-                // Refresh display to remove comparison
                 updateDisplay();
+            }
+            
+            // FIX : Force hide item rename buttons if NOT in edit mode
+            if (!isEditMode) {
+                setTimeout(() => {
+                    document.querySelectorAll('.item-rename-btn').forEach(btn => {
+                        btn.style.display = 'none';
+                    });
+                }, 100);
             }
         }
         
