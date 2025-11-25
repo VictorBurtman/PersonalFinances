@@ -1805,7 +1805,7 @@
         // Data variables
         let expenses = JSON.parse(JSON.stringify(defaultExpenses));
         let chart = null;
-        let currentChartType = null;
+        let currentChartType = 'doughnut';
         let hiddenItems = {};
         let customColors = {};
 
@@ -1821,6 +1821,10 @@
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
                     currentChartType = data.chartType || 'doughnut';
+                    // ✅ Mettre à jour l'état des boutons SEULEMENT après chargement Firebase
+                    if (typeof window.updateChartButtonsState === 'function') {
+                        window.updateChartButtonsState();
+                    }
                     categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
@@ -3361,8 +3365,6 @@
                     });
                 };
         
-                // Call immediately to set initial state
-                updateChartButtonsState();
                 
                 // Close modal when clicking outside
                 const modal = document.getElementById('colorEditorModal');
