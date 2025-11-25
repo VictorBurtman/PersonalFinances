@@ -564,6 +564,7 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .filter-radio-label {
@@ -573,10 +574,15 @@
     cursor: pointer;
     font-size: 0.85em;
     white-space: nowrap;
+    font-weight: 500;
 }
 
 .filter-radio-label input[type="radio"] {
     cursor: pointer;
     width: 16px;
     height: 16px;
+}
+
+.filter-radio-label:hover {
+    color: #667eea;
 }
