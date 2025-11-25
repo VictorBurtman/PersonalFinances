@@ -11,10 +11,21 @@
     
     <!-- Filters Row (inside sticky toolbar, hidden by default) -->
     <div class="filters-row" id="filtersRow" style="display: none;">
-        <label class="filter-checkbox">
-            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()">
-            <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
-        </label>
+        <!-- Label filter with radio buttons -->
+        <div class="filter-radio-group" style="display: flex; gap: 12px; align-items: center;">
+            <label class="filter-radio-label">
+                <input type="radio" name="labelFilter" value="all" onchange="applyFilters()" checked>
+                <span data-translate="showAll">All</span>
+            </label>
+            <label class="filter-radio-label">
+                <input type="radio" name="labelFilter" value="unlabeled" onchange="applyFilters()">
+                <span data-translate="showOnlyUnlabeled">Unlabeled</span>
+            </label>
+            <label class="filter-radio-label">
+                <input type="radio" name="labelFilter" value="labeled" onchange="applyFilters()">
+                <span data-translate="showOnlyLabeled">Labeled</span>
+            </label>
+        </div>
         
         <select id="monthFilter" onchange="applyFilters()" class="filter-select">
             <option value="" data-translate="allMonths">All months</option>
