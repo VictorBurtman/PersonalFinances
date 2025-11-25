@@ -1913,6 +1913,8 @@
         }
 
         function renderExpenseItem(expense, category, index) {
+            console.log('🟢 renderExpenseItem called - isEditMode:', isEditMode, 'item:', expense.name); // DEBUG
+
             const deleteBtn = isEditMode ? 
                 `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
             
@@ -2388,6 +2390,8 @@
             const compareBtn = document.getElementById('compareBtn');
             const monthSelect = document.getElementById('compareMonth');
             
+            console.log('🔴 AVANT toggleCompareMode - isEditMode:', isEditMode); // DEBUG
+            
             compareMode = !compareMode;
             
             if (compareMode) {
@@ -2414,14 +2418,13 @@
                 updateDisplay();
             }
             
-            // FIX : Force hide item rename buttons if NOT in edit mode
-            if (!isEditMode) {
-                setTimeout(() => {
-                    document.querySelectorAll('.item-rename-btn').forEach(btn => {
-                        btn.style.display = 'none';
-                    });
-                }, 100);
-            }
+            console.log('🔴 APRÈS toggleCompareMode - isEditMode:', isEditMode); // DEBUG
+            
+            // Force refresh to ensure correct button visibility
+            setTimeout(() => {
+                console.log('🔴 Dans setTimeout - isEditMode:', isEditMode); // DEBUG
+                updateDisplay();
+            }, 100);
         }
         
         /**
