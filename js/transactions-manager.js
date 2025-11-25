@@ -1008,19 +1008,24 @@ window.showTransactionDetails = showTransactionDetails;
 
 
 /**
- * Toggle filters panel
+ * Toggle filters row inside toolbar
  */
-function toggleFiltersPanel() {
-    const panel = document.getElementById('filtersPanel');
+function toggleFiltersRow() {
+    const filtersRow = document.getElementById('filtersRow');
     const icon = document.getElementById('filterToggleIcon');
+    const btn = document.getElementById('filtersToggleBtn');
     
-    if (panel && icon) {
-        if (panel.style.display === 'none') {
-            panel.style.display = 'block';
+    if (filtersRow && icon && btn) {
+        if (filtersRow.style.display === 'none') {
+            filtersRow.style.display = 'flex';
             icon.textContent = '▲';
+            btn.style.background = '#667eea';
+            btn.style.color = 'white';
         } else {
-            panel.style.display = 'none';
+            filtersRow.style.display = 'none';
             icon.textContent = '▼';
+            btn.style.background = 'white';
+            btn.style.color = '#333';
         }
     }
 }
