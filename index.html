@@ -26,8 +26,6 @@
             padding: 10px;
             color: #333;
             position: relative;
-            zoom: 1;
-            -webkit-text-size-adjust: 100%;
         }
         
         body::before {
@@ -197,14 +195,14 @@
 
         .modal-content {
             background: white;
-            border-radius: 20px;
+            margin: 50px auto;
+            padding: 0;
+            border-radius: 15px;
             width: 90%;
-            margin: 30px auto; /* Force margin top */
-            max-height: calc(100vh - 60px); /* Limite hauteur */
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            animation: slideIn 0.3s;
+            max-width: 500px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes slideIn {
@@ -3036,12 +3034,6 @@
             initializeApp();
         }
 
-                // Reset zoom on page load
-        window.addEventListener('load', function() {
-            document.body.style.zoom = 1;
-            document.body.style.transform = 'scale(1)';
-            document.documentElement.style.zoom = 1;
-        });
     </script>
     <script src="js/tabs-manager.js"></script>
     <script src="js/transactions-manager.js"></script>
