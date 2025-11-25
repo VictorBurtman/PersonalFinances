@@ -546,8 +546,20 @@
 }
 
 @media (max-width: 600px) {
-    .toolbar-row,
-    .toolbar-btn,
+    .toolbar-row {
+        gap: 8px;
+    }
+    
+    .toolbar-btn {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.8em;
+    }
+    
+    .filters-row {
+        flex-direction: column;
+    }
+    
     .filter-select,
     .filter-search,
     .filter-clear-btn {
