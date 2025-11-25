@@ -1915,6 +1915,7 @@
                 // Mettre à jour l'interface avec la langue chargée
                 updateUILanguage();
                 updateDisplay();
+                updateChartButtonsState();
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
@@ -3311,7 +3312,19 @@
                 closeSettings();
             }
         });
-        
+
+        // Fonction pour mettre à jour l'état visuel des boutons de graphique
+        function updateChartButtonsState() {
+            const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
+            toggleButtons.forEach(btn => {
+                if (btn.dataset.type === currentChartType) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             if (typeof Chart !== 'undefined') {
