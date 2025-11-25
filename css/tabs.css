@@ -532,7 +532,8 @@
     }
     
     .filters-panel-sticky {
-        top: 48px;
+        top: 48px; /* Ajuste selon la hauteur de ta toolbar mobile */
+        margin-top: -1px;
     }
     
     .filters-panel-content {
