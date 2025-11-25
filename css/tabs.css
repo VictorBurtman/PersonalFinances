@@ -454,8 +454,8 @@
 /* Filters Panel - Also sticky */
 .filters-panel-sticky {
     position: sticky;
-    top: 30px; /* Juste en dessous de la toolbar */
-    z-index: 99;
+    top: 50px; /* Juste en dessous de la toolbar */
+    z-index: 101;
     background: rgba(248, 249, 250, 0.98);
     backdrop-filter: blur(10px);
     padding: 12px 15px;
@@ -532,7 +532,7 @@
     }
     
     .filters-panel-sticky {
-        top: 48px; /* Ajuste selon la hauteur de ta toolbar mobile */
+        top: 50px; /* Ajuste selon la hauteur de ta toolbar mobile */
         margin-top: -1px;
     }
     
