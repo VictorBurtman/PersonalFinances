@@ -1824,7 +1824,7 @@
                 });
                 
                 // IMPORTANT : Ne PAS utiliser merge pour que les clés supprimées disparaissent vraiment
-                await db.collection('users').doc(currentUser.uid).set(dataToSave);
+                await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
                 console.log('Save successful');
             } catch (error) {
                 console.error('Error saving user data:', error);
