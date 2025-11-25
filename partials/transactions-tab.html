@@ -1,18 +1,18 @@
-<!-- Sticky Toolbar for Transactions -->
+<!-- Sticky Toolbar for Transactions with Integrated Filters -->
 <div class="transactions-sticky-toolbar">
-    <button class="toolbar-btn" onclick="toggleFiltersPanel()">
-        <span data-translate="filters">Filters</span> <span id="filterToggleIcon">▼</span>
-    </button>
-    <button class="toolbar-btn" onclick="toggleBankConfigFromToolbar()">
-        <span data-translate="bankAccountsConfig">Bank Accounts</span> ▼
-    </button>
-</div>
-
-<!-- Filters Panel (sticky when open) -->
-<div class="filters-panel-sticky" id="filtersPanel" style="display: none;">
-    <div class="filters-panel-content">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()" style="width: 18px; height: 18px; cursor: pointer;">
+    <div class="toolbar-row">
+        <button class="toolbar-btn" id="filtersToggleBtn" onclick="toggleFiltersRow()">
+            🔍 <span data-translate="filters">Filters</span> <span id="filterToggleIcon">▼</span>
+        </button>
+        <button class="toolbar-btn" onclick="toggleBankConfigFromToolbar()">
+            <span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▼
+        </button>
+    </div>
+    
+    <!-- Filters Row (inside sticky toolbar, hidden by default) -->
+    <div class="filters-row" id="filtersRow" style="display: none;">
+        <label class="filter-checkbox">
+            <input type="checkbox" id="showOnlyUnlabeled" onchange="applyFilters()">
             <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
         </label>
         
