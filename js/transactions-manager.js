@@ -1059,3 +1059,47 @@ function toggleBankConfigFromToolbar() {
         }
     }
 }
+
+/**
+ * Check if credentials exist every 30 seconds
+ */
+let lastCredentialsCheck = {
+    max: false,
+    isracard: false
+};
+
+async function monitorCredentials() {
+    if (!window.currentUser || !db) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        
+        if (userDoc.exists) {
+            const hasMax = !!userDoc.data().maxCredentials;
+            const hasIsracard = !!userDoc.data().isracardCredentials;
+            
+            // Détection de suppression Max
+            if (lastCredentialsCheck.max && !hasMax) {
+                alert('⚠️ WARNING: Max credentials have been deleted!');
+                console.error('Max credentials disappeared!', new Date());
+            }
+            
+            // Détection de suppression Isracard
+            if (lastCredentialsCheck.isracard && !hasIsracard) {
+                alert('⚠️ WARNING: Isracard credentials have been deleted!');
+                console.error('Isracard credentials disappeared!', new Date());
+            }
+            
+            lastCredentialsCheck.max = hasMax;
+            lastCredentialsCheck.isracard = hasIsracard;
+        }
+    } catch (error) {
+        console.error('Error monitoring credentials:', error);
+    }
+}
+
+// Vérifier toutes les 30 secondes
+setInterval(monitorCredentials, 30000);
+
+// Première vérification au chargement
+setTimeout(monitorCredentials, 5000);
