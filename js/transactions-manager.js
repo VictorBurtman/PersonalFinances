@@ -1197,3 +1197,45 @@ function getTransactionFrequency(description) {
         t.description.toLowerCase().trim() === description.toLowerCase().trim()
     ).length;
 }
+
+/**
+ * Scroll to top functionality
+ */
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+/**
+ * Show/hide scroll to top button based on scroll position
+ */
+function handleScrollButton() {
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+    if (!scrollBtn) return;
+    
+    // Show button when scrolled down more than 300px
+    if (window.pageYOffset > 300) {
+        scrollBtn.classList.add('visible');
+    } else {
+        scrollBtn.classList.remove('visible');
+    }
+}
+
+// Initialize scroll button listener when tab is loaded
+document.addEventListener('tabActivated', (event) => {
+    if (event.detail.tabName === 'transactions') {
+        // Add scroll listener
+        window.addEventListener('scroll', handleScrollButton);
+        
+        // Initial check
+        handleScrollButton();
+    }
+});
+
+// Also add listener on page load if already on transactions tab
+if (typeof tabsManager !== 'undefined' && tabsManager.getCurrentTab() === 'transactions') {
+    window.addEventListener('scroll', handleScrollButton);
+    handleScrollButton();
+}
