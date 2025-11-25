@@ -2356,7 +2356,6 @@
                 
                 categoryControls.forEach(c => c.classList.add('show'));
                 renameButtons.forEach(btn => {
-                    // Ne pas afficher le bouton pour Income
                     if (!btn.classList.contains('rename-btn-income')) {
                         btn.style.display = 'inline-block';
                     }
@@ -2373,6 +2372,9 @@
                 categoryControls.forEach(c => c.classList.remove('show'));
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
+            
+            // CRITICAL FIX: Force refresh to update item buttons
+            updateDisplay();
         }
 
 
@@ -2389,8 +2391,6 @@
         function toggleCompareMode() {
             const compareBtn = document.getElementById('compareBtn');
             const monthSelect = document.getElementById('compareMonth');
-            
-            console.log('🔴 AVANT toggleCompareMode - isEditMode:', isEditMode); // DEBUG
             
             compareMode = !compareMode;
             
@@ -2418,12 +2418,12 @@
                 updateDisplay();
             }
             
-            console.log('🔴 APRÈS toggleCompareMode - isEditMode:', isEditMode); // DEBUG
-            
-            // Force refresh to ensure correct button visibility
+            // CRITICAL FIX: Force hide item rename buttons based on edit mode
             setTimeout(() => {
-                console.log('🔴 Dans setTimeout - isEditMode:', isEditMode); // DEBUG
-                updateDisplay();
+                const itemRenameButtons = document.querySelectorAll('.item-rename-btn');
+                itemRenameButtons.forEach(btn => {
+                    btn.style.display = isEditMode ? 'inline-block' : 'none';
+                });
             }, 100);
         }
         
