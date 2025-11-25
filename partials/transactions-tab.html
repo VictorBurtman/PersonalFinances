@@ -47,6 +47,14 @@
         <button class="filter-clear-btn" onclick="clearFilters()">
             <span data-translate="clear">Clear</span>
         </button>
+        <select id="sortFilter" onchange="changeSortOrder(this.value)" class="filter-select">
+            <option value="date-desc" data-translate="sortDateNewest">📅 Date (newest)</option>
+            <option value="date-asc" data-translate="sortDateOldest">📅 Date (oldest)</option>
+            <option value="amount-desc" data-translate="sortAmountHighest">💰 Amount (highest)</option>
+            <option value="amount-asc" data-translate="sortAmountLowest">💰 Amount (lowest)</option>
+            <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
+            <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
+        </select>
     </div>
 </div>
 
