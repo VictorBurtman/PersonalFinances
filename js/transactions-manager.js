@@ -1119,16 +1119,23 @@ function toggleBankConfigFromToolbar() {
         if (bankConfigOpen) {
             // Afficher
             section.style.display = 'block';
-            btn.innerHTML = '🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span> ▲';
+            btn.innerHTML = '<span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▲';
             btn.style.background = '#667eea';
             btn.style.color = 'white';
+            btn.style.borderColor = '#667eea';
             updateCredentialsStatus();
         } else {
             // Cacher
             section.style.display = 'none';
-            btn.innerHTML = '🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span> ▼';
+            btn.innerHTML = '<span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▼';
             btn.style.background = 'white';
             btn.style.color = '#333';
+            btn.style.borderColor = '#dee2e6';
+        }
+        
+        // Réappliquer les traductions après modification du HTML
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
         }
     }
 }
