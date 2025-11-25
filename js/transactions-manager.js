@@ -229,17 +229,22 @@ function populateCategoryFilter() {
  * Apply filters and render transactions
  */
 function applyFilters() {
-    const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled')?.checked || false;
-    const monthFilter = document.getElementById('monthFilter')?.value || '';
-    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
-    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase().trim() || '';
+    // Get filter values
+    const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
+    const monthFilter = document.getElementById('monthFilter')?.value;
+    const categoryFilter = document.getElementById('categoryFilter')?.value;
+    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
-        // Filter by labeled status
-        if (showOnlyUnlabeled && txn.isLabeled) {
+        // Filter by labeled status (radio buttons)
+        if (labelFilter === 'unlabeled' && txn.isLabeled) {
             return false;
         }
+        if (labelFilter === 'labeled' && !txn.isLabeled) {
+            return false;
+        }
+        // 'all' = no filter on labeled status
         
         // Filter by month
         if (monthFilter) {
@@ -276,14 +281,18 @@ function applyFilters() {
  * Clear all filters
  */
 function clearFilters() {
-    const showOnlyUnlabeled = document.getElementById('showOnlyUnlabeled');
-    const monthFilter = document.getElementById('monthFilter');
-    const categoryFilter = document.getElementById('categoryFilter');
-    const searchFilter = document.getElementById('searchFilter');
+    // Reset label filter to 'all'
+    const allRadio = document.querySelector('input[name="labelFilter"][value="all"]');
+    if (allRadio) allRadio.checked = true;
     
-    if (showOnlyUnlabeled) showOnlyUnlabeled.checked = false;
+    // Reset other filters
+    const monthFilter = document.getElementById('monthFilter');
     if (monthFilter) monthFilter.value = '';
+    
+    const categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) categoryFilter.value = '';
+    
+    const searchFilter = document.getElementById('searchFilter');
     if (searchFilter) searchFilter.value = '';
     
     applyFilters();
