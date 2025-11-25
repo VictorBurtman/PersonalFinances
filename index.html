@@ -195,14 +195,15 @@
 
         .modal-content {
             background: white;
-            margin: 50px auto;
+            margin: 30px auto; /* Réduit de 50px à 30px */
             padding: 0;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 80px); /* Plus d'espace (100px → 80px) */
             overflow-y: auto;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative; /* Important pour le positionnement */
         }
 
         @keyframes slideIn {
@@ -472,6 +473,11 @@
 
             .expense-input {
                 width: 100px;
+            }
+             .modal-content {
+                margin: 10px auto; /* Encore moins d'espace en haut */
+                width: 95%;
+                max-height: calc(100vh - 40px); /* Maximum d'espace vertical */
             }
         }
 
