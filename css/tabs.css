@@ -559,3 +559,24 @@
         min-width: 100px;
     }
 }
+
+.filter-radio-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+.filter-radio-label input[type="radio"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
