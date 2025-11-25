@@ -2194,6 +2194,10 @@
         }
 
         function updateChart() {
+            // Mettre à jour l'état des boutons
+            if (typeof window.updateChartButtonsState === 'function') {
+                window.updateChartButtonsState();
+            }
             // Check if Chart.js is available
             if (typeof Chart === 'undefined') {
                 console.warn('Chart.js is not available');
@@ -3331,13 +3335,6 @@
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
                 toggleButtons.forEach(btn => {
-                    // Set initial active state
-                    if (btn.dataset.type === currentChartType) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                    
                     // Add click handler
                     btn.addEventListener('click', function() {
                         currentChartType = this.dataset.type;
@@ -3351,6 +3348,21 @@
                         updateChart();
                     });
                 });
+        
+                // Function to update button states based on current chart type
+                window.updateChartButtonsState = function() {
+                    const buttons = document.querySelectorAll('.chart-toggle-btn');
+                    buttons.forEach(btn => {
+                        if (btn.dataset.type === currentChartType) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                };
+        
+                // Call immediately to set initial state
+                updateChartButtonsState();
                 
                 // Close modal when clicking outside
                 const modal = document.getElementById('colorEditorModal');
