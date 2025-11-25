@@ -582,8 +582,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
         }
         
         .modal.show {
@@ -600,12 +600,10 @@
         
         .modal-content {
             background: white;
-            margin: 0;
-            padding: 0;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            max-height: 90vh;
+            max-height: calc(100vh - 40px);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -625,7 +623,7 @@
         }
         
         .modal-header {
-            padding: 20px;
+            padding: 15px 20px;
             border-bottom: 2px solid #f0f0f0;
             display: flex;
             justify-content: space-between;
@@ -634,7 +632,7 @@
         }
         
         .modal-header h2 {
-            font-size: 1.5em;
+            font-size: 1.3em;
             color: #667eea;
             margin: 0;
         }
@@ -653,6 +651,7 @@
             justify-content: center;
             border-radius: 50%;
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
         
         .modal-close:hover {
@@ -663,11 +662,13 @@
         .modal-body {
             padding: 20px;
             overflow-y: auto;
+            overflow-x: hidden;
             flex: 1;
+            min-height: 0;
         }
         
         .modal-footer {
-            padding: 20px;
+            padding: 15px 20px;
             border-top: 2px solid #f0f0f0;
             display: flex;
             gap: 10px;
@@ -679,7 +680,7 @@
             padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -708,10 +709,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
             background: #f8f9fa;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: all 0.3s ease;
         }
         
@@ -723,30 +724,31 @@
             font-weight: 500;
             color: #495057;
             flex: 1;
+            font-size: 0.95em;
         }
         
         .color-picker-wrapper {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .color-preview {
             width: 30px;
             height: 30px;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 2px solid #dee2e6;
             cursor: pointer;
         }
         
         input[type="color"] {
-            width: 50px;
-            height: 35px;
+            width: 45px;
+            height: 32px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
         }
-        
+                
         /* ============================================
            SETTINGS
            ============================================ */
@@ -873,17 +875,22 @@
             }
             
             /* Modals */
+            .modal {
+                padding: 10px;
+            }
+            
             .modal-content {
-                width: 95%;
-                max-height: 95vh;
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100vh - 20px);
             }
             
             .modal-header {
-                padding: 15px;
+                padding: 12px 15px;
             }
             
             .modal-header h2 {
-                font-size: 1.2em;
+                font-size: 1.1em;
             }
             
             .modal-body {
@@ -891,12 +898,13 @@
             }
             
             .modal-footer {
-                padding: 15px;
+                padding: 12px 15px;
                 flex-direction: column;
             }
             
             .modal-button {
                 width: 100%;
+                padding: 12px;
             }
         }
         
