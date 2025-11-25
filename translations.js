@@ -166,6 +166,9 @@ const translations = {
         overBy: "Over by",
         used: "used",
         exactMatch: "Exact match",
+
+        showAll: "All",
+        showOnlyLabeled: "Labeled only",
     },
     
     fr: {
@@ -1007,6 +1010,7 @@ const translations = {
         exactMatch: "تطابق تام",
     }
 };
+
 
 
 
