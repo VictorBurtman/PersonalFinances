@@ -235,6 +235,8 @@ function applyFilters() {
     const categoryFilter = document.getElementById('categoryFilter')?.value;
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
     
+    console.log('Applying filters:', { labelFilter, monthFilter, categoryFilter, searchFilter }); // DEBUG
+    
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
         // Filter by labeled status (radio buttons)
@@ -260,12 +262,11 @@ function applyFilters() {
             return false;
         }
         
-        // Filter by search text (works with Hebrew and English)
+        // Filter by search text
         if (searchFilter) {
             const description = (txn.description || '').toLowerCase();
             const memo = (txn.memo || '').toLowerCase();
             
-            // Check if search term is in description or memo
             if (!description.includes(searchFilter) && !memo.includes(searchFilter)) {
                 return false;
             }
@@ -273,6 +274,8 @@ function applyFilters() {
         
         return true;
     });
+    
+    console.log('Filtered:', filteredTransactionsData.length, 'of', transactionsData.length); // DEBUG
     
     renderTransactions();
 }
