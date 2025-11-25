@@ -949,6 +949,143 @@
                 gap: 8px;
             }
         }
+        /* ============================================
+           DARK MODE
+           ============================================ */
+        
+        body.dark-mode {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode::before {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        body.dark-mode .dashboard,
+        body.dark-mode .category-section,
+        body.dark-mode .transactions-section {
+            background: #2a2a3e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .category-header,
+        body.dark-mode .transaction-item,
+        body.dark-mode .category-header-trans,
+        body.dark-mode .sync-status {
+            background: #1f1f2e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .toolbar-btn,
+        body.dark-mode .filter-select,
+        body.dark-mode .filter-search {
+            background: #1f1f2e;
+            color: #e0e0e0;
+            border-color: #3a3a4e;
+        }
+        
+        body.dark-mode .toolbar-btn:hover,
+        body.dark-mode .filter-select:hover,
+        body.dark-mode .filter-search:hover {
+            background: #2a2a3e;
+            border-color: #667eea;
+        }
+        
+        body.dark-mode .transactions-sticky-toolbar {
+            background: rgba(42, 42, 62, 0.98);
+        }
+        
+        body.dark-mode .filter-clear-btn {
+            background: #3a3a4e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .filter-clear-btn:hover {
+            background: #4a4a5e;
+        }
+        
+        body.dark-mode .modal-content {
+            background: #2a2a3e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .modal-header {
+            border-bottom-color: #3a3a4e;
+        }
+        
+        body.dark-mode .modal-footer {
+            border-top-color: #3a3a4e;
+        }
+        
+        body.dark-mode .auth-input,
+        body.dark-mode .settings-select,
+        body.dark-mode .transaction-category-select {
+            background: #1f1f2e;
+            color: #e0e0e0;
+            border-color: #3a3a4e;
+        }
+        
+        body.dark-mode .category-btn,
+        body.dark-mode .category-btn-trans {
+            background: #1f1f2e;
+            color: #e0e0e0;
+            border-color: #3a3a4e;
+        }
+        
+        body.dark-mode .category-btn:hover,
+        body.dark-mode .category-btn-trans:hover {
+            background: #2a2a3e;
+            border-color: #667eea;
+        }
+        
+        body.dark-mode .transaction-desc,
+        body.dark-mode .category-name,
+        body.dark-mode .category-name-trans {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .transaction-date,
+        body.dark-mode .sync-info {
+            color: #a0a0b0;
+        }
+        
+        body.dark-mode .empty-state-trans {
+            color: #a0a0b0;
+        }
+        
+        body.dark-mode .alert-trans {
+            background: #1f1f2e;
+            border-left-width: 4px;
+        }
+        
+        body.dark-mode .alert-info-trans {
+            border-left-color: #17a2b8;
+            color: #5dccdc;
+        }
+        
+        body.dark-mode .alert-success-trans {
+            border-left-color: #28a745;
+            color: #6cd386;
+        }
+        
+        body.dark-mode .alert-error-trans {
+            border-left-color: #dc3545;
+            color: #ff6b7a;
+        }
+        
+        /* Comparison info in dark mode */
+        body.dark-mode .compare-info {
+            background: #1f1f2e;
+        }
+        
+        body.dark-mode .compare-progress {
+            background: #3a3a4e;
+        }
+        
+        /* Settings in dark mode */
+        body.dark-mode .settings-section {
+            border-bottom-color: #3a3a4e;
+        }
     </style>
     <link rel="stylesheet" href="css/tabs.css">
 </head>
@@ -1236,6 +1373,14 @@
                     <label class="settings-checkbox">
                         <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)" />
                         <span>Track monthly income</span>
+                    </label>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>🌙 Dark Mode</h3>
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)" />
+                        <span>Enable dark mode</span>
                     </label>
                 </div>
                 
@@ -1589,6 +1734,8 @@
                 
                 // Load user data from Firestore
                 await loadUserData();
+                loadDarkModePreference();  // ← AJOUTE CETTE LIGNE
+
             } else {
                 currentUser = null;
                 window.currentUser = null;  // ← AJOUTE
@@ -2971,6 +3118,54 @@
             percentageMode = mode;
             saveUserData();
             updateDisplay();
+        }
+
+        /**
+         * Toggle dark mode
+         */
+        function toggleDarkMode(enabled) {
+            if (enabled) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+            
+            // Save preference to Firebase
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).set({
+                    darkMode: enabled
+                }, { merge: true }).then(() => {
+                    console.log('Dark mode preference saved:', enabled);
+                }).catch(error => {
+                    console.error('Error saving dark mode preference:', error);
+                });
+            }
+        }
+        
+        /**
+         * Load dark mode preference
+         */
+        function loadDarkModePreference() {
+            if (!currentUser) return;
+            
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists && doc.data().darkMode !== undefined) {
+                    const darkModeEnabled = doc.data().darkMode;
+                    
+                    // Apply dark mode
+                    if (darkModeEnabled) {
+                        document.body.classList.add('dark-mode');
+                    }
+                    
+                    // Update checkbox
+                    const darkModeCheckbox = document.getElementById('darkModeCheckbox');
+                    if (darkModeCheckbox) {
+                        darkModeCheckbox.checked = darkModeEnabled;
+                    }
+                }
+            }).catch(error => {
+                console.error('Error loading dark mode preference:', error);
+            });
         }
 
         // Rename Functions
