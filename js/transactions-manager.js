@@ -60,6 +60,14 @@ async function loadTransactions() {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
+            // ✅ AJOUTE ICI : Load transaction limit preference
+            if (userDoc.data().transactionLimit) {
+                transactionLimit = userDoc.data().transactionLimit;
+                const limitFilter = document.getElementById('limitFilter');
+                if (limitFilter) {
+                    limitFilter.value = transactionLimit.toString();
+                }
+            }
             // Update credentials status silently
             const maxAlertEl = document.getElementById('maxCredentialsAlert');
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
@@ -494,9 +502,24 @@ function renderTransactions() {
                 </div>
             `;
         } else {
-            allTransactionsList.innerHTML = filteredTransactionsData
+            // ✅ MODIFIÉ : Limiter le nombre de transactions affichées
+            const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
+            const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
+            
+            allTransactionsList.innerHTML = transactionsToShow
                 .map(txn => renderTransaction(txn))
                 .join('');
+            
+            // ✅ AJOUTÉ : Message si des transactions sont cachées
+            if (hiddenCount > 0) {
+                const limitMessage = document.createElement('div');
+                limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
+                limitMessage.innerHTML = `
+                    Showing ${transactionsToShow.length} of ${filteredTransactionsData.length} transactions<br>
+                    <span style="font-size: 0.85em;">${hiddenCount} more hidden - adjust the "Show" filter to see more</span>
+                `;
+                allTransactionsList.appendChild(limitMessage);
+            }
         }
     }
 }
