@@ -558,6 +558,34 @@
     #compareBtn {
         min-width: 100px;
     }
+    
+    /* Scroll to top button */
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3em;
+    }
+    
+    /* Toast notifications */
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: none;
+    }
+    
+    /* Bank Accounts Modal */
+    #bankAccountsModal .modal-content {
+        margin: 10px 10px 25px 10px !important;
+        max-width: none !important;
+        max-height: calc(100vh - 35px) !important;
+    }
 }
 
 .filter-radio-group {
@@ -625,16 +653,6 @@
 
 .scroll-to-top:active {
     transform: translateY(-2px);
-}
-
-@media (max-width: 600px) {
-    .scroll-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
-        font-size: 1.3em;
-    }
 }
 
 /* ============================================
@@ -870,23 +888,3 @@
 .toast.info .toast-icon {
     color: #17a2b8;
 }
-
-@media (max-width: 600px) {
-    .toast-container {
-        top: 10px;
-        right: 10px;
-        left: 10px;
-    }
-    
-    .toast {
-        min-width: auto;
-        max-width: none;
-    }
-    
-    #bankAccountsModal .modal-content {
-        margin: 5px 10px 30px 10px;  /* top right bottom left - 15px en bas */
-        max-width: none;
-        max-height: calc(100vh - 20px);  /* Un peu moins haut pour laisser respirer */
-    }
-}
-
