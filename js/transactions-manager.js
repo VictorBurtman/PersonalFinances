@@ -570,10 +570,12 @@ function renderTransaction(txn) {
                     
                     <!-- Expandable details -->
                     <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
-                        <div style="margin-bottom: 5px;"><strong>Full name:</strong> ${escapeHtml(txn.description)}</div>
-                        ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>Memo:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
-                        <div style="margin-bottom: 5px;"><strong>Amount:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
-                        <div style="color: #667eea; font-weight: 600;"><strong>Similar transactions:</strong> ${countSimilarTransactions(txn.description)}</div>
+                        const t = translations[currentLanguage] || translations['en'];
+                        
+                        <div style="margin-bottom: 5px;"><strong>${t.fullName || 'Full name'}:</strong> ${escapeHtml(txn.description)}</div>
+                        ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
+                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
+                        <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
                     </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
