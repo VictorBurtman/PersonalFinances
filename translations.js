@@ -21,6 +21,12 @@ const translations = {
         memo: "Memo",
         amount: "Amount",
         similarTransactions: "Similar transactions",
+        syncingWithBanks: "Syncing with banks...",
+        importingCSV: "Importing CSV...",
+        removingCSV: "Removing CSV...",
+        processingTransactions: "Processing transactions",
+        deletingTransactions: "Deleting transactions",
+        thisMayTakeAMoment: "This may take a moment",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -308,6 +314,12 @@ const translations = {
         memo: "Mémo",
         amount: "Montant",
         similarTransactions: "Transactions similaires",
+        syncingWithBanks: "Synchronisation avec les banques...",
+        importingCSV: "Import du CSV...",
+        removingCSV: "Suppression du CSV...",
+        processingTransactions: "Traitement des transactions",
+        deletingTransactions: "Suppression des transactions",
+        thisMayTakeAMoment: "Cela peut prendre un moment",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -584,6 +596,12 @@ const translations = {
         memo: "הערה",
         amount: "סכום",
         similarTransactions: "עסקאות דומות",
+        syncingWithBanks: "מסנכרן עם הבנקים...",
+        importingCSV: "מייבא CSV...",
+        removingCSV: "מוחק CSV...",
+        processingTransactions: "מעבד עסקאות",
+        deletingTransactions: "מוחק עסקאות",
+        thisMayTakeAMoment: "זה עשוי לקחת רגע",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -860,6 +878,12 @@ const translations = {
         memo: "Nota",
         amount: "Cantidad",
         similarTransactions: "Transacciones similares",
+        syncingWithBanks: "Sincronizando con bancos...",
+        importingCSV: "Importando CSV...",
+        removingCSV: "Eliminando CSV...",
+        processingTransactions: "Procesando transacciones",
+        deletingTransactions: "Eliminando transacciones",
+        thisMayTakeAMoment: "Esto puede tomar un momento",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1136,6 +1160,12 @@ const translations = {
         memo: "Примечание",
         amount: "Сумма",
         similarTransactions: "Похожие транзакции",
+        syncingWithBanks: "Синхронизация с банками...",
+        importingCSV: "Импорт CSV...",
+        removingCSV: "Удаление CSV...",
+        processingTransactions: "Обработка транзакций",
+        deletingTransactions: "Удаление транзакций",
+        thisMayTakeAMoment: "Это может занять некоторое время",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1412,6 +1442,12 @@ const translations = {
         memo: "ملاحظة",
         amount: "المبلغ",
         similarTransactions: "معاملات مماثلة",
+        syncingWithBanks: "المزامنة مع البنوك...",
+        importingCSV: "جاري استيراد CSV...",
+        removingCSV: "جاري حذف CSV...",
+        processingTransactions: "معالجة المعاملات",
+        deletingTransactions: "حذف المعاملات",
+        thisMayTakeAMoment: "قد يستغرق هذا لحظة",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1667,6 +1703,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
