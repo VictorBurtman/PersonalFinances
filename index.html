@@ -1331,20 +1331,24 @@
         </div>
     </div>
     
-    <!-- Settings Modal -->
+     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>⚙️ Settings</h2>
+                <h2 data-translate="settingsTitle">⚙️ Settings</h2>
                 <button class="modal-close" onclick="closeSettings()">✕</button>
             </div>
             <div class="modal-body">
+                <!-- Account Section -->
                 <div class="settings-section">
-                    <h3>Account</h3>
+                    <h3 data-translate="account">Account</h3>
                     <p id="settingsUserEmail" style="color: #6c757d; margin-bottom: 10px;"></p>
-                    <button class="modal-button secondary" onclick="handleLogout()">Logout</button>
+                    <button class="modal-button secondary" onclick="handleLogout()">
+                        <span data-translate="logout">Logout</span>
+                    </button>
                 </div>
                 
+                <!-- Language Section (pas besoin de traduire le titre) -->
                 <div class="settings-section">
                     <h3>Language / Langue / Idioma / Язык / שפה / لغة</h3>
                     <select class="settings-select" id="languageSelect" onchange="changeLanguage(this.value)">
@@ -1357,8 +1361,9 @@
                     </select>
                 </div>
                 
+                <!-- Currency Section -->
                 <div class="settings-section">
-                    <h3>Currency</h3>
+                    <h3 data-translate="currency">Currency</h3>
                     <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
                         <option value="ILS">Israeli Shekel (₪)</option>
                         <option value="USD">US Dollar ($)</option>
@@ -1376,50 +1381,56 @@
                     </select>
                 </div>
                 
+                <!-- Income Tracking Section -->
                 <div class="settings-section">
-                    <h3>Income Tracking</h3>
+                    <h3 data-translate="incomeTracking">Income Tracking</h3>
                     <label class="settings-checkbox">
                         <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)" />
-                        <span>Track monthly income</span>
+                        <span data-translate="trackIncome">Track monthly income</span>
                     </label>
                 </div>
                 
+                <!-- Dark Mode Section -->
                 <div class="settings-section">
-                    <h3>🌙 Dark Mode</h3>
+                    <h3 data-translate="darkMode">🌙 Dark Mode</h3>
                     <label class="settings-checkbox">
                         <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)" />
-                        <span>Enable dark mode</span>
+                        <span data-translate="enableDarkMode">Enable dark mode</span>
                     </label>
                 </div>
                 
+                <!-- Percentage Calculation Section -->
                 <div class="settings-section" id="percentageModeSection" style="display: none;">
-                    <h3>Percentage Calculation</h3>
+                    <h3 data-translate="percentageCalculation">Percentage Calculation</h3>
                     <select class="settings-select" id="percentageModeSelect" onchange="updatePercentageMode(this.value)">
-                        <option value="expenses">Based on total expenses</option>
-                        <option value="income">Based on total income</option>
+                        <option value="expenses" data-translate="basedOnExpenses">Based on total expenses</option>
+                        <option value="income" data-translate="basedOnIncome">Based on total income</option>
                     </select>
-                    <p class="settings-description">Choose how category percentages are calculated</p>
+                    <p class="settings-description" data-translate="percentageDesc">Choose how category percentages are calculated</p>
                 </div>
-
-                <!-- Clear Transactions -->
+    
+                <!-- Clear Data Section -->
                 <div class="settings-section">
-                    <h3>🗑️ Clear Data</h3>
+                    <h3 data-translate="clearData">🗑️ Clear Data</h3>
                     <button class="settings-btn danger" onclick="clearAllTransactions()">
-                        Clear All Transactions
+                        <span data-translate="clearAllTransactions">Clear All Transactions</span>
                     </button>
-                    <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;">
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;" data-translate="clearTransactionsWarning">
                         Remove all synced transactions from the database. This cannot be undone.
                     </p>
                 </div>
+                
                 <!-- About Section -->
                 <div class="settings-section" style="border-top: 2px solid #e9ecef; margin-top: 30px; padding-top: 20px; text-align: center; font-size: 0.85em; color: #6c757d;">
-                    <p style="margin: 5px 0; font-weight: 600;">Made by Victor Burtman</p>
-                    <p style="margin: 5px 0;">For any bug report, ideas or suggestions:</p>
+                    <p style="margin: 5px 0; font-weight: 600;" data-translate="madeBy">Made by Victor Burtman</p>
+                    <p style="margin: 5px 0;"><span data-translate="contactInfo">For any bug report, ideas or suggestions:</span></p>
                     <a href="mailto:victorburtman@gmail.com" style="color: #667eea; text-decoration: none; font-weight: 600;">victorburtman@gmail.com</a>
                 </div>   
             </div>
             <div class="modal-footer">
-                <button class="modal-button primary" onclick="closeSettings()">Done</button>
+                <button class="modal-button primary" onclick="closeSettings()">
+                    <span data-translate="done">Done</span>
+                </button>
             </div>
         </div>
     </div>
