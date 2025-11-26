@@ -28,6 +28,8 @@ const translations = {
         pieChart: "🍩 Pie Chart",
         barChart: "📊 Bar Chart",
         colors: "🎨 Colors",
+        compare: "📊 Compare",
+        resetAll: "Reset All Expenses",
         
         // Category controls
         moveUp: "↑ Move Up",
@@ -79,13 +81,20 @@ const translations = {
         cleanDescription: "Remove categories that exist in your data but are not displayed properly. Use this if you have issues with categories that won't show up or can't be created.",
         currency: "Currency",
         incomeTracking: "Income Tracking",
-        trackIncome: "Track income and calculate remaining balance",
+        trackIncome: "Track monthly income",
         trackIncomeDesc: "When enabled, you can track your income sources and see how much money remains after expenses.",
         percentageCalculation: "Percentage Calculation",
         basedOnExpenses: "Based on Total Expenses",
         basedOnIncome: "Based on Total Income",
-        percentageDesc: "Choose whether category percentages are calculated relative to total expenses or total income.",
+        percentageDesc: "Choose how category percentages are calculated",
         language: "Language",
+        darkMode: "Dark Mode",
+        enableDarkMode: "Enable dark mode",
+        clearData: "Clear Data",
+        clearAllTransactions: "Clear All Transactions",
+        clearTransactionsWarning: "Remove all synced transactions from the database. This cannot be undone.",
+        madeBy: "Made by Victor Burtman",
+        contactInfo: "For any bug report, ideas, or suggestions:",
         
         // Confirmations & alerts
         resetAllConfirm: "Are you sure you want to reset all expenses to 0?",
@@ -115,11 +124,11 @@ const translations = {
         
         // Other
         noExpensesYet: "No expenses yet",
-        resetAll: "Reset All Expenses",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "Transactions",
-        bankAccountsConfig: "🏦 Bank Accounts Config",
+        bankAccountsConfig: "🏦 Bank Accounts",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Setup Max Credentials",
@@ -132,17 +141,57 @@ const translations = {
         syncingWithBanks: "Syncing with banks...",
         lastSync: "Last sync:",
         never: "Never",
+        ago: "ago",
+        minutes: "minutes",
+        hours: "hours",
+        days: "days",
         transactions: "transaction(s)",
         allTransactions: "📋 All Transactions",
         loadingTransactions: "Loading transactions...",
         noTransactionsYet: "No transactions yet",
         clickSyncToStart: "Click \"Sync All\" to get started",
         filters: "🔍 Filters",
+        showAll: "All",
         showOnlyUnlabeled: "Unlabeled only",
+        showOnlyLabeled: "Labeled only",
         allMonths: "All months",
+        allSources: "All sources",
         allCategories: "All categories",
         search: "Search...",
         clear: "Clear",
+        selectCategory: "Select category",
+        
+        // Month names
+        january: "January",
+        february: "February",
+        march: "March",
+        april: "April",
+        may: "May",
+        june: "June",
+        july: "July",
+        august: "August",
+        september: "September",
+        october: "October",
+        november: "November",
+        december: "December",
+        
+        // Sort options
+        sortDateNewest: "📅 Date (newest)",
+        sortDateOldest: "📅 Date (oldest)",
+        sortAmountHighest: "💰 Amount (highest)",
+        sortAmountLowest: "💰 Amount (lowest)",
+        sortFrequencyMost: "🔄 Frequency (most)",
+        sortFrequencyLeast: "🔄 Frequency (least)",
+        
+        // Transaction limits
+        show50: "Show 50",
+        show500: "Show 500",
+        show1000: "Show 1000",
+        show2000: "Show 2000",
+        showingTransactions: "Showing {shown} of {total} transactions",
+        moreHidden: "{count} more hidden - adjust the \"Show\" filter to see more",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 Bank Credentials",
         credentialsSecure: "Your credentials will be encrypted and stored securely in Firebase.",
         username: "Username",
@@ -157,23 +206,40 @@ const translations = {
         saving: "Saving...",
         cancel: "Cancel",
         
+        // CSV Import
+        importCSV: "Import CSV",
+        importCSVDescription: "Import transactions from CSV files (Revolut, N26, etc.)",
+        bankName: "Bank Name",
+        bankNamePlaceholder: "e.g. Revolut, N26, Wise...",
+        bankNameHelp: "This helps you identify transactions from different banks",
+        chooseCSV: "Choose CSV File",
+        remove: "Remove",
+        imported: "Imported",
+        
         // Compare mode
-        compare: "📊 Compare",
         budgetVsReal: "Budget vs Real",
         budget: "Budget",
         real: "Real",
         underBy: "Under by",
         overBy: "Over by",
         used: "used",
+        exactly: "Exactly",
         exactMatch: "Exact match",
-
-        showAll: "All",
-        showOnlyLabeled: "Labeled only",
+        
+        // Loading messages
+        processing: "Processing...",
+        pleaseWait: "Please wait",
+        importingCSV: "Importing CSV...",
+        processingTransactions: "Processing transactions",
+        removingCSV: "Removing CSV...",
+        deletingTransactions: "Deleting transactions",
+        deletingAllTransactions: "Deleting all transactions...",
+        thisMayTakeAMoment: "This may take a moment",
     },
     
     fr: {
         // Auth screen
-        appTitle: "Suivi des Dépenses",
+        appTitle: "💰 Suivi des Dépenses",
         authSubtitle: "Connectez-vous pour synchroniser vos dépenses",
         email: "Email",
         password: "Mot de passe (min 6 caractères)",
@@ -199,6 +265,8 @@ const translations = {
         pieChart: "🍩 Graphique Circulaire",
         barChart: "📊 Graphique à Barres",
         colors: "🎨 Couleurs",
+        compare: "📊 Comparer",
+        resetAll: "Réinitialiser Toutes les Dépenses",
         
         // Category controls
         moveUp: "↑ Monter",
@@ -250,13 +318,20 @@ const translations = {
         cleanDescription: "Supprimez les catégories qui existent dans vos données mais ne s'affichent pas correctement.",
         currency: "Devise",
         incomeTracking: "Suivi des Revenus",
-        trackIncome: "Suivre les revenus et calculer le solde restant",
+        trackIncome: "Suivre les revenus mensuels",
         trackIncomeDesc: "Lorsqu'activé, vous pouvez suivre vos sources de revenus et voir combien d'argent reste après les dépenses.",
         percentageCalculation: "Calcul des Pourcentages",
         basedOnExpenses: "Basé sur les Dépenses Totales",
         basedOnIncome: "Basé sur le Revenu Total",
-        percentageDesc: "Choisissez si les pourcentages sont calculés par rapport aux dépenses totales ou au revenu total.",
+        percentageDesc: "Choisissez comment les pourcentages des catégories sont calculés",
         language: "Langue",
+        darkMode: "Mode Sombre",
+        enableDarkMode: "Activer le mode sombre",
+        clearData: "Effacer les Données",
+        clearAllTransactions: "Effacer Toutes les Transactions",
+        clearTransactionsWarning: "Supprimer toutes les transactions synchronisées de la base de données. Cette action est irréversible.",
+        madeBy: "Créé par Victor Burtman",
+        contactInfo: "Pour tout rapport de bug, idées ou suggestions :",
         
         // Confirmations & alerts
         resetAllConfirm: "Êtes-vous sûr de vouloir réinitialiser toutes les dépenses à 0 ?",
@@ -286,11 +361,11 @@ const translations = {
         
         // Other
         noExpensesYet: "Pas encore de dépenses",
-        resetAll: "Réinitialiser Toutes les Dépenses",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "Transactions",
-        bankAccountsConfig: "🏦 Configuration des Comptes",
+        bankAccountsConfig: "🏦 Comptes Bancaires",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Configurer Max",
@@ -303,17 +378,57 @@ const translations = {
         syncingWithBanks: "Synchronisation avec les banques...",
         lastSync: "Dernière synchro:",
         never: "Jamais",
+        ago: "il y a",
+        minutes: "minutes",
+        hours: "heures",
+        days: "jours",
         transactions: "transaction(s)",
         allTransactions: "📋 Toutes les Transactions",
         loadingTransactions: "Chargement des transactions...",
         noTransactionsYet: "Aucune transaction",
         clickSyncToStart: "Cliquez sur \"Tout Synchroniser\" pour commencer",
         filters: "🔍 Filtres",
-        showOnlyUnlabeled: "Afficher uniquement non étiquetées",
+        showAll: "Tous",
+        showOnlyUnlabeled: "Non étiquetés seulement",
+        showOnlyLabeled: "Étiquetés seulement",
         allMonths: "Tous les mois",
+        allSources: "Toutes les sources",
         allCategories: "Toutes les catégories",
         search: "Rechercher...",
         clear: "Effacer",
+        selectCategory: "Sélectionner une catégorie",
+        
+        // Month names
+        january: "Janvier",
+        february: "Février",
+        march: "Mars",
+        april: "Avril",
+        may: "Mai",
+        june: "Juin",
+        july: "Juillet",
+        august: "Août",
+        september: "Septembre",
+        october: "Octobre",
+        november: "Novembre",
+        december: "Décembre",
+        
+        // Sort options
+        sortDateNewest: "📅 Date (plus récent)",
+        sortDateOldest: "📅 Date (plus ancien)",
+        sortAmountHighest: "💰 Montant (plus élevé)",
+        sortAmountLowest: "💰 Montant (plus bas)",
+        sortFrequencyMost: "🔄 Fréquence (plus)",
+        sortFrequencyLeast: "🔄 Fréquence (moins)",
+        
+        // Transaction limits
+        show50: "Afficher 50",
+        show500: "Afficher 500",
+        show1000: "Afficher 1000",
+        show2000: "Afficher 2000",
+        showingTransactions: "Affichage de {shown} sur {total} transactions",
+        moreHidden: "{count} de plus masquées - ajustez le filtre \"Afficher\" pour en voir plus",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 Identifiants Bancaires",
         credentialsSecure: "Vos identifiants seront chiffrés et stockés en toute sécurité dans Firebase.",
         username: "Nom d'utilisateur",
@@ -328,15 +443,35 @@ const translations = {
         saving: "Enregistrement...",
         cancel: "Annuler",
         
+        // CSV Import
+        importCSV: "Importer CSV",
+        importCSVDescription: "Importer des transactions depuis des fichiers CSV (Revolut, N26, etc.)",
+        bankName: "Nom de la Banque",
+        bankNamePlaceholder: "ex. Revolut, N26, Wise...",
+        bankNameHelp: "Cela vous aide à identifier les transactions de différentes banques",
+        chooseCSV: "Choisir un Fichier CSV",
+        remove: "Supprimer",
+        imported: "Importé",
+        
         // Compare mode
-        compare: "📊 Comparer",
         budgetVsReal: "Budget vs Réel",
         budget: "Budget",
         real: "Réel",
-        underBy: "Sous de",
-        overBy: "Dépassé de",
+        underBy: "En dessous de",
+        overBy: "Au-dessus de",
         used: "utilisé",
+        exactly: "Exactement",
         exactMatch: "Correspondance exacte",
+        
+        // Loading messages
+        processing: "Traitement...",
+        pleaseWait: "Veuillez patienter",
+        importingCSV: "Import du CSV...",
+        processingTransactions: "Traitement des transactions",
+        removingCSV: "Suppression du CSV...",
+        deletingTransactions: "Suppression des transactions",
+        deletingAllTransactions: "Suppression de toutes les transactions...",
+        thisMayTakeAMoment: "Cela peut prendre un moment",
     },
     
     he: {
@@ -367,6 +502,8 @@ const translations = {
         pieChart: "🍩 תרשים עוגה",
         barChart: "📊 תרשים עמודות",
         colors: "🎨 צבעים",
+        compare: "📊 השווה",
+        resetAll: "אפס את כל ההוצאות",
         
         // Category controls
         moveUp: "↑ הזז למעלה",
@@ -418,13 +555,20 @@ const translations = {
         cleanDescription: "הסר קטגוריות שקיימות בנתונים שלך אך לא מוצגות כראוי.",
         currency: "מטבע",
         incomeTracking: "מעקב הכנסות",
-        trackIncome: "עקוב אחר הכנסות וחשב יתרה",
+        trackIncome: "עקוב אחר הכנסות חודשיות",
         trackIncomeDesc: "כאשר מופעל, תוכל לעקוב אחר מקורות ההכנסה שלך ולראות כמה כסף נותר לאחר ההוצאות.",
         percentageCalculation: "חישוב אחוזים",
         basedOnExpenses: "מבוסס על סך ההוצאות",
         basedOnIncome: "מבוסס על סך ההכנסות",
-        percentageDesc: "בחר אם אחוזי הקטגוריות מחושבים ביחס לסך ההוצאות או לסך ההכנסות.",
+        percentageDesc: "בחר כיצד מחושבים אחוזי הקטגוריות",
         language: "שפה",
+        darkMode: "מצב כהה",
+        enableDarkMode: "הפעל מצב כהה",
+        clearData: "מחק נתונים",
+        clearAllTransactions: "מחק את כל העסקאות",
+        clearTransactionsWarning: "הסר את כל העסקאות המסונכרנות ממסד הנתונים. לא ניתן לבטל פעולה זו.",
+        madeBy: "נוצר על ידי ויקטור ברטמן",
+        contactInfo: "לכל דיווח על באגים, רעיונות או הצעות:",
         
         // Confirmations & alerts
         resetAllConfirm: "האם אתה בטוח שברצונך לאפס את כל ההוצאות ל-0?",
@@ -454,16 +598,16 @@ const translations = {
         
         // Other
         noExpensesYet: "עדיין אין הוצאות",
-        resetAll: "אפס את כל ההוצאות",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "עסקאות",
-        bankAccountsConfig: "🏦 הגדרות חשבונות בנק",
+        bankAccountsConfig: "🏦 חשבונות בנק",
         maxLeumi: "💳 Max.co.il (כרטיס לאומי)",
         isracard: "💳 ישראכרט",
         setupMaxCredentials: "🔐 הגדרת Max",
         setupIsracardCredentials: "🔐 הגדרת ישראכרט",
-        configureCredentials: "הגדר את פרטי ההתחברוס שלך כדי לסנכרן עסקאות.",
+        configureCredentials: "הגדר את פרטי ההתחברות שלך כדי לסנכרן עסקאות.",
         credentialsConfigured: "פרטי התחברות הוגדרו ✓",
         syncTransactions: "🔄 סנכרון עסקאות",
         syncAll: "🔄 סנכרן הכל",
@@ -471,17 +615,57 @@ const translations = {
         syncingWithBanks: "מסנכרן עם הבנקים...",
         lastSync: "סנכרון אחרון:",
         never: "אף פעם",
+        ago: "לפני",
+        minutes: "דקות",
+        hours: "שעות",
+        days: "ימים",
         transactions: "עסקה/ות",
         allTransactions: "📋 כל העסקאות",
         loadingTransactions: "טוען עסקאות...",
         noTransactionsYet: "אין עדיין עסקאות",
         clickSyncToStart: "לחץ על \"סנכרן הכל\" כדי להתחיל",
         filters: "🔍 סינון",
-        showOnlyUnlabeled: "הצג רק ללא תווית",
+        showAll: "הכל",
+        showOnlyUnlabeled: "ללא תווית בלבד",
+        showOnlyLabeled: "עם תווית בלבד",
         allMonths: "כל החודשים",
+        allSources: "כל המקורות",
         allCategories: "כל הקטגוריות",
         search: "חיפוש...",
         clear: "נקה",
+        selectCategory: "בחר קטגוריה",
+        
+        // Month names
+        january: "ינואר",
+        february: "פברואר",
+        march: "מרץ",
+        april: "אפריל",
+        may: "מאי",
+        june: "יוני",
+        july: "יולי",
+        august: "אוגוסט",
+        september: "ספטמבר",
+        october: "אוקטובר",
+        november: "נובמבר",
+        december: "דצמבר",
+        
+        // Sort options
+        sortDateNewest: "📅 תאריך (החדש ביותר)",
+        sortDateOldest: "📅 תאריך (הישן ביותר)",
+        sortAmountHighest: "💰 סכום (הגבוה ביותר)",
+        sortAmountLowest: "💰 סכום (הנמוך ביותר)",
+        sortFrequencyMost: "🔄 תדירות (הרבה)",
+        sortFrequencyLeast: "🔄 תדירות (מעט)",
+        
+        // Transaction limits
+        show50: "הצג 50",
+        show500: "הצג 500",
+        show1000: "הצג 1000",
+        show2000: "הצג 2000",
+        showingTransactions: "מציג {shown} מתוך {total} עסקאות",
+        moreHidden: "{count} נוספות מוסתרות - התאם את הסינון \"הצג\" כדי לראות יותר",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 פרטי התחברות לבנק",
         credentialsSecure: "פרטי ההתחברות שלך יוצפנו וישמרו בצורה מאובטחת ב-Firebase.",
         username: "שם משתמש",
@@ -496,15 +680,35 @@ const translations = {
         saving: "שומר...",
         cancel: "בטל",
         
+        // CSV Import
+        importCSV: "ייבוא CSV",
+        importCSVDescription: "ייבא עסקאות מקבצי CSV (Revolut, N26, וכו')",
+        bankName: "שם הבנק",
+        bankNamePlaceholder: "למשל Revolut, N26, Wise...",
+        bankNameHelp: "זה עוזר לך לזהות עסקאות מבנקים שונים",
+        chooseCSV: "בחר קובץ CSV",
+        remove: "הסר",
+        imported: "יובא",
+        
         // Compare mode
-        compare: "📊 השווה",
         budgetVsReal: "תקציב מול מציאות",
         budget: "תקציב",
         real: "מציאות",
-        underBy: "חסר",
-        overBy: "עודף",
+        underBy: "פחות ב",
+        overBy: "יותר ב",
         used: "בשימוש",
+        exactly: "בדיוק",
         exactMatch: "התאמה מדויקת",
+        
+        // Loading messages
+        processing: "מעבד...",
+        pleaseWait: "אנא המתן",
+        importingCSV: "מייבא CSV...",
+        processingTransactions: "מעבד עסקאות",
+        removingCSV: "מסיר CSV...",
+        deletingTransactions: "מוחק עסקאות",
+        deletingAllTransactions: "מוחק את כל העסקאות...",
+        thisMayTakeAMoment: "זה עשוי לקחת רגע",
     },
     
     es: {
@@ -535,6 +739,8 @@ const translations = {
         pieChart: "🍩 Gráfico Circular",
         barChart: "📊 Gráfico de Barras",
         colors: "🎨 Colores",
+        compare: "📊 Comparar",
+        resetAll: "Restablecer Todos los Gastos",
         
         // Category controls
         moveUp: "↑ Subir",
@@ -586,13 +792,20 @@ const translations = {
         cleanDescription: "Eliminar categorías que existen en tus datos pero no se muestran correctamente.",
         currency: "Moneda",
         incomeTracking: "Seguimiento de Ingresos",
-        trackIncome: "Rastrear ingresos y calcular saldo restante",
+        trackIncome: "Rastrear ingresos mensuales",
         trackIncomeDesc: "Cuando está habilitado, puedes rastrear tus fuentes de ingresos y ver cuánto dinero queda después de los gastos.",
         percentageCalculation: "Cálculo de Porcentajes",
         basedOnExpenses: "Basado en Gastos Totales",
         basedOnIncome: "Basado en Ingresos Totales",
-        percentageDesc: "Elige si los porcentajes de categorías se calculan en relación con los gastos totales o los ingresos totales.",
+        percentageDesc: "Elige cómo se calculan los porcentajes de categorías",
         language: "Idioma",
+        darkMode: "Modo Oscuro",
+        enableDarkMode: "Activar modo oscuro",
+        clearData: "Borrar Datos",
+        clearAllTransactions: "Borrar Todas las Transacciones",
+        clearTransactionsWarning: "Eliminar todas las transacciones sincronizadas de la base de datos. Esto no se puede deshacer.",
+        madeBy: "Creado por Victor Burtman",
+        contactInfo: "Para cualquier informe de error, idea o sugerencia:",
         
         // Confirmations & alerts
         resetAllConfirm: "¿Estás seguro de que quieres restablecer todos los gastos a 0?",
@@ -622,11 +835,11 @@ const translations = {
         
         // Other
         noExpensesYet: "Aún no hay gastos",
-        resetAll: "Restablecer Todos los Gastos",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "Transacciones",
-        bankAccountsConfig: "🏦 Configuración de Cuentas",
+        bankAccountsConfig: "🏦 Cuentas Bancarias",
         maxLeumi: "💳 Max.co.il (Tarjeta Leumi)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Configurar Max",
@@ -639,17 +852,57 @@ const translations = {
         syncingWithBanks: "Sincronizando con bancos...",
         lastSync: "Última sincronización:",
         never: "Nunca",
+        ago: "hace",
+        minutes: "minutos",
+        hours: "horas",
+        days: "días",
         transactions: "transacción/es",
         allTransactions: "📋 Todas las Transacciones",
         loadingTransactions: "Cargando transacciones...",
         noTransactionsYet: "Aún no hay transacciones",
         clickSyncToStart: "Haz clic en \"Sincronizar Todo\" para comenzar",
         filters: "🔍 Filtros",
-        showOnlyUnlabeled: "Mostrar solo sin etiquetar",
+        showAll: "Todos",
+        showOnlyUnlabeled: "Sin etiquetar solamente",
+        showOnlyLabeled: "Etiquetados solamente",
         allMonths: "Todos los meses",
+        allSources: "Todas las fuentes",
         allCategories: "Todas las categorías",
         search: "Buscar...",
         clear: "Limpiar",
+        selectCategory: "Seleccionar categoría",
+        
+        // Month names
+        january: "Enero",
+        february: "Febrero",
+        march: "Marzo",
+        april: "Abril",
+        may: "Mayo",
+        june: "Junio",
+        july: "Julio",
+        august: "Agosto",
+        september: "Septiembre",
+        october: "Octubre",
+        november: "Noviembre",
+        december: "Diciembre",
+        
+        // Sort options
+        sortDateNewest: "📅 Fecha (más reciente)",
+        sortDateOldest: "📅 Fecha (más antigua)",
+        sortAmountHighest: "💰 Cantidad (más alta)",
+        sortAmountLowest: "💰 Cantidad (más baja)",
+        sortFrequencyMost: "🔄 Frecuencia (más)",
+        sortFrequencyLeast: "🔄 Frecuencia (menos)",
+        
+        // Transaction limits
+        show50: "Mostrar 50",
+        show500: "Mostrar 500",
+        show1000: "Mostrar 1000",
+        show2000: "Mostrar 2000",
+        showingTransactions: "Mostrando {shown} de {total} transacciones",
+        moreHidden: "{count} más ocultas - ajusta el filtro \"Mostrar\" para ver más",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 Credenciales Bancarias",
         credentialsSecure: "Tus credenciales serán encriptadas y almacenadas de forma segura en Firebase.",
         username: "Usuario",
@@ -664,15 +917,35 @@ const translations = {
         saving: "Guardando...",
         cancel: "Cancelar",
         
+        // CSV Import
+        importCSV: "Importar CSV",
+        importCSVDescription: "Importar transacciones desde archivos CSV (Revolut, N26, etc.)",
+        bankName: "Nombre del Banco",
+        bankNamePlaceholder: "ej. Revolut, N26, Wise...",
+        bankNameHelp: "Esto te ayuda a identificar transacciones de diferentes bancos",
+        chooseCSV: "Elegir Archivo CSV",
+        remove: "Eliminar",
+        imported: "Importado",
+        
         // Compare mode
-        compare: "📊 Comparar",
         budgetVsReal: "Presupuesto vs Real",
         budget: "Presupuesto",
         real: "Real",
-        underBy: "Bajo por",
-        overBy: "Sobrepasado por",
+        underBy: "Por debajo de",
+        overBy: "Por encima de",
         used: "usado",
+        exactly: "Exactamente",
         exactMatch: "Coincidencia exacta",
+        
+        // Loading messages
+        processing: "Procesando...",
+        pleaseWait: "Por favor espera",
+        importingCSV: "Importando CSV...",
+        processingTransactions: "Procesando transacciones",
+        removingCSV: "Eliminando CSV...",
+        deletingTransactions: "Eliminando transacciones",
+        deletingAllTransactions: "Eliminando todas las transacciones...",
+        thisMayTakeAMoment: "Esto puede tomar un momento",
     },
     
     ru: {
@@ -703,6 +976,8 @@ const translations = {
         pieChart: "🍩 Круговая Диаграмма",
         barChart: "📊 Гистограмма",
         colors: "🎨 Цвета",
+        compare: "📊 Сравнить",
+        resetAll: "Сбросить Все Расходы",
         
         // Category controls
         moveUp: "↑ Вверх",
@@ -754,13 +1029,20 @@ const translations = {
         cleanDescription: "Удалить категории, которые существуют в ваших данных, но не отображаются правильно.",
         currency: "Валюта",
         incomeTracking: "Учет Доходов",
-        trackIncome: "Отслеживать доходы и рассчитывать остаток",
+        trackIncome: "Отслеживать месячные доходы",
         trackIncomeDesc: "При включении вы можете отслеживать источники дохода и видеть, сколько денег остается после расходов.",
         percentageCalculation: "Расчет Процентов",
         basedOnExpenses: "На Основе Общих Расходов",
         basedOnIncome: "На Основе Общего Дохода",
-        percentageDesc: "Выберите, рассчитываются ли проценты категорий относительно общих расходов или общего дохода.",
+        percentageDesc: "Выберите, как рассчитываются проценты категорий",
         language: "Язык",
+        darkMode: "Темный Режим",
+        enableDarkMode: "Включить темный режим",
+        clearData: "Очистить Данные",
+        clearAllTransactions: "Очистить Все Транзакции",
+        clearTransactionsWarning: "Удалить все синхронизированные транзакции из базы данных. Это действие нельзя отменить.",
+        madeBy: "Создано Виктором Бурманом",
+        contactInfo: "Для любых сообщений об ошибках, идей или предложений:",
         
         // Confirmations & alerts
         resetAllConfirm: "Вы уверены, что хотите сбросить все расходы до 0?",
@@ -790,11 +1072,11 @@ const translations = {
         
         // Other
         noExpensesYet: "Пока нет расходов",
-        resetAll: "Сбросить Все Расходы",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "Транзакции",
-        bankAccountsConfig: "🏦 Настройка Счетов",
+        bankAccountsConfig: "🏦 Банковские Счета",
         maxLeumi: "💳 Max.co.il (Карта Леуми)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Настроить Max",
@@ -807,17 +1089,57 @@ const translations = {
         syncingWithBanks: "Синхронизация с банками...",
         lastSync: "Последняя синхронизация:",
         never: "Никогда",
+        ago: "назад",
+        minutes: "минут",
+        hours: "часов",
+        days: "дней",
         transactions: "транзакци(я/и)",
         allTransactions: "📋 Все Транзакции",
         loadingTransactions: "Загрузка транзакций...",
         noTransactionsYet: "Пока нет транзакций",
         clickSyncToStart: "Нажмите \"Синхронизировать Все\" для начала",
         filters: "🔍 Фильтры",
-        showOnlyUnlabeled: "Показать только без меток",
+        showAll: "Все",
+        showOnlyUnlabeled: "Только без меток",
+        showOnlyLabeled: "Только с метками",
         allMonths: "Все месяцы",
+        allSources: "Все источники",
         allCategories: "Все категории",
         search: "Поиск...",
         clear: "Очистить",
+        selectCategory: "Выбрать категорию",
+        
+        // Month names
+        january: "Январь",
+        february: "Февраль",
+        march: "Март",
+        april: "Апрель",
+        may: "Май",
+        june: "Июнь",
+        july: "Июль",
+        august: "Август",
+        september: "Сентябрь",
+        october: "Октябрь",
+        november: "Ноябрь",
+        december: "Декабрь",
+        
+        // Sort options
+        sortDateNewest: "📅 Дата (новые)",
+        sortDateOldest: "📅 Дата (старые)",
+        sortAmountHighest: "💰 Сумма (больше)",
+        sortAmountLowest: "💰 Сумма (меньше)",
+        sortFrequencyMost: "🔄 Частота (больше)",
+        sortFrequencyLeast: "🔄 Частота (меньше)",
+        
+        // Transaction limits
+        show50: "Показать 50",
+        show500: "Показать 500",
+        show1000: "Показать 1000",
+        show2000: "Показать 2000",
+        showingTransactions: "Показано {shown} из {total} транзакций",
+        moreHidden: "Еще {count} скрыто - настройте фильтр \"Показать\" чтобы увидеть больше",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 Банковские Учетные Данные",
         credentialsSecure: "Ваши учетные данные будут зашифрованы и безопасно сохранены в Firebase.",
         username: "Имя пользователя",
@@ -832,16 +1154,37 @@ const translations = {
         saving: "Сохранение...",
         cancel: "Отмена",
         
+        // CSV Import
+        importCSV: "Импорт CSV",
+        importCSVDescription: "Импортировать транзакции из файлов CSV (Revolut, N26 и т.д.)",
+        bankName: "Название Банка",
+        bankNamePlaceholder: "например Revolut, N26, Wise...",
+        bankNameHelp: "Это помогает идентифицировать транзакции из разных банков",
+        chooseCSV: "Выбрать Файл CSV",
+        remove: "Удалить",
+        imported: "Импортировано",
+        
         // Compare mode
-        compare: "📊 Сравнить",
         budgetVsReal: "Бюджет vs Реальность",
         budget: "Бюджет",
         real: "Реальность",
         underBy: "Меньше на",
         overBy: "Превышение на",
         used: "использовано",
+        exactly: "Точно",
         exactMatch: "Точное совпадение",
+        
+        // Loading messages
+        processing: "Обработка...",
+        pleaseWait: "Пожалуйста, подождите",
+        importingCSV: "Импорт CSV...",
+        processingTransactions: "Обработка транзакций",
+        removingCSV: "Удаление CSV...",
+        deletingTransactions: "Удаление транзакций",
+        deletingAllTransactions: "Удаление всех транзакций...",
+        thisMayTakeAMoment: "Это может занять некоторое время",
     },
+    
     ar: {
         // Auth screen
         appTitle: "💰 متتبع المصروفات",
@@ -870,6 +1213,8 @@ const translations = {
         pieChart: "🍩 مخطط دائري",
         barChart: "📊 مخطط أعمدة",
         colors: "🎨 الألوان",
+        compare: "📊 مقارنة",
+        resetAll: "إعادة تعيين جميع النفقات",
         
         // Category controls
         moveUp: "↑ تحريك لأعلى",
@@ -921,13 +1266,20 @@ const translations = {
         cleanDescription: "إزالة الفئات الموجودة في بياناتك ولكن لا يتم عرضها بشكل صحيح.",
         currency: "العملة",
         incomeTracking: "تتبع الدخل",
-        trackIncome: "تتبع الدخل وحساب الرصيد المتبقي",
+        trackIncome: "تتبع الدخل الشهري",
         trackIncomeDesc: "عند التفعيل، يمكنك تتبع مصادر دخلك ومعرفة المبلغ المتبقي بعد المصروفات.",
         percentageCalculation: "حساب النسبة المئوية",
         basedOnExpenses: "بناءً على إجمالي المصروفات",
         basedOnIncome: "بناءً على إجمالي الدخل",
-        percentageDesc: "اختر ما إذا كانت نسب الفئات تُحسب بالنسبة لإجمالي المصروفات أو إجمالي الدخل.",
+        percentageDesc: "اختر كيفية حساب نسب الفئات",
         language: "اللغة",
+        darkMode: "الوضع الداكن",
+        enableDarkMode: "تفعيل الوضع الداكن",
+        clearData: "مسح البيانات",
+        clearAllTransactions: "مسح جميع المعاملات",
+        clearTransactionsWarning: "إزالة جميع المعاملات المتزامنة من قاعدة البيانات. لا يمكن التراجع عن هذا الإجراء.",
+        madeBy: "صنع بواسطة فيكتور بورتمان",
+        contactInfo: "لأي تقرير خطأ أو أفكار أو اقتراحات:",
         
         // Confirmations & alerts
         resetAllConfirm: "هل أنت متأكد من أنك تريد إعادة تعيين جميع المصروفات إلى 0؟",
@@ -957,11 +1309,11 @@ const translations = {
         
         // Other
         noExpensesYet: "لا توجد مصروفات حتى الآن",
-        resetAll: "إعادة تعيين جميع المصروفات",
         close: "✕",
+        
         // Transactions tab
         transactionsTab: "المعاملات",
-        bankAccountsConfig: "🏦 إعدادات الحسابات",
+        bankAccountsConfig: "🏦 الحسابات البنكية",
         maxLeumi: "💳 Max.co.il (بطاقة ليئومي)",
         isracard: "💳 إسراكارد",
         setupMaxCredentials: "🔐 إعداد Max",
@@ -974,17 +1326,57 @@ const translations = {
         syncingWithBanks: "جاري المزامنة مع البنوك...",
         lastSync: "آخر مزامنة:",
         never: "أبداً",
+        ago: "منذ",
+        minutes: "دقائق",
+        hours: "ساعات",
+        days: "أيام",
         transactions: "معاملة/معاملات",
         allTransactions: "📋 جميع المعاملات",
         loadingTransactions: "جاري تحميل المعاملات...",
         noTransactionsYet: "لا توجد معاملات بعد",
         clickSyncToStart: "انقر على \"مزامنة الكل\" للبدء",
         filters: "🔍 المرشحات",
-        showOnlyUnlabeled: "إظهار غير الموسومة فقط",
+        showAll: "الكل",
+        showOnlyUnlabeled: "غير الموسومة فقط",
+        showOnlyLabeled: "الموسومة فقط",
         allMonths: "جميع الأشهر",
+        allSources: "جميع المصادر",
         allCategories: "جميع الفئات",
         search: "بحث...",
         clear: "مسح",
+        selectCategory: "اختر فئة",
+        
+        // Month names
+        january: "يناير",
+        february: "فبراير",
+        march: "مارس",
+        april: "أبريل",
+        may: "مايو",
+        june: "يونيو",
+        july: "يوليو",
+        august: "أغسطس",
+        september: "سبتمبر",
+        october: "أكتوبر",
+        november: "نوفمبر",
+        december: "ديسمبر",
+        
+        // Sort options
+        sortDateNewest: "📅 التاريخ (الأحدث)",
+        sortDateOldest: "📅 التاريخ (الأقدم)",
+        sortAmountHighest: "💰 المبلغ (الأعلى)",
+        sortAmountLowest: "💰 المبلغ (الأدنى)",
+        sortFrequencyMost: "🔄 التكرار (الأكثر)",
+        sortFrequencyLeast: "🔄 التكرار (الأقل)",
+        
+        // Transaction limits
+        show50: "إظهار 50",
+        show500: "إظهار 500",
+        show1000: "إظهار 1000",
+        show2000: "إظهار 2000",
+        showingTransactions: "عرض {shown} من {total} معاملات",
+        moreHidden: "{count} أخرى مخفية - اضبط مرشح \"إظهار\" لرؤية المزيد",
+        
+        // Bank credentials modal
         bankCredentials: "🔐 بيانات اعتماد البنك",
         credentialsSecure: "سيتم تشفير بيانات اعتمادك وتخزينها بشكل آمن في Firebase.",
         username: "اسم المستخدم",
@@ -999,20 +1391,34 @@ const translations = {
         saving: "جاري الحفظ...",
         cancel: "إلغاء",
         
+        // CSV Import
+        importCSV: "استيراد CSV",
+        importCSVDescription: "استيراد المعاملات من ملفات CSV (Revolut، N26، إلخ)",
+        bankName: "اسم البنك",
+        bankNamePlaceholder: "مثل Revolut، N26، Wise...",
+        bankNameHelp: "هذا يساعدك على تحديد المعاملات من بنوك مختلفة",
+        chooseCSV: "اختر ملف CSV",
+        remove: "إزالة",
+        imported: "تم الاستيراد",
+        
         // Compare mode
-        compare: "📊 مقارنة",
         budgetVsReal: "الميزانية مقابل الواقع",
         budget: "الميزانية",
         real: "الواقع",
         underBy: "أقل بمقدار",
         overBy: "أكثر بمقدار",
         used: "مستخدم",
+        exactly: "بالضبط",
         exactMatch: "تطابق تام",
+        
+        // Loading messages
+        processing: "جاري المعالجة...",
+        pleaseWait: "الرجاء الانتظار",
+        importingCSV: "جاري استيراد CSV...",
+        processingTransactions: "جاري معالجة المعاملات",
+        removingCSV: "جاري إزالة CSV...",
+        deletingTransactions: "جاري حذف المعاملات",
+        deletingAllTransactions: "جاري حذف جميع المعاملات...",
+        thisMayTakeAMoment: "قد يستغرق هذا لحظة",
     }
 };
-
-
-
-
-
-
