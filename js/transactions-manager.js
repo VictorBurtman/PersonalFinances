@@ -377,6 +377,38 @@ function sortTransactions() {
     }
 }
 
+
+// ✅ AJOUTE ICI LES DEUX FONCTIONS
+/**
+ * Change sort order and reapply filters
+ */
+function changeSortOrder(sortOrder) {
+    currentSortOrder = sortOrder;
+    applyFilters();
+}
+
+/**
+ * Change transaction limit and save to Firebase
+ */
+async function changeTransactionLimit(limit) {
+    transactionLimit = parseInt(limit);
+    
+    // Save to Firebase
+    if (window.currentUser && db) {
+        try {
+            await db.collection('users').doc(window.currentUser.uid).set({
+                transactionLimit: transactionLimit
+            }, { merge: true });
+            console.log('Transaction limit saved:', transactionLimit);
+        } catch (error) {
+            console.error('Error saving transaction limit:', error);
+        }
+    }
+    
+    applyFilters();
+}
+
+
 /**
  * Change sort order and reapply filters
  */
