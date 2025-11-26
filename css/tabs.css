@@ -884,7 +884,7 @@
     }
     
     #bankAccountsModal .modal-content {
-        margin: 5px 10px 15px 10px;  /* top right bottom left - 15px en bas */
+        margin: 5px 10px 30px 10px;  /* top right bottom left - 15px en bas */
         max-width: none;
         max-height: calc(100vh - 20px);  /* Un peu moins haut pour laisser respirer */
     }
