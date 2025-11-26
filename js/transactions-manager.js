@@ -201,7 +201,8 @@ function populateMonthFilter() {
     const sortedMonths = Array.from(months).sort().reverse();
     
     // Clear and populate dropdown
-    monthFilter.innerHTML = '<option value="">All months</option>';
+    const t = translations[currentLanguage] || translations['en'];
+    monthFilter.innerHTML = `<option value="" data-translate="allMonths">${t.allMonths}</option>`;
     sortedMonths.forEach(monthKey => {
         const [year, month] = monthKey.split('-');
         const date = new Date(year, month - 1);
@@ -233,7 +234,8 @@ function populateCategoryFilter() {
         .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
     
     // Clear and populate dropdown
-    categoryFilter.innerHTML = '<option value="">All categories</option>';
+    const t = translations[currentLanguage] || translations['en'];
+    categoryFilter.innerHTML = `<option value="" data-translate="allCategories">${t.allCategories}</option>`;
     categories.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat;
@@ -873,20 +875,21 @@ async function updateSyncStatusInModal() {
 }
 
 /**
- * Get time ago text
+ * Get time ago text (translated)
  */
 function getTimeAgoText(date) {
+    const t = translations[currentLanguage] || translations['en'];
     const now = new Date();
     const diff = Math.floor((now - date) / (1000 * 60));
     
     if (diff < 1) return 'Just now';
-    if (diff < 60) return `${diff} minute${diff > 1 ? 's' : ''} ago`;
+    if (diff < 60) return `${diff} ${t.minutes} ${t.ago}`;
     
     const hours = Math.floor(diff / 60);
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} ${t.hours} ${t.ago}`;
     
     const days = Math.floor(hours / 24);
-    return `${days} day${days > 1 ? 's' : ''} ago`;
+    return `${days} ${t.days} ${t.ago}`;
 }
 
 /**
