@@ -713,6 +713,33 @@ function showTransactionAlert(message, type = 'info') {
 }
 
 /**
+ * Show loading overlay
+ */
+function showLoadingOverlay(text = 'Processing...', subtext = 'Please wait') {
+    const overlay = document.getElementById('loadingOverlay');
+    const textEl = document.getElementById('loadingOverlayText');
+    const subtextEl = document.getElementById('loadingOverlaySubtext');
+    
+    if (overlay) {
+        if (textEl) textEl.textContent = text;
+        if (subtextEl) subtextEl.textContent = subtext;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Disable scroll
+    }
+}
+
+/**
+ * Hide loading overlay
+ */
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Re-enable scroll
+    }
+}
+
+/**
  * Open Bank Accounts Modal
  */
 function openBankAccountsModal() {
@@ -1035,9 +1062,14 @@ async function syncAllTransactions() {
     }
     
     const btn = document.getElementById('syncAllBtn');
+    const btnModal = document.getElementById('syncAllBtnModal'); // ✅ AJOUTÉ : bouton dans la modal
     const loading = document.getElementById('syncLoading');
     
+    // ✅ AJOUTÉ : Show loading overlay
+    showLoadingOverlay('Syncing with banks...', 'This may take a minute');
+    
     if (btn) btn.disabled = true;
+    if (btnModal) btnModal.disabled = true; // ✅ AJOUTÉ
     if (loading) loading.classList.add('show');
     
     try {
@@ -1091,7 +1123,11 @@ async function syncAllTransactions() {
         console.error('Error syncing:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     } finally {
+        // ✅ AJOUTÉ : Always hide overlay
+        hideLoadingOverlay();
+        
         if (btn) btn.disabled = false;
+        if (btnModal) btnModal.disabled = false; // ✅ AJOUTÉ
         if (loading) loading.classList.remove('show');
     }
 }
@@ -1264,13 +1300,15 @@ async function handleCSVUpload(event) {
         return;
     }
     
-    showToast('Processing CSV...', 'info', 2000);
+    // ✅ AJOUTE : Show loading overlay
+    showLoadingOverlay('Importing CSV...', 'Processing transactions');
     
     try {
         const text = await file.text();
         const transactions = parseCSV(text, file.name, bankName);
         
         if (transactions.length === 0) {
+            hideLoadingOverlay(); // ✅ AJOUTE
             showToast('No valid transactions found in CSV', 'error');
             return;
         }
@@ -1289,6 +1327,9 @@ async function handleCSVUpload(event) {
     } catch (error) {
         console.error('Error processing CSV:', error);
         showToast('Error processing CSV: ' + error.message, 'error');
+    } finally {
+        // ✅ AJOUTE : Always hide overlay
+        hideLoadingOverlay();
     }
 }
 
@@ -1582,7 +1623,8 @@ async function removeCSV(csvId, fileName) {
     if (!confirm(`Remove "${fileName}" and all its transactions?`)) {
         return;
     }
-    
+    // ✅ AJOUTE : Show loading overlay
+    showLoadingOverlay('Removing CSV...', 'Deleting transactions');
     try {
         const userId = window.currentUser.uid;
         
@@ -1644,6 +1686,9 @@ async function removeCSV(csvId, fileName) {
     } catch (error) {
         console.error('Error removing CSV:', error);
         showToast('Error removing CSV: ' + error.message, 'error');
+    } finally {
+        // ✅ AJOUTE : Always hide overlay
+        hideLoadingOverlay();
     }
 }
 
