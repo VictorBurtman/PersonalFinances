@@ -555,7 +555,7 @@ function renderTransaction(txn) {
     
     const isLabeled = txn.isLabeled && txn.category;
     const txnId = txn.id.replace(/[^a-zA-Z0-9]/g, ''); // Safe ID for DOM
-    
+    const t = translations[currentLanguage] || translations['en'];
     return `
         <div class="transaction-item" style="display: block; padding: 15px;">
             <!-- Top row: Date, Description, Amount -->
@@ -570,7 +570,7 @@ function renderTransaction(txn) {
                     
                     <!-- Expandable details -->
                     <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
-                        const t = translations[currentLanguage] || translations['en'];
+                        
                         
                         <div style="margin-bottom: 5px;"><strong>${t.fullName || 'Full name'}:</strong> ${escapeHtml(txn.description)}</div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
@@ -1082,7 +1082,8 @@ async function syncAllTransactions() {
     const loading = document.getElementById('syncLoading');
     
     // ✅ AJOUTÉ : Show loading overlay
-    showLoadingOverlay('Syncing with banks...', 'This may take a minute');
+    const t = translations[currentLanguage] || translations['en'];
+    showLoadingOverlay(t.syncingWithBanks || 'Syncing with banks...', t.thisMayTakeAMoment || 'This may take a moment');
     
     if (btn) btn.disabled = true;
     if (btnModal) btnModal.disabled = true; // ✅ AJOUTÉ
@@ -1317,7 +1318,8 @@ async function handleCSVUpload(event) {
     }
     
     // ✅ AJOUTE : Show loading overlay
-    showLoadingOverlay('Importing CSV...', 'Processing transactions');
+    const t = translations[currentLanguage] || translations['en'];
+    showLoadingOverlay(t.importingCSV || 'Importing CSV...', t.processingTransactions || 'Processing transactions');
     
     try {
         const text = await file.text();
@@ -1647,7 +1649,8 @@ async function removeCSV(csvId, fileName) {
         return;
     }
     // ✅ AJOUTE : Show loading overlay
-    showLoadingOverlay('Removing CSV...', 'Deleting transactions');
+    const t = translations[currentLanguage] || translations['en'];
+    showLoadingOverlay(t.removingCSV || 'Removing CSV...', t.deletingTransactions || 'Deleting transactions');
     try {
         const userId = window.currentUser.uid;
         
