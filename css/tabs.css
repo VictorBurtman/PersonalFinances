@@ -637,15 +637,6 @@
     color: #667eea;
 }
 
-/* Mobile specific - Bank Accounts Modal */
-@media (max-width: 600px) {
-    #bankAccountsModal .modal-content {
-        margin: 2vh auto !important;
-        max-height: 96vh !important;
-        max-width: calc(100vw - 20px) !important;
-    }
-}
-
 /* ============================================
    SCROLL TO TOP BUTTON
    ============================================ */
