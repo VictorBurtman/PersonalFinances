@@ -1174,13 +1174,13 @@
 
                     <div class="chart-section">
                         <div class="chart-controls">
-                            <button id="pieChartBtn" onclick="switchChart('doughnut')" class="active">
+                            <button id="pieChartBtn" class="chart-toggle-btn active" data-type="doughnut">
                                 🍩 <span data-translate="pieChart">Pie Chart</span>
                             </button>
-                            <button id="barChartBtn" onclick="switchChart('bar')">
+                            <button id="barChartBtn" class="chart-toggle-btn" data-type="bar">
                                 📊 <span data-translate="barChart">Bar Chart</span>
                             </button>
-                            <button id="colorsBtn" onclick="openColorModal()">
+                            <button id="colorsBtn" class="color-customize-btn" onclick="openColorEditor()">
                                 🎨 <span data-translate="colors">Colors</span>
                             </button>
                         </div>
