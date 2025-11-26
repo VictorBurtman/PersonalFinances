@@ -1148,8 +1148,11 @@
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
                     <div class="edit-mode-controls">
+                        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
+                            ✏️ <span id="editBtnText">Edit Categories</span>
+                        </button>
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
-                            📊 <span data-translate="compare">Compare</span>
+                            <span data-translate="compare">Compare</span>
                         </button>
                         <select id="compareMonth" onchange="loadRealSpending()">
                         </select>
