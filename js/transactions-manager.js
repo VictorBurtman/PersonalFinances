@@ -227,6 +227,36 @@ function populateCategoryFilter() {
     });
 }
 
+
+/**
+ * Populate source filter with available sources
+ */
+function populateSourceFilter() {
+    const sourceFilter = document.getElementById('sourceFilter');
+    if (!sourceFilter) return;
+    
+    // Get unique bank names from CSV transactions
+    const csvBanks = new Set();
+    transactionsData.forEach(txn => {
+        if (txn.source === 'csv' && txn.bankName) {
+            csvBanks.add(txn.bankName);
+        }
+    });
+    
+    // Clear existing options except the first 3 (All, Max, Isracard)
+    while (sourceFilter.options.length > 3) {
+        sourceFilter.remove(3);
+    }
+    
+    // Add CSV banks
+    csvBanks.forEach(bankName => {
+        const option = document.createElement('option');
+        option.value = `csv:${bankName}`;
+        option.textContent = `🏦 ${bankName}`;
+        sourceFilter.appendChild(option);
+    });
+}
+
 /**
  * Apply filters and sorting, then render transactions
  */
@@ -234,10 +264,11 @@ function applyFilters() {
     // Get filter values
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
     const monthFilter = document.getElementById('monthFilter')?.value;
+    const sourceFilter = document.getElementById('sourceFilter')?.value; // ✅ NOUVEAU
     const categoryFilter = document.getElementById('categoryFilter')?.value;
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
     
-    console.log('Applying filters:', { labelFilter, monthFilter, categoryFilter, searchFilter, currentSortOrder }); // DEBUG
+    console.log('Applying filters:', { labelFilter, monthFilter, sourceFilter, categoryFilter, searchFilter, currentSortOrder }); // DEBUG
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
@@ -255,6 +286,21 @@ function applyFilters() {
             const date = new Date(txn.date);
             const txnMonthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
             if (txnMonthKey !== monthFilter) {
+                return false;
+            }
+        }
+        
+        // ✅ NOUVEAU : Filter by source
+        if (sourceFilter) {
+            // Si c'est un CSV spécifique (filtre par bankName)
+            if (sourceFilter.startsWith('csv:')) {
+                const bankName = sourceFilter.replace('csv:', '');
+                if (txn.source !== 'csv' || txn.bankName !== bankName) {
+                    return false;
+                }
+            }
+            // Si c'est max ou isracard
+            else if (txn.source !== sourceFilter) {
                 return false;
             }
         }
@@ -1125,6 +1171,25 @@ async function unlabelTransaction(transactionId) {
 // ============================================
 
 /**
+ * Trigger CSV file selection
+ */
+function triggerCSVUpload() {
+    const bankNameInput = document.getElementById('csvBankName');
+    const bankName = bankNameInput?.value.trim();
+    
+    if (!bankName) {
+        showToast('Please enter a bank name first', 'error');
+        return;
+    }
+    
+    // Store bank name temporarily
+    window.pendingCSVBankName = bankName;
+    
+    // Trigger file input
+    document.getElementById('csvFileInput').click();
+}
+
+/**
  * Handle CSV file upload
  */
 async function handleCSVUpload(event) {
@@ -1136,11 +1201,17 @@ async function handleCSVUpload(event) {
         return;
     }
     
+    const bankName = window.pendingCSVBankName;
+    if (!bankName) {
+        showToast('Bank name is required', 'error');
+        return;
+    }
+    
     showToast('Processing CSV...', 'info', 2000);
     
     try {
         const text = await file.text();
-        const transactions = parseCSV(text, file.name);
+        const transactions = parseCSV(text, file.name, bankName);
         
         if (transactions.length === 0) {
             showToast('No valid transactions found in CSV', 'error');
@@ -1148,10 +1219,15 @@ async function handleCSVUpload(event) {
         }
         
         // Save CSV metadata and transactions to Firebase
-        await importCSVTransactions(file.name, transactions);
+        await importCSVTransactions(file.name, bankName, transactions);
+        
+        // Clear bank name input
+        const bankNameInput = document.getElementById('csvBankName');
+        if (bankNameInput) bankNameInput.value = '';
         
         // Reset input
         event.target.value = '';
+        delete window.pendingCSVBankName;
         
     } catch (error) {
         console.error('Error processing CSV:', error);
@@ -1162,7 +1238,7 @@ async function handleCSVUpload(event) {
 /**
  * Parse CSV file and extract transactions
  */
-function parseCSV(csvText, fileName) {
+function parseCSV(csvText, fileName, bankName) {
     const lines = csvText.split('\n').filter(line => line.trim());
     if (lines.length < 2) {
         throw new Error('CSV file is empty or invalid');
@@ -1212,6 +1288,7 @@ function parseCSV(csvText, fileName) {
                 currency: currency,
                 source: 'csv',
                 csvFileName: fileName,
+                bankName: bankName, // ✅ AJOUTÉ
                 identifier: `${date.toISOString()}_${description.trim()}_${amount}`
             });
             
@@ -1222,7 +1299,6 @@ function parseCSV(csvText, fileName) {
     
     return transactions;
 }
-
 /**
  * Parse a single CSV line (handles quoted values)
  */
@@ -1290,7 +1366,7 @@ function parseDate(dateStr) {
 /**
  * Import CSV transactions to Firebase
  */
-async function importCSVTransactions(fileName, transactions) {
+async function importCSVTransactions(fileName, bankName, transactions) {
     if (!window.currentUser) {
         showToast('Please login first', 'error');
         return;
@@ -1349,6 +1425,7 @@ async function importCSVTransactions(fileName, transactions) {
         batch.set(csvMetaRef, {
             id: csvMetaRef.id,
             fileName: fileName,
+            bankName: bankName, // ✅ AJOUTÉ
             importedAt: firebase.firestore.FieldValue.serverTimestamp(),
             transactionCount: newTransactions.length,
             transactionIdentifiers: newTransactions.map(t => t.identifier)
@@ -1358,8 +1435,8 @@ async function importCSVTransactions(fileName, transactions) {
         
         const skipped = transactions.length - newTransactions.length;
         const message = skipped > 0 
-            ? `Imported ${newTransactions.length} transactions (${skipped} duplicates skipped)`
-            : `Imported ${newTransactions.length} transactions from ${fileName}`;
+            ? `Imported ${newTransactions.length} transactions from ${bankName} (${skipped} duplicates skipped)`
+            : `Imported ${newTransactions.length} transactions from ${bankName}`;
         
         showToast(message, 'success', 4000);
         
@@ -1415,13 +1492,14 @@ function createCSVItem(csvData) {
     div.className = 'csv-item';
     
     const date = csvData.importedAt ? csvData.importedAt.toDate().toLocaleDateString() : 'Unknown';
+    const bankName = csvData.bankName || 'Unknown Bank';
     
     div.innerHTML = `
         <div class="csv-item-info">
-            <div class="csv-item-name">📄 ${escapeHtml(csvData.fileName)}</div>
-            <div class="csv-item-meta">Imported ${date} • ${csvData.transactionCount} transactions</div>
+            <div class="csv-item-name">🏦 ${escapeHtml(bankName)}</div>
+            <div class="csv-item-meta">Imported ${date} • ${csvData.transactionCount} transactions • ${escapeHtml(csvData.fileName)}</div>
         </div>
-        <button class="csv-remove-btn" onclick="removeCSV('${csvData.id}', '${escapeHtml(csvData.fileName)}')">
+        <button class="csv-remove-btn" onclick="removeCSV('${csvData.id}', '${escapeHtml(bankName)}')">
             ✕ Remove
         </button>
     `;
