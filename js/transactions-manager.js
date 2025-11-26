@@ -124,6 +124,7 @@ async function loadTransactions() {
         // Populate filters
         populateMonthFilter();
         populateCategoryFilter();
+        populateSourceFilter(); // ✅ AJOUTE CETTE LIGNE
         console.log('Filters populated');
         
         // Apply filters and render
