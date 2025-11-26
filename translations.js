@@ -14,6 +14,9 @@ const translations = {
         hasAccount: "Already have an account?",
         signingIn: "Signing in...",
         creatingAccount: "Creating account...",
+        idNumber: "ID Number",
+        cardLast6: "Last 6 Digits of Card",
+        yourIsraeliId: "Your Israeli ID",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -294,6 +297,9 @@ const translations = {
         hasAccount: "Déjà un compte ?",
         signingIn: "Connexion...",
         creatingAccount: "Création du compte...",
+        idNumber: "Numéro d'identité",
+        cardLast6: "6 derniers chiffres de la carte",
+        yourIsraeliId: "Votre pièce d'identité israélienne",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -563,6 +569,9 @@ const translations = {
         hasAccount: "כבר יש לך חשבון?",
         signingIn: "מתחבר...",
         creatingAccount: "יוצר חשבון...",
+        idNumber: "מספר תעודת זהות",
+        cardLast6: "6 ספרות אחרונות של הכרטיס",
+        yourIsraeliId: "תעודת הזהות הישראלית שלך",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -832,6 +841,9 @@ const translations = {
         hasAccount: "¿Ya tienes cuenta?",
         signingIn: "Iniciando sesión...",
         creatingAccount: "Creando cuenta...",
+        idNumber: "Número de identificación",
+        cardLast6: "Últimos 6 dígitos de la tarjeta",
+        yourIsraeliId: "Tu documento de identidad israelí",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1101,6 +1113,9 @@ const translations = {
         hasAccount: "Уже есть аккаунт?",
         signingIn: "Вход...",
         creatingAccount: "Создание аккаунта...",
+        idNumber: "Номер удостоверения",
+        cardLast6: "Последние 6 цифр карты",
+        yourIsraeliId: "Ваше израильское удостоверение",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1370,6 +1385,9 @@ const translations = {
         hasAccount: "هل لديك حساب بالفعل؟",
         signingIn: "جاري تسجيل الدخول...",
         creatingAccount: "جاري إنشاء الحساب...",
+        idNumber: "رقم الهوية",
+        cardLast6: "آخر 6 أرقام من البطاقة",
+        yourIsraeliId: "بطاقة الهوية الإسرائيلية",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1625,6 +1643,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
