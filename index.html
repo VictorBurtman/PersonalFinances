@@ -1174,14 +1174,15 @@
 
                     <div class="chart-section">
                         <div class="chart-controls">
-                            <button id="pieChartBtn" onclick="switchChart('doughnut')" class="active" data-translate="pieChart">
-                                🍩 Pie Chart
+                            <button id="pieChartBtn" onclick="switchChart('doughnut')" class="active">
+                                🍩 <span data-translate="pieChart">Pie Chart</span>
                             </button>
-                            <button id="barChartBtn" onclick="switchChart('bar')" data-translate="barChart">
-                                📊 Bar Chart
+                            <button id="barChartBtn" onclick="switchChart('bar')">
+                                📊 <span data-translate="barChart">Bar Chart</span>
                             </button>
-                            <button id="colorsBtn" onclick="openColorModal()" data-translate="colors">
-                                🎨 Colors
+                            
+                            <button id="colorsBtn" onclick="openColorModal()">
+                                🎨 <span data-translate="colors">Colors</span>
                             </button>
                         </div>
                         <div class="chart-container">
@@ -1293,8 +1294,8 @@
                         </div>
                     </div>
 
-                    <button id="resetBtn" onclick="resetAllExpenses()" data-translate="resetAll">
-                        Reset All Expenses
+                    <button id="resetBtn" onclick="resetAllExpenses()">
+                        <span data-translate="resetAll">Reset All Expenses</span>
                     </button>
                 </div>
                 <!-- FIN DE L'ONGLET BUDGET -->
