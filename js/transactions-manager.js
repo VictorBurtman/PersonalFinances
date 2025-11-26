@@ -1316,6 +1316,10 @@ function parseCSV(csvText, fileName, bankName) {
     
     const transactions = [];
     
+    // ✅ AJOUTE : Calculate date limit (1 year ago)
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
     // Parse data rows
     for (let i = 1; i < lines.length; i++) {
         try {
@@ -1334,6 +1338,11 @@ function parseCSV(csvText, fileName, bankName) {
             const date = parseDate(dateStr);
             if (!date) continue;
             
+            // ✅ AJOUTE : Skip transactions older than 1 year
+            if (date < oneYearAgo) {
+                continue;
+            }
+            
             // Parse amount
             const amount = parseFloat(amountStr.replace(/[^\d.-]/g, ''));
             if (isNaN(amount)) continue;
@@ -1345,7 +1354,7 @@ function parseCSV(csvText, fileName, bankName) {
                 currency: currency,
                 source: 'csv',
                 csvFileName: fileName,
-                bankName: bankName, // ✅ AJOUTÉ
+                bankName: bankName,
                 identifier: `${date.toISOString()}_${description.trim()}_${amount}`
             });
             
