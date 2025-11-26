@@ -129,7 +129,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "Transactions",
         bankAccountsConfig: "🏦 Bank Accounts",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
@@ -368,7 +367,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "Transactions",
         bankAccountsConfig: "🏦 Comptes Bancaires",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
@@ -607,7 +605,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "עסקאות",
         bankAccountsConfig: "🏦 חשבונות בנק",
         maxLeumi: "💳 Max.co.il (כרטיס לאומי)",
         isracard: "💳 ישראכרט",
@@ -846,7 +843,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "Transacciones",
         bankAccountsConfig: "🏦 Cuentas Bancarias",
         maxLeumi: "💳 Max.co.il (Tarjeta Leumi)",
         isracard: "💳 Isracard",
@@ -1085,7 +1081,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "Транзакции",
         bankAccountsConfig: "🏦 Банковские Счета",
         maxLeumi: "💳 Max.co.il (Карта Леуми)",
         isracard: "💳 Isracard",
@@ -1324,7 +1319,6 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        transactionsTab: "المعاملات",
         bankAccountsConfig: "🏦 الحسابات البنكية",
         maxLeumi: "💳 Max.co.il (بطاقة ليئومي)",
         isracard: "💳 إسراكارد",
@@ -1434,4 +1428,5 @@ const translations = {
         thisMayTakeAMoment: "قد يستغرق هذا لحظة",
     }
 };
+
 
