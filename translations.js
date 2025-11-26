@@ -4,6 +4,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 Expense Tracker",
         authSubtitle: "Sign in to sync your expenses",
+        budgetTab: "💰 Budget",
+        transactionsTab: "💳 Transactions",
         email: "Email",
         password: "Password (min 6 characters)",
         signIn: "Sign In",
@@ -241,6 +243,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 Suivi des Dépenses",
         authSubtitle: "Connectez-vous pour synchroniser vos dépenses",
+        budgetTab: "💰 Budget",
+        transactionsTab: "💳 Transactions",
         email: "Email",
         password: "Mot de passe (min 6 caractères)",
         signIn: "Se connecter",
@@ -478,6 +482,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 מעקב הוצאות",
         authSubtitle: "היכנס כדי לסנכרן את ההוצאות שלך",
+        budgetTab: "💰 תקציב",
+        transactionsTab: "💳 עסקאות",
         email: "אימייל",
         password: "סיסמה (מינימום 6 תווים)",
         signIn: "התחבר",
@@ -715,6 +721,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 Seguimiento de Gastos",
         authSubtitle: "Inicia sesión para sincronizar tus gastos",
+        budgetTab: "💰 Presupuesto",
+        transactionsTab: "💳 Transacciones",
         email: "Email",
         password: "Contraseña (mín 6 caracteres)",
         signIn: "Iniciar Sesión",
@@ -952,6 +960,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 Учет Расходов",
         authSubtitle: "Войдите, чтобы синхронизировать ваши расходы",
+        budgetTab: "💰 Бюджет",
+        transactionsTab: "💳 Транзакции",
         email: "Email",
         password: "Пароль (минимум 6 символов)",
         signIn: "Войти",
@@ -1189,6 +1199,8 @@ const translations = {
         // Auth screen
         appTitle: "💰 متتبع المصروفات",
         authSubtitle: "سجل الدخول لمزامنة مصروفاتك",
+        budgetTab: "💰 الميزانية",
+        transactionsTab: "💳 المعاملات",
         email: "البريد الإلكتروني",
         password: "كلمة المرور (6 أحرف على الأقل)",
         signIn: "تسجيل الدخول",
@@ -1422,3 +1434,4 @@ const translations = {
         thisMayTakeAMoment: "قد يستغرق هذا لحظة",
     }
 };
+
