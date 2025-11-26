@@ -31,6 +31,14 @@
             <option value="" data-translate="allMonths">All months</option>
         </select>
         
+        <!-- ✅ AJOUTE CE NOUVEAU SELECT -->
+        <select id="sourceFilter" onchange="applyFilters()" class="filter-select">
+            <option value="" data-translate="allSources">All sources</option>
+            <option value="max">🏦 Max (Leumi)</option>
+            <option value="isracard">💳 Isracard</option>
+            <!-- Les CSV seront ajoutés dynamiquement -->
+        </select>
+        
         <select id="categoryFilter" onchange="applyFilters()" class="filter-select">
             <option value="" data-translate="allCategories">All categories</option>
         </select>
