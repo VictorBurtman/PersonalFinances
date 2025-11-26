@@ -1443,7 +1443,7 @@ async function importCSVTransactions(fileName, bankName, transactions) {
         // Reload transactions and CSV list
         await loadTransactions();
         await loadImportedCSVsList();
-        
+        populateSourceFilter(); // ✅ AJOUTE CETTE LIGNE
     } catch (error) {
         console.error('Error importing CSV:', error);
         showToast('Error importing CSV: ' + error.message, 'error');
