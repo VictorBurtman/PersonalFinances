@@ -749,6 +749,17 @@
     color: #495057;
 }
 
+/* ✅ AJOUTE CES STYLES ICI */
+.bank-section .btn {
+    padding: 12px 20px !important;
+    font-size: 0.95em !important;
+    min-height: 44px !important;
+}
+
+.sync-buttons button {
+    padding: 12px 20px !important;
+    min-height: 44px !important;
+}
 .csv-import-section {
     margin-top: 20px;
 }
