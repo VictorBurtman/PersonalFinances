@@ -4,8 +4,8 @@
         <button class="toolbar-btn" id="filtersToggleBtn" onclick="toggleFiltersRow()">
             <span data-translate="filters">Filters</span> <span id="filterToggleIcon">▼</span>
         </button>
-        <button class="toolbar-btn" onclick="toggleBankConfigFromToolbar()">
-            <span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▼
+        <button class="toolbar-btn" onclick="openBankAccountsModal()">
+            <span data-translate="bankAccountsConfig">🏦 Bank Accounts</span>
         </button>
     </div>
     
@@ -55,71 +55,6 @@
             <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
             <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
         </select>
-    </div>
-</div>
-
-
-<!-- Bank Accounts Configuration -->
-<div class="transactions-section" id="bankConfigSection" style="display: none;">
-    <div class="section-title-trans">
-        🏦 <span data-translate="bankAccountsConfig">Bank Accounts Config</span>
-    </div>
-    <div id="bankConfigContent">
-        <!-- Max.co.il Credentials -->
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
-                <span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span>
-            </h4>
-            <div class="alert-trans alert-info-trans" id="maxCredentialsAlert">
-                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
-            </div>
-            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
-                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
-            </button>
-        </div>
-        
-        <!-- Isracard Credentials -->
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
-                <span data-translate="isracard">💳 Isracard</span>
-            </h4>
-            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlert">
-                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
-            </div>
-            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
-                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
-            </button>
-        </div>
-        
-        <!-- Sync Section -->
-        <div>
-            <h4 style="margin-bottom: 10px; font-size: 0.95em;">
-                <span data-translate="syncTransactions">🔄 Sync Transactions</span>
-            </h4>
-            <div class="sync-status">
-                <div class="sync-info">
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <div>Max: <strong id="lastMaxSyncTime" data-translate="never">Never</strong> <span id="lastMaxSyncCount"></span></div>
-                        <div>Isracard: <strong id="lastIsracardSyncTime" data-translate="never">Never</strong> <span id="lastIsracardSyncCount"></span></div>
-                    </div>
-                </div>
-                <div class="sync-buttons">
-                    <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtn">
-                        <span data-translate="syncAll">🔄 Sync All</span>
-                    </button>
-                    <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn">
-                        <span data-translate="autoLabel">🏷️ Auto-label</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="loading-trans" id="syncLoading">
-                <div class="spinner-trans"></div>
-                <div><span data-translate="syncingWithBanks">Syncing with banks...</span></div>
-            </div>
-
-            <div id="syncResult"></div>
-        </div>
     </div>
 </div>
 
@@ -248,7 +183,89 @@
         </div>
     </div>
 </div>
+
+
+<!-- Bank Accounts Modal -->
+<div id="bankAccountsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span></h2>
+            <button class="modal-close" onclick="closeBankAccountsModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- Max.co.il Credentials -->
+            <div class="bank-section">
+                <h4><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h4>
+                <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal">
+                    <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
+                </div>
+                <button class="btn btn-primary" onclick="openCredentialsModal('max')">
+                    <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
+                </button>
+            </div>
+            
+            <!-- Isracard Credentials -->
+            <div class="bank-section">
+                <h4><span data-translate="isracard">💳 Isracard</span></h4>
+                <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal">
+                    <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
+                </div>
+                <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
+                    <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
+                </button>
+            </div>
+            
+            <!-- Sync Section -->
+            <div class="bank-section">
+                <h4><span data-translate="syncTransactions">🔄 Sync Transactions</span></h4>
+                <div class="sync-status">
+                    <div class="sync-info">
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <div>Max: <strong id="lastMaxSyncTimeModal" data-translate="never">Never</strong> <span id="lastMaxSyncCountModal"></span></div>
+                            <div>Isracard: <strong id="lastIsracardSyncTimeModal" data-translate="never">Never</strong> <span id="lastIsracardSyncCountModal"></span></div>
+                        </div>
+                    </div>
+                    <div class="sync-buttons">
+                        <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal">
+                            <span data-translate="syncAll">🔄 Sync All</span>
+                        </button>
+                        <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal">
+                            <span data-translate="autoLabel">🏷️ Auto-label</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CSV Import Section -->
+            <div class="bank-section">
+                <h4>📥 <span data-translate="importCSV">Import CSV</span></h4>
+                <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
+                    <span data-translate="importCSVDescription">Import transactions from CSV files (Revolut, N26, etc.)</span>
+                </p>
+                <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv" onchange="handleCSVUpload(event)" />
+                <button class="csv-import-btn" onclick="document.getElementById('csvFileInput').click()">
+                    📥 <span data-translate="chooseCSV">Choose CSV File</span>
+                </button>
+                
+                <!-- Liste des CSV importés -->
+                <div class="csv-list" id="csvList">
+                    <!-- Les CSV importés apparaîtront ici -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-button primary" onclick="closeBankAccountsModal()">
+                <span data-translate="done">Done</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
 <!-- Scroll to Top Button (APRÈS la modal) -->
 <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
     ↑
 </button>
+
+<!-- Toast Notifications Container -->
+<div class="toast-container" id="toastContainer"></div>
