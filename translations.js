@@ -138,7 +138,7 @@ const translations = {
         noTransactionsYet: "No transactions yet",
         clickSyncToStart: "Click \"Sync All\" to get started",
         filters: "🔍 Filters",
-        showOnlyUnlabeled: "Show only unlabeled",
+        showOnlyUnlabeled: "Unlabeled only",
         allMonths: "All months",
         allCategories: "All categories",
         search: "Search...",
@@ -1010,6 +1010,7 @@ const translations = {
         exactMatch: "تطابق تام",
     }
 };
+
 
 
 
