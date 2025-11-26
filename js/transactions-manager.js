@@ -1113,6 +1113,393 @@ async function unlabelTransaction(transactionId) {
     }
 }
 
+
+// ============================================
+// CSV IMPORT FUNCTIONALITY
+// ============================================
+
+/**
+ * Handle CSV file upload
+ */
+async function handleCSVUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!file.name.endsWith('.csv')) {
+        showToast('Please select a CSV file', 'error');
+        return;
+    }
+    
+    showToast('Processing CSV...', 'info', 2000);
+    
+    try {
+        const text = await file.text();
+        const transactions = parseCSV(text, file.name);
+        
+        if (transactions.length === 0) {
+            showToast('No valid transactions found in CSV', 'error');
+            return;
+        }
+        
+        // Save CSV metadata and transactions to Firebase
+        await importCSVTransactions(file.name, transactions);
+        
+        // Reset input
+        event.target.value = '';
+        
+    } catch (error) {
+        console.error('Error processing CSV:', error);
+        showToast('Error processing CSV: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Parse CSV file and extract transactions
+ */
+function parseCSV(csvText, fileName) {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length < 2) {
+        throw new Error('CSV file is empty or invalid');
+    }
+    
+    // Parse header
+    const headers = parseCSVLine(lines[0]);
+    
+    // Detect column indices (support multiple formats)
+    const dateCol = findColumn(headers, ['date', 'date de début', 'transaction date', 'datum']);
+    const descCol = findColumn(headers, ['description', 'desc', 'merchant', 'nom']);
+    const amountCol = findColumn(headers, ['amount', 'montant', 'betrag', 'value']);
+    const currencyCol = findColumn(headers, ['currency', 'devise', 'währung', 'curr']);
+    
+    if (dateCol === -1 || descCol === -1 || amountCol === -1) {
+        throw new Error('CSV format not recognized. Required columns: date, description, amount');
+    }
+    
+    const transactions = [];
+    
+    // Parse data rows
+    for (let i = 1; i < lines.length; i++) {
+        try {
+            const values = parseCSVLine(lines[i]);
+            
+            if (values.length < headers.length) continue;
+            
+            const dateStr = values[dateCol];
+            const description = values[descCol];
+            const amountStr = values[amountCol];
+            const currency = currencyCol !== -1 ? values[currencyCol] : 'EUR';
+            
+            if (!dateStr || !description || !amountStr) continue;
+            
+            // Parse date
+            const date = parseDate(dateStr);
+            if (!date) continue;
+            
+            // Parse amount
+            const amount = parseFloat(amountStr.replace(/[^\d.-]/g, ''));
+            if (isNaN(amount)) continue;
+            
+            transactions.push({
+                date: date.toISOString(),
+                description: description.trim(),
+                chargedAmount: amount,
+                currency: currency,
+                source: 'csv',
+                csvFileName: fileName,
+                identifier: `${date.toISOString()}_${description.trim()}_${amount}`
+            });
+            
+        } catch (error) {
+            console.warn(`Error parsing line ${i + 1}:`, error);
+        }
+    }
+    
+    return transactions;
+}
+
+/**
+ * Parse a single CSV line (handles quoted values)
+ */
+function parseCSVLine(line) {
+    const values = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    values.push(current.trim());
+    return values;
+}
+
+/**
+ * Find column index by multiple possible names
+ */
+function findColumn(headers, possibleNames) {
+    for (let i = 0; i < headers.length; i++) {
+        const header = headers[i].toLowerCase().trim();
+        for (const name of possibleNames) {
+            if (header.includes(name.toLowerCase())) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+/**
+ * Parse date from various formats
+ */
+function parseDate(dateStr) {
+    // Try ISO format first (2024-01-15 or 2024-01-15T10:30:00)
+    let date = new Date(dateStr);
+    if (!isNaN(date.getTime())) return date;
+    
+    // Try DD/MM/YYYY
+    const parts1 = dateStr.split(/[\/\-\.]/);
+    if (parts1.length === 3) {
+        const day = parseInt(parts1[0]);
+        const month = parseInt(parts1[1]);
+        const year = parseInt(parts1[2]);
+        
+        if (day <= 31 && month <= 12) {
+            date = new Date(year, month - 1, day);
+            if (!isNaN(date.getTime())) return date;
+        }
+    }
+    
+    return null;
+}
+
+/**
+ * Import CSV transactions to Firebase
+ */
+async function importCSVTransactions(fileName, transactions) {
+    if (!window.currentUser) {
+        showToast('Please login first', 'error');
+        return;
+    }
+    
+    try {
+        const userId = window.currentUser.uid;
+        const batch = db.batch();
+        
+        // Check for duplicates
+        const existingTransactions = await db.collection('users')
+            .doc(userId)
+            .collection('transactions')
+            .get();
+        
+        const existingIdentifiers = new Set();
+        existingTransactions.forEach(doc => {
+            const data = doc.data();
+            if (data.identifier) {
+                existingIdentifiers.add(data.identifier);
+            }
+        });
+        
+        // Filter out duplicates
+        const newTransactions = transactions.filter(t => 
+            !existingIdentifiers.has(t.identifier)
+        );
+        
+        if (newTransactions.length === 0) {
+            showToast('All transactions already exist (no duplicates imported)', 'info');
+            return;
+        }
+        
+        // Add new transactions
+        newTransactions.forEach(transaction => {
+            const docRef = db.collection('users')
+                .doc(userId)
+                .collection('transactions')
+                .doc();
+            
+            batch.set(docRef, {
+                ...transaction,
+                id: docRef.id,
+                isLabeled: false,
+                category: null,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        
+        // Save CSV metadata
+        const csvMetaRef = db.collection('users')
+            .doc(userId)
+            .collection('importedCSVs')
+            .doc();
+        
+        batch.set(csvMetaRef, {
+            id: csvMetaRef.id,
+            fileName: fileName,
+            importedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            transactionCount: newTransactions.length,
+            transactionIdentifiers: newTransactions.map(t => t.identifier)
+        });
+        
+        await batch.commit();
+        
+        const skipped = transactions.length - newTransactions.length;
+        const message = skipped > 0 
+            ? `Imported ${newTransactions.length} transactions (${skipped} duplicates skipped)`
+            : `Imported ${newTransactions.length} transactions from ${fileName}`;
+        
+        showToast(message, 'success', 4000);
+        
+        // Reload transactions and CSV list
+        await loadTransactions();
+        await loadImportedCSVsList();
+        
+    } catch (error) {
+        console.error('Error importing CSV:', error);
+        showToast('Error importing CSV: ' + error.message, 'error');
+    }
+}
+
+/**
+ * Load list of imported CSVs
+ */
+async function loadImportedCSVsList() {
+    if (!window.currentUser) return;
+    
+    const csvList = document.getElementById('csvList');
+    if (!csvList) return;
+    
+    try {
+        const userId = window.currentUser.uid;
+        const csvs = await db.collection('users')
+            .doc(userId)
+            .collection('importedCSVs')
+            .orderBy('importedAt', 'desc')
+            .get();
+        
+        if (csvs.empty) {
+            csvList.innerHTML = '<p style="color: #6c757d; font-size: 0.9em; margin-top: 10px;">No CSV files imported yet</p>';
+            return;
+        }
+        
+        csvList.innerHTML = '';
+        csvs.forEach(doc => {
+            const data = doc.data();
+            const csvItem = createCSVItem(data);
+            csvList.appendChild(csvItem);
+        });
+        
+    } catch (error) {
+        console.error('Error loading CSV list:', error);
+    }
+}
+
+/**
+ * Create CSV item HTML element
+ */
+function createCSVItem(csvData) {
+    const div = document.createElement('div');
+    div.className = 'csv-item';
+    
+    const date = csvData.importedAt ? csvData.importedAt.toDate().toLocaleDateString() : 'Unknown';
+    
+    div.innerHTML = `
+        <div class="csv-item-info">
+            <div class="csv-item-name">📄 ${escapeHtml(csvData.fileName)}</div>
+            <div class="csv-item-meta">Imported ${date} • ${csvData.transactionCount} transactions</div>
+        </div>
+        <button class="csv-remove-btn" onclick="removeCSV('${csvData.id}', '${escapeHtml(csvData.fileName)}')">
+            ✕ Remove
+        </button>
+    `;
+    
+    return div;
+}
+
+/**
+ * Remove CSV and its transactions
+ */
+async function removeCSV(csvId, fileName) {
+    if (!window.currentUser) return;
+    
+    if (!confirm(`Remove "${fileName}" and all its transactions?`)) {
+        return;
+    }
+    
+    try {
+        const userId = window.currentUser.uid;
+        
+        // Get CSV metadata
+        const csvDoc = await db.collection('users')
+            .doc(userId)
+            .collection('importedCSVs')
+            .doc(csvId)
+            .get();
+        
+        if (!csvDoc.exists) {
+            showToast('CSV not found', 'error');
+            return;
+        }
+        
+        const csvData = csvDoc.data();
+        const identifiers = csvData.transactionIdentifiers || [];
+        
+        // Delete transactions with batch
+        const batch = db.batch();
+        
+        const transactions = await db.collection('users')
+            .doc(userId)
+            .collection('transactions')
+            .where('identifier', 'in', identifiers.slice(0, 10)) // Firestore limit: 10 items in 'in'
+            .get();
+        
+        transactions.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        
+        // Delete CSV metadata
+        batch.delete(csvDoc.ref);
+        
+        await batch.commit();
+        
+        // If more than 10 transactions, handle them in additional batches
+        if (identifiers.length > 10) {
+            for (let i = 10; i < identifiers.length; i += 10) {
+                const chunk = identifiers.slice(i, i + 10);
+                const moreTxns = await db.collection('users')
+                    .doc(userId)
+                    .collection('transactions')
+                    .where('identifier', 'in', chunk)
+                    .get();
+                
+                const batch2 = db.batch();
+                moreTxns.forEach(doc => batch2.delete(doc.ref));
+                await batch2.commit();
+            }
+        }
+        
+        showToast(`Removed ${fileName} and its transactions`, 'success');
+        
+        // Reload
+        await loadTransactions();
+        await loadImportedCSVsList();
+        
+    } catch (error) {
+        console.error('Error removing CSV:', error);
+        showToast('Error removing CSV: ' + error.message, 'error');
+    }
+}
+
+
+
+
 // Initialize when the script loads
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTransactions);
