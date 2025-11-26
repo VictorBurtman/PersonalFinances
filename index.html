@@ -1152,7 +1152,7 @@
                             ✏️ <span id="editBtnText">Edit Categories</span>
                         </button>
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
-                            📊 Compare
+                            <span data-translate="compare">📊 Compare</span>
                         </button>
                         <select id="compareMonth" onchange="loadRealSpending()">
                         </select>
@@ -1174,9 +1174,15 @@
 
                     <div class="chart-section">
                         <div class="chart-controls">
-                            <button class="chart-toggle-btn" data-type="doughnut">🍩 Pie Chart</button>
-                            <button class="chart-toggle-btn" data-type="bar">📊 Bar Chart</button>
-                            <button class="color-customize-btn" onclick="openColorEditor()">🎨 Colors</button>
+                            <button id="pieChartBtn" onclick="switchChart('doughnut')" class="active">
+                                <span data-translate="pieChart">🍩 Pie Chart</span>
+                            </button>
+                            <button id="barChartBtn" onclick="switchChart('bar')">
+                                <span data-translate="barChart">📊 Bar Chart</span>
+                            </button>
+                            <button id="colorsBtn" onclick="openColorModal()">
+                                <span data-translate="colors">🎨 Colors</span>
+                            </button>
                         </div>
                         <div class="chart-container">
                             <canvas id="expensesChart"></canvas>
@@ -1287,7 +1293,9 @@
                         </div>
                     </div>
 
-                    <button class="reset-button" onclick="resetExpenses()">Reset All Expenses</button>
+                    <button id="resetBtn" onclick="resetAllExpenses()">
+                        <span data-translate="resetAll">Reset All Expenses</span>
+                    </button>
                 </div>
                 <!-- FIN DE L'ONGLET BUDGET -->
 
