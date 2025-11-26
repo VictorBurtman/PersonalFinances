@@ -582,9 +582,9 @@
     
     /* Bank Accounts Modal */
     #bankAccountsModal .modal-content {
-        margin: 10px 10px 25px 10px !important;
-        max-width: none !important;
-        max-height: calc(100vh - 35px) !important;
+       margin: 5px 10px 5px 10px !important;
+       max-width: none !important;
+       max-height: calc(100vh - 50px) !important;
     }
 }
 
