@@ -1600,6 +1600,11 @@ async function loadImportedCSVsList() {
             csvList.appendChild(csvItem);
         });
         
+        // ✅ AJOUTE CETTE LIGNE
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
+        }
+        
     } catch (error) {
         console.error('Error loading CSV list:', error);
     }
