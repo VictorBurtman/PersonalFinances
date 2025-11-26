@@ -617,6 +617,9 @@ function openBankAccountsModal() {
     if (modal) {
         modal.style.display = 'block';
         
+        // ✅ AJOUTE CETTE LIGNE - Désactiver le scroll
+        document.body.style.overflow = 'hidden';
+        
         // Update credentials status
         updateCredentialsStatusInModal();
         
@@ -640,6 +643,9 @@ function closeBankAccountsModal() {
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
         modal.style.display = 'none';
+        
+        // ✅ AJOUTE CETTE LIGNE - Réactiver le scroll
+        document.body.style.overflow = '';
     }
 }
 
