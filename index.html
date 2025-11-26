@@ -2149,7 +2149,8 @@
                 document.getElementById('totalIncome').textContent = `${currency}${totalIncome.toFixed(2)}`;
                 document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
-                document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% of income)`;
+                const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
+                document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
         
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');
