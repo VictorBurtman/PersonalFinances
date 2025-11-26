@@ -27,6 +27,16 @@ const translations = {
         processingTransactions: "Processing transactions",
         deletingTransactions: "Deleting transactions",
         thisMayTakeAMoment: "This may take a moment",
+        income: "Income",
+        doneEditing: "Done Editing",
+        editCategories: "Edit Categories",
+        income: "Income",
+        budget: "Budget",
+        real: "Real",
+        overBy: "Over by",
+        underBy: "Under by",
+        exactly: "Exact match",
+        used: "used",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -320,6 +330,15 @@ const translations = {
         processingTransactions: "Traitement des transactions",
         deletingTransactions: "Suppression des transactions",
         thisMayTakeAMoment: "Cela peut prendre un moment",
+        doneEditing: "Terminer",
+        editCategories: "Modifier les catégories",
+        income: "Revenus",
+        budget: "Budget",
+        real: "Réel",
+        overBy: "Dépassé de",
+        underBy: "Économisé",
+        exactly: "Exactement",
+        used: "utilisé",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -602,6 +621,15 @@ const translations = {
         processingTransactions: "מעבד עסקאות",
         deletingTransactions: "מוחק עסקאות",
         thisMayTakeAMoment: "זה עשוי לקחת רגע",
+        doneEditing: "סיים עריכה",
+        editCategories: "ערוך קטגוריות",
+        income: "הכנסה",
+        budget: "תקציב",
+        real: "בפועל",
+        overBy: "חריגה של",
+        underBy: "חיסכון של",
+        exactly: "התאמה מדויקת",
+        used: "בשימוש",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -884,6 +912,15 @@ const translations = {
         processingTransactions: "Procesando transacciones",
         deletingTransactions: "Eliminando transacciones",
         thisMayTakeAMoment: "Esto puede tomar un momento",
+        doneEditing: "Terminar edición",
+        editCategories: "Editar categorías",
+        income: "Ingresos",
+        budget: "Presupuesto",
+        real: "Real",
+        overBy: "Excedido por",
+        underBy: "Ahorrado",
+        exactly: "Exacto",
+        used: "usado",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1166,6 +1203,15 @@ const translations = {
         processingTransactions: "Обработка транзакций",
         deletingTransactions: "Удаление транзакций",
         thisMayTakeAMoment: "Это может занять некоторое время",
+        doneEditing: "Готово",
+        editCategories: "Редактировать категории",
+        income: "Доход",
+        budget: "Бюджет",
+        real: "Факт",
+        overBy: "Превышение на",
+        underBy: "Экономия",
+        exactly: "Точное совпадение",
+        used: "использовано",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1448,6 +1494,15 @@ const translations = {
         processingTransactions: "معالجة المعاملات",
         deletingTransactions: "حذف المعاملات",
         thisMayTakeAMoment: "قد يستغرق هذا لحظة",
+        doneEditing: "إنهاء التعديل",
+        editCategories: "تعديل الفئات",
+        income: "الدخل",
+        budget: "الميزانية",
+        real: "الفعلي",
+        overBy: "تجاوز بمقدار",
+        underBy: "توفير بمقدار",
+        exactly: "مطابقة تامة",
+        used: "مستخدم",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1703,6 +1758,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
