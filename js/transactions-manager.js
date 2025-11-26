@@ -7,6 +7,7 @@ let filteredTransactionsData = [];
 let transactionsFunctions = null;
 // Ajoute cette ligne après la ligne 7 (après transactionsFunctions = null;)
 let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'
+let transactionLimit = 2000; // Nombre de transactions à afficher
 let importedCSVs = []; // Liste des CSV importés
 /**
  * Initialize transactions system
