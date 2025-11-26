@@ -3380,7 +3380,7 @@
 
         // Wait for Chart.js to load before initializing
         function initializeApp() {
-            translatePage();
+            updateTransactionsLanguage(); // ✅ Appliquer les traductions
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
