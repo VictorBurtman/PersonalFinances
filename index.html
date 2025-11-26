@@ -1180,7 +1180,6 @@
                             <button id="barChartBtn" onclick="switchChart('bar')">
                                 📊 <span data-translate="barChart">Bar Chart</span>
                             </button>
-                            
                             <button id="colorsBtn" onclick="openColorModal()">
                                 🎨 <span data-translate="colors">Colors</span>
                             </button>
@@ -1565,8 +1564,8 @@
             //chartButtons[1].textContent = t('barChart');
             //document.querySelector('.color-customize-btn').textContent = t('colors');
             
-            // Reset button
-            //document.querySelector('.reset-button').textContent = t('resetAll');
+            Reset button
+            document.querySelector('.reset-button').textContent = t('resetAll');
             
             // Modals
             document.querySelector('#colorEditorModal .modal-header h2').textContent = t('customizeColors');
