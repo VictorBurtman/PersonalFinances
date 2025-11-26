@@ -579,7 +579,34 @@
         min-width: auto;
         max-width: none;
     }
+   
+     /* ✅ AJOUTE ICI - Bank Accounts Modal sur mobile */
+    #bankAccountsModal {
+        padding: 10px !important;
+    }
     
+    #bankAccountsModal .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        max-height: 70vh !important;
+        max-height: 70dvh !important;
+    }
+    
+    #bankAccountsModal .modal-header {
+        padding: 10px 12px !important;
+    }
+    
+    #bankAccountsModal .modal-header h2 {
+        font-size: 1.1em !important;
+    }
+    
+    #bankAccountsModal .modal-body {
+        padding: 12px !important;
+    }
+    
+    #bankAccountsModal .modal-footer {
+        padding: 10px 12px !important;
+    }
 
 }
 
