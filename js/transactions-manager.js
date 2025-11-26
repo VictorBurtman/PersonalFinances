@@ -7,6 +7,7 @@ let filteredTransactionsData = [];
 let transactionsFunctions = null;
 // Ajoute cette ligne après la ligne 7 (après transactionsFunctions = null;)
 let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'
+let importedCSVs = []; // Liste des CSV importés
 /**
  * Initialize transactions system
  * Called after Firebase is initialized
@@ -567,23 +568,189 @@ function updateSyncStatus(date, count, bankType = 'max') {
 }
 
 /**
- * Show transaction alert message
+ * Show toast notification (replacement for showTransactionAlert)
+ */
+function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) {
+        console.warn('Toast container not found');
+        return;
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
+    };
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || 'ℹ'}</div>
+        <div class="toast-message">${message}</div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto-remove after duration
+    setTimeout(() => {
+        toast.classList.add('removing');
+        setTimeout(() => {
+            toast.remove();
+        }, 300); // Wait for animation
+    }, duration);
+}
+
+/**
+ * Update showTransactionAlert to use toast instead
  */
 function showTransactionAlert(message, type = 'info') {
-    const resultDiv = document.getElementById('syncResult');
-    if (!resultDiv) return;
-    
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert-trans alert-${type}-trans`;
-    alertDiv.textContent = message;
-    
-    resultDiv.innerHTML = '';
-    resultDiv.appendChild(alertDiv);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
+    showToast(message, type, 3000);
 }
+
+/**
+ * Open Bank Accounts Modal
+ */
+function openBankAccountsModal() {
+    const modal = document.getElementById('bankAccountsModal');
+    if (modal) {
+        modal.style.display = 'block';
+        
+        // Update credentials status
+        updateCredentialsStatusInModal();
+        
+        // Update sync status
+        updateSyncStatusInModal();
+        
+        // Load imported CSVs list
+        loadImportedCSVsList();
+        
+        // Apply translations
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
+        }
+    }
+}
+
+/**
+ * Close Bank Accounts Modal
+ */
+function closeBankAccountsModal() {
+    const modal = document.getElementById('bankAccountsModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Update credentials status in modal
+ */
+async function updateCredentialsStatusInModal() {
+    if (!window.currentUser) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            
+            // Max credentials
+            const maxAlert = document.getElementById('maxCredentialsAlertModal');
+            if (maxAlert) {
+                if (data.maxCredentials && data.maxCredentials.encrypted) {
+                    maxAlert.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
+                    maxAlert.className = 'alert-trans alert-success-trans';
+                } else {
+                    maxAlert.innerHTML = '<span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>';
+                    maxAlert.className = 'alert-trans alert-info-trans';
+                }
+            }
+            
+            // Isracard credentials
+            const isracardAlert = document.getElementById('isracardCredentialsAlertModal');
+            if (isracardAlert) {
+                if (data.isracardCredentials && data.isracardCredentials.encrypted) {
+                    isracardAlert.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
+                    isracardAlert.className = 'alert-trans alert-success-trans';
+                } else {
+                    isracardAlert.innerHTML = '<span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>';
+                    isracardAlert.className = 'alert-trans alert-info-trans';
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error updating credentials status:', error);
+    }
+}
+
+/**
+ * Update sync status in modal
+ */
+async function updateSyncStatusInModal() {
+    if (!window.currentUser) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            
+            // Max sync status
+            if (data.lastMaxSync) {
+                const lastSync = data.lastMaxSync.toDate();
+                const count = data.lastMaxSyncTransactionCount;
+                const timeText = getTimeAgoText(lastSync);
+                
+                const timeEl = document.getElementById('lastMaxSyncTimeModal');
+                const countEl = document.getElementById('lastMaxSyncCountModal');
+                if (timeEl) timeEl.textContent = timeText;
+                if (countEl) countEl.textContent = count ? `(${count} transactions)` : '';
+            }
+            
+            // Isracard sync status
+            if (data.lastIsracardSync) {
+                const lastSync = data.lastIsracardSync.toDate();
+                const count = data.lastIsracardSyncTransactionCount;
+                const timeText = getTimeAgoText(lastSync);
+                
+                const timeEl = document.getElementById('lastIsracardSyncTimeModal');
+                const countEl = document.getElementById('lastIsracardSyncCountModal');
+                if (timeEl) timeEl.textContent = timeText;
+                if (countEl) countEl.textContent = count ? `(${count} transactions)` : '';
+            }
+        }
+    } catch (error) {
+        console.error('Error updating sync status:', error);
+    }
+}
+
+/**
+ * Get time ago text
+ */
+function getTimeAgoText(date) {
+    const now = new Date();
+    const diff = Math.floor((now - date) / (1000 * 60));
+    
+    if (diff < 1) return 'Just now';
+    if (diff < 60) return `${diff} minute${diff > 1 ? 's' : ''} ago`;
+    
+    const hours = Math.floor(diff / 60);
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    
+    const days = Math.floor(hours / 24);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+}
+
+/**
+ * Close modal when clicking outside
+ */
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('bankAccountsModal');
+    if (event.target === modal) {
+        closeBankAccountsModal();
+    }
+});
 
 /**
  * Escape HTML to prevent XSS
@@ -1108,37 +1275,6 @@ function toggleFiltersRow() {
  * Toggle Bank Config from toolbar with arrow indicator
  */
 let bankConfigOpen = false;
-
-function toggleBankConfigFromToolbar() {
-    const section = document.getElementById('bankConfigSection');
-    const btn = document.querySelector('.toolbar-btn[onclick*="toggleBankConfig"]');
-    
-    bankConfigOpen = !bankConfigOpen;
-    
-    if (section && btn) {
-        if (bankConfigOpen) {
-            // Afficher
-            section.style.display = 'block';
-            btn.innerHTML = '<span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▲';
-            btn.style.background = '#667eea';
-            btn.style.color = 'white';
-            btn.style.borderColor = '#667eea';
-            updateCredentialsStatus();
-        } else {
-            // Cacher
-            section.style.display = 'none';
-            btn.innerHTML = '<span data-translate="bankAccountsConfig">🏦 Bank Accounts</span> ▼';
-            btn.style.background = 'white';
-            btn.style.color = '#333';
-            btn.style.borderColor = '#dee2e6';
-        }
-        
-        // Réappliquer les traductions après modification du HTML
-        if (typeof updateTransactionsLanguage === 'function') {
-            updateTransactionsLanguage();
-        }
-    }
-}
 
 /**
  * Check if credentials exist every 30 seconds
