@@ -205,7 +205,12 @@ function populateMonthFilter() {
     sortedMonths.forEach(monthKey => {
         const [year, month] = monthKey.split('-');
         const date = new Date(year, month - 1);
-        const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const t = translations[currentLanguage] || translations['en'];
+        const monthNames = [
+            t.january, t.february, t.march, t.april, t.may, t.june,
+            t.july, t.august, t.september, t.october, t.november, t.december
+        ];
+        const monthName = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
         
         const option = document.createElement('option');
         option.value = monthKey;
@@ -515,9 +520,15 @@ function renderTransactions() {
             if (hiddenCount > 0) {
                 const limitMessage = document.createElement('div');
                 limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
+                const t = translations[currentLanguage] || translations['en'];
+                const showingText = t.showingTransactions
+                    .replace('{shown}', transactionsToShow.length)
+                    .replace('{total}', filteredTransactionsData.length);
+                const moreHiddenText = t.moreHidden.replace('{count}', hiddenCount);
+                
                 limitMessage.innerHTML = `
-                    Showing ${transactionsToShow.length} of ${filteredTransactionsData.length} transactions<br>
-                    <span style="font-size: 0.85em;">${hiddenCount} more hidden - adjust the "Show" filter to see more</span>
+                    ${showingText}<br>
+                    <span style="font-size: 0.85em;">${moreHiddenText}</span>
                 `;
                 allTransactionsList.appendChild(limitMessage);
             }
@@ -587,7 +598,7 @@ function renderTransaction(txn) {
                         onchange="labelTransaction('${txn.id}', this.value)"
                         style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; max-width: 250px;"
                     >
-                        <option value="">Select category...</option>
+                        <option value="" data-translate="selectCategory">Select category</option>
                         ${categories.map(cat => `
                             <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
                         `).join('')}
@@ -1601,13 +1612,15 @@ function createCSVItem(csvData) {
     const date = csvData.importedAt ? csvData.importedAt.toDate().toLocaleDateString() : 'Unknown';
     const bankName = csvData.bankName || 'Unknown Bank';
     
+    const t = translations[currentLanguage] || translations['en'];
+    
     div.innerHTML = `
         <div class="csv-item-info">
             <div class="csv-item-name">🏦 ${escapeHtml(bankName)}</div>
-            <div class="csv-item-meta">Imported ${date} • ${csvData.transactionCount} transactions • ${escapeHtml(csvData.fileName)}</div>
+            <div class="csv-item-meta">${t.imported} ${date} • ${csvData.transactionCount} ${t.transactions} • ${escapeHtml(csvData.fileName)}</div>
         </div>
         <button class="csv-remove-btn" onclick="removeCSV('${csvData.id}', '${escapeHtml(bankName)}')">
-            ✕ Remove
+            ✕ <span data-translate="remove">Remove</span>
         </button>
     `;
     
