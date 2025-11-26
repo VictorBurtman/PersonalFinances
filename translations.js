@@ -17,6 +17,10 @@ const translations = {
         idNumber: "ID Number",
         cardLast6: "Last 6 Digits of Card",
         yourIsraeliId: "Your Israeli ID",
+        fullName: "Full name",
+        memo: "Memo",
+        amount: "Amount",
+        similarTransactions: "Similar transactions",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -300,6 +304,10 @@ const translations = {
         idNumber: "Numéro d'identité",
         cardLast6: "6 derniers chiffres de la carte",
         yourIsraeliId: "Votre pièce d'identité israélienne",
+        fullName: "Nom complet",
+        memo: "Mémo",
+        amount: "Montant",
+        similarTransactions: "Transactions similaires",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -572,6 +580,10 @@ const translations = {
         idNumber: "מספר תעודת זהות",
         cardLast6: "6 ספרות אחרונות של הכרטיס",
         yourIsraeliId: "תעודת הזהות הישראלית שלך",
+        fullName: "שם מלא",
+        memo: "הערה",
+        amount: "סכום",
+        similarTransactions: "עסקאות דומות",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -844,6 +856,10 @@ const translations = {
         idNumber: "Número de identificación",
         cardLast6: "Últimos 6 dígitos de la tarjeta",
         yourIsraeliId: "Tu documento de identidad israelí",
+        fullName: "Nombre completo",
+        memo: "Nota",
+        amount: "Cantidad",
+        similarTransactions: "Transacciones similares",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1116,6 +1132,10 @@ const translations = {
         idNumber: "Номер удостоверения",
         cardLast6: "Последние 6 цифр карты",
         yourIsraeliId: "Ваше израильское удостоверение",
+        fullName: "Полное название",
+        memo: "Примечание",
+        amount: "Сумма",
+        similarTransactions: "Похожие транзакции",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1388,6 +1408,10 @@ const translations = {
         idNumber: "رقم الهوية",
         cardLast6: "آخر 6 أرقام من البطاقة",
         yourIsraeliId: "بطاقة الهوية الإسرائيلية",
+        fullName: "الاسم الكامل",
+        memo: "ملاحظة",
+        amount: "المبلغ",
+        similarTransactions: "معاملات مماثلة",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1643,6 +1667,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
