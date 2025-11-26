@@ -588,7 +588,6 @@
     #bankAccountsModal .modal-content {
         width: 95% !important;
         max-width: 95% !important;
-        max-height: 70vh !important;
         max-height: 90dvh !important;
     }
     
