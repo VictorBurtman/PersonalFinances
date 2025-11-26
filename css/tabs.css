@@ -580,12 +580,7 @@
         max-width: none;
     }
     
-    /* Bank Accounts Modal */
-    #bankAccountsModal .modal-content {
-       margin: 5px 10px 5px 10px !important;
-       max-width: none !important;
-       max-height: calc(100vh - 50px) !important;
-    }
+
 }
 
 .filter-radio-group {
@@ -613,6 +608,15 @@
 
 .filter-radio-label:hover {
     color: #667eea;
+}
+
+/* Mobile specific - Bank Accounts Modal */
+@media (max-width: 600px) {
+    #bankAccountsModal .modal-content {
+        margin: 2vh auto !important;
+        max-height: 96vh !important;
+        max-width: calc(100vw - 20px) !important;
+    }
 }
 
 /* ============================================
@@ -802,6 +806,7 @@
 .csv-remove-btn:hover {
     background: #c82333;
 }
+
 
 /* ============================================
    TOAST NOTIFICATIONS
