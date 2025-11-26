@@ -235,15 +235,41 @@
                     </div>
                 </div>
             </div>
-            
             <!-- CSV Import Section -->
             <div class="bank-section">
                 <h4>📥 <span data-translate="importCSV">Import CSV</span></h4>
                 <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
                     <span data-translate="importCSVDescription">Import transactions from CSV files (Revolut, N26, etc.)</span>
                 </p>
+                
+                <!-- Bank name input -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em;">
+                        <span data-translate="bankName">Bank Name</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="csvBankName" 
+                        class="auth-input" 
+                        placeholder="e.g. Revolut, N26, Wise..."
+                        list="bankSuggestions"
+                        style="width: 100%;"
+                    />
+                    <datalist id="bankSuggestions">
+                        <option value="Revolut">
+                        <option value="N26">
+                        <option value="Wise">
+                        <option value="Monzo">
+                        <option value="Starling">
+                        <option value="Bunq">
+                    </datalist>
+                    <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
+                        <span data-translate="bankNameHelp">This helps you identify transactions from different banks</span>
+                    </p>
+                </div>
+                
                 <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv" onchange="handleCSVUpload(event)" />
-                <button class="csv-import-btn" onclick="document.getElementById('csvFileInput').click()">
+                <button class="csv-import-btn" onclick="triggerCSVUpload()">
                     📥 <span data-translate="chooseCSV">Choose CSV File</span>
                 </button>
                 
