@@ -37,6 +37,7 @@ const translations = {
         underBy: "Under by",
         exactly: "Exact match",
         used: "used",
+        justNow: "Just now",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -339,6 +340,7 @@ const translations = {
         underBy: "Économisé",
         exactly: "Exactement",
         used: "utilisé",
+        justNow: "À l'instant",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -630,6 +632,7 @@ const translations = {
         underBy: "חיסכון של",
         exactly: "התאמה מדויקת",
         used: "בשימוש",
+        justNow: "ממש עכשיו",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -921,6 +924,7 @@ const translations = {
         underBy: "Ahorrado",
         exactly: "Exacto",
         used: "usado",
+        justNow: "Justo ahora",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1212,6 +1216,7 @@ const translations = {
         underBy: "Экономия",
         exactly: "Точное совпадение",
         used: "использовано",
+        justNow: "Только что",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1503,6 +1508,7 @@ const translations = {
         underBy: "توفير بمقدار",
         exactly: "مطابقة تامة",
         used: "مستخدم",
+        justNow: "الآن",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1758,6 +1764,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
