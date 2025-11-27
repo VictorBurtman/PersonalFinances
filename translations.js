@@ -273,7 +273,7 @@ const translations = {
         
         // Bank Accounts Modal
         credentialsConfigured: "Credentials configured ✓",
-        configureCredentials: "Configure your {bank} credentials to sync transactions.",
+        configureCredentials: "Configure your Isracard credentials to sync transactions.",
         lastSync: "Last sync",
         never: "Never",
         ago: "ago",
@@ -574,7 +574,7 @@ const translations = {
         showingTransactions: "Affichage de {shown} sur {total} transactions",
         moreHidden: "{count} autres masquées - ajustez le filtre \"Afficher\" pour en voir plus",
         credentialsConfigured: "Identifiants configurés ✓",
-        configureCredentials: "Configurez vos identifiants {bank} pour synchroniser les transactions.",
+        configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions.",
         lastSync: "Dernière synchro",
         never: "Jamais",
         ago: "il y a",
@@ -869,7 +869,7 @@ const translations = {
         showingTransactions: "מציג {shown} מתוך {total} עסקאות",
         moreHidden: "{count} נוספות מוסתרות - התאם את מסנן \"הצג\" כדי לראות יותר",
         credentialsConfigured: "אישורים הוגדרו ✓",
-        configureCredentials: "הגדר את אישורי {bank} שלך כדי לסנכרן עסקאות.",
+        configureCredentials: "הגדר את אישורי Isracard שלך כדי לסנכרן עסקאות.",
         lastSync: "סנכרון אחרון",
         never: "אף פעם",
         ago: "לפני",
@@ -1164,7 +1164,7 @@ const translations = {
         showingTransactions: "Mostrando {shown} de {total} transacciones",
         moreHidden: "{count} más ocultas - ajusta el filtro \"Mostrar\" para ver más",
         credentialsConfigured: "Credenciales configuradas ✓",
-        configureCredentials: "Configura tus credenciales de {bank} para sincronizar transacciones.",
+        configureCredentials: "Configura tus credenciales de Isracard para sincronizar transacciones.",
         lastSync: "Última sincronización",
         never: "Nunca",
         ago: "hace",
@@ -1459,7 +1459,7 @@ const translations = {
         showingTransactions: "Показано {shown} из {total} транзакций",
         moreHidden: "{count} скрыто - настройте фильтр \"Показать\" для просмотра",
         credentialsConfigured: "Учётные данные настроены ✓",
-        configureCredentials: "Настройте учётные данные {bank} для синхронизации транзакций.",
+        configureCredentials: "Настройте учётные данные Isracard для синхронизации транзакций.",
         lastSync: "Последняя синхронизация",
         never: "Никогда",
         ago: "назад",
@@ -1754,7 +1754,7 @@ const translations = {
         showingTransactions: "عرض {shown} من {total} معاملة",
         moreHidden: "{count} مخفية - اضبط فلتر \"عرض\" لرؤية المزيد",
         credentialsConfigured: "تم تكوين بيانات الاعتماد ✓",
-        configureCredentials: "قم بتكوين بيانات اعتماد {bank} لمزامنة المعاملات.",
+        configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات.",
         lastSync: "آخر مزامنة",
         never: "أبداً",
         ago: "منذ",
@@ -1782,6 +1782,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
