@@ -206,7 +206,6 @@ function populateMonthFilter() {
     sortedMonths.forEach(monthKey => {
         const [year, month] = monthKey.split('-');
         const date = new Date(year, month - 1);
-        const t = translations[currentLanguage] || translations['en'];
         const monthNames = [
             t.january, t.february, t.march, t.april, t.may, t.june,
             t.july, t.august, t.september, t.october, t.november, t.december
@@ -1617,6 +1616,8 @@ async function loadImportedCSVsList() {
     const csvList = document.getElementById('csvList');
     if (!csvList) return;
     
+    const t = translations[currentLanguage] || translations['en'];
+    
     try {
         const userId = window.currentUser.uid;
         const csvs = await db.collection('users')
@@ -1626,7 +1627,7 @@ async function loadImportedCSVsList() {
             .get();
         
         if (csvs.empty) {
-            csvList.innerHTML = '<p style="color: #6c757d; font-size: 0.9em; margin-top: 10px;">No CSV files imported yet</p>';
+            csvList.innerHTML = `<p style="color: #6c757d; font-size: 0.9em; margin-top: 10px;" data-translate="noCSVImported">${t.noCSVImported}</p>`;
             return;
         }
         
@@ -1637,10 +1638,8 @@ async function loadImportedCSVsList() {
             csvList.appendChild(csvItem);
         });
         
-        // ✅ AJOUTE CETTE LIGNE
-        if (typeof updateTransactionsLanguage === 'function') {
-            updateTransactionsLanguage();
-        }
+        // Traduire après ajout au DOM
+        updateTransactionsLanguage();
         
     } catch (error) {
         console.error('Error loading CSV list:', error);
