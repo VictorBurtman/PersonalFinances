@@ -59,15 +59,25 @@
             position: relative;
         }
                 
+        /* Cherchez ce bloc dans votre <style> et remplacez-le */
         .header h1 {
-            text-align: left;
+            text-align: start; /* Mieux pour RTL (Hébreu/Arabe) */
             margin: 0;
-            padding-right: 50px;
+            padding-right: 50px; /* Espace pour le bouton settings */
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            /* On garde ellipsis comme sécurité, mais le JS devrait l'empêcher d'apparaître */
+            text-overflow: ellipsis; 
+            /* On garde le clamp comme taille par défaut idéale */
             font-size: clamp(1.2em, 4vw, 2em);
             line-height: 1.2;
+            transition: font-size 0.1s ease; /* Pour que l'ajustement soit fluide */
+        }
+
+        /* Ajout pour le support RTL du header */
+        html[dir="rtl"] .header h1 {
+            padding-right: 0;
+            padding-left: 50px; /* Inverse le padding pour le bouton en mode RTL */
         }
         @media (max-width: 600px) {
             .header h1 {
@@ -1502,6 +1512,34 @@
 
     
     <script>
+
+        /**
+         * Ajuste la taille de la police du titre pour qu'il tienne sur une seule ligne
+         */
+        function fitAppTitle() {
+            const h1 = document.querySelector('.header h1');
+            if (!h1) return;
+        
+            // 1. Réinitialiser pour mesurer la taille "naturelle"
+            h1.style.fontSize = ''; 
+            
+            // 2. Vérifier si le contenu dépasse la zone visible
+            // scrollWidth est la largeur du texte réel, clientWidth est la largeur visible
+            if (h1.scrollWidth > h1.clientWidth) {
+                const currentSize = parseFloat(window.getComputedStyle(h1).fontSize);
+                // Calcule le ratio nécessaire pour faire rentrer le texte
+                // On multiplie par 0.95 pour avoir une petite marge de sécurité
+                const newSize = (h1.clientWidth / h1.scrollWidth) * currentSize * 0.95;
+                
+                // Applique la nouvelle taille (avec un minimum de 12px pour rester lisible)
+                h1.style.fontSize = `${Math.max(newSize, 12)}px`;
+            }
+        }
+        
+        // Ajouter un écouteur pour redimensionner si l'écran tourne ou change de taille
+        window.addEventListener('resize', fitAppTitle);
+
+        
         // Global error handler
         window.addEventListener('error', function(e) {
             console.error('Error caught:', e.message);
@@ -1688,6 +1726,9 @@
             // Update display to refresh category names and stats
             updateDisplay();
             updateTransactionsLanguage();
+            // ===> AJOUTEZ CETTE LIGNE À LA TOUTE FIN DE LA FONCTION <===
+            // Utilise setTimeout pour laisser le temps au navigateur de faire le rendu du texte
+            setTimeout(fitAppTitle, 50);
         }
 
 
