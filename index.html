@@ -62,22 +62,21 @@
         .header h1 {
             text-align: left;
             margin: 0;
-            padding-right: 50px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            padding-right: 50px; /* Espace pour le bouton Settings */
+            font-size: 2em; /* Taille normale desktop */
+            line-height: 1.2;
         }
         
-        /* Ajuste la taille sur mobile */
+        /* Responsive mobile - réduction progressive */
         @media (max-width: 600px) {
             .header h1 {
-                font-size: 1.8em; /* Réduit de 2em (par défaut) à 1.8em */
+                font-size: 1.5em; /* Plus petit sur mobile */
             }
         }
         
         @media (max-width: 400px) {
             .header h1 {
-                font-size: 1.5em; /* Encore plus petit sur très petits écrans */
+                font-size: 1.3em; /* Encore plus petit sur très petits écrans */
             }
         }
         
