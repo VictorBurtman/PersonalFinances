@@ -90,7 +90,7 @@ async function loadTransactions() {
             if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
                 console.log('✓ Isracard credentials configured');
                 if (isracardAlertEl) {
-                    isracardAlertEl.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured} ✓</span>`;
+                    isracardAlertEl.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured}</span>`;
                     isracardAlertEl.className = 'alert-trans alert-success-trans';
                 }
             } else {
@@ -828,7 +828,7 @@ async function updateCredentialsStatusInModal() {
             const isracardAlert = document.getElementById('isracardCredentialsAlertModal');
             if (isracardAlert) {
                 if (data.isracardCredentials && data.isracardCredentials.encrypted) {
-                    isracardAlert.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured} ✓</span>`;
+                    isracardAlert.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured}</span>`;
                     isracardAlert.className = 'alert-trans alert-success-trans';
                 } else {
                     isracardAlert.innerHTML = `<span data-translate="configureCredentials">${t.configureCredentials}</span>`;
