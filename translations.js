@@ -38,7 +38,7 @@ const translations = {
         exactly: "Exact match",
         used: "used",
         justNow: "Just now",
-        credentialsConfigured: "Credentials Configured",
+        credentialsConfigured: "Credentials Configured ✓",
         configureCredentials: "Configure your Isracard credentials to sync transactions",
         noCSVImported: "No CSV files imported yet",
         
@@ -162,7 +162,6 @@ const translations = {
         setupMaxCredentials: "🔐 Setup Max Credentials",
         setupIsracardCredentials: "🔐 Setup Isracard Credentials",
         configureCredentials: "Configure your credentials to sync transactions.",
-        credentialsConfigured: "Credentials configured ✓",
         syncTransactions: "🔄 Sync Transactions",
         syncAll: "🔄 Sync All",
         autoLabel: "🏷️ Auto-label",
@@ -272,7 +271,6 @@ const translations = {
         moreHidden: "{count} more hidden - adjust the \"Show\" filter to see more",
         
         // Bank Accounts Modal
-        credentialsConfigured: "Credentials configured ✓",
         configureCredentials: "Configure your Isracard credentials to sync transactions.",
         lastSync: "Last sync",
         never: "Never",
@@ -344,7 +342,7 @@ const translations = {
         exactly: "Exactement",
         used: "utilisé",
         justNow: "À l'instant",
-        credentialsConfigured: "Identifiants configurés",
+        credentialsConfigured: "Identifiants configurés ✓",
         configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions",
         noCSVImported: "Aucun fichier CSV importé pour le moment",
         
@@ -468,7 +466,6 @@ const translations = {
         setupMaxCredentials: "🔐 Configurer Max",
         setupIsracardCredentials: "🔐 Configurer Isracard",
         configureCredentials: "Configurez vos identifiants pour synchroniser les transactions.",
-        credentialsConfigured: "Identifiants configurés ✓",
         syncTransactions: "🔄 Synchroniser",
         syncAll: "🔄 Tout Synchroniser",
         autoLabel: "🏷️ Étiquetage Auto",
@@ -573,7 +570,6 @@ const translations = {
         selectCategory: "Sélectionner une catégorie",
         showingTransactions: "Affichage de {shown} sur {total} transactions",
         moreHidden: "{count} autres masquées - ajustez le filtre \"Afficher\" pour en voir plus",
-        credentialsConfigured: "Identifiants configurés ✓",
         configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions.",
         lastSync: "Dernière synchro",
         never: "Jamais",
@@ -639,7 +635,7 @@ const translations = {
         exactly: "התאמה מדויקת",
         used: "בשימוש",
         justNow: "ממש עכשיו",
-        credentialsConfigured: "פרטי הזדהות הוגדרו",
+        credentialsConfigured: "✓ פרטי הזדהות הוגדרו",
         configureCredentials: "הגדר את פרטי הזיהוי שלך ב-Isracard כדי לסנכרן עסקאות",
         noCSVImported: "עדיין לא יובאו קבצי CSV",
         
@@ -763,7 +759,6 @@ const translations = {
         setupMaxCredentials: "🔐 הגדרת Max",
         setupIsracardCredentials: "🔐 הגדרת ישראכרט",
         configureCredentials: "הגדר את פרטי ההתחברות שלך כדי לסנכרן עסקאות.",
-        credentialsConfigured: "פרטי התחברות הוגדרו ✓",
         syncTransactions: "🔄 סנכרון עסקאות",
         syncAll: "🔄 סנכרן הכל",
         autoLabel: "🏷️ תיוג אוטומטי",
@@ -868,7 +863,6 @@ const translations = {
         selectCategory: "בחר קטגוריה",
         showingTransactions: "מציג {shown} מתוך {total} עסקאות",
         moreHidden: "{count} נוספות מוסתרות - התאם את מסנן \"הצג\" כדי לראות יותר",
-        credentialsConfigured: "אישורים הוגדרו ✓",
         configureCredentials: "הגדר את אישורי Isracard שלך כדי לסנכרן עסקאות.",
         lastSync: "סנכרון אחרון",
         never: "אף פעם",
@@ -934,7 +928,7 @@ const translations = {
         exactly: "Exacto",
         used: "usado",
         justNow: "Justo ahora",
-        credentialsConfigured: "Credenciales configuradas",
+        credentialsConfigured: "Credenciales configuradas ✓",
         configureCredentials: "Configure sus credenciales de Isracard para sincronizar transacciones",
         noCSVImported: "Aún no se han importado archivos CSV",
         
@@ -1058,7 +1052,6 @@ const translations = {
         setupMaxCredentials: "🔐 Configurar Max",
         setupIsracardCredentials: "🔐 Configurar Isracard",
         configureCredentials: "Configura tus credenciales para sincronizar transacciones.",
-        credentialsConfigured: "Credenciales configuradas ✓",
         syncTransactions: "🔄 Sincronizar",
         syncAll: "🔄 Sincronizar Todo",
         autoLabel: "🏷️ Etiquetar Auto",
@@ -1163,7 +1156,6 @@ const translations = {
         selectCategory: "Seleccionar categoría",
         showingTransactions: "Mostrando {shown} de {total} transacciones",
         moreHidden: "{count} más ocultas - ajusta el filtro \"Mostrar\" para ver más",
-        credentialsConfigured: "Credenciales configuradas ✓",
         configureCredentials: "Configura tus credenciales de Isracard para sincronizar transacciones.",
         lastSync: "Última sincronización",
         never: "Nunca",
@@ -1229,7 +1221,7 @@ const translations = {
         exactly: "Точное совпадение",
         used: "использовано",
         justNow: "Только что",
-        credentialsConfigured: "Учетные данные настроены",
+        credentialsConfigured: "Учетные данные настроены ✓",
         configureCredentials: "Настройте учетные данные Isracard для синхронизации транзакций",
         noCSVImported: "CSV-файлы еще не импортированы",
         
@@ -1353,7 +1345,6 @@ const translations = {
         setupMaxCredentials: "🔐 Настроить Max",
         setupIsracardCredentials: "🔐 Настроить Isracard",
         configureCredentials: "Настройте учетные данные для синхронизации транзакций.",
-        credentialsConfigured: "Учетные данные настроены ✓",
         syncTransactions: "🔄 Синхронизация",
         syncAll: "🔄 Синхронизировать Все",
         autoLabel: "🏷️ Авто-метка",
@@ -1458,7 +1449,6 @@ const translations = {
         selectCategory: "Выбрать категорию",
         showingTransactions: "Показано {shown} из {total} транзакций",
         moreHidden: "{count} скрыто - настройте фильтр \"Показать\" для просмотра",
-        credentialsConfigured: "Учётные данные настроены ✓",
         configureCredentials: "Настройте учётные данные Isracard для синхронизации транзакций.",
         lastSync: "Последняя синхронизация",
         never: "Никогда",
@@ -1524,7 +1514,7 @@ const translations = {
         exactly: "مطابقة تامة",
         used: "مستخدم",
         justNow: "الآن",
-        credentialsConfigured: "تم تكوين بيانات الاعتماد",
+        credentialsConfigured: "✓ تم تكوين بيانات الاعتماد",
         configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات",
         noCSVImported: "لم يتم استيراد ملفات CSV بعد",
         
@@ -1648,7 +1638,6 @@ const translations = {
         setupMaxCredentials: "🔐 إعداد Max",
         setupIsracardCredentials: "🔐 إعداد إسراكارد",
         configureCredentials: "قم بتكوين بيانات الاعتماد الخاصة بك لمزامنة المعاملات.",
-        credentialsConfigured: "تم تكوين بيانات الاعتماد ✓",
         syncTransactions: "🔄 مزامنة المعاملات",
         syncAll: "🔄 مزامنة الكل",
         autoLabel: "🏷️ وسم تلقائي",
@@ -1753,7 +1742,6 @@ const translations = {
         selectCategory: "اختر الفئة",
         showingTransactions: "عرض {shown} من {total} معاملة",
         moreHidden: "{count} مخفية - اضبط فلتر \"عرض\" لرؤية المزيد",
-        credentialsConfigured: "تم تكوين بيانات الاعتماد ✓",
         configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات.",
         lastSync: "آخر مزامنة",
         never: "أبداً",
@@ -1782,6 +1770,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
