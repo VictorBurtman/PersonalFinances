@@ -150,7 +150,8 @@ async function loadTransactions() {
         
     } catch (error) {
         console.error('Error loading transactions:', error);
-        showTransactionAlert('Error loading transactions: ' + error.message, 'error');
+        const t = translations[currentLanguage] || translations['en'];
+        showToast(t.errorLoadingTransactions + ' ' + error.message, 'error');
         
         // Hide loading
         if (transactionsLoading) transactionsLoading.style.display = 'none';
@@ -1095,7 +1096,8 @@ async function saveCredentials(event) {
         });
         
         const bankName = bankType === 'max' ? 'Max' : 'Isracard';
-        showTransactionAlert(`${bankName} credentials saved successfully! ✓`, 'success');
+        const t = translations[currentLanguage] || translations['en'];
+        showToast(t.credentialsSaved, 'success');
         closeCredentialsModal();
         
         // Update alert
@@ -1106,7 +1108,8 @@ async function saveCredentials(event) {
         }
     } catch (error) {
         console.error('Error saving credentials:', error);
-        showTransactionAlert('Error: ' + error.message, 'error');
+        const t = translations[currentLanguage] || translations['en'];
+        showToast(t.errorSavingCredentials + ' ' + error.message, 'error');
     } finally {
         if (btn) {
             btn.disabled = false;
@@ -1180,7 +1183,8 @@ async function syncAllTransactions() {
         if (!hasMax && !hasIsracard) {
             showTransactionAlert('No bank credentials configured. Please set up at least one bank.', 'error');
         } else {
-            showTransactionAlert(`Sync completed! ${totalTransactions} total transactions. ${results.join(' | ')}`, 'success');
+            const t = translations[currentLanguage] || translations['en'];
+            showToast(t.syncCompleted.replace('{count}', totalTransactions), 'success');
             await loadTransactions();
         }
     } catch (error) {
@@ -1250,9 +1254,11 @@ async function autoLabelAll() {
         
         const count = result.data.labeledCount || 0;
         if (count > 0) {
-            showTransactionAlert(`Auto-labeled ${count} transaction${count > 1 ? 's' : ''}! ✓`, 'success');
+            const t = translations[currentLanguage] || translations['en'];
+            showToast(t.autoLabelCompleted.replace('{count}', count), 'success');
         } else {
-            showTransactionAlert('No transactions could be auto-labeled. Try labeling some manually first.', 'info');
+            const t = translations[currentLanguage] || translations['en'];
+            showToast(t.noTransactionsToLabel || 'No transactions could be auto-labeled.', 'info');
         }
         
         await loadTransactions();
@@ -1750,7 +1756,8 @@ async function removeCSV(csvId, fileName) {
             }
         }
         
-        showToast(`Removed ${fileName} and its transactions`, 'success');
+        const t = translations[currentLanguage] || translations['en'];
+        showToast(t.csvRemovedSuccess.replace('{count}', csvData.transactionCount), 'success');
         
         // Reload
         await loadTransactions();
