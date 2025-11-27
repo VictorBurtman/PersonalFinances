@@ -1332,8 +1332,9 @@ function triggerCSVUpload() {
     const bankNameInput = document.getElementById('csvBankName');
     const bankName = bankNameInput?.value.trim();
     
+    const t = translations[currentLanguage] || translations['en'];
     if (!bankName) {
-        showToast('Please enter a bank name first', 'error');
+        showToast(t.enterBankNameFirst || 'Please enter a bank name first', 'error');
         return;
     }
     
@@ -1697,7 +1698,9 @@ function createCSVItem(csvData) {
 async function removeCSV(csvId, fileName) {
     if (!window.currentUser) return;
     
-    if (!confirm(`Remove "${fileName}" and all its transactions?`)) {
+    const t = translations[currentLanguage] || translations['en'];
+    const confirmMessage = t.removeCSVConfirm.replace('{name}', fileName);
+    if (!confirm(confirmMessage)) {
         return;
     }
     // ✅ AJOUTE : Show loading overlay
