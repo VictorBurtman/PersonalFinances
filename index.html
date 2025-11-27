@@ -1583,7 +1583,6 @@
             db = firebase.firestore();
             functions = firebase.functions();
             window.functions = functions;
-            console.log('Firebase initialized successfully');
         } catch (error) {  // ← AJOUTE CETTE LIGNE
             console.error('Firebase initialization error:', error);
         }
@@ -1789,9 +1788,7 @@
             // S'assurer qu'income est toujours en premier si elle existe
             if (categoryOrder.includes('income') && categoryOrder[0] !== 'income') {
                 categoryOrder = ['income', ...categoryOrder.filter(c => c !== 'income')];
-            }
-            
-            console.log('Category order cleaned:', categoryOrder);
+            }        
         }
 
         // Authentication functions
@@ -1985,10 +1982,6 @@
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
                     
-                    console.log('Loaded from Firebase:', {
-                        expenseCategories: Object.keys(expenses),
-                        categoryOrder: categoryOrder
-                    });
                     
                     // Hide default categories that were deleted by the user
                     const defaultCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
@@ -2110,14 +2103,9 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                console.log('Saving to Firebase:', {
-                    expenseCategories: Object.keys(expenses),
-                    categoryOrder: categoryOrder
-                });
                 
                 // IMPORTANT : Ne PAS utiliser merge pour que les clés supprimées disparaissent vraiment
                 await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
-                console.log('Save successful');
             } catch (error) {
                 console.error('Error saving user data:', error);
                 throw error;
@@ -2205,8 +2193,6 @@
         }
 
         function renderExpenseItem(expense, category, index) {
-            console.log('🟢 renderExpenseItem called - isEditMode:', isEditMode, 'item:', expense.name); // DEBUG
-
             const deleteBtn = isEditMode ? 
                 `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
             
@@ -2753,8 +2739,6 @@
                 
                 select.appendChild(option);
             }
-            
-            console.log('Month dropdown populated with', select.options.length, 'options');
         }
         
         /**
@@ -2801,9 +2785,7 @@
                         }
                     }
                 });
-                
-                console.log('Real spending loaded:', realSpendingData);
-                
+                                
                 // Refresh display with comparison
                 updateDisplay();
                 
@@ -3094,9 +3076,6 @@
         function renderCategoriesInOrder() {
             const expensesList = document.getElementById('expensesList');
             
-            // Log for debugging
-            console.log('Rendering categories in order:', categoryOrder);
-            console.log('Available categories in expenses:', Object.keys(expenses));
             
             // Create a document fragment for better performance
             const fragment = document.createDocumentFragment();
@@ -3370,14 +3349,7 @@
             if (!newName || newName.trim() === '') return;
             if (newName.trim() === currentDisplayName) return;
             
-            const newKey = newName.toLowerCase().replace(/\s+/g, '-');
-            
-            console.log('Renaming:', {
-                oldKey: categoryKey,
-                newKey: newKey,
-                oldDisplayName: currentDisplayName,
-                newDisplayName: newName
-            });
+            const newKey = newName.toLowerCase().replace(/\s+/g, '-');   
             
             // Vérifier les doublons
             if (expenses[newKey] && newKey !== categoryKey) {
