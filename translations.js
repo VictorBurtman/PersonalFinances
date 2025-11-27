@@ -59,6 +59,28 @@ const translations = {
         syncFailed: "Sync failed:",
         autoLabelCompleted: "Auto-labeling completed! {count} transaction(s) labeled.",
         autoLabelFailed: "Auto-labeling failed:",
+
+        // Prompts & confirms
+        enterCategoryName: "Enter category name:",
+        enterEmoji: "Enter emoji (e.g., 🎮):",
+        enterFirstItem: "Enter first item name:",
+        enterNewItemName: "Enter new item name:",
+        enterNewName: "Enter new name:",
+        enterNewCategoryName: "Enter new name for \"{current}\":",
+        deleteCategoryConfirm: "Delete \"{name}\" ({amount})?\n\nAll labeled transactions will be unlabeled.",
+        deleteItemConfirm: "Delete this item?",
+        lastItemConfirm: "Last item in category. Delete entire category?",
+        categoryExistsAlert: "Category already exists!",
+        cannotRenameIncome: "Cannot rename Income category.",
+        cannotUseSystemName: "Cannot use system category name.",
+        resetAllConfirm: "Reset all expenses to 0?",
+        resetColorsConfirm: "Reset all colors to default?",
+        logoutConfirm: "Are you sure you want to logout?",
+        clearAllWarning1: "⚠️ Delete ALL transactions? This cannot be undone!",
+        clearAllWarning2: "⚠️ FINAL WARNING: Permanently delete all transactions?",
+        csvImportedWithDuplicates: "CSV imported! {count} transaction(s) added ({skipped} duplicates skipped)",
+        noTransactionsToLabel: "No transactions could be auto-labeled. Try labeling some manually first.",
+        csvImportedWithDuplicates: "CSV imported! {count} transaction(s) added ({skipped} duplicates skipped)",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -381,6 +403,29 @@ const translations = {
         syncFailed: "Échec de la synchronisation :",
         autoLabelCompleted: "Étiquetage automatique terminé ! {count} transaction(s) étiquetée(s).",
         autoLabelFailed: "Échec de l'étiquetage automatique :",
+
+        // Prompts & confirms
+        enterCategoryName: "Entrez le nom de la catégorie :",
+        enterEmoji: "Entrez un emoji (ex: 🎮) :",
+        enterFirstItem: "Entrez le nom du premier élément :",
+        enterNewItemName: "Entrez le nom du nouvel élément :",
+        enterNewName: "Entrez le nouveau nom :",
+        enterNewCategoryName: "Nouveau nom pour \"{current}\" :",
+        deleteCategoryConfirm: "Supprimer \"{name}\" ({amount}) ?\n\nToutes les transactions étiquetées perdront leur étiquette.",
+        deleteItemConfirm: "Supprimer cet élément ?",
+        lastItemConfirm: "Dernier élément. Supprimer toute la catégorie ?",
+        categoryExistsAlert: "Cette catégorie existe déjà !",
+        cannotRenameIncome: "Impossible de renommer Revenus.",
+        cannotUseSystemName: "Nom de catégorie système interdit.",
+        resetAllConfirm: "Réinitialiser toutes les dépenses à 0 ?",
+        resetColorsConfirm: "Réinitialiser toutes les couleurs ?",
+        logoutConfirm: "Êtes-vous sûr de vouloir vous déconnecter ?",
+        clearAllWarning1: "⚠️ Supprimer TOUTES les transactions ? Irréversible !",
+        clearAllWarning2: "⚠️ DERNIER AVERTISSEMENT : Supprimer définitivement ?",
+        csvImportedWithDuplicates: "CSV importé ! {count} transaction(s) ajoutée(s) ({skipped} doublons ignorés)",
+        noTransactionsToLabel: "Aucune transaction n'a pu être étiquetée automatiquement. Essayez d'en étiqueter manuellement d'abord.",
+        csvImportedWithDuplicates: "CSV importé ! {count} transaction(s) ajoutée(s) ({skipped} doublons ignorés)",
+
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -694,6 +739,28 @@ const translations = {
         autoLabelCompleted: "תיוג אוטומטי הושלם! {count} עסקאות תויגו.",
         autoLabelFailed: "התיוג נכשל:",
         errorLoadingTransactions: "שגיאה בטעינה:",
+
+        // Prompts & confirms
+        enterCategoryName: "הזן שם קטגוריה:",
+        enterEmoji: "הזן אימוג'י (לדוגמה: 🎮):",
+        enterFirstItem: "הזן שם לפריט הראשון:",
+        enterNewItemName: "הזן שם לפריט חדש:",
+        enterNewName: "הזן שם חדש:",
+        enterNewCategoryName: "שם חדש עבור \"{current}\":",
+        deleteCategoryConfirm: "למחוק את \"{name}\" ({amount})?\n\nכל העסקאות המתויגות יאבדו את התווית.",
+        deleteItemConfirm: "למחוק את הפריט הזה?",
+        lastItemConfirm: "פריט אחרון בקטגוריה. למחוק את כל הקטגוריה?",
+        categoryExistsAlert: "קטגוריה זו כבר קיימת!",
+        cannotRenameIncome: "לא ניתן לשנות שם של הכנסה.",
+        cannotUseSystemName: "לא ניתן להשתמש בשם קטגוריית מערכת.",
+        resetAllConfirm: "לאפס את כל ההוצאות ל-0?",
+        resetColorsConfirm: "לאפס את כל הצבעים?",
+        logoutConfirm: "האם אתה בטוח שברצונך להתנתק?",
+        clearAllWarning1: "⚠️ למחוק את כל העסקאות? לא ניתן לבטל!",
+        clearAllWarning2: "⚠️ אזהרה אחרונה: למחוק לצמיתות?",
+        csvImportedWithDuplicates: "CSV יובא! {count} עסקאות נוספו ({skipped} כפילויות דולגו)",
+        noTransactionsToLabel: "לא ניתן היה לתייג עסקאות אוטומטית. נסה לתייג כמה באופן ידני תחילה.",
+        csvImportedWithDuplicates: "CSV יובא! {count} עסקאות נוספו ({skipped} כפילויות דולגו)",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -1006,6 +1073,28 @@ const translations = {
         autoLabelCompleted: "¡Etiquetado completado! {count} transacción/es etiquetada/s.",
         autoLabelFailed: "Etiquetado fallido:",
         errorLoadingTransactions: "Error al cargar:",
+
+        // Prompts & confirms
+        enterCategoryName: "Ingrese el nombre de la categoría:",
+        enterEmoji: "Ingrese un emoji (ej: 🎮):",
+        enterFirstItem: "Ingrese el nombre del primer elemento:",
+        enterNewItemName: "Ingrese el nombre del nuevo elemento:",
+        enterNewName: "Ingrese el nuevo nombre:",
+        enterNewCategoryName: "Nuevo nombre para \"{current}\":",
+        deleteCategoryConfirm: "¿Eliminar \"{name}\" ({amount})?\n\nTodas las transacciones etiquetadas perderán su etiqueta.",
+        deleteItemConfirm: "¿Eliminar este elemento?",
+        lastItemConfirm: "Último elemento. ¿Eliminar toda la categoría?",
+        categoryExistsAlert: "¡Esta categoría ya existe!",
+        cannotRenameIncome: "No se puede renombrar Ingresos.",
+        cannotUseSystemName: "No se puede usar nombre de categoría del sistema.",
+        resetAllConfirm: "¿Restablecer todos los gastos a 0?",
+        resetColorsConfirm: "¿Restablecer todos los colores?",
+        logoutConfirm: "¿Estás seguro de que quieres cerrar sesión?",
+        clearAllWarning1: "⚠️ ¿Eliminar TODAS las transacciones? ¡Irreversible!",
+        clearAllWarning2: "⚠️ ADVERTENCIA FINAL: ¿Eliminar permanentemente?",
+        csvImportedWithDuplicates: "¡CSV importado! {count} transacción/es añadida/s ({skipped} duplicados omitidos)",
+        noTransactionsToLabel: "No se pudieron etiquetar transacciones automáticamente. Intenta etiquetar algunas manualmente primero.",
+        csvImportedWithDuplicates: "¡CSV importado! {count} transacción/es añadida/s ({skipped} duplicados omitidos)",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1318,6 +1407,28 @@ const translations = {
         autoLabelCompleted: "Авто-метки готовы! {count} транзакци(й/я) помечено.",
         autoLabelFailed: "Авто-метки не удались:",
         errorLoadingTransactions: "Ошибка загрузки:",
+
+        // Prompts & confirms
+        enterCategoryName: "Введите название категории:",
+        enterEmoji: "Введите эмодзи (например: 🎮):",
+        enterFirstItem: "Введите название первого элемента:",
+        enterNewItemName: "Введите название нового элемента:",
+        enterNewName: "Введите новое название:",
+        enterNewCategoryName: "Новое название для \"{current}\":",
+        deleteCategoryConfirm: "Удалить \"{name}\" ({amount})?\n\nВсе помеченные транзакции потеряют метку.",
+        deleteItemConfirm: "Удалить этот элемент?",
+        lastItemConfirm: "Последний элемент. Удалить всю категорию?",
+        categoryExistsAlert: "Эта категория уже существует!",
+        cannotRenameIncome: "Нельзя переименовать Доход.",
+        cannotUseSystemName: "Нельзя использовать системное название.",
+        resetAllConfirm: "Сбросить все расходы до 0?",
+        resetColorsConfirm: "Сбросить все цвета?",
+        logoutConfirm: "Вы уверены, что хотите выйти?",
+        clearAllWarning1: "⚠️ Удалить ВСЕ транзакции? Необратимо!",
+        clearAllWarning2: "⚠️ ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ: Удалить навсегда?",
+        csvImportedWithDuplicates: "CSV импортирован! {count} транзакци(й/я) добавлено ({skipped} дубликатов пропущено)",
+        noTransactionsToLabel: "Не удалось автоматически пометить транзакции. Попробуйте пометить вручную сначала.",
+        csvImportedWithDuplicates: "CSV импортирован! {count} транзакци(й/я) добавлено ({skipped} дубликатов пропущено)",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1630,6 +1741,28 @@ const translations = {
         autoLabelCompleted: "اكتمل الوسم التلقائي! {count} معاملة موسومة.",
         autoLabelFailed: "فشل الوسم التلقائي:",
         errorLoadingTransactions: "خطأ في التحميل:",
+
+        // Prompts & confirms
+        enterCategoryName: "أدخل اسم الفئة:",
+        enterEmoji: "أدخل رمز تعبيري (مثال: 🎮):",
+        enterFirstItem: "أدخل اسم العنصر الأول:",
+        enterNewItemName: "أدخل اسم العنصر الجديد:",
+        enterNewName: "أدخل الاسم الجديد:",
+        enterNewCategoryName: "اسم جديد لـ \"{current}\":",
+        deleteCategoryConfirm: "حذف \"{name}\" ({amount})؟\n\nجميع المعاملات الموسومة ستفقد تصنيفها.",
+        deleteItemConfirm: "حذف هذا العنصر؟",
+        lastItemConfirm: "آخر عنصر. حذف الفئة بأكملها؟",
+        categoryExistsAlert: "هذه الفئة موجودة بالفعل!",
+        cannotRenameIncome: "لا يمكن إعادة تسمية الدخل.",
+        cannotUseSystemName: "لا يمكن استخدام اسم فئة النظام.",
+        resetAllConfirm: "إعادة تعيين جميع النفقات إلى 0؟",
+        resetColorsConfirm: "إعادة تعيين جميع الألوان؟",
+        logoutConfirm: "هل أنت متأكد من تسجيل الخروج؟",
+        clearAllWarning1: "⚠️ حذف جميع المعاملات؟ لا يمكن التراجع!",
+        clearAllWarning2: "⚠️ تحذير نهائي: حذف نهائي؟",
+        csvImportedWithDuplicates: "تم استيراد CSV! {count} معاملة مضافة ({skipped} مكررات متجاهلة)",
+        noTransactionsToLabel: "لم يتم وسم معاملات تلقائياً. حاول الوسم يدوياً أولاً.",
+        csvImportedWithDuplicates: "تم استيراد CSV! {count} معاملة مضافة ({skipped} مكررات متجاهلة)",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1883,6 +2016,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
