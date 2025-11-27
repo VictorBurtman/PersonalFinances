@@ -674,6 +674,26 @@ const translations = {
         credentialsConfigured: "✓ פרטי הזדהות הוגדרו",
         configureCredentials: "הגדר את פרטי הזיהוי שלך ב-Isracard כדי לסנכרן עסקאות",
         noCSVImported: "עדיין לא יובאו קבצי CSV",
+
+
+        // Toasts & notifications
+        categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
+        categoryDeletedSuccess: "הקטגוריה נמחקה! {count} עסקאות ללא תווית.",
+        errorRenamingCategory: "שגיאה בשינוי שם:",
+        errorDeletingCategory: "שגיאה במחיקה:",
+        transactionsCleared: "✓ נמחקו {count} עסקאות ו-{csvCount} CSV",
+        errorClearingTransactions: "שגיאה:",
+        csvImportedSuccess: "CSV יובא! {count} עסקאות נוספו.",
+        csvRemovedSuccess: "CSV הוסר! {count} עסקאות נמחקו.",
+        errorImportingCSV: "שגיאה בייבוא CSV:",
+        errorRemovingCSV: "שגיאה בהסרת CSV:",
+        credentialsSaved: "פרטי הזדהות נשמרו!",
+        errorSavingCredentials: "שגיאה בשמירה:",
+        syncCompleted: "סנכרון הושלם! {count} עסקאות חדשות.",
+        syncFailed: "הסנכרון נכשל:",
+        autoLabelCompleted: "תיוג אוטומטי הושלם! {count} עסקאות תויגו.",
+        autoLabelFailed: "התיוג נכשל:",
+        errorLoadingTransactions: "שגיאה בטעינה:",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -967,6 +987,25 @@ const translations = {
         credentialsConfigured: "Credenciales configuradas ✓",
         configureCredentials: "Configure sus credenciales de Isracard para sincronizar transacciones",
         noCSVImported: "Aún no se han importado archivos CSV",
+
+        // Toasts & notifications
+        categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
+        categoryDeletedSuccess: "¡Categoría eliminada! {count} transacción/es sin etiqueta.",
+        errorRenamingCategory: "Error al renombrar:",
+        errorDeletingCategory: "Error al eliminar:",
+        transactionsCleared: "✓ Eliminadas {count} transacciones y {csvCount} CSV",
+        errorClearingTransactions: "Error:",
+        csvImportedSuccess: "¡CSV importado! {count} transacción/es añadida/s.",
+        csvRemovedSuccess: "¡CSV eliminado! {count} transacción/es eliminada/s.",
+        errorImportingCSV: "Error al importar CSV:",
+        errorRemovingCSV: "Error al eliminar CSV:",
+        credentialsSaved: "¡Credenciales guardadas!",
+        errorSavingCredentials: "Error al guardar:",
+        syncCompleted: "¡Sincronización completada! {count} nueva/s transacción/es.",
+        syncFailed: "Sincronización fallida:",
+        autoLabelCompleted: "¡Etiquetado completado! {count} transacción/es etiquetada/s.",
+        autoLabelFailed: "Etiquetado fallido:",
+        errorLoadingTransactions: "Error al cargar:",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1260,6 +1299,25 @@ const translations = {
         credentialsConfigured: "Учетные данные настроены ✓",
         configureCredentials: "Настройте учетные данные Isracard для синхронизации транзакций",
         noCSVImported: "CSV-файлы еще не импортированы",
+
+        // Toasts & notifications
+        categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
+        categoryDeletedSuccess: "Категория удалена! {count} транзакци(й/я) без метки.",
+        errorRenamingCategory: "Ошибка переименования:",
+        errorDeletingCategory: "Ошибка удаления:",
+        transactionsCleared: "✓ Удалено {count} транзакций и {csvCount} CSV",
+        errorClearingTransactions: "Ошибка:",
+        csvImportedSuccess: "CSV импортирован! {count} транзакци(й/я) добавлено.",
+        csvRemovedSuccess: "CSV удалён! {count} транзакци(й/я) удалено.",
+        errorImportingCSV: "Ошибка импорта CSV:",
+        errorRemovingCSV: "Ошибка удаления CSV:",
+        credentialsSaved: "Учётные данные сохранены!",
+        errorSavingCredentials: "Ошибка сохранения:",
+        syncCompleted: "Синхронизация завершена! {count} нов(ых/ая) транзакци(й/я).",
+        syncFailed: "Синхронизация не удалась:",
+        autoLabelCompleted: "Авто-метки готовы! {count} транзакци(й/я) помечено.",
+        autoLabelFailed: "Авто-метки не удались:",
+        errorLoadingTransactions: "Ошибка загрузки:",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1553,6 +1611,25 @@ const translations = {
         credentialsConfigured: "✓ تم تكوين بيانات الاعتماد",
         configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات",
         noCSVImported: "لم يتم استيراد ملفات CSV بعد",
+
+        // Toasts & notifications
+        categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",
+        categoryDeletedSuccess: "تم حذف الفئة! {count} معاملة بدون تصنيف.",
+        errorRenamingCategory: "خطأ في إعادة التسمية:",
+        errorDeletingCategory: "خطأ في الحذف:",
+        transactionsCleared: "✓ تم حذف {count} معاملة و {csvCount} CSV",
+        errorClearingTransactions: "خطأ:",
+        csvImportedSuccess: "تم استيراد CSV! {count} معاملة مضافة.",
+        csvRemovedSuccess: "تم إزالة CSV! {count} معاملة محذوفة.",
+        errorImportingCSV: "خطأ في استيراد CSV:",
+        errorRemovingCSV: "خطأ في إزالة CSV:",
+        credentialsSaved: "تم حفظ بيانات الاعتماد!",
+        errorSavingCredentials: "خطأ في الحفظ:",
+        syncCompleted: "اكتملت المزامنة! {count} معاملة جديدة.",
+        syncFailed: "فشلت المزامنة:",
+        autoLabelCompleted: "اكتمل الوسم التلقائي! {count} معاملة موسومة.",
+        autoLabelFailed: "فشل الوسم التلقائي:",
+        errorLoadingTransactions: "خطأ في التحميل:",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1806,6 +1883,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
