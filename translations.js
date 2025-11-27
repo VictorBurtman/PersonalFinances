@@ -38,6 +38,9 @@ const translations = {
         exactly: "Exact match",
         used: "used",
         justNow: "Just now",
+        credentialsConfigured: "Credentials Configured",
+        configureCredentials: "Configure your Isracard credentials to sync transactions",
+        noCSVImported: "No CSV files imported yet",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -341,6 +344,9 @@ const translations = {
         exactly: "Exactement",
         used: "utilisé",
         justNow: "À l'instant",
+        credentialsConfigured: "Identifiants configurés",
+        configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions",
+        noCSVImported: "Aucun fichier CSV importé pour le moment",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -633,6 +639,9 @@ const translations = {
         exactly: "התאמה מדויקת",
         used: "בשימוש",
         justNow: "ממש עכשיו",
+        credentialsConfigured: "פרטי הזדהות הוגדרו",
+        configureCredentials: "הגדר את פרטי הזיהוי שלך ב-Isracard כדי לסנכרן עסקאות",
+        noCSVImported: "עדיין לא יובאו קבצי CSV",
         
         // Main app
         monthlyExpenses: "הוצאות חודשיות",
@@ -925,6 +934,9 @@ const translations = {
         exactly: "Exacto",
         used: "usado",
         justNow: "Justo ahora",
+        credentialsConfigured: "Credenciales configuradas",
+        configureCredentials: "Configure sus credenciales de Isracard para sincronizar transacciones",
+        noCSVImported: "Aún no se han importado archivos CSV",
         
         // Main app
         monthlyExpenses: "Gastos Mensuales",
@@ -1217,6 +1229,9 @@ const translations = {
         exactly: "Точное совпадение",
         used: "использовано",
         justNow: "Только что",
+        credentialsConfigured: "Учетные данные настроены",
+        configureCredentials: "Настройте учетные данные Isracard для синхронизации транзакций",
+        noCSVImported: "CSV-файлы еще не импортированы",
         
         // Main app
         monthlyExpenses: "Ежемесячные Расходы",
@@ -1509,6 +1524,9 @@ const translations = {
         exactly: "مطابقة تامة",
         used: "مستخدم",
         justNow: "الآن",
+        credentialsConfigured: "تم تكوين بيانات الاعتماد",
+        configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات",
+        noCSVImported: "لم يتم استيراد ملفات CSV بعد",
         
         // Main app
         monthlyExpenses: "المصروفات الشهرية",
@@ -1764,6 +1782,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
