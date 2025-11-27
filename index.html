@@ -2583,16 +2583,13 @@
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
             
-            // ✅ Récupérer les traductions
+            // Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
             if (isEditMode) {
-                if (editBtn) {
-                    editBtn.classList.add('active');
-                }
-                if (editBtnText) {
-                    editBtnText.textContent = `✓ ${t.doneEditing || 'Done Editing'}`;
-                }
+                // Mode Edit activé
+                if (editBtn) editBtn.classList.add('active');
+                if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
                 
                 const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
                 if (addBtn) addBtn.style.display = 'block';
@@ -2604,12 +2601,9 @@
                     }
                 });
             } else {
-                if (editBtn) {
-                    editBtn.classList.remove('active');
-                }
-                if (editBtnText) {
-                    editBtnText.textContent = `✏️ ${t.editCategories || 'Edit Categories'}`;
-                }
+                // Mode Edit désactivé
+                if (editBtn) editBtn.classList.remove('active');
+                if (editBtnText) editBtnText.textContent = t.editCategories || 'Edit Categories';
                 
                 const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
                 if (addBtn) addBtn.style.display = 'none';
@@ -2618,11 +2612,10 @@
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
             
-            // CRITICAL FIX: Force refresh to update item buttons
+            // Force refresh to update item buttons
             updateDisplay();
         }
-
-
+        
         // ============================================
         // COMPARE MODE - Real Spending vs Budget
         // ============================================
@@ -2663,7 +2656,7 @@
                 updateDisplay();
             }
             
-            // CRITICAL FIX: Force hide item rename buttons based on edit mode
+            // Force hide item rename buttons based on edit mode
             setTimeout(() => {
                 const itemRenameButtons = document.querySelectorAll('.item-rename-btn');
                 itemRenameButtons.forEach(btn => {
@@ -2671,7 +2664,6 @@
                 });
             }, 100);
         }
-        
         /**
          * Populate month dropdown with last 12 months
          */
