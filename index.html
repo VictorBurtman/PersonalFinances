@@ -2974,10 +2974,10 @@
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
         async function deleteCategory(categoryKey) {
-            // Empêcher de supprimer les catégories système
-            const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
-            if (systemCategories.includes(categoryKey)) {
-                alert('Cannot delete system categories. You can hide them in settings instead.');
+            // Empêcher SEULEMENT de supprimer Income
+            if (categoryKey === 'income') {
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.cannotDeleteIncome || 'Cannot delete Income category.');
                 return;
             }
             
