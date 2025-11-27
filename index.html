@@ -2915,13 +2915,16 @@
             const categoryName = prompt(t.enterCategoryName || 'Enter category name:');
             if (!categoryName) return;
             
+            // ✅ CETTE LIGNE MANQUAIT !
+            const categoryKey = categoryName.toLowerCase().replace(/\s+/g, '_');
+            
             if (expenses[categoryKey]) {
-                alert('A category with this name already exists!');
+                alert(t.categoryExistsAlert || 'Category already exists!');
                 return;
             }
             
-            const emoji = prompt('Enter emoji for this category (e.g., 🎮):') || '📋';
-            const itemName = prompt('Enter first expense item name:') || 'Item';
+            const emoji = prompt(t.enterEmoji || 'Enter emoji (e.g., 🎮):') || '📋';
+            const itemName = prompt(t.enterFirstItem || 'Enter first item name:') || 'Item';
             
             // Create the new category with the first item
             expenses[categoryKey] = [{ name: itemName, amount: 0 }];
@@ -2948,10 +2951,18 @@
                 </div>
                 <div class="category-stats" id="${statsId}"></div>
                 <div class="category-controls ${isEditMode ? 'show' : ''}">
-                    <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
-                    <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
-                    <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
-                    <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
+                    <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">
+                        <span data-translate="moveUp">↑ Move Up</span>
+                    </button>
+                    <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">
+                        <span data-translate="moveDown">↓ Move Down</span>
+                    </button>
+                    <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">
+                        <span data-translate="addItem">➕ Add Item</span>
+                    </button>
+                    <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">
+                        <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                    </button>
                 </div>
                 <div id="${expensesId}"></div>
             `;
@@ -2959,14 +2970,12 @@
             // Add to the expenses list
             document.getElementById('expensesList').appendChild(categorySection);
             
-            // IMPORTANT: Save to Firebase FIRST before calling updateDisplay
-            // This ensures the data is persisted before any UI updates
+            // Save to Firebase FIRST before calling updateDisplay
             saveUserData().then(() => {
-                // Now update the display which will populate the first item
                 updateDisplay();
             }).catch(error => {
                 console.error('Error saving new category:', error);
-                alert('Error creating category. Please try again.');
+                alert(t.errorCreatingCategory || 'Error creating category. Please try again.');
             });
         }
 
