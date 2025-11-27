@@ -2984,19 +2984,28 @@
         // ============================================
         async function deleteCategory(categoryKey) {
             // Empêcher SEULEMENT de supprimer Income
+            const t = translations[currentLanguage] || translations['en'];
+            
             if (categoryKey === 'income') {
-                const t = translations[currentLanguage] || translations['en'];
                 alert(t.cannotDeleteIncome || 'Cannot delete Income category.');
                 return;
             }
             
-            const displayName = getCategoryDisplayName(categoryKey);
-            const total = getCategoryStats(categoryKey).total;
+            // ✅ Fonction locale pour obtenir le displayName
+            function getDisplayName(catKey) {
+                if (categoryMetadata[catKey] && categoryMetadata[catKey].displayName) {
+                    return categoryMetadata[catKey].displayName;
+                }
+                return catKey.charAt(0).toUpperCase() + catKey.slice(1);
+            }
             
-            const t = translations[currentLanguage] || translations['en'];
+            const displayName = getDisplayName(categoryKey);
+            const total = calculateCategoryTotal(categoryKey);
+            
             const confirmMessage = t.deleteCategoryConfirm
                 .replace('{name}', displayName)
                 .replace('{amount}', `${currency}${total.toFixed(2)}`);
+            
             if (!confirm(confirmMessage)) {
                 return;
             }
@@ -3027,12 +3036,10 @@
                 // Actualiser l'affichage
                 updateDisplay();
                 
-                const t = translations[currentLanguage] || translations['en'];
                 alert(t.categoryDeletedSuccess.replace('{count}', result.data.unlabeledCount));
                 
             } catch (error) {
                 console.error('Error deleting category:', error);
-                const t = translations[currentLanguage] || translations['en'];
                 alert(t.errorDeletingCategory + ' ' + error.message);
             }
         }
