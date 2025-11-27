@@ -3004,11 +3004,13 @@
                 // Actualiser l'affichage
                 updateDisplay();
                 
-                alert(`Category deleted! ${result.data.unlabeledCount} transaction(s) unlabeled.`);
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.categoryDeletedSuccess.replace('{count}', result.data.unlabeledCount));
                 
             } catch (error) {
                 console.error('Error deleting category:', error);
-                alert('Error deleting category: ' + error.message);
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.errorDeletingCategory + ' ' + error.message);
             }
         }
         // ============================================
@@ -3269,7 +3271,10 @@
                 
                 await csvBatch.commit();
                 
-                alert(`✓ Successfully deleted ${snapshot.size} transactions and ${csvSnapshot.size} CSV records`);
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.transactionsCleared
+                    .replace('{count}', snapshot.size)
+                    .replace('{csvCount}', csvSnapshot.size));
                 
                 // Reload if on transactions tab
                 if (typeof loadTransactions === 'function') {
@@ -3277,7 +3282,8 @@
                 }
             } catch (error) {
                 console.error('Error clearing transactions:', error);
-                alert('❌ Error: ' + error.message);
+                const t = translations[currentLanguage] || translations['en'];
+                alert('❌ ' + t.errorClearingTransactions + ' ' + error.message);
             } finally {
                 // Restore modal content
                 if (settingsModalBody) {
@@ -3425,7 +3431,8 @@
                 // Actualiser l'affichage
                 updateDisplay();
                 
-                alert(`Category renamed successfully! ${result.data.updatedCount} transaction(s) updated.`);
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
                 
             } catch (error) {
                 console.error('Error renaming category:', error);
