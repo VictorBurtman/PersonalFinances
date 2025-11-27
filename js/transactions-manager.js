@@ -1704,7 +1704,6 @@ async function removeCSV(csvId, fileName) {
         return;
     }
     // ✅ AJOUTE : Show loading overlay
-    const t = translations[currentLanguage] || translations['en'];
     showLoadingOverlay(t.removingCSV || 'Removing CSV...', t.deletingTransactions || 'Deleting transactions');
     try {
         const userId = window.currentUser.uid;
