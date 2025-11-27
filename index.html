@@ -63,6 +63,22 @@
             text-align: left;
             margin: 0;
             padding-right: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Ajuste la taille sur mobile */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em; /* Réduit de 2em (par défaut) à 1.8em */
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .header h1 {
+                font-size: 1.5em; /* Encore plus petit sur très petits écrans */
+            }
         }
         
         .header p {
@@ -3114,21 +3130,25 @@
             const percentageModeSelect = document.getElementById('percentageModeSelect');
             const percentageModeSection = document.getElementById('percentageModeSection');
             
+            // ✅ Vérifications ajoutées
+            if (!modal) {
+                console.error('Settings modal not found');
+                return;
+            }
+            
             // Set current values
             const currencyCode = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
-            currencySelect.value = currencyCode;
-            useIncomeCheckbox.checked = useIncome;
-            percentageModeSelect.value = percentageMode;
+            if (currencySelect) currencySelect.value = currencyCode;
+            if (useIncomeCheckbox) useIncomeCheckbox.checked = useIncome;
+            if (percentageModeSelect) percentageModeSelect.value = percentageMode;
             
             // Show/hide percentage mode section based on useIncome
-            if (useIncome) {
-                percentageModeSection.style.display = 'block';
-            } else {
-                percentageModeSection.style.display = 'none';
+            if (percentageModeSection) {
+                percentageModeSection.style.display = useIncome ? 'block' : 'none';
             }
             
             // Set user email
-            if (currentUser) {
+            if (currentUser && settingsUserEmail) {
                 settingsUserEmail.textContent = currentUser.email;
             }
             
