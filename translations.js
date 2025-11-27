@@ -41,6 +41,24 @@ const translations = {
         credentialsConfigured: "Credentials Configured ✓",
         configureCredentials: "Configure your Isracard credentials to sync transactions",
         noCSVImported: "No CSV files imported yet",
+
+        // Alerts & notifications
+        categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
+        categoryDeletedSuccess: "Category deleted! {count} transaction(s) unlabeled.",
+        errorRenamingCategory: "Error renaming category:",
+        errorDeletingCategory: "Error deleting category:",
+        transactionsCleared: "Successfully deleted {count} transactions and {csvCount} CSV records",
+        errorClearingTransactions: "Error:",
+        csvImportedSuccess: "CSV imported successfully! {count} transaction(s) added.",
+        csvRemovedSuccess: "CSV removed! {count} transaction(s) deleted.",
+        errorImportingCSV: "Error importing CSV:",
+        errorRemovingCSV: "Error removing CSV:",
+        credentialsSaved: "Credentials saved successfully!",
+        errorSavingCredentials: "Error saving credentials:",
+        syncCompleted: "Sync completed! {count} new transaction(s).",
+        syncFailed: "Sync failed:",
+        autoLabelCompleted: "Auto-labeling completed! {count} transaction(s) labeled.",
+        autoLabelFailed: "Auto-labeling failed:",
         
         // Main app
         monthlyExpenses: "Monthly Expenses",
@@ -345,6 +363,24 @@ const translations = {
         credentialsConfigured: "Identifiants configurés ✓",
         configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions",
         noCSVImported: "Aucun fichier CSV importé pour le moment",
+
+        // Alerts & notifications
+        categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
+        categoryDeletedSuccess: "Catégorie supprimée ! {count} transaction(s) sans étiquette.",
+        errorRenamingCategory: "Erreur lors du renommage de la catégorie :",
+        errorDeletingCategory: "Erreur lors de la suppression de la catégorie :",
+        transactionsCleared: "{count} transactions et {csvCount} enregistrements CSV supprimés avec succès",
+        errorClearingTransactions: "Erreur :",
+        csvImportedSuccess: "CSV importé avec succès ! {count} transaction(s) ajoutée(s).",
+        csvRemovedSuccess: "CSV supprimé ! {count} transaction(s) supprimée(s).",
+        errorImportingCSV: "Erreur lors de l'importation du CSV :",
+        errorRemovingCSV: "Erreur lors de la suppression du CSV :",
+        credentialsSaved: "Identifiants enregistrés avec succès !",
+        errorSavingCredentials: "Erreur lors de l'enregistrement des identifiants :",
+        syncCompleted: "Synchronisation terminée ! {count} nouvelle(s) transaction(s).",
+        syncFailed: "Échec de la synchronisation :",
+        autoLabelCompleted: "Étiquetage automatique terminé ! {count} transaction(s) étiquetée(s).",
+        autoLabelFailed: "Échec de l'étiquetage automatique :",
         
         // Main app
         monthlyExpenses: "Dépenses Mensuelles",
@@ -1770,6 +1806,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
