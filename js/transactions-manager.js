@@ -884,14 +884,47 @@ function getTimeAgoText(date) {
     const now = new Date();
     const diff = Math.floor((now - date) / (1000 * 60));
     
-    if (diff < 1) return 'Just now';
-    if (diff < 60) return `${diff} ${t.minutes} ${t.ago}`;
+    // Just now
+    if (diff < 1) return t.justNow || 'Just now';
     
+    // Minutes
+    if (diff < 60) {
+        if (currentLanguage === 'fr') {
+            return `Il y a ${diff} ${t.minutes}`;
+        } else if (currentLanguage === 'he') {
+            return `לפני ${diff} ${t.minutes}`;
+        } else if (currentLanguage === 'ar') {
+            return `منذ ${diff} ${t.minutes}`;
+        } else {
+            return `${diff} ${t.minutes} ${t.ago}`;
+        }
+    }
+    
+    // Hours
     const hours = Math.floor(diff / 60);
-    if (hours < 24) return `${hours} ${t.hours} ${t.ago}`;
+    if (hours < 24) {
+        if (currentLanguage === 'fr') {
+            return `Il y a ${hours} ${t.hours}`;
+        } else if (currentLanguage === 'he') {
+            return `לפני ${hours} ${t.hours}`;
+        } else if (currentLanguage === 'ar') {
+            return `منذ ${hours} ${t.hours}`;
+        } else {
+            return `${hours} ${t.hours} ${t.ago}`;
+        }
+    }
     
+    // Days
     const days = Math.floor(hours / 24);
-    return `${days} ${t.days} ${t.ago}`;
+    if (currentLanguage === 'fr') {
+        return `Il y a ${days} ${t.days}`;
+    } else if (currentLanguage === 'he') {
+        return `לפני ${days} ${t.days}`;
+    } else if (currentLanguage === 'ar') {
+        return `منذ ${days} ${t.days}`;
+    } else {
+        return `${days} ${t.days} ${t.ago}`;
+    }
 }
 
 /**
