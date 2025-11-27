@@ -115,6 +115,24 @@
             transform: translateY(-50%) scale(1.15);
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
         }
+
+        /* ============================================
+           AJOUT POUR LE SUPPORT RTL (Hébreu/Arabe)
+           ============================================ */
+        
+        /* 1. Déplace le bouton Settings de droite à gauche */
+        html[dir="rtl"] .settings-btn-header {
+            right: auto;  /* Annule la propriété 'right' par défaut */
+            left: 15px;   /* Le place à gauche */
+        }
+        
+        /* 2. Ajuste l'espace de sécurité du Titre pour ne pas chevaucher le bouton */
+        html[dir="rtl"] .header h1 {
+            padding-right: 0;    /* Enlève l'espace à droite (puisqu'il n'y a plus de bouton) */
+            padding-left: 50px;  /* Ajoute l'espace à gauche (là où est le bouton maintenant) */
+            text-align: right;   /* S'assure que le texte est bien aligné à droite */
+        }
+
         
         /* ============================================
            DASHBOARD & TOTAL SECTION
