@@ -1165,7 +1165,7 @@
                 <div id="budgetTab" class="tab-content active">
                     <div class="edit-mode-controls">
                         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-                            <span id="editBtnText" data-translate="editCategories">✏️ Edit Categories</span>
+                            <span id="editBtnText" data-translate="editCategories">Edit Categories</span>
                         </button>
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
                             <span data-translate="compare">Compare</span>
@@ -1595,6 +1595,7 @@
             // Vérifier que les éléments existent avant de les modifier
             const authTitle = document.querySelector('.auth-title');
             if (!authTitle) return; // Sortir si les éléments ne sont pas encore chargés
+            
             // Auth screen
             document.querySelector('.auth-title').textContent = t('appTitle');
             document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
@@ -1615,16 +1616,7 @@
             // Main app header
             document.querySelector('.header h1').textContent = t('monthlyExpenses');
             
-            // Edit mode buttons
-            //const editBtn = document.getElementById('editModeBtn');
-            //if (editBtn.classList.contains('active')) {
-            //    editBtn.textContent = t('doneEditing');
-            //} else {
-             //   editBtn.textContent = t('editCategories');
-            //}
-            
-            //document.querySelector('[onclick="addNewCategory()"]').textContent = t('addCategory');
-            //document.querySelector('[onclick="openSettings()"]').textContent = t('settings');
+            // ❌ SUPPRIMÉ : Ne pas toucher au bouton Edit ici, c'est géré par toggleEditMode()
             
             // Total section
             document.querySelector('.total-section h2').textContent = t('totalExpenses');
@@ -1632,15 +1624,6 @@
             if (incomeH3) incomeH3.textContent = t('totalIncome');
             const remainingH3 = document.querySelector('#remainingDisplay h3');
             if (remainingH3) remainingH3.textContent = t('remaining');
-            
-            // Chart buttons
-            //const chartButtons = document.querySelectorAll('.chart-toggle-btn');
-            //chartButtons[0].textContent = t('pieChart');
-            //chartButtons[1].textContent = t('barChart');
-            //document.querySelector('.color-customize-btn').textContent = t('colors');
-            
-            //Reset button
-            //document.querySelector('.reset-button').textContent = t('resetAll');
             
             // Modals
             document.querySelector('#colorEditorModal .modal-header h2').textContent = t('customizeColors');
@@ -1650,15 +1633,30 @@
             document.querySelector('#settingsModal .modal-header h2').textContent = t('settingsTitle');
             document.querySelector('#settingsModal .modal-footer .primary').textContent = t('done');
             
-            // Settings sections
-            const settingsSections = document.querySelectorAll('#settingsModal .settings-section h3');
-            settingsSections[0].textContent = t('account');
-            settingsSections[1].textContent = t('currency');
-            settingsSections[2].textContent = t('incomeTracking');
-            if (settingsSections[3]) settingsSections[3].textContent = t('percentageCalculation');
+            // ✅ MODIFIÉ : Settings sections avec vérifications
+            const accountTitle = document.getElementById('accountTitle');
+            if (accountTitle) accountTitle.textContent = t('account');
             
-            document.querySelector('#settingsModal .settings-section button').textContent = t('logout');
+            const currencyTitle = document.getElementById('currencyTitle');
+            if (currencyTitle) currencyTitle.textContent = t('currency');
             
+            const incomeTrackingTitle = document.getElementById('incomeTrackingTitle');
+            if (incomeTrackingTitle) incomeTrackingTitle.textContent = t('incomeTracking');
+            
+            const darkModeTitle = document.getElementById('darkModeTitle');
+            if (darkModeTitle) darkModeTitle.textContent = t('darkMode');
+            
+            const percentageTitle = document.getElementById('percentageTitle');
+            if (percentageTitle) percentageTitle.textContent = t('percentageCalculation');
+            
+            const clearDataTitle = document.getElementById('clearDataTitle');
+            if (clearDataTitle) clearDataTitle.textContent = t('clearData');
+            
+            // Settings button
+            const logoutBtn = document.querySelector('#settingsModal .settings-section button');
+            if (logoutBtn) logoutBtn.textContent = t('logout');
+            
+            // Settings descriptions
             const settingsDescriptions = document.querySelectorAll('.settings-description');
             if (settingsDescriptions[0]) settingsDescriptions[0].textContent = t('percentageDesc');
             
