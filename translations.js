@@ -41,6 +41,10 @@ const translations = {
         credentialsConfigured: "Credentials Configured ✓",
         configureCredentials: "Configure your Isracard credentials to sync transactions",
         noCSVImported: "No CSV files imported yet",
+        enterBankNameFirst: "Please enter a bank name first",
+        removeCSVConfirm: "Remove \"{name}\" and all its transactions?",
+        cannotDeleteIncome: "Cannot delete Income category.",
+        
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -385,6 +389,9 @@ const translations = {
         credentialsConfigured: "Identifiants configurés ✓",
         configureCredentials: "Configurez vos identifiants Isracard pour synchroniser les transactions",
         noCSVImported: "Aucun fichier CSV importé pour le moment",
+        enterBankNameFirst: "Veuillez d'abord entrer un nom de banque",
+        removeCSVConfirm: "Supprimer \"{name}\" et toutes ses transactions ?",
+        cannotDeleteIncome: "Impossible de supprimer la catégorie Revenus.",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -719,6 +726,9 @@ const translations = {
         credentialsConfigured: "✓ פרטי הזדהות הוגדרו",
         configureCredentials: "הגדר את פרטי הזיהוי שלך ב-Isracard כדי לסנכרן עסקאות",
         noCSVImported: "עדיין לא יובאו קבצי CSV",
+        enterBankNameFirst: "אנא הזן שם בנק תחילה",
+        removeCSVConfirm: "להסיר את \"{name}\" ואת כל העסקאות שלו?",
+        cannotDeleteIncome: "לא ניתן למחוק את קטגוריית ההכנסה.",
 
 
         // Toasts & notifications
@@ -1054,6 +1064,9 @@ const translations = {
         credentialsConfigured: "Credenciales configuradas ✓",
         configureCredentials: "Configure sus credenciales de Isracard para sincronizar transacciones",
         noCSVImported: "Aún no se han importado archivos CSV",
+        enterBankNameFirst: "Por favor ingrese un nombre de banco primero",
+        removeCSVConfirm: "¿Eliminar \"{name}\" y todas sus transacciones?",
+        cannotDeleteIncome: "No se puede eliminar la categoría Ingresos.",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1388,6 +1401,9 @@ const translations = {
         credentialsConfigured: "Учетные данные настроены ✓",
         configureCredentials: "Настройте учетные данные Isracard для синхронизации транзакций",
         noCSVImported: "CSV-файлы еще не импортированы",
+        enterBankNameFirst: "Пожалуйста, сначала введите название банка",
+        removeCSVConfirm: "Удалить \"{name}\" и все его транзакции?",
+        cannotDeleteIncome: "Нельзя удалить категорию Доход.",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -1722,6 +1738,9 @@ const translations = {
         credentialsConfigured: "✓ تم تكوين بيانات الاعتماد",
         configureCredentials: "قم بتكوين بيانات اعتماد Isracard لمزامنة المعاملات",
         noCSVImported: "لم يتم استيراد ملفات CSV بعد",
+        enterBankNameFirst: "الرجاء إدخال اسم البنك أولاً",
+        removeCSVConfirm: "إزالة \"{name}\" وجميع معاملاته؟",
+        cannotDeleteIncome: "لا يمكن حذف فئة الدخل.",
 
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",
@@ -2016,6 +2035,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
