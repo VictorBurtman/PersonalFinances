@@ -100,6 +100,11 @@ async function loadTransactions() {
                     isracardAlertEl.className = 'alert-trans alert-info-trans';
                 }
             }
+
+            // ✅ AJOUTÉ : Force refresh des traductions
+            if (typeof updateTransactionsLanguage === 'function') {
+                updateTransactionsLanguage();
+            }
             
             // Update Max sync status
             if (userDoc.data().lastMaxSync) {
