@@ -1603,10 +1603,17 @@ async function importCSVTransactions(fileName, bankName, transactions) {
         
         await batch.commit();
         
+        const t = translations[currentLanguage] || translations['en'];
         const skipped = transactions.length - newTransactions.length;
-        const message = skipped > 0 
-            ? `Imported ${newTransactions.length} transactions from ${bankName} (${skipped} duplicates skipped)`
-            : `Imported ${newTransactions.length} transactions from ${bankName}`;
+        
+        let message;
+        if (skipped > 0) {
+            message = t.csvImportedWithDuplicates
+                .replace('{count}', newTransactions.length)
+                .replace('{skipped}', skipped);
+        } else {
+            message = t.csvImportedSuccess.replace('{count}', newTransactions.length);
+        }
         
         showToast(message, 'success', 4000);
         
