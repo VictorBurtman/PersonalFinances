@@ -1149,7 +1149,7 @@
                 <div id="budgetTab" class="tab-content active">
                     <div class="edit-mode-controls">
                         <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-                            ✏️ <span id="editBtnText">Edit Categories</span>
+                            <span id="editBtnText">✏️ Edit Categories</span>
                         </button>
                         <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="border-color: #667eea; color: #667eea;">
                             <span data-translate="compare">Compare</span>
@@ -2566,16 +2566,19 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
+            const editBtnText = document.getElementById('editBtnText');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
             
-            // ✅ AJOUTÉ : Récupérer les traductions
+            // ✅ Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
             if (isEditMode) {
                 if (editBtn) {
                     editBtn.classList.add('active');
-                    editBtn.innerHTML = `✓ ${t.doneEditing || 'Done Editing'}`; // ✅ MODIFIÉ
+                }
+                if (editBtnText) {
+                    editBtnText.textContent = `✓ ${t.doneEditing || 'Done Editing'}`;
                 }
                 
                 const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
@@ -2590,7 +2593,9 @@
             } else {
                 if (editBtn) {
                     editBtn.classList.remove('active');
-                    editBtn.innerHTML = `✏️ ${t.editCategories || 'Edit Categories'}`; // ✅ MODIFIÉ
+                }
+                if (editBtnText) {
+                    editBtnText.textContent = `✏️ ${t.editCategories || 'Edit Categories'}`;
                 }
                 
                 const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
