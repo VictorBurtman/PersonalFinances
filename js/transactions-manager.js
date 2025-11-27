@@ -31,6 +31,11 @@ async function loadTransactions() {
         return;
     }
     
+    // ✅ AJOUTÉ : Appliquer les traductions dès le début
+    if (typeof updateTransactionsLanguage === 'function') {
+        updateTransactionsLanguage();
+    }
+    
     // Show loading inside All Transactions section
     const transactionsLoading = document.getElementById('transactionsLoading');
     const allTransactionsList = document.getElementById('allTransactionsList');
@@ -60,7 +65,7 @@ async function loadTransactions() {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
-            // ✅ AJOUTE ICI : Load transaction limit preference
+            // Load transaction limit preference
             if (userDoc.data().transactionLimit) {
                 transactionLimit = userDoc.data().transactionLimit;
                 const limitFilter = document.getElementById('limitFilter');
@@ -68,24 +73,26 @@ async function loadTransactions() {
                     limitFilter.value = transactionLimit.toString();
                 }
             }
-            // Update credentials status silently
+            
+            // ✅ MODIFIÉ : Récupérer les traductions
+            const t = translations[currentLanguage] || translations['en'];
+            
+            // Update Max credentials status
             const maxAlertEl = document.getElementById('maxCredentialsAlert');
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
                 console.log('✓ Max credentials configured');
                 if (maxAlertEl) {
-                    maxAlertEl.innerHTML = '<span data-translate="credentialsConfigured">Credentials configured ✓</span>';
+                    maxAlertEl.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured}</span>`;
                     maxAlertEl.className = 'alert-trans alert-success-trans';
                 }
             } else {
-                // Pas de credentials
                 if (maxAlertEl) {
-                    maxAlertEl.innerHTML = '<span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>';
+                    maxAlertEl.innerHTML = `<span data-translate="configureCredentials">${t.configureCredentials}</span>`;
                     maxAlertEl.className = 'alert-trans alert-info-trans';
                 }
             }
             
             // Check Isracard credentials
-            const t = translations[currentLanguage] || translations['en'];
             const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
             if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
                 console.log('✓ Isracard credentials configured');
@@ -94,17 +101,18 @@ async function loadTransactions() {
                     isracardAlertEl.className = 'alert-trans alert-success-trans';
                 }
             } else {
-                // Pas de credentials
                 if (isracardAlertEl) {
                     isracardAlertEl.innerHTML = `<span data-translate="configureCredentials">${t.configureCredentials}</span>`;
                     isracardAlertEl.className = 'alert-trans alert-info-trans';
                 }
             }
 
-            // ✅ AJOUTÉ : Force refresh des traductions
-            if (typeof updateTransactionsLanguage === 'function') {
-                updateTransactionsLanguage();
-            }
+            // ✅ Force refresh des traductions APRÈS avoir modifié le HTML
+            setTimeout(() => {
+                if (typeof updateTransactionsLanguage === 'function') {
+                    updateTransactionsLanguage();
+                }
+            }, 100);
             
             // Update Max sync status
             if (userDoc.data().lastMaxSync) {
@@ -130,7 +138,7 @@ async function loadTransactions() {
         // Populate filters
         populateMonthFilter();
         populateCategoryFilter();
-        populateSourceFilter(); // ✅ AJOUTE CETTE LIGNE
+        populateSourceFilter();
         console.log('Filters populated');
         
         // Apply filters and render
