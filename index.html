@@ -1855,7 +1855,8 @@
         }
 
         function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
+            const t = translations[currentLanguage] || translations['en'];
+            if (confirm(t.logoutConfirm || 'Logout?')) {
                 closeSettings();
                 auth.signOut();
             }
@@ -2552,7 +2553,8 @@
         }
     
         function resetExpenses() {
-            if (confirm('Are you sure you want to reset all expenses to 0?')) {
+            const t = translations[currentLanguage] || translations['en'];
+            if (confirm(t.resetAllConfirm || 'Reset all to 0?')) {
                 expenses = JSON.parse(JSON.stringify(defaultExpenses));
                 hiddenItems = {};
                 saveUserData();
@@ -2613,7 +2615,8 @@
         }
 
         function resetColors() {
-            if (confirm('Reset all colors to default?')) {
+            const t = translations[currentLanguage] || translations['en'];
+            if (confirm(t.resetColorsConfirm || 'Reset colors?')) {
                 customColors = {};
                 saveUserData();
                 closeColorEditor();
@@ -2879,14 +2882,15 @@
         
 
         function deleteExpenseItem(category, index) {
-            if (!confirm('Delete this expense item?')) return;
+            const t = translations[currentLanguage] || translations['en'];
+            if (!confirm(t.deleteItemConfirm || 'Delete this item?')) return;
             
             if (expenses[category] && expenses[category][index]) {
                 expenses[category].splice(index, 1);
                 
                 // If category is now empty, ask if user wants to delete the whole category
                 if (expenses[category].length === 0) {
-                    if (confirm('This was the last item in this category. Delete the entire category?')) {
+                    if (confirm(t.lastItemConfirm || 'Delete entire category?')) {
                         deleteCategory(category);
                         return; // NOUVEAU : Important pour arrêter l'exécution ici
                     }
@@ -2900,10 +2904,10 @@
         }
 
         function addNewCategory() {
-            const categoryName = prompt('Enter category name:');
-            if (!categoryName) return;
+            const t = translations[currentLanguage] || translations['en'];
             
-            const categoryKey = categoryName.toLowerCase().replace(/\s+/g, '_');
+            const categoryName = prompt(t.enterCategoryName || 'Enter category name:');
+            if (!categoryName) return;
             
             if (expenses[categoryKey]) {
                 alert('A category with this name already exists!');
@@ -2974,7 +2978,11 @@
             const displayName = getCategoryDisplayName(categoryKey);
             const total = getCategoryStats(categoryKey).total;
             
-            if (!confirm(`Delete category "${displayName}" (₪${total.toFixed(2)})?\n\nAll transactions labeled with this category will be unlabeled.`)) {
+            const t = translations[currentLanguage] || translations['en'];
+            const confirmMessage = t.deleteCategoryConfirm
+                .replace('{name}', displayName)
+                .replace('{amount}', `${currency}${total.toFixed(2)}`);
+            if (!confirm(confirmMessage)) {
                 return;
             }
             
@@ -3018,7 +3026,8 @@
         // ============================================
 
         function addItemToCategory(categoryKey) {
-            const itemName = prompt('Enter new expense item name:');
+            const t = translations[currentLanguage] || translations['en'];
+            const itemName = prompt(t.enterNewItemName || 'Enter new item name:');
             if (!itemName) return;
             
             if (!expenses[categoryKey]) {
@@ -3222,11 +3231,12 @@
         async function clearAllTransactions() {
             if (!currentUser) return;
             
-            if (!confirm('⚠️ Are you sure you want to delete ALL transactions? This cannot be undone!')) {
+            const t = translations[currentLanguage] || translations['en'];
+            if (!confirm(t.clearAllWarning1 || '⚠️ Delete ALL transactions?')) {
                 return;
             }
             
-            if (!confirm('⚠️ FINAL WARNING: This will permanently delete all your transactions. Continue?')) {
+            if (!confirm(t.clearAllWarning2 || '⚠️ FINAL WARNING! Continue?')) {
                 return;
             }
             
@@ -3350,7 +3360,10 @@
         // Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
-            const newName = prompt(`Enter new name for "${currentDisplayName}":`, currentDisplayName);
+            const t = translations[currentLanguage] || translations['en'];
+            const promptMessage = t.enterNewCategoryName
+                .replace('{current}', currentDisplayName);
+            const newName = prompt(promptMessage, currentDisplayName);
             
             if (!newName || newName.trim() === '') return;
             if (newName.trim() === currentDisplayName) return;
@@ -3359,19 +3372,19 @@
             
             // Vérifier les doublons
             if (expenses[newKey] && newKey !== categoryKey) {
-                alert(`A category named "${newName}" already exists! Please choose a different name.`);
+                alert(t.categoryExistsAlert || 'Category already exists!');
                 return;
             }
 
             // Empêcher de renommer "income"
             if (categoryKey === 'income') {
-                alert('Cannot rename the Income category.');
+                alert(t.cannotRenameIncome || 'Cannot rename Income.');
                 return;
             }
             // Empêcher de renommer en catégories système
             const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
             if (systemCategories.includes(newKey) && newKey !== categoryKey) {
-                alert(`Cannot use "${newName}" as it's a system category name.`);
+                alert(t.cannotUseSystemName || 'Cannot use system name.');
                 return;
             }
             
@@ -3441,7 +3454,8 @@
         }
 
         function renameItem(category, index) {
-            const newName = prompt('Enter new name for this item:', expenses[category][index].name);
+            const t = translations[currentLanguage] || translations['en'];
+            const newName = prompt(t.enterNewName || 'Enter new name:', expenses[category][index].name);
             if (!newName) return;
             
             expenses[category][index].name = newName;
