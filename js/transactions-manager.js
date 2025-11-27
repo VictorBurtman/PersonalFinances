@@ -16,7 +16,6 @@ let importedCSVs = []; // Liste des CSV importés
 function initTransactions() {
     if (typeof firebase !== 'undefined' && firebase.functions) {
         transactionsFunctions = firebase.functions();
-        console.log('✓ Transactions system initialized');
     } else {
         console.error('Firebase Functions not available');
     }
@@ -80,7 +79,6 @@ async function loadTransactions() {
             // Update Max credentials status
             const maxAlertEl = document.getElementById('maxCredentialsAlert');
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
-                console.log('✓ Max credentials configured');
                 if (maxAlertEl) {
                     maxAlertEl.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured}</span>`;
                     maxAlertEl.className = 'alert-trans alert-success-trans';
@@ -95,7 +93,6 @@ async function loadTransactions() {
             // Check Isracard credentials
             const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
             if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
-                console.log('✓ Isracard credentials configured');
                 if (isracardAlertEl) {
                     isracardAlertEl.innerHTML = `<span data-translate="credentialsConfigured">${t.credentialsConfigured}</span>`;
                     isracardAlertEl.className = 'alert-trans alert-success-trans';
@@ -139,7 +136,6 @@ async function loadTransactions() {
         populateMonthFilter();
         populateCategoryFilter();
         populateSourceFilter();
-        console.log('Filters populated');
         
         // Apply filters and render
         applyFilters();
@@ -299,7 +295,6 @@ function applyFilters() {
     const categoryFilter = document.getElementById('categoryFilter')?.value;
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
     
-    console.log('Applying filters:', { labelFilter, monthFilter, sourceFilter, categoryFilter, searchFilter, currentSortOrder }); // DEBUG
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
@@ -356,9 +351,6 @@ function applyFilters() {
     
     // Apply sorting
     sortTransactions();
-    
-    console.log('Filtered:', filteredTransactionsData.length, 'of', transactionsData.length); // DEBUG
-    
     renderTransactions();
 }
 
