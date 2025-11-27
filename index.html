@@ -2983,7 +2983,6 @@
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
         async function deleteCategory(categoryKey) {
-            // Empêcher SEULEMENT de supprimer Income
             const t = translations[currentLanguage] || translations['en'];
             
             if (categoryKey === 'income') {
@@ -2991,7 +2990,6 @@
                 return;
             }
             
-            // ✅ Fonction locale pour obtenir le displayName
             function getDisplayName(catKey) {
                 if (categoryMetadata[catKey] && categoryMetadata[catKey].displayName) {
                     return categoryMetadata[catKey].displayName;
@@ -3029,10 +3027,19 @@
                     categoryOrder.splice(index, 1);
                 }
                 
-                // Sauvegarder dans Firebase
-                await saveUserData();
-                // Recharger depuis Firebase pour être sûr
-                await loadUserData();
+                // ✅ SAFE : Utiliser .update() pour supprimer SEULEMENT les champs de la catégorie
+                // Ceci ne touche PAS aux credentials !
+                const updateData = {
+                    [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                    [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                    categoryOrder: categoryOrder,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await db.collection('users').doc(currentUser.uid).update(updateData);
+                
+                console.log(`Category ${categoryKey} deleted from Firebase (credentials untouched)`);
+                
                 // Actualiser l'affichage
                 updateDisplay();
                 
