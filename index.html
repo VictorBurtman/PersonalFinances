@@ -1542,24 +1542,20 @@
     <script>
 
             /**
-             * Ajuste la taille de la police du titre pour qu'il tienne sur une seule ligne
+             * Ajuste la taille de la police du titre pour qu'il tienne sur une seule ligne.
+             * Commence à 28px et réduit progressivement si débordement.
              */
             function fitAppTitle() {
                 const h1 = document.querySelector('.header h1');
                 if (!h1) return;
             
-                // 1. Réinitialiser la taille de police (enlève le style inline)
-                // Cela force le navigateur à utiliser la taille CSS (clamp) comme point de départ.
-                h1.style.fontSize = ''; 
-            
-                // 2. Mesurer la taille après rendu du style CSS
-                // On récupère la taille actuelle calculée par le CSS (ex: 4vw)
-                let size = parseFloat(window.getComputedStyle(h1).fontSize); 
+                // 1. Définir la taille maximale souhaitée (en px)
+                let size = 28; // On monte à 28px pour les grands écrans
+                h1.style.fontSize = size + 'px';
                 
-                // 3. Boucle de réduction : tant que le texte dépasse et que la taille est > 12px
+                // 2. Boucle de réduction : tant que le texte dépasse et que la taille est > 12px
                 while (h1.scrollWidth > h1.clientWidth && size > 12) {
-                    // Décrémenter par petits pas (0.5px pour plus de finesse)
-                    size -= 0.5; 
+                    size -= 0.5; // On réduit de 0.5px (plus fin que 1px)
                     h1.style.fontSize = size + 'px';
                 }
             }
