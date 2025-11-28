@@ -115,7 +115,13 @@
             position: absolute;
             right: 15px;
             top: 50%;
-            transform: translateY(-50%);
+            
+            /* === MODIFICATION CLÉ ICI : Ajustement du Transform === */
+            /* top: 50% déplace le point d'ancrage au milieu du header.
+               transform: translateY(calc(-50% + 1px)) déplace l'élément de -50% (centrage)
+               puis ajoute 1px vers le bas pour l'alignement final. */
+            transform: translateY(calc(-50% + 1px)); 
+            
             background: transparent;
             border: none;
             color: white;
@@ -127,7 +133,8 @@
         }
         
         .settings-btn-header:hover {
-            transform: translateY(-50%) scale(1.15);
+            /* Mise à jour du hover pour inclure le décalage d'alignement */
+            transform: translateY(calc(-50% + 1px)) scale(1.15);
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
         }
 
