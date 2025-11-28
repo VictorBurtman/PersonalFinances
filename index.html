@@ -2562,10 +2562,6 @@
         
             // SI le graphique existe déjà, on met juste à jour les données
             if (chart && chart.config.type === currentChartType) {
-                // Update colors for theme changes
-                if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
-                    chart.options.plugins.legend.labels.color = textColor;
-                }
                 // Mise à jour des données existantes
                 chart.data.labels = displayLabels;
                 chart.data.datasets[0].data = displayData;
@@ -2592,6 +2588,11 @@
                         }
                     }
                 } : commonOptions;
+                
+                // Update legend colors AFTER setting options
+                if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                }
                 
                 // Rafraîchir le graphique avec animation
                 chart.update('active'); // 'active' permet une animation fluide
@@ -2632,8 +2633,8 @@
                             datasets: [{
                                 data: displayData,
                                 backgroundColor: displayColors,
-                                borderWidth: 2,
-                                borderColor: '#fff'
+                                borderWidth: 0,
+                                borderColor: isDarkMode ? '#2a2a3e' : '#fff'
                             }]
                         },
                         options: commonOptions
