@@ -65,14 +65,12 @@
                 
         /* Cherchez ce bloc dans votre <style> et remplacez-le */
         .header h1 {
-            text-align: left; /* Pour LTR par défaut */
+            text-align: left;
             margin: 0;
-            /* On réserve la place pour le bouton settings (50px) + une marge (10px) */
             padding-right: 60px; 
             white-space: nowrap;
-            /* On enlève l'ellipsis et l'overflow hidden temporairement pour que le JS puisse lire la vraie largeur */
             overflow: visible; 
-            /* Taille de départ max, le JS la réduira si besoin */
+            /* Définir une taille de base fixe, le JS fera le reste */
             font-size: 24px; 
             line-height: 1.2;
             width: 100%;
