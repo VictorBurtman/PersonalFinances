@@ -1144,12 +1144,24 @@
             background: #1f1f2e;
         }
         
+        body.dark-mode .budget-label,
+        body.dark-mode .real-label,
+        body.dark-mode .diff {
+            color: #e0e0e0;
+        }
+        
         body.dark-mode .compare-progress {
             background: #3a3a4e;
         }
         
         /* Settings in dark mode */
         body.dark-mode .settings-section {
+            border-bottom-color: #3a3a4e;
+        }
+        
+        /* Sticky bar (edit mode) in dark mode */
+        body.dark-mode .edit-mode-controls {
+            background: #2a2a3e;
             border-bottom-color: #3a3a4e;
         }
     </style>
@@ -2388,6 +2400,13 @@
             }
         
             const ctx = document.getElementById('expensesChart').getContext('2d');
+
+            // Detect dark mode for chart styling
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? '#e0e0e0' : '#666';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            // Prepare data for chart - EXCLUDE income category
             
             // Prepare data for chart - EXCLUDE income category
             const allLabels = [];
@@ -2460,6 +2479,7 @@
                             font: {
                                 size: 11
                             },
+                            color: textColor,
                             boxWidth: 15,
                             boxHeight: 15,
                             generateLabels: function(chart) {
@@ -2512,7 +2532,11 @@
                         },
                         y: {
                             beginAtZero: true,
+                            grid: {
+                                color: gridColor
+                            },
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return currency + value;
                                 }
@@ -2586,7 +2610,11 @@
                                 },
                                 y: {
                                     beginAtZero: true,
+                                    grid: {
+                                        color: gridColor
+                                    },
                                     ticks: {
+                                        color: textColor,
                                         callback: function(value) {
                                             return currency + value;
                                         }
