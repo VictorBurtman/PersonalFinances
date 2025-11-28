@@ -63,18 +63,21 @@
             /* === FIN DES AJOUTS === */
         }
                 
-        /* Cherchez ce bloc dans votre <style> et remplacez-le */
         .header h1 {
             text-align: left;
             margin: 0;
-            padding-right: 60px; 
+            padding-right: 60px;
             white-space: nowrap;
-            overflow: visible; 
+            overflow: visible;
             /* Définir une taille de base fixe, le JS fera le reste */
-            font-size: 24px; 
+            font-size: 24px;
             line-height: 1.2;
             width: 100%;
             display: block;
+            
+            /* === AJOUT POUR L'ALIGNEMENT VERTICAL === */
+            position: relative; /* Nécessaire pour que 'top' fonctionne */
+            top: 2px;         /* Déplace le titre de 2 pixels vers le bas */
         }
         
         /* Support RTL (Arabe/Hébreu) */
