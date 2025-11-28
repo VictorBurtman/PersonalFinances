@@ -57,6 +57,10 @@
             margin-bottom: 20px;
             color: white;
             position: relative;
+            /* === AJOUTS === */
+            min-height: 50px; /* Ajoute une hauteur minimale pour stabiliser le header */
+            overflow: hidden; /* Important pour isoler le titre et empêcher le scroll/resize d'affecter la mesure */
+            /* === FIN DES AJOUTS === */
         }
                 
         /* Cherchez ce bloc dans votre <style> et remplacez-le */
@@ -1561,8 +1565,31 @@
         }
         
         // Ajouter un écouteur pour redimensionner si l'écran tourne ou change de taille
-        window.addEventListener('resize', fitAppTitle);
+        // Exécute fitAppTitle une seule fois après 100ms de silence
+        window.addEventListener('resize', debounce(fitAppTitle, 100));
+        
+        // Optionnel: Déclenchez l'ajustement aussi au défilement pour capturer certains cas mobiles
+        window.addEventListener('scroll', debounce(fitAppTitle, 100));
 
+
+        /**
+         * Empêche une fonction de s'exécuter trop souvent.
+         * @param {function} func - La fonction à débouncer.
+         * @param {number} delay - Le délai en ms (e.g., 100ms).
+         */
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+
+
+
+
+        
         
         // Global error handler
         window.addEventListener('error', function(e) {
@@ -1751,7 +1778,7 @@
             updateTransactionsLanguage();
             // ===> AJOUTEZ CETTE LIGNE À LA TOUTE FIN DE LA FONCTION <===
             // Utilise setTimeout pour laisser le temps au navigateur de faire le rendu du texte
-            setTimeout(fitAppTitle, 50);
+            debounce(fitAppTitle, 100)();
         }
 
 
