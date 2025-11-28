@@ -2589,13 +2589,8 @@
                     }
                 } : commonOptions;
                 
-                // Update legend colors AFTER setting options
-                if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
-                    chart.options.plugins.legend.labels.color = textColor;
-                }
-                
-                // Rafraîchir le graphique avec animation
-                chart.update('none'); // Force immediate update without animation
+                // Rafraîchir le graphique SANS animation pour forcer la mise à jour des couleurs
+                chart.update('none');
                 
             } else {
                 // Le graphique n'existe pas OU le type a changé : on le recrée
