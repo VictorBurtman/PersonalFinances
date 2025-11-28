@@ -984,3 +984,25 @@ body.dark-mode .bank-section h4 {
 body.dark-mode .bank-section {
     border-bottom-color: #3a3a4e;
 }
+
+/* Bank Accounts Modal in dark mode */
+body.dark-mode #bankAccountsModal .modal-content {
+    background: #2a2a3e;
+    color: #e0e0e0;
+}
+
+body.dark-mode #bankAccountsModal .modal-header {
+    border-bottom-color: #3a3a4e;
+}
+
+body.dark-mode #bankAccountsModal .modal-header h2 {
+    color: #8b9cff;
+}
+
+body.dark-mode #bankAccountsModal .modal-footer {
+    border-top-color: #3a3a4e;
+}
+
+body.dark-mode #bankAccountsModal .modal-body {
+    color: #e0e0e0;
+}
