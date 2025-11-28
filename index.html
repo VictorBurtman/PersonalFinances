@@ -57,28 +57,35 @@
             margin-bottom: 20px;
             color: white;
             position: relative;
-            /* === AJOUTS === */
-            min-height: 50px; /* Ajoute une hauteur minimale pour stabiliser le header */
-            overflow: hidden; /* Important pour isoler le titre et empêcher le scroll/resize d'affecter la mesure */
-            /* === FIN DES AJOUTS === */
+            
+            /* === AJOUTS POUR L'ALIGNEMENT VERTICAL === */
+            display: flex;        /* Active le mode Flexbox */
+            align-items: center;  /* Centre les éléments enfants (h1 et bouton) verticalement */
+            /* Assurez-vous d'avoir un padding vertical ici si nécessaire */
+            
+            min-height: 50px; 
+            overflow: hidden; 
         }
                 
         /* Modification du bloc .header h1 dans votre <style> */
         .header h1 {
             text-align: left;
             margin: 0;
+            /* IMPORTANT : Le bouton "Settings" doit probablement être en position: absolute;
+               pour que le h1 puisse prendre la largeur maximale restante avec Flexbox. */
             padding-right: 60px;
             white-space: nowrap;
             overflow: visible;
+            
             /* Taille gérée par le JS pour s'adapter */
-            font-size: 24px; 
+            font-size: 24px;
             line-height: 1.2;
             width: 100%;
-            display: block;
+            /* display: block; n'est plus nécessaire mais peut être laissé */
             
-            /* === NOUVEL AJOUT POUR L'ALIGNEMENT VERTICAL === */
-            /* Déplace le titre de 2 pixels vers le bas sans perturber la mise en page */
-            transform: translateY(2px); 
+            /* === AJUSTEMENT MICRO-FIN === */
+            /* Utilisez 1px, 2px, ou 3px pour le dernier ajustement visuel. */
+            transform: translateY(2px);
         }
         
         /* Support RTL (Arabe/Hébreu) */
@@ -3571,6 +3578,61 @@
             });
         }
 
+
+        /**
+         * Force le défilement de la page au sommet.
+         */
+        function scrollToTop() {
+            // Un petit délai est crucial pour laisser le temps à l'interface de l'application de s'afficher
+            setTimeout(() => {
+                // Méthode 1 : Scroll vers le haut du body (souvent la plus efficace sur mobile)
+                document.body.scrollIntoView({ behavior: 'auto', block: 'start' });
+                
+                // Méthode 2 : Fallback pour les navigateurs récalcitrants
+                window.scrollTo(0, 0); 
+            }, 100); // 100ms pour être sûr
+        }
+
+        // Global variables
+        let currentUser = null;
+        // ... (toutes vos variables globales) ...
+        // let currentLanguage = 'en'; 
+        
+        // === GESTION DE L'ÉTAT D'AUTHENTIFICATION FIREBASE ===
+        // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
+        auth.onAuthStateChanged(user => {
+            const authScreen = document.getElementById('auth-screen');
+            const mainApp = document.getElementById('main-app');
+        
+            if (user) {
+                // Utilisateur connecté
+                currentUser = user;
+        
+                if (authScreen && mainApp) {
+                    authScreen.style.display = 'none';
+                    mainApp.style.display = 'block';
+                }
+                
+                // Charger ou mettre à jour les données de l'utilisateur
+                loadUserData(); 
+                
+                // ===> APPEL CRITIQUE ICI <===
+                // Force le retour en haut de page DÈS QUE l'app principale est affichée
+                scrollToTop(); 
+        
+            } else {
+                // Utilisateur déconnecté
+                currentUser = null;
+                
+                if (authScreen && mainApp) {
+                    authScreen.style.display = 'block';
+                    mainApp.style.display = 'none';
+                }
+        
+                // Réinitialiser l'interface utilisateur ou afficher le formulaire de connexion
+                // ... (votre code pour vider les données si besoin) ...
+            }
+        });
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             setTimeout(() => {
