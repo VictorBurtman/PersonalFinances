@@ -970,3 +970,17 @@
     font-size: 0.9em;
     opacity: 0.8;
 }
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+/* Bank section headings in dark mode */
+body.dark-mode .bank-section h4 {
+    color: #e0e0e0;
+}
+
+/* Border color in dark mode */
+body.dark-mode .bank-section {
+    border-bottom-color: #3a3a4e;
+}
