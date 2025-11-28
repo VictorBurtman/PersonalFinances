@@ -1550,20 +1550,19 @@
                 const h1 = document.querySelector('.header h1');
                 if (!h1) return;
             
-                // 1. On définit la taille maximale souhaitée (en px)
-                let size = 24; 
-                h1.style.fontSize = size + 'px';
+                // 1. Réinitialiser la taille de police (enlève le style inline)
+                // Cela force le navigateur à utiliser la taille CSS (clamp) comme point de départ.
+                h1.style.fontSize = ''; 
+            
+                // 2. Mesurer la taille après rendu du style CSS
+                // On récupère la taille actuelle calculée par le CSS (ex: 4vw)
+                let size = parseFloat(window.getComputedStyle(h1).fontSize); 
                 
-                // 2. Boucle de réduction
-                // On réduit tant que ça dépasse et qu'on est au-dessus de 12px
+                // 3. Boucle de réduction : tant que le texte dépasse et que la taille est > 12px
                 while (h1.scrollWidth > h1.clientWidth && size > 12) {
-                    size--; 
+                    // Décrémenter par petits pas (0.5px pour plus de finesse)
+                    size -= 0.5; 
                     h1.style.fontSize = size + 'px';
-                }
-                
-                // 3. Sécurité finale
-                if (h1.scrollWidth > h1.clientWidth) {
-                     h1.style.fontSize = (size - 1) + 'px';
                 }
             }
             
@@ -3576,6 +3575,7 @@
 
         // Wait for Chart.js to load before initializing
         function initializeApp() {
+            window.scrollTo(0, 0);
             updateTransactionsLanguage(); 
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
