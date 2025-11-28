@@ -65,23 +65,25 @@
                 
         /* Cherchez ce bloc dans votre <style> et remplacez-le */
         .header h1 {
-            text-align: start; /* Mieux pour RTL (Hébreu/Arabe) */
+            text-align: left; /* Pour LTR par défaut */
             margin: 0;
-            padding-right: 50px; /* Espace pour le bouton settings */
+            /* On réserve la place pour le bouton settings (50px) + une marge (10px) */
+            padding-right: 60px; 
             white-space: nowrap;
-            overflow: hidden;
-            /* On garde ellipsis comme sécurité, mais le JS devrait l'empêcher d'apparaître */
-            text-overflow: ellipsis; 
-            /* On garde le clamp comme taille par défaut idéale */
-            font-size: clamp(1.2em, 4vw, 2em);
+            /* On enlève l'ellipsis et l'overflow hidden temporairement pour que le JS puisse lire la vraie largeur */
+            overflow: visible; 
+            /* Taille de départ max, le JS la réduira si besoin */
+            font-size: 24px; 
             line-height: 1.2;
-            transition: font-size 0.1s ease; /* Pour que l'ajustement soit fluide */
+            width: 100%;
+            display: block;
         }
-
-        /* Ajout pour le support RTL du header */
+        
+        /* Support RTL (Arabe/Hébreu) */
         html[dir="rtl"] .header h1 {
+            text-align: right;
             padding-right: 0;
-            padding-left: 50px; /* Inverse le padding pour le bouton en mode RTL */
+            padding-left: 60px;
         }
         @media (max-width: 600px) {
             .header h1 {
@@ -1541,35 +1543,36 @@
     
     <script>
 
-        /**
-         * Ajuste la taille de la police du titre pour qu'il tienne sur une seule ligne
-         */
-        function fitAppTitle() {
-            const h1 = document.querySelector('.header h1');
-            if (!h1) return;
-        
-            // 1. Réinitialiser pour mesurer la taille "naturelle"
-            h1.style.fontSize = ''; 
+            /**
+             * Ajuste la taille de la police du titre pour qu'il tienne sur une seule ligne
+             */
+            function fitAppTitle() {
+                const h1 = document.querySelector('.header h1');
+                if (!h1) return;
             
-            // 2. Vérifier si le contenu dépasse la zone visible
-            // scrollWidth est la largeur du texte réel, clientWidth est la largeur visible
-            if (h1.scrollWidth > h1.clientWidth) {
-                const currentSize = parseFloat(window.getComputedStyle(h1).fontSize);
-                // Calcule le ratio nécessaire pour faire rentrer le texte
-                // On multiplie par 0.95 pour avoir une petite marge de sécurité
-                const newSize = (h1.clientWidth / h1.scrollWidth) * currentSize * 0.95;
+                // 1. On définit la taille maximale souhaitée (en px)
+                let size = 24; 
+                h1.style.fontSize = size + 'px';
                 
-                // Applique la nouvelle taille (avec un minimum de 12px pour rester lisible)
-                h1.style.fontSize = `${Math.max(newSize, 12)}px`;
+                // 2. Boucle de réduction
+                // On réduit tant que ça dépasse et qu'on est au-dessus de 12px
+                while (h1.scrollWidth > h1.clientWidth && size > 12) {
+                    size--; 
+                    h1.style.fontSize = size + 'px';
+                }
+                
+                // 3. Sécurité finale
+                if (h1.scrollWidth > h1.clientWidth) {
+                     h1.style.fontSize = (size - 1) + 'px';
+                }
             }
-        }
-        
-        // Ajouter un écouteur pour redimensionner si l'écran tourne ou change de taille
-        // Exécute fitAppTitle une seule fois après 100ms de silence
-        window.addEventListener('resize', debounce(fitAppTitle, 100));
-        
-        // Optionnel: Déclenchez l'ajustement aussi au défilement pour capturer certains cas mobiles
-        window.addEventListener('scroll', debounce(fitAppTitle, 100));
+            
+            // Gestionnaire de redimensionnement simplifié (sans debounce externe)
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(fitAppTitle, 100);
+            });
 
 
         /**
@@ -1690,12 +1693,13 @@
             document.getElementById('authEmail').placeholder = t('email');
             document.getElementById('authPassword').placeholder = t('password');
             
-            const isSignUp = document.getElementById('authSubmitBtn').textContent.includes('Sign Up') || 
-                             document.getElementById('authSubmitBtn').textContent.includes('S\'inscrire') ||
-                             document.getElementById('authSubmitBtn').textContent.includes('Зарегистрироваться') ||
-                             document.getElementById('authSubmitBtn').textContent.includes('הירשם') ||
-                             document.getElementById('authSubmitBtn').textContent.includes('Registrarse') ||
-                             document.getElementById('authSubmitBtn').textContent.includes('إنشاء حساب');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const isSignUp = submitBtn.textContent.includes('Sign Up') || 
+                             submitBtn.textContent.includes('S\'inscrire') ||
+                             submitBtn.textContent.includes('Зарегистрироваться') ||
+                             submitBtn.textContent.includes('הירשם') ||
+                             submitBtn.textContent.includes('Registrarse') ||
+                             submitBtn.textContent.includes('إنشاء حساب');
             
             document.getElementById('authSubmitBtn').textContent = isSignUp ? t('signUp') : t('signIn');
             document.getElementById('authToggleText').textContent = isSignUp ? t('hasAccount') : t('noAccount');
@@ -1703,8 +1707,6 @@
             
             // Main app header
             document.querySelector('.header h1').textContent = t('monthlyExpenses');
-            
-            // ❌ SUPPRIMÉ : Ne pas toucher au bouton Edit ici, c'est géré par toggleEditMode()
             
             // Total section
             document.querySelector('.total-section h2').textContent = t('totalExpenses');
@@ -1721,7 +1723,7 @@
             document.querySelector('#settingsModal .modal-header h2').textContent = t('settingsTitle');
             document.querySelector('#settingsModal .modal-footer .primary').textContent = t('done');
             
-            // ✅ MODIFIÉ : Settings sections avec vérifications
+            // Settings sections
             const accountTitle = document.getElementById('accountTitle');
             if (accountTitle) accountTitle.textContent = t('account');
             
@@ -1775,10 +1777,15 @@
             
             // Update display to refresh category names and stats
             updateDisplay();
-            updateTransactionsLanguage();
-            // ===> AJOUTEZ CETTE LIGNE À LA TOUTE FIN DE LA FONCTION <===
-            // Utilise setTimeout pour laisser le temps au navigateur de faire le rendu du texte
-            debounce(fitAppTitle, 100)();
+            if (typeof updateTransactionsLanguage === 'function') {
+                updateTransactionsLanguage();
+            }
+            
+            // === AJUSTEMENT DU TITRE ===
+            // Appel immédiat
+            fitAppTitle();
+            // Appel différé pour assurer le rendu correct
+            setTimeout(fitAppTitle, 50);
         }
 
 
@@ -3569,7 +3576,7 @@
 
         // Wait for Chart.js to load before initializing
         function initializeApp() {
-            updateTransactionsLanguage(); // ✅ Appliquer les traductions
+            updateTransactionsLanguage(); 
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
@@ -3599,7 +3606,6 @@
                         }
                     });
                 };
-        
                 
                 // Close modal when clicking outside
                 const modal = document.getElementById('colorEditorModal');
@@ -3617,18 +3623,24 @@
                 });
                 
                 updateDisplay();
+                
+                // ✨ AJOUT CRITIQUE ICI ✨
+                // On lance l'ajustement du titre après que tout soit chargé et affiché
+                setTimeout(fitAppTitle, 100); 
+        
             } else {
                 console.warn('Chart.js not loaded, waiting...');
                 setTimeout(initializeApp, 100);
             }
         }
 
-        // Initialize on load
+        // Initialize on load (Bloc final simplifié et corrigé)
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeApp);
         } else {
             initializeApp();
         }
+        // Note : L'appel à fitAppTitle est maintenant géré DANS initializeApp (voir point 1).
 
     </script>
     <script src="js/tabs-manager.js"></script>
