@@ -1159,11 +1159,55 @@
             border-bottom-color: #3a3a4e;
         }
         
-        /* Sticky bar (edit mode) in dark mode */
         body.dark-mode .edit-mode-controls {
             background: #2a2a3e;
             border-bottom-color: #3a3a4e;
         }
+        
+        body.dark-mode .edit-mode-btn {
+            background: #1f1f2e;
+            color: #e0e0e0;
+            border-color: #3a3a4e;
+        }
+        
+        body.dark-mode .edit-mode-btn:hover {
+            background: #2a2a3e;
+            border-color: #667eea;
+        }
+        
+        body.dark-mode .edit-mode-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        /* Chart legend labels in dark mode */
+        body.dark-mode .chartjs-legend,
+        body.dark-mode .chartjs-legend span {
+            color: #e0e0e0 !important;
+        }
+
+
+        /* Expense items in dark mode (same style as transactions) */
+        body.dark-mode .expense-item {
+            background: #1f1f2e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .expense-item:hover {
+            background: #2a2a3e;
+        }
+        
+        body.dark-mode .expense-name {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .expense-input {
+            background: #2a2a3e;
+            color: #e0e0e0;
+            border-color: #3a3a4e;
+        }
+        
     </style>
     <link rel="stylesheet" href="css/tabs.css">
 </head>
@@ -2518,6 +2562,10 @@
         
             // SI le graphique existe déjà, on met juste à jour les données
             if (chart && chart.config.type === currentChartType) {
+                // Update colors for theme changes
+                if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                }
                 // Mise à jour des données existantes
                 chart.data.labels = displayLabels;
                 chart.data.datasets[0].data = displayData;
