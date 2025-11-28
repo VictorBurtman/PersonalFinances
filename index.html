@@ -3569,7 +3569,9 @@
 
         // Wait for Chart.js to load before initializing
         function initializeApp() {
-            window.scrollTo(0, 0);
+            setTimeout(() => {
+                document.body.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }, 50); // Petit délai de 50ms pour laisser le temps au rendu initial
             updateTransactionsLanguage(); 
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
