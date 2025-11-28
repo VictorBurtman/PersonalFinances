@@ -44,6 +44,8 @@ const translations = {
         enterBankNameFirst: "Please enter a bank name first",
         removeCSVConfirm: "Remove \"{name}\" and all its transactions?",
         cannotDeleteIncome: "Cannot delete Income category.",
+        errorCreatingCategory: "Error creating category. Please try again.",
+
         
 
         // Alerts & notifications
@@ -392,6 +394,8 @@ const translations = {
         enterBankNameFirst: "Veuillez d'abord entrer un nom de banque",
         removeCSVConfirm: "Supprimer \"{name}\" et toutes ses transactions ?",
         cannotDeleteIncome: "Impossible de supprimer la catégorie Revenus.",
+        errorCreatingCategory: "Erreur lors de la création de la catégorie. Veuillez réessayer.",
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -729,6 +733,8 @@ const translations = {
         enterBankNameFirst: "אנא הזן שם בנק תחילה",
         removeCSVConfirm: "להסיר את \"{name}\" ואת כל העסקאות שלו?",
         cannotDeleteIncome: "לא ניתן למחוק את קטגוריית ההכנסה.",
+        errorCreatingCategory: "שגיאה ביצירת קטגוריה. אנא נסה שוב.",
+
 
 
         // Toasts & notifications
@@ -1067,6 +1073,8 @@ const translations = {
         enterBankNameFirst: "Por favor ingrese un nombre de banco primero",
         removeCSVConfirm: "¿Eliminar \"{name}\" y todas sus transacciones?",
         cannotDeleteIncome: "No se puede eliminar la categoría Ingresos.",
+        errorCreatingCategory: "Error al crear la categoría. Inténtalo de nuevo.",
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1404,6 +1412,8 @@ const translations = {
         enterBankNameFirst: "Пожалуйста, сначала введите название банка",
         removeCSVConfirm: "Удалить \"{name}\" и все его транзакции?",
         cannotDeleteIncome: "Нельзя удалить категорию Доход.",
+        errorCreatingCategory: "Ошибка при создании категории. Попробуйте снова.",
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -1741,6 +1751,8 @@ const translations = {
         enterBankNameFirst: "الرجاء إدخال اسم البنك أولاً",
         removeCSVConfirm: "إزالة \"{name}\" وجميع معاملاته؟",
         cannotDeleteIncome: "لا يمكن حذف فئة الدخل.",
+        errorCreatingCategory: "خطأ في إنشاء الفئة. حاول مرة أخرى.",
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",
@@ -2035,6 +2047,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
