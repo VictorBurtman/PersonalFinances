@@ -3147,6 +3147,18 @@
             }
             
             try {
+                // Afficher l'overlay
+                const overlay = document.getElementById('loadingOverlay');
+                const textEl = document.getElementById('loadingOverlayText');
+                const subtextEl = document.getElementById('loadingOverlaySubtext');
+                
+                if (overlay) {
+                    if (textEl) textEl.textContent = t.deletingCategory || 'Deleting category...';
+                    if (subtextEl) subtextEl.textContent = t.updatingTransactions || 'Updating transactions...';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+                
                 // Appeler la Cloud Function pour unlabel les transactions
                 const deleteCategoryFunc = firebase.functions().httpsCallable('deleteCategory');
                 const result = await deleteCategoryFunc({
@@ -3165,25 +3177,41 @@
                     categoryOrder.splice(index, 1);
                 }
                 
-                // ✅ SAFE : Utiliser .update() pour supprimer SEULEMENT les champs de la catégorie
-                // Ceci ne touche PAS aux credentials !
-                const updateData = {
-                    [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
-                    [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                // ✅ Sauvegarder TOUT le document (comme renameCategory)
+                await db.collection('users').doc(currentUser.uid).set({
+                    expenses: expenses,
+                    categoryMetadata: categoryMetadata,
                     categoryOrder: categoryOrder,
+                    customColors: customColors,
+                    chartType: currentChartType,
+                    useIncome: useIncome,
+                    currency: currency,
+                    percentageMode: percentageMode,
+                    language: currentLanguage,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+                }, { merge: true });
                 
-                await db.collection('users').doc(currentUser.uid).update(updateData);
-                
-                console.log(`Category ${categoryKey} deleted from Firebase (credentials untouched)`);
+                console.log(`Category ${categoryKey} deleted from Firebase`);
                 
                 // Actualiser l'affichage
                 updateDisplay();
                 
+                // Cacher l'overlay
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                
                 alert(t.categoryDeletedSuccess.replace('{count}', result.data.unlabeledCount));
                 
             } catch (error) {
+                // Cacher l'overlay en cas d'erreur
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                
                 console.error('Error deleting category:', error);
                 alert(t.errorDeletingCategory + ' ' + error.message);
             }
