@@ -1768,13 +1768,8 @@ function triggerCSVUpload() {
  * Handle CSV file upload
  */
 async function handleCSVUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    if (!file.name.endsWith('.csv')) {
-        showToast('Please select a CSV file', 'error');
-        return;
-    }
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
     
     const bankName = window.pendingCSVBankName;
     if (!bankName) {
@@ -1782,22 +1777,75 @@ async function handleCSVUpload(event) {
         return;
     }
     
-    // ✅ AJOUTE : Show loading overlay
+    // ✅ Show loading overlay
     const t = translations[currentLanguage] || translations['en'];
-    showLoadingOverlay(t.importingCSV || 'Importing CSV...', t.processingTransactions || 'Processing transactions');
+    showLoadingOverlay(
+        t.importingCSV || 'Importing CSV...', 
+        `${t.processingTransactions || 'Processing transactions'} (0/${files.length})`
+    );
+    
+    let totalImported = 0;
+    let totalSkipped = 0;
+    let errors = [];
     
     try {
-        const text = await file.text();
-        const transactions = parseCSV(text, file.name, bankName);
-        
-        if (transactions.length === 0) {
-            hideLoadingOverlay(); // ✅ AJOUTE
-            showToast('No valid transactions found in CSV', 'error');
-            return;
+        // Process each file
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Update loading overlay progress
+            const subtextEl = document.getElementById('loadingOverlaySubtext');
+            if (subtextEl) {
+                subtextEl.textContent = `${t.processingTransactions || 'Processing transactions'} (${i + 1}/${files.length})`;
+            }
+            
+            if (!file.name.endsWith('.csv')) {
+                errors.push(`${file.name}: Not a CSV file`);
+                continue;
+            }
+            
+            try {
+                const text = await file.text();
+                const transactions = parseCSV(text, file.name, bankName);
+                
+                if (transactions.length === 0) {
+                    errors.push(`${file.name}: No valid transactions found`);
+                    continue;
+                }
+                
+                // Import transactions
+                const result = await importCSVTransactions(file.name, bankName, transactions);
+                totalImported += result.imported;
+                totalSkipped += result.skipped;
+                
+            } catch (error) {
+                console.error(`Error processing ${file.name}:`, error);
+                errors.push(`${file.name}: ${error.message}`);
+            }
         }
         
-        // Save CSV metadata and transactions to Firebase
-        await importCSVTransactions(file.name, bankName, transactions);
+        // Show results
+        hideLoadingOverlay();
+        
+        if (totalImported > 0) {
+            let message = t.csvImportedSuccess?.replace('{count}', totalImported) || 
+                          `Successfully imported ${totalImported} transactions`;
+            
+            if (totalSkipped > 0) {
+                message += ` (${totalSkipped} duplicates skipped)`;
+            }
+            
+            showToast(message, 'success', 5000);
+        }
+        
+        if (errors.length > 0) {
+            console.error('Import errors:', errors);
+            showToast(`${errors.length} file(s) had errors. Check console for details.`, 'error', 5000);
+        }
+        
+        if (totalImported === 0 && errors.length === 0) {
+            showToast('All transactions already exist (no duplicates imported)', 'info');
+        }
         
         // Clear bank name input
         const bankNameInput = document.getElementById('csvBankName');
@@ -1807,12 +1855,14 @@ async function handleCSVUpload(event) {
         event.target.value = '';
         delete window.pendingCSVBankName;
         
+        // Reload
+        await loadTransactions();
+        await loadImportedCSVsList();
+        
     } catch (error) {
+        hideLoadingOverlay();
         console.error('Error processing CSV:', error);
         showToast('Error processing CSV: ' + error.message, 'error');
-    } finally {
-        // ✅ AJOUTE : Always hide overlay
-        hideLoadingOverlay();
     }
 }
 
@@ -2039,7 +2089,7 @@ function parseDate(dateStr) {
 async function importCSVTransactions(fileName, bankName, transactions) {
     if (!window.currentUser) {
         showToast('Please login first', 'error');
-        return;
+        return { imported: 0, skipped: 0 };
     }
     
     try {
@@ -2065,9 +2115,10 @@ async function importCSVTransactions(fileName, bankName, transactions) {
             !existingIdentifiers.has(t.identifier)
         );
         
+        const skipped = transactions.length - newTransactions.length;
+        
         if (newTransactions.length === 0) {
-            showToast('All transactions already exist (no duplicates imported)', 'info');
-            return;
+            return { imported: 0, skipped: skipped };
         }
         
         // Add new transactions
@@ -2095,7 +2146,7 @@ async function importCSVTransactions(fileName, bankName, transactions) {
         batch.set(csvMetaRef, {
             id: csvMetaRef.id,
             fileName: fileName,
-            bankName: bankName, // ✅ AJOUTÉ
+            bankName: bankName,
             importedAt: firebase.firestore.FieldValue.serverTimestamp(),
             transactionCount: newTransactions.length,
             transactionIdentifiers: newTransactions.map(t => t.identifier)
@@ -2103,27 +2154,12 @@ async function importCSVTransactions(fileName, bankName, transactions) {
         
         await batch.commit();
         
-        const t = translations[currentLanguage] || translations['en'];
-        const skipped = transactions.length - newTransactions.length;
+        // Return stats instead of showing toast
+        return { imported: newTransactions.length, skipped: skipped };
         
-        let message;
-        if (skipped > 0) {
-            message = t.csvImportedWithDuplicates
-                .replace('{count}', newTransactions.length)
-                .replace('{skipped}', skipped);
-        } else {
-            message = t.csvImportedSuccess.replace('{count}', newTransactions.length);
-        }
-        
-        showToast(message, 'success', 4000);
-        
-        // Reload transactions and CSV list
-        await loadTransactions();
-        await loadImportedCSVsList();
-        populateSourceFilter(); // ✅ AJOUTE CETTE LIGNE
     } catch (error) {
         console.error('Error importing CSV:', error);
-        showToast('Error importing CSV: ' + error.message, 'error');
+        throw error; // Throw error to be caught by handleCSVUpload
     }
 }
 
