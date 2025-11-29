@@ -359,3 +359,25 @@
         </div>
     </div>
 </div>
+
+<!-- Excluded Transactions Modal -->
+<div id="excludedTransactionsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🚫 <span data-translate="excludedTransactions">Excluded Transactions</span></h2>
+            <button class="modal-close" onclick="closeExcludedTransactionsModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="excludedTransactionsList"></div>
+            <div id="noExcludedTransactions" style="display: none; text-align: center; padding: 40px; color: #6c757d;">
+                <div style="font-size: 3em; margin-bottom: 10px;">✅</div>
+                <div><span data-translate="noExcludedTransactions">No excluded transactions</span></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-button primary" onclick="closeExcludedTransactionsModal()">
+                <span data-translate="done">Done</span>
+            </button>
+        </div>
+    </div>
+</div>
