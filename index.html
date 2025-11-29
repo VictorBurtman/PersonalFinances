@@ -3642,24 +3642,9 @@
                     categoryMetadata[categoryKey].emoji = newEmoji;
                 }
                 
-                // ✅ MODIFIÉ : Supprimer explicitement l'ancienne catégorie dans Firebase
-                if (newKey !== categoryKey) {
-                    await db.collection('users').doc(currentUser.uid).set({
-                        [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
-                        [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
-                    }, { merge: true });
-                }
                 
                 // Sauvegarder dans Firebase SANS recharger
                 await saveUserData();
-                
-                // ✅ Supprimer le HTML de l'ancienne catégorie manuellement
-                if (newKey !== categoryKey) {
-                    const oldSection = document.getElementById(`category-${categoryKey}`);
-                    if (oldSection) {
-                        oldSection.remove();
-                    }
-                }
                 
                 // Actualiser l'affichage
                 updateDisplay();
