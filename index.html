@@ -3536,7 +3536,7 @@
             });
         }
 
-        // Rename Functions
+// Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3547,23 +3547,32 @@
             if (!newName || newName.trim() === '') return;
             if (newName.trim() === currentDisplayName) return;
             
-            const newKey = newName.toLowerCase().replace(/\s+/g, '-');   
-            
-            // Vérifier les doublons
-            if (expenses[newKey] && newKey !== categoryKey) {
-                alert(t.categoryExistsAlert || 'Category already exists!');
+            // ✅ AJOUTÉ : Demander l'emoji
+            const currentEmoji = categoryMetadata[categoryKey]?.emoji || '📋';
+            const newEmoji = prompt(t.enterEmoji || 'Enter emoji for this category:', currentEmoji);
+            if (!newEmoji || newEmoji.trim() === '') {
+                alert(t.emojiRequired || 'Emoji is required');
                 return;
             }
-
+            
+            const newKey = newName.toLowerCase().replace(/\s+/g, '-');   
+            
             // Empêcher de renommer "income"
             if (categoryKey === 'income') {
                 alert(t.cannotRenameIncome || 'Cannot rename Income.');
                 return;
             }
-            // Empêcher de renommer en catégories système
+            
+            // Empêcher de renommer en catégories système (sauf si c'est déjà une catégorie système)
             const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
             if (systemCategories.includes(newKey) && newKey !== categoryKey) {
                 alert(t.cannotUseSystemName || 'Cannot use system name.');
+                return;
+            }
+            
+            // Vérifier les doublons SEULEMENT si on change vraiment de clé
+            if (newKey !== categoryKey && expenses[newKey]) {
+                alert(t.categoryExistsAlert || 'Category already exists!');
                 return;
             }
             
@@ -3577,33 +3586,26 @@
                 
                 console.log(`Renamed category: ${result.data.message}`);
                 
-                // Cas 1 : Changement de clé (ex: "mina" → "mina-the-poo")
+                // Cas 1 : Changement de clé (ex: "fun" → "fun-test" ou "mina" → "victor")
                 if (newKey !== categoryKey) {
-                    // Copier les données
+                    // Copier les données vers la nouvelle clé
                     expenses[newKey] = expenses[categoryKey];
                     
-                    // Copier les métadonnées
+                    // Initialiser les métadonnées pour la nouvelle clé
                     if (!categoryMetadata[newKey]) {
                         categoryMetadata[newKey] = {};
                     }
                     
-                    if (categoryMetadata[categoryKey]) {
-                        Object.keys(categoryMetadata[categoryKey]).forEach(key => {
-                            if (categoryMetadata[categoryKey][key] !== undefined) {
-                                categoryMetadata[newKey][key] = categoryMetadata[categoryKey][key];
-                            }
-                        });
-                    }
-                    
-                    // Ajouter le nouveau displayName
+                    // Définir les métadonnées avec le nouvel emoji
+                    categoryMetadata[newKey].emoji = newEmoji;
                     categoryMetadata[newKey].displayName = newName;
                     
-                    // ✅ AJOUTÉ : S'assurer qu'il y a un emoji
-                    if (!categoryMetadata[newKey].emoji) {
-                        categoryMetadata[newKey].emoji = categoryMetadata[categoryKey]?.emoji || '📋';
+                    // Copier autres propriétés si elles existent
+                    if (categoryMetadata[categoryKey]?.color) {
+                        categoryMetadata[newKey].color = categoryMetadata[categoryKey].color;
                     }
                     
-                    // Supprimer l'ancien
+                    // Supprimer l'ancienne clé
                     delete expenses[categoryKey];
                     delete categoryMetadata[categoryKey];
                     
@@ -3611,19 +3613,21 @@
                     const index = categoryOrder.indexOf(categoryKey);
                     if (index !== -1) {
                         categoryOrder[index] = newKey;
+                    } else {
+                        // Si pas dans l'ordre, l'ajouter
+                        categoryOrder.push(newKey);
                     }
                 } 
-                // Cas 2 : Changement de displayName uniquement (ex: "Mina" → "Mina the poo")
+                // Cas 2 : Pas de changement de clé, juste le displayName (ex: "fun" reste "fun" mais displayName change)
                 else {
+                    // Initialiser les métadonnées si elles n'existent pas
                     if (!categoryMetadata[categoryKey]) {
                         categoryMetadata[categoryKey] = {};
                     }
-                    categoryMetadata[categoryKey].displayName = newName;
                     
-                    // ✅ AJOUTÉ : S'assurer qu'il y a un emoji
-                    if (!categoryMetadata[categoryKey].emoji) {
-                        categoryMetadata[categoryKey].emoji = '📋';
-                    }
+                    // Mettre à jour le displayName et l'emoji
+                    categoryMetadata[categoryKey].displayName = newName;
+                    categoryMetadata[categoryKey].emoji = newEmoji;
                 }
                 
                 // Sauvegarder dans Firebase
@@ -3633,7 +3637,6 @@
                 // Actualiser l'affichage
                 updateDisplay();
                 
-                const t = translations[currentLanguage] || translations['en'];
                 alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
                 
             } catch (error) {
