@@ -3120,6 +3120,9 @@
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
+// ============================================
+        // == DÉBUT DU CODE CORRIGÉ ==
+        // ============================================
         async function deleteCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             
@@ -3177,7 +3180,13 @@
                     categoryOrder.splice(index, 1);
                 }
                 
-                // ✅ Sauvegarder TOUT le document (comme renameCategory)
+                // ✅ D'abord supprimer explicitement dans Firebase
+                await db.collection('users').doc(currentUser.uid).update({
+                    [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                    [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
+                });
+                
+                // ✅ Ensuite sauvegarder tout le reste
                 await db.collection('users').doc(currentUser.uid).set({
                     expenses: expenses,
                     categoryMetadata: categoryMetadata,
@@ -3680,8 +3689,23 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 
+                // ✅ Forcer la recréation du HTML
+                if (newKey !== categoryKey) {
+                    // Supprimer l'ancien HTML
+                    const oldSection = document.getElementById(`category-${categoryKey}`);
+                    if (oldSection) {
+                        oldSection.remove();
+                    }
+                }
+                
                 // Actualiser l'affichage
                 updateDisplay();
+                
+                // ✅ S'assurer que la nouvelle catégorie a son HTML
+                if (newKey !== categoryKey && !document.getElementById(`category-${newKey}`)) {
+                    // Forcer un reload complet depuis Firebase pour recréer le HTML
+                    await loadUserData();
+                }
                 
                 // Cacher l'overlay
                 if (overlay) {
