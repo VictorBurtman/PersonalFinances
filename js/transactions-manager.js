@@ -1372,9 +1372,10 @@ async function labelTransaction(transactionId, category) {
         // Show smart message based on how many were labeled
         const similarCount = result.data.similarCount || 0;
         if (similarCount > 0) {
-            showTransactionAlert(`Labeled 1 transaction + ${similarCount} similar ones! ✓`, 'success');
+            const message = (t.labeledWithSimilar || 'Labeled 1 transaction + {count} similar ones! ✓').replace('{count}', similarCount);
+            showTransactionAlert(message, 'success');
         } else {
-            showTransactionAlert('Transaction labeled! ✓', 'success');
+            showTransactionAlert(t.transactionLabeled || 'Transaction labeled! ✓', 'success');
         }
         
         await loadTransactions();
