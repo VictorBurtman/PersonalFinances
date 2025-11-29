@@ -1013,6 +1013,17 @@ body.dark-mode .transaction-details {
     color: #e0e0e0 !important;
 }
 
+/* Better centering for excluded transactions modal */
+#excludedTransactionsModal .modal-content {
+    margin: auto;
+    max-height: 80vh;
+}
+
+#excludedTransactionsModal .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
 body.dark-mode .transaction-details strong {
     color: #e0e0e0 !important;
 }
