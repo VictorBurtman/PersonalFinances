@@ -74,6 +74,9 @@ const translations = {
         transactionExcluded: 'Transaction excluded ✓',
         excludedSimilarCount: 'Excluded {count} similar transactions',
         pleaseWait: 'Please wait',
+        transactionLabeled: 'Transaction labeled! ✓',
+        labeledWithSimilar: 'Labeled 1 transaction + {count} similar ones! ✓',
+        labelRemoved: 'Label removed! ✓',
 
         
 
@@ -453,6 +456,9 @@ const translations = {
         transactionExcluded: 'Transaction exclue ✓',
         excludedSimilarCount: '{count} transactions similaires exclues',
         pleaseWait: 'Veuillez patienter',
+        transactionLabeled: 'Transaction étiquetée ! ✓',
+        labeledWithSimilar: '1 transaction + {count} similaires étiquetées ! ✓',
+        labelRemoved: 'Étiquette supprimée ! ✓',
 
 
 
@@ -822,6 +828,9 @@ const translations = {
         transactionExcluded: 'עסקה הוחרגה ✓',
         excludedSimilarCount: '{count} עסקאות דומות הוחרגו',
         pleaseWait: 'אנא המתן',
+        transactionLabeled: 'העסקה תויגה! ✓',
+        labeledWithSimilar: 'תויגה עסקה אחת + {count} דומות! ✓',
+        labelRemoved: 'התווית הוסרה! ✓',
 
 
 
@@ -1192,7 +1201,9 @@ const translations = {
         transactionExcluded: 'Transacción excluida ✓',
         excludedSimilarCount: '{count} transacciones similares excluidas',
         pleaseWait: 'Por favor espere',
-
+        transactionLabeled: '¡Transacción etiquetada! ✓',
+        labeledWithSimilar: '¡1 transacción + {count} similares etiquetadas! ✓',
+        labelRemoved: '¡Etiqueta eliminada! ✓',
 
 
         // Toasts & notifications
@@ -1561,7 +1572,9 @@ const translations = {
         transactionExcluded: 'Транзакция исключена ✓',
         excludedSimilarCount: 'Исключено {count} похожих транзакций',
         pleaseWait: 'Пожалуйста, подождите',
-
+        transactionLabeled: 'Транзакция помечена! ✓',
+        labeledWithSimilar: '1 транзакция + {count} похожих помечены! ✓',
+        labelRemoved: 'Метка удалена! ✓',
 
 
         // Toasts & notifications
@@ -1930,6 +1943,9 @@ const translations = {
         transactionExcluded: 'تم استبعاد المعاملة ✓',
         excludedSimilarCount: 'تم استبعاد {count} معاملات مماثلة',
         pleaseWait: 'يرجى الانتظار',
+        transactionLabeled: 'تم تصنيف المعاملة! ✓',
+        labeledWithSimilar: 'تم تصنيف معاملة واحدة + {count} معاملات مشابهة! ✓',
+        labelRemoved: 'تم إزالة التصنيف! ✓',
 
 
 
@@ -2227,6 +2243,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
