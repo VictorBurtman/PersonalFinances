@@ -594,7 +594,8 @@ function renderTransaction(txn) {
                                 </span>
                             </div>
                             <button
-                                onclick="copyTransactionName('${txnId}', '${escapeHtml(txn.description).replace(/'/g, "\\'").replace(/"/g, '&quot;')}'); event.stopPropagation();"
+                                onclick="copyTransactionName('${txnId}'); event.stopPropagation();"
+                                data-description="${escapeHtml(txn.description).replace(/"/g, '&quot;')}"
                                 style="padding: 4px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-weight: 500; min-width: 70px;"
                                 id="copy-btn-${txnId}"
                             >
@@ -794,9 +795,10 @@ function hideLoadingOverlay() {
 /**
  * Copy transaction name to clipboard
  */
-function copyTransactionName(txnId, text) {
+function copyTransactionName(txnId) {
     const t = translations[currentLanguage] || translations['en'];
     const btn = document.getElementById(`copy-btn-${txnId}`);
+    const text = btn.getAttribute('data-description');
     const originalText = btn.textContent;
     
     if (navigator.clipboard && navigator.clipboard.writeText) {
