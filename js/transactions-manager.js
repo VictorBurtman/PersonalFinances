@@ -578,7 +578,16 @@ function renderTransaction(txn) {
                     <div id="details-${txnId}" class="transaction-details" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
                         
                         
-                        <div style="margin-bottom: 5px;"><strong>${t.fullName || 'Full name'}:</strong> ${escapeHtml(txn.description)}</div>
+                        <div style="margin-bottom: 5px;">
+                            <strong>${t.fullName || 'Full name'}:</strong> 
+                            <span 
+                                style="text-decoration: underline; cursor: pointer; user-select: all;" 
+                                onclick="copyToClipboard('${escapeHtml(txn.description).replace(/'/g, "\\'")}', '${t.copiedToClipboard || 'Copied to clipboard!'}')"
+                                title="${t.clickToCopy || 'Click to copy'}"
+                            >
+                                ${escapeHtml(txn.description)}
+                            </span>
+                        </div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
@@ -758,6 +767,38 @@ function hideLoadingOverlay() {
         overlay.classList.remove('active');
         document.body.style.overflow = ''; // Re-enable scroll
     }
+}
+
+/**
+ * Copy text to clipboard
+ */
+function copyToClipboard(text, successMessage) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(successMessage, 'success');
+        }).catch(err => {
+            // Fallback pour les navigateurs plus anciens
+            fallbackCopyToClipboard(text, successMessage);
+        });
+    } else {
+        fallbackCopyToClipboard(text, successMessage);
+    }
+}
+
+function fallbackCopyToClipboard(text, successMessage) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showToast(successMessage, 'success');
+    } catch (err) {
+        showToast('Failed to copy', 'error');
+    }
+    document.body.removeChild(textArea);
 }
 
 /**
@@ -1281,8 +1322,15 @@ async function labelTransaction(transactionId, category) {
     if (!category) return; // User selected "Select category..."
     
     try {
+        // Show loading overlay
+        const t = translations[currentLanguage] || translations['en'];
+        showLoadingOverlay(t.labelingTransaction || 'Labeling transaction...', t.checkingSimilar || 'Checking for similar transactions...');
+        
         const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
         const result = await labelTransactionFunc({ transactionId, category });
+        
+        // Hide loading overlay
+        hideLoadingOverlay();
         
         // Show smart message based on how many were labeled
         const similarCount = result.data.similarCount || 0;
@@ -1294,6 +1342,7 @@ async function labelTransaction(transactionId, category) {
         
         await loadTransactions();
     } catch (error) {
+        hideLoadingOverlay();
         console.error('Error labeling:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     }
