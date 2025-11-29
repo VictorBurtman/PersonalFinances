@@ -3120,9 +3120,6 @@
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
-// ============================================
-        // == DÉBUT DU CODE CORRIGÉ ==
-        // ============================================
         async function deleteCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             
@@ -3186,19 +3183,8 @@
                     [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
                 });
                 
-                // ✅ Ensuite sauvegarder tout le reste
-                await db.collection('users').doc(currentUser.uid).set({
-                    expenses: expenses,
-                    categoryMetadata: categoryMetadata,
-                    categoryOrder: categoryOrder,
-                    customColors: customColors,
-                    chartType: currentChartType,
-                    useIncome: useIncome,
-                    currency: currency,
-                    percentageMode: percentageMode,
-                    language: currentLanguage,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                // ✅ Utiliser saveUserData() qui préserve TOUT (y compris credentials)
+                await saveUserData();
                 
                 console.log(`Category ${categoryKey} deleted from Firebase`);
                 
@@ -3225,10 +3211,8 @@
                 alert(t.errorDeletingCategory + ' ' + error.message);
             }
         }
-        // ============================================
-        // == FIN DU CODE CORRIGÉ ==
-        // ============================================
 
+        
         function addItemToCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             const itemName = prompt(t.enterNewItemName || 'Enter new item name:');
@@ -3573,7 +3557,7 @@
             });
         }
 
-        // Rename Functions
+// Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3675,19 +3659,8 @@
                     });
                 }
                 
-                // Ensuite sauvegarder les nouvelles données
-                await db.collection('users').doc(currentUser.uid).set({
-                    expenses: expenses,
-                    categoryMetadata: categoryMetadata,
-                    categoryOrder: categoryOrder,
-                    customColors: customColors,
-                    chartType: currentChartType,
-                    useIncome: useIncome,
-                    currency: currency,
-                    percentageMode: percentageMode,
-                    language: currentLanguage,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
+                // ✅ Utiliser saveUserData() qui préserve TOUT (y compris credentials)
+                await saveUserData();
                 
                 // ✅ Forcer la recréation du HTML
                 if (newKey !== categoryKey) {
