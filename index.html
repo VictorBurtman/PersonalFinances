@@ -3547,7 +3547,7 @@
             if (!newName || newName.trim() === '') return;
             if (newName.trim() === currentDisplayName) return;
             
-            // ✅ AJOUTÉ : Demander l'emoji
+            // Demander l'emoji
             const currentEmoji = categoryMetadata[categoryKey]?.emoji || '📋';
             const newEmoji = prompt(t.enterEmoji || 'Enter emoji for this category:', currentEmoji);
             if (!newEmoji || newEmoji.trim() === '') {
@@ -3577,12 +3577,17 @@
             }
             
             try {
-                // ✅ AJOUTÉ : Afficher le loading
-                const t = translations[currentLanguage] || translations['en'];
-                showLoadingOverlay(
-                    t.renamingCategory || 'Renaming category...', 
-                    t.updatingTransactions || 'Updating transactions...'
-                );
+                // ✅ Afficher l'overlay existant
+                const overlay = document.getElementById('loadingOverlay');
+                const textEl = document.getElementById('loadingOverlayText');
+                const subtextEl = document.getElementById('loadingOverlaySubtext');
+                
+                if (overlay) {
+                    if (textEl) textEl.textContent = t.renamingCategory || 'Renaming category...';
+                    if (subtextEl) subtextEl.textContent = t.updatingTransactions || 'Updating transactions...';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
                 
                 // Appeler la Cloud Function pour mettre à jour les transactions
                 const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
@@ -3643,11 +3648,23 @@
                 await loadUserData();
                 // Actualiser l'affichage
                 updateDisplay();
-                // ✅ AJOUTÉ : Cacher le loading
-                hideLoadingOverlay();
+                
+                // ✅ Cacher l'overlay
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                
                 alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
                 
             } catch (error) {
+                // ✅ Cacher l'overlay en cas d'erreur aussi
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                
                 console.error('Error renaming category:', error);
                 alert('Error renaming category: ' + error.message);
             }
