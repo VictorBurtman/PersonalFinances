@@ -3515,6 +3515,11 @@
                     if (darkModeCheckbox) {
                         darkModeCheckbox.checked = darkModeEnabled;
                     }
+                    
+                    // === MISE A JOUR DU GRAPHIQUE AVEC LES COULEURS DARK MODE ===
+                    if (typeof updateChart === 'function') {
+                        updateChart();
+                    }
                 }
             }).catch(error => {
                 console.error('Error loading dark mode preference:', error);
