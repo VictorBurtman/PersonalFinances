@@ -1067,3 +1067,12 @@ body.dark-mode #excludedTransactionsList > div > div:last-child {
 body.dark-mode #restoreSimilarCheckbox {
     accent-color: #667eea;
 }
+
+/* Toast notifications above modals */
+.toast-container {
+    z-index: 10001 !important;
+}
+
+.modal {
+    z-index: 10000;
+}
