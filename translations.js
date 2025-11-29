@@ -67,6 +67,13 @@ const translations = {
         allTransactionsRestored: 'All transactions restored ✓',
         restoredSimilarCount: 'Restored {count} similar transactions',
         restoreSimilarHelp: 'When enabled, clicking "Restore" will also restore all similar transactions',
+        excludeAllSimilar: 'Exclude all similar transactions',
+        confirmExclude: 'Exclude this transaction? It will be hidden from the list.',
+        confirmExcludeAllSimilar: 'Exclude all similar transactions? They will be hidden from the list.',
+        excluding: 'Excluding...',
+        transactionExcluded: 'Transaction excluded ✓',
+        excludedSimilarCount: 'Excluded {count} similar transactions',
+        pleaseWait: 'Please wait',
 
         
 
@@ -438,6 +445,13 @@ const translations = {
         allTransactionsRestored: 'Toutes les transactions restaurées ✓',
         restoredSimilarCount: '{count} transactions similaires restaurées',
         restoreSimilarHelp: 'Si activé, cliquer sur "Restaurer" restaurera aussi toutes les transactions similaires',
+        excludeAllSimilar: 'Exclure toutes les transactions similaires',
+        confirmExclude: 'Exclure cette transaction ? Elle sera cachée de la liste.',
+        confirmExcludeAllSimilar: 'Exclure toutes les transactions similaires ? Elles seront cachées de la liste.',
+        excluding: 'Exclusion...',
+        transactionExcluded: 'Transaction exclue ✓',
+        excludedSimilarCount: '{count} transactions similaires exclues',
+        pleaseWait: 'Veuillez patienter',
 
 
 
@@ -799,6 +813,13 @@ const translations = {
         allTransactionsRestored: 'כל העסקאות שוחזרו ✓',
         restoredSimilarCount: '{count} עסקאות דומות שוחזרו',
         restoreSimilarHelp: 'כאשר מופעל, לחיצה על "שחזר" תשחזר גם את כל העסקאות הדומות',
+        excludeAllSimilar: 'החרג את כל העסקאות הדומות',
+        confirmExclude: 'להחריג עסקה זו? היא תוסתר מהרשימה.',
+        confirmExcludeAllSimilar: 'להחריג את כל העסקאות הדומות? הן יוסתרו מהרשימה.',
+        excluding: 'מחריג...',
+        transactionExcluded: 'עסקה הוחרגה ✓',
+        excludedSimilarCount: '{count} עסקאות דומות הוחרגו',
+        pleaseWait: 'אנא המתן',
 
 
 
@@ -1162,6 +1183,13 @@ const translations = {
         allTransactionsRestored: 'Todas las transacciones restauradas ✓',
         restoredSimilarCount: '{count} transacciones similares restauradas',
         restoreSimilarHelp: 'Cuando está activado, hacer clic en "Restaurar" también restaurará todas las transacciones similares',
+        excludeAllSimilar: 'Excluir todas las transacciones similares',
+        confirmExclude: '¿Excluir esta transacción? Se ocultará de la lista.',
+        confirmExcludeAllSimilar: '¿Excluir todas las transacciones similares? Se ocultarán de la lista.',
+        excluding: 'Excluyendo...',
+        transactionExcluded: 'Transacción excluida ✓',
+        excludedSimilarCount: '{count} transacciones similares excluidas',
+        pleaseWait: 'Por favor espere',
 
 
 
@@ -1524,6 +1552,13 @@ const translations = {
         allTransactionsRestored: 'Все транзакции восстановлены ✓',
         restoredSimilarCount: 'Восстановлено {count} похожих транзакций',
         restoreSimilarHelp: 'При включении нажатие на "Восстановить" также восстановит все похожие транзакции',
+        excludeAllSimilar: 'Исключить все похожие транзакции',
+        confirmExclude: 'Исключить эту транзакцию? Она будет скрыта из списка.',
+        confirmExcludeAllSimilar: 'Исключить все похожие транзакции? Они будут скрыты из списка.',
+        excluding: 'Исключение...',
+        transactionExcluded: 'Транзакция исключена ✓',
+        excludedSimilarCount: 'Исключено {count} похожих транзакций',
+        pleaseWait: 'Пожалуйста, подождите',
 
 
 
@@ -1886,6 +1921,13 @@ const translations = {
         allTransactionsRestored: 'تم استعادة جميع المعاملات ✓',
         restoredSimilarCount: 'تم استعادة {count} معاملات مماثلة',
         restoreSimilarHelp: 'عند التمكين، سيؤدي النقر على "استعادة" أيضًا إلى استعادة جميع المعاملات المماثلة',
+        excludeAllSimilar: 'استبعاد جميع المعاملات المماثلة',
+        confirmExclude: 'استبعاد هذه المعاملة؟ سيتم إخفاؤها من القائمة.',
+        confirmExcludeAllSimilar: 'استبعاد جميع المعاملات المماثلة؟ سيتم إخفاؤها من القائمة.',
+        excluding: 'جاري الاستبعاد...',
+        transactionExcluded: 'تم استبعاد المعاملة ✓',
+        excludedSimilarCount: 'تم استبعاد {count} معاملات مماثلة',
+        pleaseWait: 'يرجى الانتظار',
 
 
 
@@ -2183,6 +2225,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
