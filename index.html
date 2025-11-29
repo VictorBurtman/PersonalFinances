@@ -3577,6 +3577,13 @@
             }
             
             try {
+                // ✅ AJOUTÉ : Afficher le loading
+                const t = translations[currentLanguage] || translations['en'];
+                showLoadingOverlay(
+                    t.renamingCategory || 'Renaming category...', 
+                    t.updatingTransactions || 'Updating transactions...'
+                );
+                
                 // Appeler la Cloud Function pour mettre à jour les transactions
                 const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
                 const result = await renameCategoryFunc({
@@ -3636,7 +3643,8 @@
                 await loadUserData();
                 // Actualiser l'affichage
                 updateDisplay();
-                
+                // ✅ AJOUTÉ : Cacher le loading
+                hideLoadingOverlay();
                 alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
                 
             } catch (error) {
