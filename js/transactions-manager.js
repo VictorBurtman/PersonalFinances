@@ -580,11 +580,8 @@ function renderTransactions() {
             transactionTotal.textContent = `${mainCurrency}0.00`;
         } else {
             const totalsText = currencies.map(curr => {
-                const isDifferent = curr !== mainCurrency;
-                // ✅ MODIFIÉ : Utiliser des couleurs plus claires pour dark mode
-                const color = isDifferent ? '#c084fc' : '#93c5fd'; // Violet clair / Bleu clair
-                return `<span style="color: ${color}; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
-            }).join(' <span style="color: var(--text-color, #666); opacity: 0.5;">|</span> ');
+                return `<span style="color: white; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
+            }).join(' <span style="color: white; opacity: 0.5;">|</span> ');
             
             transactionTotal.innerHTML = totalsText;
         }
