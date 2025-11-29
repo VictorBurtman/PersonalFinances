@@ -550,6 +550,7 @@ function renderTransactions() {
  * Render a single transaction with improved layout
  */
 function renderTransaction(txn) {
+    const t = translations[currentLanguage] || translations['en'];
     const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
     const categories = Array.from(categorySections)
         .map(section => section.id.replace('category-', ''))
@@ -1463,6 +1464,20 @@ function confirmExclude(excludeSimilar) {
  * Exclude a transaction or all similar ones
  */
 async function excludeTransaction(transactionId, excludeSimilar) {
+    console.log('excludeTransaction called with:', transactionId, excludeSimilar);
+    
+    if (!window.currentUser || !window.currentUser.uid) {
+        console.error('No current user!');
+        showToast('Error: User not authenticated', 'error');
+        return;
+    }
+    
+    if (!transactionId || transactionId.trim() === '') {
+        console.error('No transaction ID!');
+        showToast('Error: No transaction ID', 'error');
+        return;
+    }
+    
     const t = translations[currentLanguage] || translations['en'];
     
     const confirmMessage = excludeSimilar ? 
@@ -1476,7 +1491,7 @@ async function excludeTransaction(transactionId, excludeSimilar) {
     try {
         showLoadingOverlay(t.excluding || 'Excluding...', t.pleaseWait || 'Please wait');
         
-        const txnRef = db.collection('users').doc(currentUser.uid).collection('transactions').doc(transactionId);
+        const txnRef = db.collection('users').doc(window.currentUser.uid).collection('transactions').doc(transactionId);
         const txnDoc = await txnRef.get();
         
         if (!txnDoc.exists) {
@@ -1488,7 +1503,7 @@ async function excludeTransaction(transactionId, excludeSimilar) {
         if (excludeSimilar) {
             // Exclude all similar transactions based on description
             const allTxnsSnapshot = await db.collection('users')
-                .doc(currentUser.uid)
+                .doc(window.currentUser.uid)
                 .collection('transactions')
                 .get();
             
