@@ -139,6 +139,41 @@ async function loadTransactions() {
         populateCategoryFilter();
         populateSourceFilter();
         
+        // ✅ NOUVEAU : Charger les filtres sauvegardés
+        if (userDoc.exists && userDoc.data().transactionFilters) {
+            const savedFilters = userDoc.data().transactionFilters;
+            
+            // Label filter (radio buttons)
+            if (savedFilters.labelFilter) {
+                const radio = document.querySelector(`input[name="labelFilter"][value="${savedFilters.labelFilter}"]`);
+                if (radio) radio.checked = true;
+            }
+            
+            // Month filter
+            const monthSelect = document.getElementById('monthFilter');
+            if (monthSelect && savedFilters.monthFilter) {
+                monthSelect.value = savedFilters.monthFilter;
+            }
+            
+            // Source filter
+            const sourceSelect = document.getElementById('sourceFilter');
+            if (sourceSelect && savedFilters.sourceFilter) {
+                sourceSelect.value = savedFilters.sourceFilter;
+            }
+            
+            // Category filter
+            const categorySelect = document.getElementById('categoryFilter');
+            if (categorySelect && savedFilters.categoryFilter) {
+                categorySelect.value = savedFilters.categoryFilter;
+            }
+            
+            // Search filter
+            const searchInput = document.getElementById('searchFilter');
+            if (searchInput && savedFilters.searchFilter) {
+                searchInput.value = savedFilters.searchFilter;
+            }
+        }
+        
         // Apply filters and render
         applyFilters();
         
@@ -289,14 +324,30 @@ function populateSourceFilter() {
 /**
  * Apply filters and sorting, then render transactions
  */
-function applyFilters() {
+async function applyFilters() {
     // Get filter values
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
-    const monthFilter = document.getElementById('monthFilter')?.value;
-    const sourceFilter = document.getElementById('sourceFilter')?.value; // ✅ NOUVEAU
-    const categoryFilter = document.getElementById('categoryFilter')?.value;
-    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase();
+    const monthFilter = document.getElementById('monthFilter')?.value || '';
+    const sourceFilter = document.getElementById('sourceFilter')?.value || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
     
+    // ✅ NOUVEAU : Sauvegarder les filtres dans Firebase
+    if (window.currentUser && db) {
+        try {
+            await db.collection('users').doc(window.currentUser.uid).set({
+                transactionFilters: {
+                    labelFilter: labelFilter,
+                    monthFilter: monthFilter,
+                    sourceFilter: sourceFilter,
+                    categoryFilter: categoryFilter,
+                    searchFilter: searchFilter
+                }
+            }, { merge: true });
+        } catch (error) {
+            console.error('Error saving filters:', error);
+        }
+    }
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
@@ -318,7 +369,7 @@ function applyFilters() {
             }
         }
         
-        // ✅ NOUVEAU : Filter by source
+        // Filter by source
         if (sourceFilter) {
             // Si c'est un CSV spécifique (filtre par bankName)
             if (sourceFilter.startsWith('csv:')) {
@@ -355,6 +406,7 @@ function applyFilters() {
     sortTransactions();
     renderTransactions();
 }
+
 
 /**
  * Sort filtered transactions based on current sort order
