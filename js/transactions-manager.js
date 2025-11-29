@@ -566,27 +566,32 @@ function renderTransaction(txn) {
         <div class="transaction-item" style="display: block; padding: 15px;">
             <!-- Top row: Date, Description, Amount -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <div style="flex: 1; min-width: 0;" onclick="showTransactionDetails('${txnId}')" style="cursor: pointer;">
+                <div style="flex: 1; min-width: 0;">
                     <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
                         ${date}
                     </div>
-                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;">
-                        ${escapeHtml(txn.description)}
+                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="showTransactionDetails('${txnId}')">
+                        ${escapeHtml(txn.description)} <span style="font-size: 0.75em; opacity: 0.7;">▼</span>
                     </div>
                     
                     <!-- Expandable details -->
                     <div id="details-${txnId}" class="transaction-details" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
                         
                         
-                        <div style="margin-bottom: 5px;">
-                            <strong>${t.fullName || 'Full name'}:</strong> 
-                            <span 
-                                style="text-decoration: underline; cursor: pointer; user-select: all;" 
-                                onclick="copyToClipboard('${escapeHtml(txn.description).replace(/'/g, "\\'")}', '${t.copiedToClipboard || 'Copied to clipboard!'}')"
-                                title="${t.clickToCopy || 'Click to copy'}"
+                        <div style="margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
+                            <div style="flex: 1;">
+                                <strong>${t.fullName || 'Full name'}:</strong> 
+                                <span id="txn-name-${txnId}" style="user-select: all;">
+                                    ${escapeHtml(txn.description)}
+                                </span>
+                            </div>
+                            <button
+                                onclick="copyTransactionName('${txnId}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
+                                style="padding: 4px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-weight: 500;"
+                                id="copy-btn-${txnId}"
                             >
-                                ${escapeHtml(txn.description)}
-                            </span>
+                                <span data-translate="copy">Copy</span>
+                            </button>
                         </div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
@@ -770,22 +775,31 @@ function hideLoadingOverlay() {
 }
 
 /**
- * Copy text to clipboard
+ * Copy transaction name to clipboard
  */
-function copyToClipboard(text, successMessage) {
+function copyTransactionName(txnId, text) {
+    const t = translations[currentLanguage] || translations['en'];
+    const btn = document.getElementById(`copy-btn-${txnId}`);
+    const originalText = btn.textContent;
+    
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
-            showToast(successMessage, 'success');
+            btn.textContent = t.copied || 'Copied!';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#667eea';
+            }, 2000);
         }).catch(err => {
-            // Fallback pour les navigateurs plus anciens
-            fallbackCopyToClipboard(text, successMessage);
+            fallbackCopyToClipboard(text, btn, originalText);
         });
     } else {
-        fallbackCopyToClipboard(text, successMessage);
+        fallbackCopyToClipboard(text, btn, originalText);
     }
 }
 
-function fallbackCopyToClipboard(text, successMessage) {
+function fallbackCopyToClipboard(text, btn, originalText) {
+    const t = translations[currentLanguage] || translations['en'];
     const textArea = document.createElement("textarea");
     textArea.value = text;
     textArea.style.position = "fixed";
@@ -794,13 +808,17 @@ function fallbackCopyToClipboard(text, successMessage) {
     textArea.select();
     try {
         document.execCommand('copy');
-        showToast(successMessage, 'success');
+        btn.textContent = t.copied || 'Copied!';
+        btn.style.background = '#28a745';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#667eea';
+        }, 2000);
     } catch (err) {
         showToast('Failed to copy', 'error');
     }
     document.body.removeChild(textArea);
 }
-
 /**
  * Open Bank Accounts Modal
  */
@@ -1358,12 +1376,20 @@ async function unlabelTransaction(transactionId) {
     }
     
     try {
+        // Show loading overlay
+        const t = translations[currentLanguage] || translations['en'];
+        showLoadingOverlay(t.unlabelingTransaction || 'Removing label...', t.checkingSimilar || 'Checking for similar transactions...');
+        
         const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
         await labelTransactionFunc({ transactionId, category: null });
         
-        showTransactionAlert('Label removed! ✓', 'success');
+        // Hide loading overlay
+        hideLoadingOverlay();
+        
+        showTransactionAlert(t.labelRemoved || 'Label removed! ✓', 'success');
         await loadTransactions();
     } catch (error) {
+        hideLoadingOverlay();
         console.error('Error removing label:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     }
