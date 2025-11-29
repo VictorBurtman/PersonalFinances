@@ -289,9 +289,9 @@
                     </p>
                 </div>
                 
-                <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv" multiple onchange="handleCSVUpload(event)" />
+                <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv,.xlsx,.xls" multiple onchange="handleCSVUpload(event)" />
                 <button class="csv-import-btn" onclick="triggerCSVUpload()">
-                    📥 <span data-translate="chooseCSV">Choose CSV File</span>
+                    📥 <span data-translate="chooseFile">Choose CSV/Excel File</span>
                 </button>
                 
                 <!-- Liste des CSV importés -->
