@@ -1817,9 +1817,89 @@ async function handleCSVUpload(event) {
 }
 
 /**
+ * Detect and convert Israeli bank CSV format to standard format
+ */
+function convertIsraeliCSV(csvText) {
+    const lines = csvText.split('\n');
+    
+    // Détecter le format israélien : chercher la ligne avec les headers hébreux
+    let headerLineIndex = -1;
+    for (let i = 0; i < Math.min(15, lines.length); i++) {
+        const line = lines[i];
+        // Chercher "תאריך רכישה" (date d'achat) ou "שם בית עסק" (nom du commerce)
+        if (line.includes('תאריך רכישה') || line.includes('שם בית עסק')) {
+            headerLineIndex = i;
+            break;
+        }
+    }
+    
+    // Si format israélien non détecté, retourner tel quel
+    if (headerLineIndex === -1) {
+        return csvText;
+    }
+    
+    console.log(`✓ Israeli CSV format detected at line ${headerLineIndex + 1}`);
+    
+    // Créer le nouveau CSV avec headers anglais
+    const newLines = [];
+    newLines.push('date,description,amount,currency');
+    
+    // Parser les lignes de données (après le header)
+    for (let i = headerLineIndex + 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.split(',').length < 3) continue;
+        
+        const values = parseCSVLine(line);
+        
+        // Format israélien attendu:
+        // תאריך רכישה, שם בית עסק, סכום עסקה, מטבע עסקה, ...
+        // Index:  0          1             2              3
+        
+        if (values.length < 4) continue;
+        
+        const dateStr = values[0]; // DD.MM.YY
+        const merchant = values[1];
+        const amount = values[2];
+        const currency = values[3];
+        
+        if (!dateStr || !merchant || !amount) continue;
+        
+        // Convertir la date DD.MM.YY → YYYY-MM-DD
+        const dateParts = dateStr.split('.');
+        if (dateParts.length === 3) {
+            let day = dateParts[0].padStart(2, '0');
+            let month = dateParts[1].padStart(2, '0');
+            let year = dateParts[2];
+            
+            // Si l'année est sur 2 chiffres, ajouter 20XX
+            if (year.length === 2) {
+                year = '20' + year;
+            }
+            
+            const isoDate = `${year}-${month}-${day}`;
+            
+            // Nettoyer le montant (enlever les espaces et symboles de devise)
+            const cleanAmount = amount.replace(/[^\d.-]/g, '');
+            
+            // Construire la nouvelle ligne
+            // IMPORTANT : Mettre le montant en négatif car ce sont des dépenses
+            newLines.push(`${isoDate},"${merchant}",-${cleanAmount},${currency}`);
+        }
+    }
+    
+    const convertedCSV = newLines.join('\n');
+    console.log(`✓ Converted ${newLines.length - 1} Israeli transactions`);
+    
+    return convertedCSV;
+}
+
+/**
  * Parse CSV file and extract transactions
  */
 function parseCSV(csvText, fileName, bankName) {
+    // ✅ NOUVEAU : Détecter et convertir le format israélien
+    csvText = convertIsraeliCSV(csvText);
+    
     const lines = csvText.split('\n').filter(line => line.trim());
     if (lines.length < 2) {
         throw new Error('CSV file is empty or invalid');
@@ -1840,7 +1920,7 @@ function parseCSV(csvText, fileName, bankName) {
     
     const transactions = [];
     
-    // ✅ AJOUTE : Calculate date limit (1 year ago)
+    // Calculate date limit (1 year ago)
     const oneYearAgo = new Date();
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
     
@@ -1862,7 +1942,7 @@ function parseCSV(csvText, fileName, bankName) {
             const date = parseDate(dateStr);
             if (!date) continue;
             
-            // ✅ AJOUTE : Skip transactions older than 1 year
+            // Skip transactions older than 1 year
             if (date < oneYearAgo) {
                 continue;
             }
