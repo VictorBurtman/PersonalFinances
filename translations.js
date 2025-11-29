@@ -66,6 +66,8 @@ const translations = {
         confirmRestoreAll: 'Restore all excluded transactions?',
         allTransactionsRestored: 'All transactions restored ✓',
         restoredSimilarCount: 'Restored {count} similar transactions',
+        restoreSimilarHelp: 'When enabled, clicking "Restore" will also restore all similar transactions',
+
         
 
         // Alerts & notifications
@@ -435,6 +437,8 @@ const translations = {
         confirmRestoreAll: 'Restaurer toutes les transactions exclues ?',
         allTransactionsRestored: 'Toutes les transactions restaurées ✓',
         restoredSimilarCount: '{count} transactions similaires restaurées',
+        restoreSimilarHelp: 'Si activé, cliquer sur "Restaurer" restaurera aussi toutes les transactions similaires',
+
 
 
         // Alerts & notifications
@@ -794,6 +798,8 @@ const translations = {
         confirmRestoreAll: 'לשחזר את כל העסקאות המוחרגות?',
         allTransactionsRestored: 'כל העסקאות שוחזרו ✓',
         restoredSimilarCount: '{count} עסקאות דומות שוחזרו',
+        restoreSimilarHelp: 'כאשר מופעל, לחיצה על "שחזר" תשחזר גם את כל העסקאות הדומות',
+
 
 
 
@@ -1155,6 +1161,8 @@ const translations = {
         confirmRestoreAll: '¿Restaurar todas las transacciones excluidas?',
         allTransactionsRestored: 'Todas las transacciones restauradas ✓',
         restoredSimilarCount: '{count} transacciones similares restauradas',
+        restoreSimilarHelp: 'Cuando está activado, hacer clic en "Restaurar" también restaurará todas las transacciones similares',
+
 
 
         // Toasts & notifications
@@ -1515,6 +1523,8 @@ const translations = {
         confirmRestoreAll: 'Восстановить все исключенные транзакции?',
         allTransactionsRestored: 'Все транзакции восстановлены ✓',
         restoredSimilarCount: 'Восстановлено {count} похожих транзакций',
+        restoreSimilarHelp: 'При включении нажатие на "Восстановить" также восстановит все похожие транзакции',
+
 
 
         // Toasts & notifications
@@ -1875,6 +1885,8 @@ const translations = {
         confirmRestoreAll: 'استعادة جميع المعاملات المستبعدة؟',
         allTransactionsRestored: 'تم استعادة جميع المعاملات ✓',
         restoredSimilarCount: 'تم استعادة {count} معاملات مماثلة',
+        restoreSimilarHelp: 'عند التمكين، سيؤدي النقر على "استعادة" أيضًا إلى استعادة جميع المعاملات المماثلة',
+
 
 
 
@@ -2171,6 +2183,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
