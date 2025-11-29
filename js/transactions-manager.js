@@ -1420,6 +1420,7 @@ let currentExcludeTransactionName = null;
  * Open exclude modal
  */
 function openExcludeModal(transactionId, transactionName) {
+    const t = translations[currentLanguage] || translations['en'];  // ← Cette ligne
     console.log('Opening exclude modal for:', transactionId, transactionName); // Debug
     currentExcludeTransactionId = transactionId;
     currentExcludeTransactionName = transactionName;
@@ -1434,6 +1435,11 @@ function openExcludeModal(transactionId, transactionName) {
     if (modal) {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+    }
+    // Update translations
+    const excludeAllBtn = document.getElementById('excludeAllSimilarText');
+    if (excludeAllBtn) {
+        excludeAllBtn.textContent = t.excludeAllSimilar || 'Exclude all similar transactions';
     }
 }
 
