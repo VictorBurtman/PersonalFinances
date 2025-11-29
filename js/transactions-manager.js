@@ -575,7 +575,7 @@ function renderTransaction(txn) {
                     </div>
                     
                     <!-- Expandable details -->
-                    <div id="details-${txnId}" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
+                    <div id="details-${txnId}" class="transaction-details" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
                         
                         
                         <div style="margin-bottom: 5px;"><strong>${t.fullName || 'Full name'}:</strong> ${escapeHtml(txn.description)}</div>
