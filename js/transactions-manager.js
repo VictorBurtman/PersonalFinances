@@ -653,7 +653,14 @@ function renderTransaction(txn) {
     const t = translations[currentLanguage] || translations['en'];
     
     // ✅ NOUVEAU : Déterminer la devise et la couleur
-    const txnCurrency = txn.currency || window.currency || '₪';
+    let txnCurrency = txn.currency || window.currency || '₪';
+    
+    // ✅ AJOUTÉ : Normaliser les devises vers leurs symboles
+    if (txnCurrency === 'ILS') txnCurrency = '₪';
+    if (txnCurrency === 'EUR') txnCurrency = '€';
+    if (txnCurrency === 'USD') txnCurrency = '$';
+    if (txnCurrency === 'GBP') txnCurrency = '£';
+    
     const isDifferentCurrency = txnCurrency !== (window.currency || '₪');
     const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea'; // Violet si devise différente, bleu sinon
     
