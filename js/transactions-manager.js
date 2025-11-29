@@ -544,6 +544,12 @@ function renderTransactions() {
             }
         }
     }
+        // Apply translations to dynamically created content
+    setTimeout(() => {
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
+        }
+    }, 100);
 }
 
 /**
