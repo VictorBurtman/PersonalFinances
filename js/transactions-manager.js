@@ -2316,6 +2316,13 @@ function showTransactionDetails(txnId) {
     if (detailsDiv) {
         if (detailsDiv.style.display === 'none' || !detailsDiv.style.display) {
             detailsDiv.style.display = 'block';
+            
+            // Apply translations to the newly shown content
+            setTimeout(() => {
+                if (typeof updateTransactionsLanguage === 'function') {
+                    updateTransactionsLanguage();
+                }
+            }, 10);
         } else {
             detailsDiv.style.display = 'none';
         }
