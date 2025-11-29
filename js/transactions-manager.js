@@ -1596,7 +1596,7 @@ async function openExcludedTransactionsModal() {
                             onclick="restoreTransaction('${txn.id}')"
                             style="padding: 6px 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; white-space: nowrap;"
                         >
-                            ↩️ <span data-translate="restore">Restore</span>
+                            ↩️ ${t.restore || 'Restore'}
                         </button>
                     </div>
                 `;
