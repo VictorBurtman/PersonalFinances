@@ -1448,16 +1448,21 @@ function closeExcludeModal() {
  * Confirm exclusion from modal
  */
 function confirmExclude(excludeSimilar) {
-    console.log('Confirm exclude called with:', currentExcludeTransactionId, excludeSimilar); // Debug
+    console.log('Confirm exclude called with:', currentExcludeTransactionId, excludeSimilar);
     if (currentExcludeTransactionId && currentExcludeTransactionId.trim() !== '') {
+        // Save the ID locally before closing modal
+        const txnIdToExclude = currentExcludeTransactionId;
+        
+        // Close modal
         closeExcludeModal();
-        excludeTransaction(currentExcludeTransactionId, excludeSimilar);
+        
+        // Now exclude with the saved ID
+        excludeTransaction(txnIdToExclude, excludeSimilar);
     } else {
         console.error('No transaction ID to exclude');
         showToast('Error: No transaction selected', 'error');
     }
 }
-
 
 /**
  * Exclude a transaction or all similar ones
