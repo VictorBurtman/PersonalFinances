@@ -3632,9 +3632,13 @@
                     expenses[newKey] = expenses[categoryKey] || [];
                     categoryMetadata[newKey] = {
                         emoji: newEmoji,
-                        displayName: newName,
-                        color: categoryMetadata[categoryKey]?.color
+                        displayName: newName
                     };
+                    
+                    // Copier la couleur seulement si elle existe
+                    if (categoryMetadata[categoryKey]?.color) {
+                        categoryMetadata[newKey].color = categoryMetadata[categoryKey].color;
+                    }
                     
                     // Mettre à jour l'ordre
                     const index = categoryOrder.indexOf(categoryKey);
