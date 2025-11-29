@@ -322,3 +322,37 @@
         <div class="loading-overlay-subtext" id="loadingOverlaySubtext">Please wait</div>
     </div>
 </div>
+
+<!-- Exclude Transaction Modal -->
+<div id="excludeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🚫 <span data-translate="excludeTransaction">Exclude Transaction</span></h2>
+            <button class="modal-close" onclick="closeExcludeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="excludeTransactionName" style="font-weight: 600; margin-bottom: 20px; color: #667eea;"></p>
+            
+            <button 
+                class="modal-button primary" 
+                style="width: 100%; margin-bottom: 10px; background: #dc3545; border-color: #dc3545;"
+                onclick="confirmExclude(false)"
+            >
+                🚫 <span data-translate="excludeThisOnly">Exclude this transaction only</span>
+            </button>
+            
+            <button 
+                class="modal-button primary" 
+                style="width: 100%; background: #bd2130; border-color: #bd2130;"
+                onclick="confirmExclude(true)"
+            >
+                🚫🚫 <span data-translate="excludeAllSimilar">Exclude all similar transactions</span>
+            </button>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-button secondary" onclick="closeExcludeModal()">
+                <span data-translate="cancel">Cancel</span>
+            </button>
+        </div>
+    </div>
+</div>
