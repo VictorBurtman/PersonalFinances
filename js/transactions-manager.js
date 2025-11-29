@@ -594,7 +594,7 @@ function renderTransaction(txn) {
                                 </span>
                             </div>
                             <button
-                                onclick="copyTransactionName('${txnId}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
+                                onclick="copyTransactionName('${txnId}', '${escapeHtml(txn.description).replace(/'/g, "\\'").replace(/"/g, '&quot;')}'); event.stopPropagation();"
                                 style="padding: 4px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-weight: 500; min-width: 70px;"
                                 id="copy-btn-${txnId}"
                             >
