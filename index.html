@@ -3536,7 +3536,7 @@
             });
         }
 
-        // Rename Functions
+// Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3563,21 +3563,21 @@
                 return;
             }
             
-            // Empêcher de renommer en catégories système (sauf si c'est déjà une catégorie système)
+            // Empêcher de renommer en catégories système
             const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
             if (systemCategories.includes(newKey) && newKey !== categoryKey) {
                 alert(t.cannotUseSystemName || 'Cannot use system name.');
                 return;
             }
             
-            // Vérifier les doublons SEULEMENT si on change vraiment de clé
+            // Vérifier les doublons
             if (newKey !== categoryKey && expenses[newKey]) {
                 alert(t.categoryExistsAlert || 'Category already exists!');
                 return;
             }
             
             try {
-                // ✅ Afficher l'overlay existant
+                // Afficher l'overlay
                 const overlay = document.getElementById('loadingOverlay');
                 const textEl = document.getElementById('loadingOverlayText');
                 const subtextEl = document.getElementById('loadingOverlaySubtext');
@@ -3589,7 +3589,7 @@
                     document.body.style.overflow = 'hidden';
                 }
                 
-                // Appeler la Cloud Function pour mettre à jour les transactions
+                // Appeler Cloud Function pour transactions
                 const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
                 const result = await renameCategoryFunc({
                     oldName: categoryKey,
@@ -3598,58 +3598,52 @@
                 
                 console.log(`Renamed category: ${result.data.message}`);
                 
-                // Cas 1 : Changement de clé (ex: "fun" → "fun-test" ou "mina" → "victor")
+                // ✅ LOGIQUE SIMPLE : Tout faire localement
                 if (newKey !== categoryKey) {
-                    // Copier les données vers la nouvelle clé
-                    expenses[newKey] = expenses[categoryKey];
-                    
-                    // Initialiser les métadonnées pour la nouvelle clé
-                    if (!categoryMetadata[newKey]) {
-                        categoryMetadata[newKey] = {};
-                    }
-                    
-                    // Définir les métadonnées avec le nouvel emoji
-                    categoryMetadata[newKey].emoji = newEmoji;
-                    categoryMetadata[newKey].displayName = newName;
-                    
-                    // Copier autres propriétés si elles existent
-                    if (categoryMetadata[categoryKey]?.color) {
-                        categoryMetadata[newKey].color = categoryMetadata[categoryKey].color;
-                    }
-                    
-                    // Supprimer l'ancienne clé
-                    delete expenses[categoryKey];
-                    delete categoryMetadata[categoryKey];
+                    // Copier vers nouvelle clé
+                    expenses[newKey] = expenses[categoryKey] || [];
+                    categoryMetadata[newKey] = {
+                        emoji: newEmoji,
+                        displayName: newName,
+                        color: categoryMetadata[categoryKey]?.color
+                    };
                     
                     // Mettre à jour l'ordre
                     const index = categoryOrder.indexOf(categoryKey);
                     if (index !== -1) {
                         categoryOrder[index] = newKey;
                     } else {
-                        // Si pas dans l'ordre, l'ajouter
                         categoryOrder.push(newKey);
                     }
-                } 
-                // Cas 2 : Pas de changement de clé, juste le displayName (ex: "fun" reste "fun" mais displayName change)
-                else {
-                    // Initialiser les métadonnées si elles n'existent pas
-                    if (!categoryMetadata[categoryKey]) {
-                        categoryMetadata[categoryKey] = {};
-                    }
                     
-                    // Mettre à jour le displayName et l'emoji
+                    // Supprimer l'ancienne
+                    delete expenses[categoryKey];
+                    delete categoryMetadata[categoryKey];
+                } else {
+                    // Juste mettre à jour le displayName/emoji
+                    if (!categoryMetadata[categoryKey]) categoryMetadata[categoryKey] = {};
                     categoryMetadata[categoryKey].displayName = newName;
                     categoryMetadata[categoryKey].emoji = newEmoji;
                 }
                 
-                
-                // Sauvegarder dans Firebase SANS recharger
-                await saveUserData();
+                // ✅ Sauvegarder TOUT le document (écrase l'ancien)
+                await db.collection('users').doc(currentUser.uid).set({
+                    expenses: expenses,
+                    categoryMetadata: categoryMetadata,
+                    categoryOrder: categoryOrder,
+                    customColors: customColors,
+                    chartType: currentChartType,
+                    useIncome: useIncome,
+                    currency: currency,
+                    percentageMode: percentageMode,
+                    language: currentLanguage,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
                 
                 // Actualiser l'affichage
                 updateDisplay();
                 
-                // ✅ Cacher l'overlay
+                // Cacher l'overlay
                 if (overlay) {
                     overlay.classList.remove('active');
                     document.body.style.overflow = '';
@@ -3658,7 +3652,6 @@
                 alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
                 
             } catch (error) {
-                // ✅ Cacher l'overlay en cas d'erreur aussi
                 const overlay = document.getElementById('loadingOverlay');
                 if (overlay) {
                     overlay.classList.remove('active');
