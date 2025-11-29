@@ -131,6 +131,8 @@ async function loadTransactions() {
         const result = await getTransactions({ limit: 2000 });
         
         transactionsData = result.data.transactions || [];
+        // Filter out excluded transactions
+        transactionsData = transactionsData.filter(txn => !txn.excluded);
         
         // Populate filters
         populateMonthFilter();
@@ -596,6 +598,22 @@ function renderTransaction(txn) {
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                            <button 
+                                class="btn btn-sm" 
+                                style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; margin-right: 8px;"
+                                onclick="excludeTransaction('${txn.id}', false); event.stopPropagation();"
+                            >
+                                🚫 <span data-translate="excludeThis">Exclude this</span>
+                            </button>
+                            <button 
+                                class="btn btn-sm" 
+                                style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
+                                onclick="excludeTransaction('${txn.id}', true); event.stopPropagation();"
+                            >
+                                🚫🚫 <span data-translate="excludeAllSimilar">Exclude all similar</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
@@ -1394,6 +1412,72 @@ async function unlabelTransaction(transactionId) {
         showTransactionAlert('Error: ' + error.message, 'error');
     }
 }
+
+/**
+ * Exclude a transaction or all similar ones
+ */
+async function excludeTransaction(transactionId, excludeSimilar) {
+    const t = translations[currentLanguage] || translations['en'];
+    
+    const confirmMessage = excludeSimilar ? 
+        (t.confirmExcludeAllSimilar || 'Exclude all similar transactions? They will be hidden from the list.') : 
+        (t.confirmExclude || 'Exclude this transaction? It will be hidden from the list.');
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+    
+    try {
+        showLoadingOverlay(t.excluding || 'Excluding...', t.pleaseWait || 'Please wait');
+        
+        const txnRef = db.collection('users').doc(currentUser.uid).collection('transactions').doc(transactionId);
+        const txnDoc = await txnRef.get();
+        
+        if (!txnDoc.exists) {
+            throw new Error('Transaction not found');
+        }
+        
+        const txnData = txnDoc.data();
+        
+        if (excludeSimilar) {
+            // Exclude all similar transactions based on description
+            const allTxnsSnapshot = await db.collection('users')
+                .doc(currentUser.uid)
+                .collection('transactions')
+                .get();
+            
+            const batch = db.batch();
+            let count = 0;
+            
+            allTxnsSnapshot.forEach(doc => {
+                const data = doc.data();
+                // Check if descriptions match (case insensitive)
+                if (data.description && txnData.description && 
+                    data.description.toLowerCase().trim() === txnData.description.toLowerCase().trim()) {
+                    batch.update(doc.ref, { excluded: true });
+                    count++;
+                }
+            });
+            
+            await batch.commit();
+            hideLoadingOverlay();
+            showTransactionAlert(t.excludedSimilarCount?.replace('{count}', count) || `Excluded ${count} similar transactions`, 'success');
+        } else {
+            // Exclude only this transaction
+            await txnRef.update({ excluded: true });
+            hideLoadingOverlay();
+            showTransactionAlert(t.transactionExcluded || 'Transaction excluded ✓', 'success');
+        }
+        
+        await loadTransactions();
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error('Error excluding transaction:', error);
+        showTransactionAlert('Error: ' + error.message, 'error');
+    }
+}
+
+
 
 
 // ============================================
