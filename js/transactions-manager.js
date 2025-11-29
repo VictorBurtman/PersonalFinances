@@ -1621,15 +1621,58 @@ function closeExcludedTransactionsModal() {
  */
 async function restoreTransaction(transactionId) {
     const t = translations[currentLanguage] || translations['en'];
+    const restoreSimilar = document.getElementById('restoreSimilarCheckbox')?.checked || false;
     
     try {
-        await db.collection('users')
-            .doc(currentUser.uid)
-            .collection('transactions')
-            .doc(transactionId)
-            .update({ excluded: false });
+        showLoadingOverlay(t.restoring || 'Restoring...', t.pleaseWait || 'Please wait');
         
-        showToast(t.transactionRestored || 'Transaction restored ✓', 'success');
+        if (restoreSimilar) {
+            // Get the transaction to find similar ones
+            const txnDoc = await db.collection('users')
+                .doc(window.currentUser.uid)
+                .collection('transactions')
+                .doc(transactionId)
+                .get();
+            
+            if (!txnDoc.exists) {
+                throw new Error('Transaction not found');
+            }
+            
+            const txnData = txnDoc.data();
+            
+            // Find and restore all similar excluded transactions
+            const allTxnsSnapshot = await db.collection('users')
+                .doc(window.currentUser.uid)
+                .collection('transactions')
+                .where('excluded', '==', true)
+                .get();
+            
+            const batch = db.batch();
+            let count = 0;
+            
+            allTxnsSnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.description && txnData.description && 
+                    data.description.toLowerCase().trim() === txnData.description.toLowerCase().trim()) {
+                    batch.update(doc.ref, { excluded: false });
+                    count++;
+                }
+            });
+            
+            await batch.commit();
+            hideLoadingOverlay();
+            showToast(t.restoredSimilarCount?.replace('{count}', count) || `Restored ${count} similar transactions`, 'success');
+        } else {
+            // Restore only this transaction
+            await db.collection('users')
+                .doc(window.currentUser.uid)
+                .collection('transactions')
+                .doc(transactionId)
+                .update({ excluded: false });
+            
+            hideLoadingOverlay();
+            showToast(t.transactionRestored || 'Transaction restored ✓', 'success');
+        }
         
         // Refresh excluded list
         await openExcludedTransactionsModal();
@@ -1637,11 +1680,50 @@ async function restoreTransaction(transactionId) {
         // Refresh main transactions list
         await loadTransactions();
     } catch (error) {
+        hideLoadingOverlay();
         console.error('Error restoring transaction:', error);
         showToast('Error: ' + error.message, 'error');
     }
 }
 
+/**
+ * Restore all excluded transactions
+ */
+async function restoreAllTransactions() {
+    const t = translations[currentLanguage] || translations['en'];
+    
+    if (!confirm(t.confirmRestoreAll || 'Restore all excluded transactions?')) {
+        return;
+    }
+    
+    try {
+        showLoadingOverlay(t.restoringAll || 'Restoring all...', t.pleaseWait || 'Please wait');
+        
+        const excludedSnapshot = await db.collection('users')
+            .doc(window.currentUser.uid)
+            .collection('transactions')
+            .where('excluded', '==', true)
+            .get();
+        
+        const batch = db.batch();
+        excludedSnapshot.forEach(doc => {
+            batch.update(doc.ref, { excluded: false });
+        });
+        
+        await batch.commit();
+        hideLoadingOverlay();
+        
+        showToast(t.allTransactionsRestored || 'All transactions restored ✓', 'success');
+        
+        // Refresh
+        await openExcludedTransactionsModal();
+        await loadTransactions();
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error('Error restoring all:', error);
+        showToast('Error: ' + error.message, 'error');
+    }
+}
 
 // ============================================
 // CSV IMPORT FUNCTIONALITY
