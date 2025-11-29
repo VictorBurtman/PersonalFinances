@@ -553,7 +553,11 @@ function renderTransactions() {
     filteredTransactionsData.forEach(txn => {
         // Ignorer les montants positifs (revenus/remboursements)
         if (txn.chargedAmount < 0) {
-            const currency = txn.currency || window.currency || '₪';
+            let currency = txn.currency || window.currency || '₪';
+            
+            // ✅ NOUVEAU : Normaliser ILS → ₪
+            if (currency === 'ILS') currency = '₪';
+            
             if (!totalsByCurrency[currency]) {
                 totalsByCurrency[currency] = 0;
             }
@@ -577,9 +581,10 @@ function renderTransactions() {
         } else {
             const totalsText = currencies.map(curr => {
                 const isDifferent = curr !== mainCurrency;
-                const color = isDifferent ? '#9333ea' : '#667eea';
-                return `<span style="color: ${color};">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
-            }).join(' | ');
+                // ✅ MODIFIÉ : Utiliser des couleurs plus claires pour dark mode
+                const color = isDifferent ? '#c084fc' : '#93c5fd'; // Violet clair / Bleu clair
+                return `<span style="color: ${color}; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
+            }).join(' <span style="color: var(--text-color, #666); opacity: 0.5;">|</span> ');
             
             transactionTotal.innerHTML = totalsText;
         }
