@@ -2567,10 +2567,10 @@ async function monitorCredentials() {
 }
 
 // Vérifier toutes les 30 secondes
-setInterval(monitorCredentials, 30000);
+//setInterval(monitorCredentials, 30000);
 
 // Première vérification au chargement
-setTimeout(monitorCredentials, 5000);
+//setTimeout(monitorCredentials, 5000);
 
 
 /**
