@@ -446,6 +446,7 @@ const translations = {
         restoredSimilarCount: '{count} transactions similaires restaurées',
         restoreSimilarHelp: 'Si activé, cliquer sur "Restaurer" restaurera aussi toutes les transactions similaires',
         excludeAllSimilar: 'Exclure toutes les transactions similaires',
+        exclude: 'Exclure',
         confirmExclude: 'Exclure cette transaction ? Elle sera cachée de la liste.',
         confirmExcludeAllSimilar: 'Exclure toutes les transactions similaires ? Elles seront cachées de la liste.',
         excluding: 'Exclusion...',
@@ -815,6 +816,7 @@ const translations = {
         restoreSimilarHelp: 'כאשר מופעל, לחיצה על "שחזר" תשחזר גם את כל העסקאות הדומות',
         excludeAllSimilar: 'החרג את כל העסקאות הדומות',
         confirmExclude: 'להחריג עסקה זו? היא תוסתר מהרשימה.',
+        exclude: 'לא לכלול',
         confirmExcludeAllSimilar: 'להחריג את כל העסקאות הדומות? הן יוסתרו מהרשימה.',
         excluding: 'מחריג...',
         transactionExcluded: 'עסקה הוחרגה ✓',
@@ -2225,6 +2227,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
