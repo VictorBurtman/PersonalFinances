@@ -1027,3 +1027,7 @@ body.dark-mode .transaction-details {
 body.dark-mode .transaction-details strong {
     color: #e0e0e0 !important;
 }
+
+body.dark-mode .expense-name {
+    color: white !important;
+}
