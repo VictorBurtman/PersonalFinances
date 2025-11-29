@@ -2834,7 +2834,15 @@
             }
             
             // Force refresh to update item buttons
-            updateDisplay();
+            // ✅ MODIFIÉ : Ne pas appeler updateDisplay() - juste mettre à jour les boutons des items
+            const itemBtns = document.querySelectorAll('.item-controls button');
+            itemBtns.forEach(btn => {
+                if (isEditMode) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }); 
         }
         
         // ============================================
@@ -3218,7 +3226,7 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                restoreEditMode(); // ✅ AJOUTÉ
+                setTimeout(() => restoreEditMode(), 50); // ✅ Délai plus long
 
                 // Cacher l'overlay
                 if (overlay) {
@@ -3702,7 +3710,7 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                restoreEditMode(); // ✅ AJOUTÉ
+                setTimeout(() => restoreEditMode(), 50); // ✅ Délai plus long
                 // ✅ S'assurer que la nouvelle catégorie a son HTML
                 if (newKey !== categoryKey && !document.getElementById(`category-${newKey}`)) {
                     // Forcer un reload complet depuis Firebase pour recréer le HTML
