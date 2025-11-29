@@ -2444,22 +2444,17 @@
             }
         
             const ctx = document.getElementById('expensesChart').getContext('2d');
-            // === CORRECTION COULEUR ===
-            // 1. Détecter le mode sombre
+        
+            // === CORRECTION DARK MODE ===
+            // On déclare les variables de couleur UNE SEULE FOIS ici
             const isDarkMode = document.body.classList.contains('dark-mode');
             const textColor = isDarkMode ? '#e0e0e0' : '#666';
             const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        
-            // 2. FORCER les défauts globaux de Chart.js
-            // Cela garantit que TOUS les textes (légende, axes, titres) prennent la bonne couleur
+            
+            // On applique les défauts globaux pour que la légende change immédiatement
             Chart.defaults.color = textColor;
             Chart.defaults.borderColor = gridColor;
-            // ==========================
-            // Detect dark mode for chart styling
-            const textColor = isDarkMode ? '#e0e0e0' : '#666';
-            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            
-            // Prepare data for chart - EXCLUDE income category
+            // ===========================
             
             // Prepare data for chart - EXCLUDE income category
             const allLabels = [];
@@ -2517,8 +2512,8 @@
                 animation: currentChartType === 'doughnut' ? {
                     duration: 400,
                     easing: 'easeOutQuart',
-                    animateRotate: false, // Désactive la rotation pendant l'animation
-                    animateScale: true    // Garde l'animation de taille
+                    animateRotate: false, 
+                    animateScale: true
                 } : {
                     duration: 750,
                     easing: 'easeInOutQuart'
@@ -2532,7 +2527,7 @@
                             font: {
                                 size: 11
                             },
-                            color: textColor,
+                            // Pas besoin de définir color ici car Chart.defaults.color s'en occupe
                             boxWidth: 15,
                             boxHeight: 15,
                             generateLabels: function(chart) {
@@ -2589,7 +2584,7 @@
                                 color: gridColor
                             },
                             ticks: {
-                                color: textColor,
+                                color: textColor, // Utilise la variable définie en haut
                                 callback: function(value) {
                                     return currency + value;
                                 }
@@ -2598,13 +2593,14 @@
                     }
                 } : commonOptions;
                 
-                // Update legend colors AFTER setting options
-                if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
-                    chart.options.plugins.legend.labels.color = textColor;
+                // Force la mise à jour des couleurs globales
+                chart.options.color = textColor;
+                if (chart.options.plugins.legend) {
+                     chart.options.plugins.legend.labels.color = textColor;
                 }
-                
+        
                 // Rafraîchir le graphique avec animation
-                chart.update('active'); // 'active' permet une animation fluide
+                chart.update(); 
                 
             } else {
                 // Le graphique n'existe pas OU le type a changé : on le recrée
