@@ -3564,7 +3564,7 @@
             });
         }
 
-// Rename Functions
+        // Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3658,7 +3658,15 @@
                     categoryMetadata[categoryKey].emoji = newEmoji;
                 }
                 
-                // ✅ Sauvegarder TOUT le document (écrase l'ancien)
+                // ✅ D'abord supprimer l'ancienne catégorie explicitement
+                if (newKey !== categoryKey) {
+                    await db.collection('users').doc(currentUser.uid).update({
+                        [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                        [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
+                    });
+                }
+                
+                // Ensuite sauvegarder les nouvelles données
                 await db.collection('users').doc(currentUser.uid).set({
                     expenses: expenses,
                     categoryMetadata: categoryMetadata,
