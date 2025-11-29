@@ -1034,11 +1034,20 @@ body.dark-mode .expense-name {
 
 /* Smaller exclude modal */
 #excludeModal .modal-content {
-    max-width: 450px;
+    max-width: 400px;
+    margin: auto;
 }
 
 #excludeModal .modal-body {
-    padding: 20px 25px;
+    padding: 15px 20px;
+}
+
+#excludeModal .modal-header {
+    padding: 15px 20px;
+}
+
+#excludeModal .modal-footer {
+    padding: 12px 20px;
 }
 
 /* Dark mode for excluded transactions list */
