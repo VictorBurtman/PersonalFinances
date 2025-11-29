@@ -548,17 +548,41 @@ function renderTransactions() {
         transactionCount.textContent = filteredTransactionsData.length;
     }
     
-    // Calculate and display total amount (valeurs absolues uniquement des dépenses)
-    const totalAmount = filteredTransactionsData.reduce((sum, txn) => {
+    // ✅ MODIFIÉ : Calculer le total par devise
+    const totalsByCurrency = {};
+    filteredTransactionsData.forEach(txn => {
         // Ignorer les montants positifs (revenus/remboursements)
         if (txn.chargedAmount < 0) {
-            return sum + Math.abs(txn.chargedAmount);
+            const currency = txn.currency || window.currency || '₪';
+            if (!totalsByCurrency[currency]) {
+                totalsByCurrency[currency] = 0;
+            }
+            totalsByCurrency[currency] += Math.abs(txn.chargedAmount);
         }
-        return sum;
-    }, 0);
+    });
+    
+    // ✅ MODIFIÉ : Afficher tous les totaux
     const transactionTotal = document.getElementById('transactionTotal');
     if (transactionTotal) {
-        transactionTotal.textContent = `${window.currency || '₪'}${totalAmount.toFixed(2)}`;
+        // Trier les devises : devise principale d'abord, puis les autres par ordre alphabétique
+        const mainCurrency = window.currency || '₪';
+        const currencies = Object.keys(totalsByCurrency).sort((a, b) => {
+            if (a === mainCurrency) return -1;
+            if (b === mainCurrency) return 1;
+            return a.localeCompare(b);
+        });
+        
+        if (currencies.length === 0) {
+            transactionTotal.textContent = `${mainCurrency}0.00`;
+        } else {
+            const totalsText = currencies.map(curr => {
+                const isDifferent = curr !== mainCurrency;
+                const color = isDifferent ? '#9333ea' : '#667eea';
+                return `<span style="color: ${color};">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
+            }).join(' | ');
+            
+            transactionTotal.innerHTML = totalsText;
+        }
     }
     
     // Render transactions
@@ -570,7 +594,7 @@ function renderTransactions() {
                 </div>
             `;
         } else {
-            // ✅ MODIFIÉ : Limiter le nombre de transactions affichées
+            // Limiter le nombre de transactions affichées
             const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
             const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
             
@@ -578,7 +602,7 @@ function renderTransactions() {
                 .map(txn => renderTransaction(txn))
                 .join('');
             
-            // ✅ AJOUTÉ : Message si des transactions sont cachées
+            // Message si des transactions sont cachées
             if (hiddenCount > 0) {
                 const limitMessage = document.createElement('div');
                 limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
@@ -596,7 +620,7 @@ function renderTransactions() {
             }
         }
     }
-        // Apply translations to dynamically created content
+    // Apply translations to dynamically created content
     setTimeout(() => {
         if (typeof updateTransactionsLanguage === 'function') {
             updateTransactionsLanguage();
@@ -622,6 +646,12 @@ function renderTransaction(txn) {
     const isLabeled = txn.isLabeled && txn.category;
     const txnId = txn.id.replace(/[^a-zA-Z0-9]/g, ''); // Safe ID for DOM
     const t = translations[currentLanguage] || translations['en'];
+    
+    // ✅ NOUVEAU : Déterminer la devise et la couleur
+    const txnCurrency = txn.currency || window.currency || '₪';
+    const isDifferentCurrency = txnCurrency !== (window.currency || '₪');
+    const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea'; // Violet si devise différente, bleu sinon
+    
     return `
         <div class="transaction-item" style="display: block; padding: 15px;">
             <!-- Top row: Date, Description, Amount -->
@@ -655,7 +685,7 @@ function renderTransaction(txn) {
                             </button>
                         </div>
                         ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
-                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}</div>
+                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
                             <button 
@@ -668,8 +698,8 @@ function renderTransaction(txn) {
                         </div>
                     </div>
                 </div>
-                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: #667eea; white-space: nowrap; margin-left: 15px;">
-                    ${window.currency || '₪'}${Math.abs(txn.chargedAmount).toFixed(2)}
+                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: ${amountColor}; white-space: nowrap; margin-left: 15px;">
+                    ${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}
                 </div>
             </div>
             
