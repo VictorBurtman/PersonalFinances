@@ -3598,6 +3598,11 @@
                     // Ajouter le nouveau displayName
                     categoryMetadata[newKey].displayName = newName;
                     
+                    // ✅ AJOUTÉ : S'assurer qu'il y a un emoji
+                    if (!categoryMetadata[newKey].emoji) {
+                        categoryMetadata[newKey].emoji = categoryMetadata[categoryKey]?.emoji || '📋';
+                    }
+                    
                     // Supprimer l'ancien
                     delete expenses[categoryKey];
                     delete categoryMetadata[categoryKey];
@@ -3614,6 +3619,11 @@
                         categoryMetadata[categoryKey] = {};
                     }
                     categoryMetadata[categoryKey].displayName = newName;
+                    
+                    // ✅ AJOUTÉ : S'assurer qu'il y a un emoji
+                    if (!categoryMetadata[categoryKey].emoji) {
+                        categoryMetadata[categoryKey].emoji = '📋';
+                    }
                 }
                 
                 // Sauvegarder dans Firebase
@@ -3632,6 +3642,7 @@
             }
         }
 
+        
         function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
             const newName = prompt(t.enterNewName || 'Enter new name:', expenses[category][index].name);
