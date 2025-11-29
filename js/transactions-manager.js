@@ -550,7 +550,6 @@ function renderTransactions() {
  * Render a single transaction with improved layout
  */
 function renderTransaction(txn) {
-    const t = translations[currentLanguage] || translations['en'];
     const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
     const categories = Array.from(categorySections)
         .map(section => section.id.replace('category-', ''))
