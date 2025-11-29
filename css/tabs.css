@@ -1009,7 +1009,7 @@ body.dark-mode #bankAccountsModal .modal-body {
 
 /* Transaction details expandable section in dark mode */
 body.dark-mode .transaction-details {
-    background: #1f1f2e !important;
+    background: #262638 !important;  /* Légèrement plus clair que #1f1f2e */
     color: #e0e0e0 !important;
 }
 
