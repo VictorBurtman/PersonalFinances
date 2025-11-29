@@ -51,7 +51,14 @@ const translations = {
         copy: 'Copy',
         copied: 'Copied!',
         clickToExpand: 'Click to expand',
-
+        exclude: 'Exclude',
+        excludeTransaction: 'Exclude Transaction',
+        excludeThisOnly: 'Exclude this transaction only',
+        excluded: 'Excluded',
+        excludedTransactions: 'Excluded Transactions',
+        noExcludedTransactions: 'No excluded transactions',
+        restore: 'Restore',
+        transactionRestored: 'Transaction restored ✓',
         
 
         // Alerts & notifications
@@ -407,6 +414,13 @@ const translations = {
         copy: 'Copier',
         copied: 'Copié !',
         clickToExpand: 'Cliquer pour développer',
+        excludeTransaction: 'Exclure la transaction',
+        excludeThisOnly: 'Exclure uniquement cette transaction',
+        excluded: 'Exclues',
+        excludedTransactions: 'Transactions exclues',
+        noExcludedTransactions: 'Aucune transaction exclue',
+        restore: 'Restaurer',
+        transactionRestored: 'Transaction restaurée ✓',
 
 
         // Alerts & notifications
@@ -752,6 +766,13 @@ const translations = {
         copy: 'העתק',
         copied: 'הועתק!',
         clickToExpand: 'לחץ להרחבה',
+        excludeTransaction: 'החרג עסקה',
+        excludeThisOnly: 'החרג רק עסקה זו',
+        excluded: 'מוחרגות',
+        excludedTransactions: 'עסקאות מוחרגות',
+        noExcludedTransactions: 'אין עסקאות מוחרגות',
+        restore: 'שחזר',
+        transactionRestored: 'עסקה שוחזרה ✓',
 
 
 
@@ -1098,6 +1119,14 @@ const translations = {
         copy: 'Copiar',
         copied: '¡Copiado!',
         clickToExpand: 'Clic para expandir',
+        exclude: 'Excluir',
+        excludeTransaction: 'Excluir transacción',
+        excludeThisOnly: 'Excluir solo esta transacción',
+        excluded: 'Excluidas',
+        excludedTransactions: 'Transacciones excluidas',
+        noExcludedTransactions: 'No hay transacciones excluidas',
+        restore: 'Restaurar',
+        transactionRestored: 'Transacción restaurada ✓',
 
 
         // Toasts & notifications
@@ -1443,6 +1472,14 @@ const translations = {
         copy: 'Копировать',
         copied: 'Скопировано!',
         clickToExpand: 'Нажмите, чтобы развернуть',
+        exclude: 'Исключить',
+        excludeTransaction: 'Исключить транзакцию',
+        excludeThisOnly: 'Исключить только эту транзакцию',
+        excluded: 'Исключенные',
+        excludedTransactions: 'Исключенные транзакции',
+        noExcludedTransactions: 'Нет исключенных транзакций',
+        restore: 'Восстановить',
+        transactionRestored: 'Транзакция восстановлена ✓',
 
 
         // Toasts & notifications
@@ -1788,6 +1825,14 @@ const translations = {
         copy: 'نسخ',
         copied: 'تم النسخ!',
         clickToExpand: 'انقر للتوسيع',
+        exclude: 'استبعاد',
+        excludeTransaction: 'استبعاد المعاملة',
+        excludeThisOnly: 'استبعاد هذه المعاملة فقط',
+        excluded: 'المستبعدة',
+        excludedTransactions: 'المعاملات المستبعدة',
+        noExcludedTransactions: 'لا توجد معاملات مستبعدة',
+        restore: 'استعادة',
+        transactionRestored: 'تم استعادة المعاملة ✓',
 
 
 
@@ -2084,6 +2129,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
