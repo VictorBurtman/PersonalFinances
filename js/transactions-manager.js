@@ -1518,7 +1518,105 @@ async function excludeTransaction(transactionId, excludeSimilar) {
     }
 }
 
+/**
+ * Open excluded transactions modal
+ */
+async function openExcludedTransactionsModal() {
+    const modal = document.getElementById('excludedTransactionsModal');
+    const listEl = document.getElementById('excludedTransactionsList');
+    const noExcludedEl = document.getElementById('noExcludedTransactions');
+    
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    try {
+        // Load excluded transactions
+        const excludedSnapshot = await db.collection('users')
+            .doc(currentUser.uid)
+            .collection('transactions')
+            .where('excluded', '==', true)
+            .orderBy('date', 'desc')
+            .get();
+        
+        const excludedTxns = excludedSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        
+        if (excludedTxns.length === 0) {
+            if (listEl) listEl.innerHTML = '';
+            if (noExcludedEl) noExcludedEl.style.display = 'block';
+        } else {
+            if (noExcludedEl) noExcludedEl.style.display = 'none';
+            
+            const t = translations[currentLanguage] || translations['en'];
+            const html = excludedTxns.map(txn => {
+                const date = txn.date ? new Date(txn.date).toLocaleDateString() : 'N/A';
+                const amount = Math.abs(txn.chargedAmount || 0).toFixed(2);
+                
+                return `
+                    <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">${escapeHtml(txn.description)}</div>
+                            <div style="font-size: 0.85em; color: #6c757d;">${date} • ${window.currency || '₪'}${amount}</div>
+                        </div>
+                        <button 
+                            onclick="restoreTransaction('${txn.id}')"
+                            style="padding: 6px 12px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; white-space: nowrap;"
+                        >
+                            ✅ <span data-translate="restore">Restore</span>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            if (listEl) listEl.innerHTML = html;
+        }
+        
+    } catch (error) {
+        console.error('Error loading excluded transactions:', error);
+        showToast('Error loading excluded transactions', 'error');
+    }
+}
 
+/**
+ * Close excluded transactions modal
+ */
+function closeExcludedTransactionsModal() {
+    const modal = document.getElementById('excludedTransactionsModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+/**
+ * Restore an excluded transaction
+ */
+async function restoreTransaction(transactionId) {
+    const t = translations[currentLanguage] || translations['en'];
+    
+    try {
+        await db.collection('users')
+            .doc(currentUser.uid)
+            .collection('transactions')
+            .doc(transactionId)
+            .update({ excluded: false });
+        
+        showToast(t.transactionRestored || 'Transaction restored ✓', 'success');
+        
+        // Refresh excluded list
+        await openExcludedTransactionsModal();
+        
+        // Refresh main transactions list
+        await loadTransactions();
+    } catch (error) {
+        console.error('Error restoring transaction:', error);
+        showToast('Error: ' + error.message, 'error');
+    }
+}
 
 
 // ============================================
