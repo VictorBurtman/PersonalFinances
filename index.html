@@ -3643,6 +3643,15 @@
                 }
                 
                 // Sauvegarder dans Firebase
+                // ✅ MODIFIÉ : Supprimer explicitement l'ancienne catégorie dans Firebase
+                if (newKey !== categoryKey) {
+                    await db.collection('users').doc(currentUser.uid).set({
+                        [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
+                        [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
+                    }, { merge: true });
+                }
+                
+                // Sauvegarder dans Firebase
                 await saveUserData();
                 // Recharger depuis Firebase pour être sûr
                 await loadUserData();
