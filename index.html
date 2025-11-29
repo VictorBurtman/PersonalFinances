@@ -2702,14 +2702,24 @@
             
             // Build list of all expenses with their current colors - EXCLUDE income
             body.innerHTML = '';
-            let colorIndex = 0;
             
             Object.keys(expenses).forEach(categoryKey => {
                 // Skip income category
                 if (categoryKey === 'income') return;
                 
                 expenses[categoryKey].forEach(expense => {
-                    const currentColor = customColors[expense.name] || colors[colorIndex % colors.length];
+                    // Use the same hash-based color calculation as the chart
+                    let currentColor;
+                    if (customColors[expense.name]) {
+                        currentColor = customColors[expense.name];
+                    } else {
+                        // Generate consistent color based on item name (hash) - same as chart
+                        const hash = expense.name.split('').reduce((acc, char) => {
+                            return char.charCodeAt(0) + ((acc << 5) - acc);
+                        }, 0);
+                        const colorIdx = Math.abs(hash) % colors.length;
+                        currentColor = colors[colorIdx];
+                    }
                     
                     const colorItem = document.createElement('div');
                     colorItem.className = 'color-item';
@@ -2724,7 +2734,6 @@
                         </div>
                     `;
                     body.appendChild(colorItem);
-                    colorIndex++;
                 });
             });
             
