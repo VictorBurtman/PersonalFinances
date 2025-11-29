@@ -2444,7 +2444,17 @@
             }
         
             const ctx = document.getElementById('expensesChart').getContext('2d');
-
+            // === CORRECTION COULEUR ===
+            // 1. Détecter le mode sombre
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? '#e0e0e0' : '#666';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        
+            // 2. FORCER les défauts globaux de Chart.js
+            // Cela garantit que TOUS les textes (légende, axes, titres) prennent la bonne couleur
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+            // ==========================
             // Detect dark mode for chart styling
             const isDarkMode = document.body.classList.contains('dark-mode');
             const textColor = isDarkMode ? '#e0e0e0' : '#666';
@@ -3469,7 +3479,14 @@
             } else {
                 document.body.classList.remove('dark-mode');
             }
-            updateChart();
+            
+            // === MISE A JOUR IMMEDIATE DU GRAPHIQUE ===
+            // On force le graphique à se redessiner avec les nouvelles couleurs
+            if (typeof updateChart === 'function') {
+                updateChart();
+            }
+            // ==========================================
+        
             // Save preference to Firebase
             if (currentUser) {
                 db.collection('users').doc(currentUser.uid).set({
