@@ -2768,6 +2768,34 @@
             }
         }
 
+        // Restore edit mode UI after updateDisplay()
+        function restoreEditMode() {
+            if (!isEditMode) return;
+            
+            const editBtn = document.getElementById('editModeBtn');
+            const editBtnText = document.getElementById('editBtnText');
+            const t = translations[currentLanguage] || translations['en'];
+            
+            if (editBtn) editBtn.classList.add('active');
+            if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
+            
+            const categoryControls = document.querySelectorAll('.category-controls');
+            const renameButtons = document.querySelectorAll('.rename-btn');
+            const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
+            
+            if (addBtn) addBtn.style.display = 'block';
+            categoryControls.forEach(c => c.classList.add('show'));
+            renameButtons.forEach(btn => {
+                if (!btn.classList.contains('rename-btn-income')) {
+                    btn.style.display = 'inline-block';
+                }
+            });
+        }
+
+
+
+
+        
         // Edit Mode Functions
         function toggleEditMode() {
             isEditMode = !isEditMode;
@@ -3190,7 +3218,8 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                
+                restoreEditMode(); // ✅ AJOUTÉ
+
                 // Cacher l'overlay
                 if (overlay) {
                     overlay.classList.remove('active');
@@ -3673,7 +3702,7 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                
+                restoreEditMode(); // ✅ AJOUTÉ
                 // ✅ S'assurer que la nouvelle catégorie a son HTML
                 if (newKey !== categoryKey && !document.getElementById(`category-${newKey}`)) {
                     // Forcer un reload complet depuis Firebase pour recréer le HTML
