@@ -1040,3 +1040,21 @@ body.dark-mode .expense-name {
 #excludeModal .modal-body {
     padding: 20px 25px;
 }
+
+/* Dark mode for excluded transactions list */
+body.dark-mode #excludedTransactionsList > div {
+    background: #1f1f2e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #excludedTransactionsList > div > div {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #excludedTransactionsList > div > div:last-child {
+    color: #a0a0b0 !important;
+}
+
+body.dark-mode #restoreSimilarCheckbox {
+    accent-color: #667eea;
+}
