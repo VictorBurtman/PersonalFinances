@@ -3052,34 +3052,60 @@
         }
 
 
-
-
-
-
-
-
-
-        
-
-        function deleteExpenseItem(category, index) {
+        async function deleteExpenseItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
             if (!confirm(t.deleteItemConfirm || 'Delete this item?')) return;
             
-            if (expenses[category] && expenses[category][index]) {
+            if (!expenses[category] || !expenses[category][index]) return;
+            
+            try {
+                // Afficher l'overlay
+                const overlay = document.getElementById('loadingOverlay');
+                const textEl = document.getElementById('loadingOverlayText');
+                const subtextEl = document.getElementById('loadingOverlaySubtext');
+                
+                if (overlay) {
+                    if (textEl) textEl.textContent = t.deletingItem || 'Deleting item...';
+                    if (subtextEl) subtextEl.textContent = t.pleaseWait || 'Please wait';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+                
                 expenses[category].splice(index, 1);
                 
                 // If category is now empty, ask if user wants to delete the whole category
                 if (expenses[category].length === 0) {
+                    // Cacher l'overlay avant de demander confirmation
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    
                     if (confirm(t.lastItemConfirm || 'Delete entire category?')) {
                         deleteCategory(category);
-                        return; // NOUVEAU : Important pour arrêter l'exécution ici
+                        return;
                     }
                 }
                 
-                // S'il reste des items, sauvegarde simplement les changements
-                saveUserData().then(() => {
-                    updateDisplay();
-                });
+                // S'il reste des items, sauvegarder simplement les changements
+                await saveUserData();
+                updateDisplay();
+                setTimeout(() => restoreEditMode(), 50);
+                
+                // Cacher l'overlay
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            } catch (error) {
+                // Cacher l'overlay en cas d'erreur
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                console.error('Error deleting item:', error);
+                alert('Error deleting item: ' + error.message);
             }
         }
 
@@ -3250,18 +3276,48 @@
         }
 
         
-        function addItemToCategory(categoryKey) {
+        async function addItemToCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             const itemName = prompt(t.enterNewItemName || 'Enter new item name:');
             if (!itemName) return;
             
-            if (!expenses[categoryKey]) {
-                expenses[categoryKey] = [];
+            try {
+                // Afficher l'overlay
+                const overlay = document.getElementById('loadingOverlay');
+                const textEl = document.getElementById('loadingOverlayText');
+                const subtextEl = document.getElementById('loadingOverlaySubtext');
+                
+                if (overlay) {
+                    if (textEl) textEl.textContent = t.addingItem || 'Adding item...';
+                    if (subtextEl) subtextEl.textContent = t.pleaseWait || 'Please wait';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                if (!expenses[categoryKey]) {
+                    expenses[categoryKey] = [];
+                }
+                
+                expenses[categoryKey].push({ name: itemName, amount: 0 });
+                await saveUserData();
+                updateDisplay();
+                setTimeout(() => restoreEditMode(), 50);
+                
+                // Cacher l'overlay
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            } catch (error) {
+                // Cacher l'overlay en cas d'erreur
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                console.error('Error adding item:', error);
+                alert('Error adding item: ' + error.message);
             }
-            
-            expenses[categoryKey].push({ name: itemName, amount: 0 });
-            saveUserData();
-            updateDisplay();
         }
 
         function moveCategoryUp(categoryKey) {
@@ -3738,14 +3794,44 @@
         }
 
         
-        function renameItem(category, index) {
+        async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
             const newName = prompt(t.enterNewName || 'Enter new name:', expenses[category][index].name);
             if (!newName) return;
             
-            expenses[category][index].name = newName;
-            saveUserData();
-            updateDisplay();
+            try {
+                // Afficher l'overlay
+                const overlay = document.getElementById('loadingOverlay');
+                const textEl = document.getElementById('loadingOverlayText');
+                const subtextEl = document.getElementById('loadingOverlaySubtext');
+                
+                if (overlay) {
+                    if (textEl) textEl.textContent = t.renamingItem || 'Renaming item...';
+                    if (subtextEl) subtextEl.textContent = t.pleaseWait || 'Please wait';
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+                
+                expenses[category][index].name = newName;
+                await saveUserData();
+                updateDisplay();
+                setTimeout(() => restoreEditMode(), 50);
+                
+                // Cacher l'overlay
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            } catch (error) {
+                // Cacher l'overlay en cas d'erreur
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+                console.error('Error renaming item:', error);
+                alert('Error renaming item: ' + error.message);
+            }
         }
 
         // Item Movement Functions
