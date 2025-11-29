@@ -555,8 +555,11 @@ function renderTransactions() {
         if (txn.chargedAmount < 0) {
             let currency = txn.currency || window.currency || '₪';
             
-            // ✅ NOUVEAU : Normaliser ILS → ₪
+            // ✅ NOUVEAU : Normaliser les devises vers leurs symboles
             if (currency === 'ILS') currency = '₪';
+            if (currency === 'EUR') currency = '€';
+            if (currency === 'USD') currency = '$';
+            if (currency === 'GBP') currency = '£';
             
             if (!totalsByCurrency[currency]) {
                 totalsByCurrency[currency] = 0;
