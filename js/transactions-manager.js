@@ -601,17 +601,10 @@ function renderTransaction(txn) {
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
                             <button 
                                 class="btn btn-sm" 
-                                style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; margin-right: 8px;"
-                                onclick="excludeTransaction('${txn.id}', false); event.stopPropagation();"
-                            >
-                                🚫 <span data-translate="excludeThis">Exclude this</span>
-                            </button>
-                            <button 
-                                class="btn btn-sm" 
                                 style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
-                                onclick="excludeTransaction('${txn.id}', true); event.stopPropagation();"
+                                onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
                             >
-                                🚫🚫 <span data-translate="excludeAllSimilar">Exclude all similar</span>
+                                🚫 <span data-translate="exclude">Exclude</span>
                             </button>
                         </div>
                     </div>
