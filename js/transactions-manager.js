@@ -604,7 +604,7 @@ function renderTransaction(txn) {
                                 style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
                                 onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
                             >
-                                🚫 <span data-translate="exclude">Exclude</span>
+                                🚫 ${t.exclude || 'Exclude'}
                             </button>
                         </div>
                     </div>
@@ -1414,6 +1414,7 @@ let currentExcludeTransactionName = null;
  * Open exclude modal
  */
 function openExcludeModal(transactionId, transactionName) {
+    console.log('Opening exclude modal for:', transactionId, transactionName); // Debug
     currentExcludeTransactionId = transactionId;
     currentExcludeTransactionName = transactionName;
     
@@ -1447,9 +1448,13 @@ function closeExcludeModal() {
  * Confirm exclusion from modal
  */
 function confirmExclude(excludeSimilar) {
-    if (currentExcludeTransactionId) {
+    console.log('Confirm exclude called with:', currentExcludeTransactionId, excludeSimilar); // Debug
+    if (currentExcludeTransactionId && currentExcludeTransactionId.trim() !== '') {
         closeExcludeModal();
         excludeTransaction(currentExcludeTransactionId, excludeSimilar);
+    } else {
+        console.error('No transaction ID to exclude');
+        showToast('Error: No transaction selected', 'error');
     }
 }
 
