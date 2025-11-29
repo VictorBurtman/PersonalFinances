@@ -3469,7 +3469,7 @@
             } else {
                 document.body.classList.remove('dark-mode');
             }
-            
+            updateChart();
             // Save preference to Firebase
             if (currentUser) {
                 db.collection('users').doc(currentUser.uid).set({
