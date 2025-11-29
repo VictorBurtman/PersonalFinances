@@ -610,7 +610,7 @@ function renderTransaction(txn) {
                                 style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
                                 onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
                             >
-                                🚫 <span data-translate="exclude">Exclude</span>
+                                🚫 <span data-translate="exclude">${t.exclude || 'Exclude'}</span>
                             </button>
                         </div>
                     </div>
