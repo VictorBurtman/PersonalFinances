@@ -1765,7 +1765,42 @@ function triggerCSVUpload() {
 }
 
 /**
- * Handle CSV file upload
+ * Convert Excel file to CSV text
+ */
+async function convertExcelToCSV(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Get first sheet
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // Convert to CSV
+                const csv = XLSX.utils.sheet_to_csv(worksheet);
+                
+                console.log(`✓ Converted Excel file: ${file.name}`);
+                resolve(csv);
+            } catch (error) {
+                reject(new Error(`Failed to read Excel file: ${error.message}`));
+            }
+        };
+        
+        reader.onerror = function() {
+            reject(new Error('Failed to read file'));
+        };
+        
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+
+/**
+ * Handle CSV/Excel file upload (supports multiple files)
  */
 async function handleCSVUpload(event) {
     const files = event.target.files;
@@ -1780,7 +1815,7 @@ async function handleCSVUpload(event) {
     // ✅ Show loading overlay
     const t = translations[currentLanguage] || translations['en'];
     showLoadingOverlay(
-        t.importingCSV || 'Importing CSV...', 
+        t.importingCSV || 'Importing files...', 
         `${t.processingTransactions || 'Processing transactions'} (0/${files.length})`
     );
     
@@ -1799,14 +1834,26 @@ async function handleCSVUpload(event) {
                 subtextEl.textContent = `${t.processingTransactions || 'Processing transactions'} (${i + 1}/${files.length})`;
             }
             
-            if (!file.name.endsWith('.csv')) {
-                errors.push(`${file.name}: Not a CSV file`);
+            const isExcel = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
+            const isCSV = file.name.endsWith('.csv');
+            
+            if (!isExcel && !isCSV) {
+                errors.push(`${file.name}: Not a CSV or Excel file`);
                 continue;
             }
             
             try {
-                const text = await file.text();
-                const transactions = parseCSV(text, file.name, bankName);
+                let csvText;
+                
+                if (isExcel) {
+                    // Convert Excel to CSV
+                    csvText = await convertExcelToCSV(file);
+                } else {
+                    // Read CSV directly
+                    csvText = await file.text();
+                }
+                
+                const transactions = parseCSV(csvText, file.name, bankName);
                 
                 if (transactions.length === 0) {
                     errors.push(`${file.name}: No valid transactions found`);
@@ -1861,8 +1908,8 @@ async function handleCSVUpload(event) {
         
     } catch (error) {
         hideLoadingOverlay();
-        console.error('Error processing CSV:', error);
-        showToast('Error processing CSV: ' + error.message, 'error');
+        console.error('Error processing files:', error);
+        showToast('Error processing files: ' + error.message, 'error');
     }
 }
 
