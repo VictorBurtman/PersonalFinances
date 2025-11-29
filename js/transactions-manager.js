@@ -1406,6 +1406,54 @@ async function unlabelTransaction(transactionId) {
     }
 }
 
+// Store current transaction info for exclude modal
+let currentExcludeTransactionId = null;
+let currentExcludeTransactionName = null;
+
+/**
+ * Open exclude modal
+ */
+function openExcludeModal(transactionId, transactionName) {
+    currentExcludeTransactionId = transactionId;
+    currentExcludeTransactionName = transactionName;
+    
+    const modal = document.getElementById('excludeModal');
+    const nameEl = document.getElementById('excludeTransactionName');
+    
+    if (nameEl) {
+        nameEl.textContent = transactionName;
+    }
+    
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+/**
+ * Close exclude modal
+ */
+function closeExcludeModal() {
+    const modal = document.getElementById('excludeModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    currentExcludeTransactionId = null;
+    currentExcludeTransactionName = null;
+}
+
+/**
+ * Confirm exclusion from modal
+ */
+function confirmExclude(excludeSimilar) {
+    if (currentExcludeTransactionId) {
+        closeExcludeModal();
+        excludeTransaction(currentExcludeTransactionId, excludeSimilar);
+    }
+}
+
+
 /**
  * Exclude a transaction or all similar ones
  */
