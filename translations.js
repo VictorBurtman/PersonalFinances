@@ -59,6 +59,13 @@ const translations = {
         noExcludedTransactions: 'No excluded transactions',
         restore: 'Restore',
         transactionRestored: 'Transaction restored ✓',
+        restoreSimilarTransactions: 'Restore similar transactions',
+        restoreAll: 'Restore All',
+        restoring: 'Restoring...',
+        restoringAll: 'Restoring all...',
+        confirmRestoreAll: 'Restore all excluded transactions?',
+        allTransactionsRestored: 'All transactions restored ✓',
+        restoredSimilarCount: 'Restored {count} similar transactions',
         
 
         // Alerts & notifications
@@ -421,6 +428,13 @@ const translations = {
         noExcludedTransactions: 'Aucune transaction exclue',
         restore: 'Restaurer',
         transactionRestored: 'Transaction restaurée ✓',
+        restoreSimilarTransactions: 'Restaurer les transactions similaires',
+        restoreAll: 'Tout restaurer',
+        restoring: 'Restauration...',
+        restoringAll: 'Restauration de tout...',
+        confirmRestoreAll: 'Restaurer toutes les transactions exclues ?',
+        allTransactionsRestored: 'Toutes les transactions restaurées ✓',
+        restoredSimilarCount: '{count} transactions similaires restaurées',
 
 
         // Alerts & notifications
@@ -773,6 +787,13 @@ const translations = {
         noExcludedTransactions: 'אין עסקאות מוחרגות',
         restore: 'שחזר',
         transactionRestored: 'עסקה שוחזרה ✓',
+        restoreSimilarTransactions: 'שחזר עסקאות דומות',
+        restoreAll: 'שחזר הכל',
+        restoring: 'משחזר...',
+        restoringAll: 'משחזר הכל...',
+        confirmRestoreAll: 'לשחזר את כל העסקאות המוחרגות?',
+        allTransactionsRestored: 'כל העסקאות שוחזרו ✓',
+        restoredSimilarCount: '{count} עסקאות דומות שוחזרו',
 
 
 
@@ -1127,6 +1148,13 @@ const translations = {
         noExcludedTransactions: 'No hay transacciones excluidas',
         restore: 'Restaurar',
         transactionRestored: 'Transacción restaurada ✓',
+        restoreSimilarTransactions: 'Restaurar transacciones similares',
+        restoreAll: 'Restaurar todo',
+        restoring: 'Restaurando...',
+        restoringAll: 'Restaurando todo...',
+        confirmRestoreAll: '¿Restaurar todas las transacciones excluidas?',
+        allTransactionsRestored: 'Todas las transacciones restauradas ✓',
+        restoredSimilarCount: '{count} transacciones similares restauradas',
 
 
         // Toasts & notifications
@@ -1480,6 +1508,13 @@ const translations = {
         noExcludedTransactions: 'Нет исключенных транзакций',
         restore: 'Восстановить',
         transactionRestored: 'Транзакция восстановлена ✓',
+        restoreSimilarTransactions: 'Восстановить похожие транзакции',
+        restoreAll: 'Восстановить все',
+        restoring: 'Восстановление...',
+        restoringAll: 'Восстановление всех...',
+        confirmRestoreAll: 'Восстановить все исключенные транзакции?',
+        allTransactionsRestored: 'Все транзакции восстановлены ✓',
+        restoredSimilarCount: 'Восстановлено {count} похожих транзакций',
 
 
         // Toasts & notifications
@@ -1833,6 +1868,13 @@ const translations = {
         noExcludedTransactions: 'لا توجد معاملات مستبعدة',
         restore: 'استعادة',
         transactionRestored: 'تم استعادة المعاملة ✓',
+        restoreSimilarTransactions: 'استعادة المعاملات المماثلة',
+        restoreAll: 'استعادة الكل',
+        restoring: 'جاري الاستعادة...',
+        restoringAll: 'استعادة الكل...',
+        confirmRestoreAll: 'استعادة جميع المعاملات المستبعدة؟',
+        allTransactionsRestored: 'تم استعادة جميع المعاملات ✓',
+        restoredSimilarCount: 'تم استعادة {count} معاملات مماثلة',
 
 
 
@@ -2129,6 +2171,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
