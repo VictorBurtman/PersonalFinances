@@ -45,6 +45,12 @@ const translations = {
         removeCSVConfirm: "Remove \"{name}\" and all its transactions?",
         cannotDeleteIncome: "Cannot delete Income category.",
         errorCreatingCategory: "Error creating category. Please try again.",
+        labelingTransaction: 'Labeling transaction...',
+        unlabelingTransaction: 'Removing label...',
+        checkingSimilar: 'Checking for similar transactions...',
+        copy: 'Copy',
+        copied: 'Copied!',
+        clickToExpand: 'Click to expand',
 
         
 
@@ -395,6 +401,12 @@ const translations = {
         removeCSVConfirm: "Supprimer \"{name}\" et toutes ses transactions ?",
         cannotDeleteIncome: "Impossible de supprimer la catégorie Revenus.",
         errorCreatingCategory: "Erreur lors de la création de la catégorie. Veuillez réessayer.",
+        labelingTransaction: 'Étiquetage en cours...',
+        unlabelingTransaction: 'Suppression de l\'étiquette...',
+        checkingSimilar: 'Vérification des transactions similaires...',
+        copy: 'Copier',
+        copied: 'Copié !',
+        clickToExpand: 'Cliquer pour développer',
 
 
         // Alerts & notifications
@@ -734,6 +746,12 @@ const translations = {
         removeCSVConfirm: "להסיר את \"{name}\" ואת כל העסקאות שלו?",
         cannotDeleteIncome: "לא ניתן למחוק את קטגוריית ההכנסה.",
         errorCreatingCategory: "שגיאה ביצירת קטגוריה. אנא נסה שוב.",
+        labelingTransaction: 'מתייג עסקה...',
+        unlabelingTransaction: 'מסיר תווית...',
+        checkingSimilar: 'בודק עסקאות דומות...',
+        copy: 'העתק',
+        copied: 'הועתק!',
+        clickToExpand: 'לחץ להרחבה',
 
 
 
@@ -1074,6 +1092,12 @@ const translations = {
         removeCSVConfirm: "¿Eliminar \"{name}\" y todas sus transacciones?",
         cannotDeleteIncome: "No se puede eliminar la categoría Ingresos.",
         errorCreatingCategory: "Error al crear la categoría. Inténtalo de nuevo.",
+        labelingTransaction: 'Etiquetando transacción...',
+        unlabelingTransaction: 'Eliminando etiqueta...',
+        checkingSimilar: 'Verificando transacciones similares...',
+        copy: 'Copiar',
+        copied: '¡Copiado!',
+        clickToExpand: 'Clic para expandir',
 
 
         // Toasts & notifications
@@ -1413,6 +1437,12 @@ const translations = {
         removeCSVConfirm: "Удалить \"{name}\" и все его транзакции?",
         cannotDeleteIncome: "Нельзя удалить категорию Доход.",
         errorCreatingCategory: "Ошибка при создании категории. Попробуйте снова.",
+        labelingTransaction: 'Маркировка транзакции...',
+        unlabelingTransaction: 'Удаление метки...',
+        checkingSimilar: 'Проверка похожих транзакций...',
+        copy: 'Копировать',
+        copied: 'Скопировано!',
+        clickToExpand: 'Нажмите, чтобы развернуть',
 
 
         // Toasts & notifications
@@ -1752,6 +1782,13 @@ const translations = {
         removeCSVConfirm: "إزالة \"{name}\" وجميع معاملاته؟",
         cannotDeleteIncome: "لا يمكن حذف فئة الدخل.",
         errorCreatingCategory: "خطأ في إنشاء الفئة. حاول مرة أخرى.",
+        labelingTransaction: 'وضع علامة على المعاملة...',
+        unlabelingTransaction: 'إزالة العلامة...',
+        checkingSimilar: 'التحقق من المعاملات المماثلة...',
+        copy: 'نسخ',
+        copied: 'تم النسخ!',
+        clickToExpand: 'انقر للتوسيع',
+
 
 
         // Toasts & notifications
@@ -2047,6 +2084,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
