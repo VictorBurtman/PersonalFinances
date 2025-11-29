@@ -1029,7 +1029,7 @@ body.dark-mode .transaction-details strong {
 }
 
 body.dark-mode .expense-name {
-    color: white !important;
+    color: #e0e0e0 !important;
 }
 
 /* Smaller exclude modal */
