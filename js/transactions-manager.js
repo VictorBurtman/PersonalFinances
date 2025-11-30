@@ -2808,7 +2808,7 @@ function toggleFiltersRow() {
             
             // ✅ MODIFIÉ : Adapter au mode
             if (isDarkMode) {
-                btn.style.background = 'rgba(255, 255, 255, 0.1)'; // Fond sombre transparent
+                btn.style.background = '#2a2a3e'; // ✅ Même couleur que les autres boutons
                 btn.style.color = '#e0e0e0'; // Texte clair
             } else {
                 btn.style.background = 'white';
