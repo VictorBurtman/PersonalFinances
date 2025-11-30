@@ -268,44 +268,43 @@
                     </h4>
                 </div>
                 
-                <div id="bankSyncContent" style="display: none; margin-top: 15px;">
-                    <!-- Max.co.il Credentials -->
-                    <div style="margin-bottom: 25px;">
-                        <h5 style="margin-bottom: 10px;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
-                        <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 10px;">
-                            <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
+                <div id="bankSyncContent" style="display: none; margin-top: 20px;">
+                        <!-- Max.co.il Credentials -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
+                            <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
+                                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
+                                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
+                            </button>
                         </div>
-                        <button class="btn btn-primary" onclick="openCredentialsModal('max')">
-                            <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Isracard Credentials -->
-                    <div style="margin-bottom: 25px;">
-                        <h5 style="margin-bottom: 10px;"><span data-translate="isracard">💳 Isracard</span></h5>
-                        <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 10px;">
-                            <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
+                        
+                        <!-- Isracard Credentials -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
+                            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
+                                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
+                                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
+                            </button>
                         </div>
-                        <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
-                            <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Sync Section -->
-                    <div>
-                        <h5><span data-translate="syncStatus">Sync Status</span></h5>
-                        <div class="sync-status">
-                            <div class="sync-info">
-                                <div style="display: flex; flex-direction: column; gap: 5px;">
-                                    <div>Max: <strong id="lastMaxSyncTimeModal" data-translate="never">Never</strong> <span id="lastMaxSyncCountModal"></span></div>
-                                    <div>Isracard: <strong id="lastIsracardSyncTimeModal" data-translate="never">Never</strong> <span id="lastIsracardSyncCountModal"></span></div>
+                        
+                        <!-- Sync Section -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
+                            <div style="margin-bottom: 15px; padding: 10px; background: white; border-radius: 6px;">
+                                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
+                                    <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
+                                    <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
                                 </div>
                             </div>
-                            <div class="sync-buttons">
-                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal">
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
                                     <span data-translate="syncAll">🔄 Sync All</span>
                                 </button>
-                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal">
+                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
                                     <span data-translate="autoLabel">🏷️ Auto-label</span>
                                 </button>
                             </div>
