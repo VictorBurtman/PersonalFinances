@@ -1978,7 +1978,10 @@
             const t = translations[currentLanguage] || translations['en'];
             if (confirm(t.logoutConfirm || 'Logout?')) {
                 closeSettings();
-                auth.signOut();
+                auth.signOut().then(() => {
+                    // ✅ AJOUTÉ : Force un reload complet de la page
+                    window.location.reload();
+                });
             }
         }
 
