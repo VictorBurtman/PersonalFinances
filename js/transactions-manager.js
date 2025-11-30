@@ -126,13 +126,33 @@ async function loadTransactions() {
             }
         }
         
-        // Load transactions with increased limit
+        // Load transactions from Cloud Function (Max/Isracard)
         const getTransactions = transactionsFunctions.httpsCallable('getTransactions');
         const result = await getTransactions({ limit: 2000 });
         
-        transactionsData = result.data.transactions || [];
+        let bankTransactions = result.data.transactions || [];
         // Filter out excluded transactions
-        transactionsData = transactionsData.filter(txn => !txn.excluded);
+        bankTransactions = bankTransactions.filter(txn => !txn.excluded);
+        
+        // ✅ NOUVEAU : Load manual transactions from Firestore
+        let manualTransactions = [];
+        const manualSnapshot = await db.collection('transactions')
+            .where('userId', '==', window.currentUser.uid)
+            .where('isManual', '==', true)
+            .get();
+        
+        manualSnapshot.forEach(doc => {
+            const data = doc.data();
+            manualTransactions.push({
+                id: doc.id,
+                ...data
+            });
+        });
+        
+        console.log(`Loaded ${bankTransactions.length} bank transactions and ${manualTransactions.length} manual transactions`);
+        
+        // ✅ NOUVEAU : Combiner les deux sources
+        transactionsData = [...bankTransactions, ...manualTransactions];
         
         // Populate filters
         populateMonthFilter();
