@@ -522,10 +522,14 @@ body.dark-mode {
        align-items: center;
        justify-content: center;
        gap: 2px;
-       font-size: 1.3em; /* ✅ TAILLE EMOJI (grand) */
+       font-size: 1.5em; /* ✅ TAILLE EMOJI (grand) */
        line-height: 1;
     }
 
+   .toolbar-btn-text {
+       display: none; /* ✅ Masquer le texte sur mobile */
+   }
+   
    .toolbar-btn-text {
        font-size: 0.5em; /* ✅ TEXTE TRÈS PETIT (par rapport à l'emoji) */
        font-weight: 600;
