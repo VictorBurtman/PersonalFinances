@@ -809,6 +809,8 @@ function openAddManualTransactionModal() {
     populateManualTxnCategories();
     
     modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // ✅ AJOUTÉ
+
 }
 
 /**
@@ -818,6 +820,7 @@ function closeAddManualTransactionModal() {
     const modal = document.getElementById('addManualTransactionModal');
     if (modal) {
         modal.style.display = 'none';
+        document.body.style.overflow = ''; // ✅ AJOUTÉ
     }
 }
 
