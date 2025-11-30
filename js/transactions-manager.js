@@ -663,6 +663,10 @@ function renderTransaction(txn) {
     
     const isDifferentCurrency = txnCurrency !== (window.currency || '₪');
     const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea'; // Violet si devise différente, bleu sinon
+
+    // ✅ AJOUTÉ : Couleur différente pour transactions manuelles
+    const descColor = txn.isManual ? '#ff6b6b' : 'inherit';
+    const manualBadge = txn.isManual ? ' <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 5px;">MANUAL</span>' : '';
     
     return `
         <div class="transaction-item" style="display: block; padding: 15px;">
@@ -672,8 +676,8 @@ function renderTransaction(txn) {
                     <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
                         ${date}
                     </div>
-                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="showTransactionDetails('${txnId}')">
-                        ${escapeHtml(txn.description)} <span style="font-size: 0.75em; opacity: 0.7;">▼</span>
+                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: ${descColor};" onclick="showTransactionDetails('${txnId}')">
+                        ${escapeHtml(txn.description)}${manualBadge} <span style="font-size: 0.75em; opacity: 0.7;">▼</span>
                     </div>
                     
                     <!-- Expandable details -->
@@ -763,6 +767,149 @@ function toggleBankSync() {
     }
 }
 
+/**
+ * Open Add Manual Transaction Modal
+ */
+function openAddManualTransactionModal() {
+    const modal = document.getElementById('addManualTransactionModal');
+    if (!modal) return;
+    
+    // Reset form
+    document.getElementById('manualTransactionForm').reset();
+    
+    // Set today's date as default
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('manualTxnDate').value = today;
+    
+    // Set user's currency as default
+    const userCurrency = window.currency || '₪';
+    document.getElementById('manualTxnCurrency').value = userCurrency;
+    
+    // Populate categories
+    populateManualTxnCategories();
+    
+    modal.style.display = 'block';
+}
+
+/**
+ * Close Add Manual Transaction Modal
+ */
+function closeAddManualTransactionModal() {
+    const modal = document.getElementById('addManualTransactionModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Populate categories dropdown in manual transaction modal
+ */
+function populateManualTxnCategories() {
+    const select = document.getElementById('manualTxnCategory');
+    if (!select) return;
+    
+    // Get categories from Budget tab
+    const categorySections = document.querySelectorAll('.category-section[id^="category-"]');
+    const categories = Array.from(categorySections)
+        .map(section => section.id.replace('category-', ''))
+        .filter(c => c !== 'income' && document.getElementById(`category-${c}`).style.display !== 'none');
+    
+    // Clear existing options except first one
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
+    
+    // Add category options
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = `${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}`;
+        select.appendChild(option);
+    });
+}
+
+/**
+ * Save manual transaction
+ */
+async function saveManualTransaction(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('manualTxnName').value.trim();
+    const date = document.getElementById('manualTxnDate').value;
+    const amount = parseFloat(document.getElementById('manualTxnAmount').value);
+    const currency = document.getElementById('manualTxnCurrency').value;
+    const memo = document.getElementById('manualTxnMemo').value.trim();
+    const category = document.getElementById('manualTxnCategory').value;
+    
+    if (!name || !date || !amount) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    try {
+        // Show loading overlay
+        const overlay = document.getElementById('loadingOverlay');
+        const textEl = document.getElementById('loadingOverlayText');
+        const subtextEl = document.getElementById('loadingOverlaySubtext');
+        const t = translations[currentLanguage] || translations['en'];
+        
+        if (overlay) {
+            if (textEl) textEl.textContent = t.addingTransaction || 'Adding transaction...';
+            if (subtextEl) subtextEl.textContent = t.pleaseWait || 'Please wait';
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Create transaction object
+        const transaction = {
+            id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            description: name,
+            date: date,
+            chargedAmount: -Math.abs(amount), // Negative for expense
+            currency: currency,
+            memo: memo || '',
+            source: 'manual',
+            isManual: true,
+            isLabeled: category ? true : false,
+            category: category || null,
+            createdAt: new Date().toISOString()
+        };
+        
+        // Save to Firebase
+        await db.collection('transactions').add({
+            userId: window.currentUser.uid,
+            ...transaction
+        });
+        
+        console.log('Manual transaction added:', transaction);
+        
+        // Close modal
+        closeAddManualTransactionModal();
+        
+        // Hide loading overlay
+        if (overlay) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Show success toast
+        showToast(t.transactionAdded || 'Transaction added successfully!', 'success');
+        
+        // Reload transactions
+        await loadTransactions();
+        
+    } catch (error) {
+        // Hide loading overlay
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        console.error('Error adding manual transaction:', error);
+        alert('Error adding transaction: ' + error.message);
+    }
+}
 
 /**
  * Get category emoji
