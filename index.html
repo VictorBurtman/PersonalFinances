@@ -15,7 +15,7 @@
     <script src="translations.js"></script>
     <script>
     // ✅ APP VERSION - Facile à modifier
-    const APP_VERSION = '2.1.0';
+    const APP_VERSION = '0.0.1';
     </script>
 
     <style>
@@ -1579,16 +1579,6 @@
                     </label>
                 </div>
 
-                <!-- App Version Section -->
-                <div class="settings-section">
-                    <h3 data-translate="appVersion">ℹ️ App Version</h3>
-                    <p style="font-size: 1.1em; font-weight: 600; color: #667eea;">
-                        <span id="appVersionDisplay">Loading...</span>
-                    </p>
-                    <p style="font-size: 0.9em; color: #6c757d;">
-                        <span data-translate="versionInfo">Current version of your Personal Finance app</span>
-                    </p>
-                </div>
                                 
                 <!-- Percentage Calculation Section -->
                 <div class="settings-section" id="percentageModeSection" style="display: none;">
@@ -1605,7 +1595,19 @@
                     <p style="margin: 5px 0; font-weight: 600;" data-translate="madeBy">Made by Victor Burtman</p>
                     <p style="margin: 5px 0;"><span data-translate="contactInfo">For any bug report, ideas or suggestions:</span></p>
                     <a href="mailto:victorburtman@gmail.com" style="color: #667eea; text-decoration: none; font-weight: 600;">victorburtman@gmail.com</a>
-                </div>   
+                </div> 
+
+                <!-- App Version Section -->
+                <div class="settings-section">
+                    <h3 data-translate="appVersion">ℹ️ App Version</h3>
+                    <p style="font-size: 1.1em; font-weight: 600; color: #667eea;">
+                        <span id="appVersionDisplay">Loading...</span>
+                    </p>
+                    <p style="font-size: 0.9em; color: #6c757d;">
+                        <span data-translate="versionInfo">Current version of your Personal Finance app</span>
+                    </p>
+                </div>
+                
             </div>
             <div class="modal-footer">
                 <button class="modal-button primary" onclick="closeSettings()">
