@@ -77,7 +77,12 @@ const translations = {
         transactionLabeled: 'Transaction labeled! ✓',
         labeledWithSimilar: 'Labeled 1 transaction + {count} similar ones! ✓',
         labelRemoved: 'Label removed! ✓',
-
+        addTransaction: 'Add Transaction',
+        addManualTransaction: 'Add Transaction',
+        transactionName: 'Name',
+        optional: 'optional',
+        addingTransaction: 'Adding transaction...',
+        transactionAdded: 'Transaction added successfully!',
         
 
         // Alerts & notifications
@@ -459,6 +464,12 @@ const translations = {
         transactionLabeled: 'Transaction étiquetée ! ✓',
         labeledWithSimilar: '1 transaction + {count} similaires étiquetées ! ✓',
         labelRemoved: 'Étiquette supprimée ! ✓',
+        addTransaction: 'Ajouter Transaction',
+        addManualTransaction: 'Ajouter une Transaction',
+        transactionName: 'Nom',
+        optional: 'facultatif',
+        addingTransaction: 'Ajout de la transaction...',
+        transactionAdded: 'Transaction ajoutée avec succès!',
 
 
 
@@ -831,6 +842,12 @@ const translations = {
         transactionLabeled: 'העסקה תויגה! ✓',
         labeledWithSimilar: 'תויגה עסקה אחת + {count} דומות! ✓',
         labelRemoved: 'התווית הוסרה! ✓',
+        addTransaction: 'הוסף עסקה',
+        addManualTransaction: 'הוסף עסקה',
+        transactionName: 'שם',
+        optional: 'אופציונלי',
+        addingTransaction: 'מוסיף עסקה...',
+        transactionAdded: 'העסקה נוספה בהצלחה!',
 
 
 
@@ -1204,6 +1221,12 @@ const translations = {
         transactionLabeled: '¡Transacción etiquetada! ✓',
         labeledWithSimilar: '¡1 transacción + {count} similares etiquetadas! ✓',
         labelRemoved: '¡Etiqueta eliminada! ✓',
+        addTransaction: 'Agregar Transacción',
+        addManualTransaction: 'Agregar Transacción',
+        transactionName: 'Nombre',
+        optional: 'opcional',
+        addingTransaction: 'Agregando transacción...',
+        transactionAdded: '¡Transacción agregada exitosamente!',
 
 
         // Toasts & notifications
@@ -1575,6 +1598,12 @@ const translations = {
         transactionLabeled: 'Транзакция помечена! ✓',
         labeledWithSimilar: '1 транзакция + {count} похожих помечены! ✓',
         labelRemoved: 'Метка удалена! ✓',
+        addTransaction: 'Добавить транзакцию',
+        addManualTransaction: 'Добавить транзакцию',
+        transactionName: 'Название',
+        optional: 'необязательно',
+        addingTransaction: 'Добавление транзакции...',
+        transactionAdded: 'Транзакция успешно добавлена!',
 
 
         // Toasts & notifications
@@ -1946,6 +1975,12 @@ const translations = {
         transactionLabeled: 'تم تصنيف المعاملة! ✓',
         labeledWithSimilar: 'تم تصنيف معاملة واحدة + {count} معاملات مشابهة! ✓',
         labelRemoved: 'تم إزالة التصنيف! ✓',
+        addTransaction: 'إضافة معاملة',
+        addManualTransaction: 'إضافة معاملة',
+        transactionName: 'الاسم',
+        optional: 'اختياري',
+        addingTransaction: 'جارٍ إضافة المعاملة...',
+        transactionAdded: 'تمت إضافة المعاملة بنجاح!',
 
 
 
@@ -2243,6 +2278,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
