@@ -3666,9 +3666,8 @@
                 return;
             }
             
-            // Empêcher de renommer en catégories système
-            const systemCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
-            if (systemCategories.includes(newKey) && newKey !== categoryKey) {
+            // Empêcher de renommer en "income" uniquement
+            if (newKey === 'income' && categoryKey !== 'income') {
                 alert(t.cannotUseSystemName || 'Cannot use system name.');
                 return;
             }
