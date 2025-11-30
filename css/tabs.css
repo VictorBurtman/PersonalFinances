@@ -516,15 +516,15 @@ body.dark-mode {
     .toolbar-btn {
         flex: 1;
         min-width: 0;
-        font-size: 0.75em;
-        padding: 6px 10px;
+        font-size: 0.7em; /* ✅ RÉDUIT de 0.75em à 0.7em */
+        padding: 8px 6px; /* ✅ MODIFIÉ */
+        display: flex;
+        flex-direction: column; /* ✅ AJOUTÉ : emoji au-dessus du texte */
+        align-items: center;
+        gap: 2px;
+        line-height: 1.2;
     }
 
-       /* ✅ AJOUTÉ : Masquer le texte des boutons toolbar sur mobile */
-    .toolbar-btn-text {
-        display: none;
-    }
-   
     /* Filters */
     .filters-row {
         flex-direction: column;
