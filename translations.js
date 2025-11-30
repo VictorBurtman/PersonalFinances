@@ -83,6 +83,8 @@ const translations = {
         optional: 'optional',
         addingTransaction: 'Adding transaction...',
         transactionAdded: 'Transaction added successfully!',
+        appVersion: 'App Version',
+        versionInfo: 'Current version of your Personal Finance app',
         
 
         // Alerts & notifications
@@ -470,6 +472,8 @@ const translations = {
         optional: 'facultatif',
         addingTransaction: 'Ajout de la transaction...',
         transactionAdded: 'Transaction ajoutée avec succès!',
+        appVersion: 'Version de l\'App',
+        versionInfo: 'Version actuelle de votre app Finance',
 
 
 
@@ -848,6 +852,8 @@ const translations = {
         optional: 'אופציונלי',
         addingTransaction: 'מוסיף עסקה...',
         transactionAdded: 'העסקה נוספה בהצלחה!',
+        appVersion: 'גרסת האפליקציה',
+        versionInfo: 'גרסה נוכחית של אפליקציית הפיננסים',
 
 
 
@@ -1227,6 +1233,8 @@ const translations = {
         optional: 'opcional',
         addingTransaction: 'Agregando transacción...',
         transactionAdded: '¡Transacción agregada exitosamente!',
+        appVersion: 'Versión de la App',
+        versionInfo: 'Versión actual de tu app de Finanzas',
 
 
         // Toasts & notifications
@@ -1604,6 +1612,9 @@ const translations = {
         optional: 'необязательно',
         addingTransaction: 'Добавление транзакции...',
         transactionAdded: 'Транзакция успешно добавлена!',
+        appVersion: 'Версия приложения',
+        versionInfo: 'Текущая версия вашего приложения',
+
 
 
         // Toasts & notifications
@@ -1981,6 +1992,8 @@ const translations = {
         optional: 'اختياري',
         addingTransaction: 'جارٍ إضافة المعاملة...',
         transactionAdded: 'تمت إضافة المعاملة بنجاح!',
+        appVersion: 'إصدار التطبيق',
+        versionInfo: 'الإصدار الحالي لتطبيق التمويل الخاص بك',
 
 
 
@@ -2278,6 +2291,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
