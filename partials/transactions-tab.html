@@ -10,6 +10,9 @@
         <button class="toolbar-btn" onclick="openExcludedTransactionsModal()">
             🚫 <span data-translate="excluded">Excluded</span>
         </button>
+        <button class="toolbar-btn" onclick="openAddManualTransactionModal()">
+        ➕ <span data-translate="addTransaction">Add Transaction</span>
+        </button>
     </div>
     
     <!-- Filters Row (inside sticky toolbar, hidden by default) -->
@@ -332,6 +335,105 @@
     </div>
 </div>
 
+<!-- Add Manual Transaction Modal -->
+<div id="addManualTransactionModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2>➕ <span data-translate="addManualTransaction">Add Transaction</span></h2>
+            <button class="modal-close" onclick="closeAddManualTransactionModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="manualTransactionForm" onsubmit="saveManualTransaction(event)">
+                <!-- Name -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="transactionName">Name</span> <span style="color: #dc3545;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="manualTxnName" 
+                        class="auth-input" 
+                        required
+                        style="width: 100%;"
+                        placeholder="e.g. Rent, Groceries..."
+                    />
+                </div>
+
+                <!-- Date -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="date">Date</span> <span style="color: #dc3545;">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="manualTxnDate" 
+                        class="auth-input" 
+                        required
+                        style="width: 100%;"
+                    />
+                </div>
+
+                <!-- Amount and Currency -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="amount">Amount</span> <span style="color: #dc3545;">*</span>
+                    </label>
+                    <div style="display: flex; gap: 10px;">
+                        <input 
+                            type="number" 
+                            id="manualTxnAmount" 
+                            class="auth-input" 
+                            required
+                            step="0.01"
+                            min="0"
+                            style="flex: 1;"
+                            placeholder="0.00"
+                        />
+                        <select id="manualTxnCurrency" class="auth-input" style="width: 100px;">
+                            <option value="₪">₪ ILS</option>
+                            <option value="€">€ EUR</option>
+                            <option value="$">$ USD</option>
+                            <option value="£">£ GBP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Memo (optional) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="memo">Memo</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
+                    </label>
+                    <textarea 
+                        id="manualTxnMemo" 
+                        class="auth-input" 
+                        rows="3"
+                        style="width: 100%; resize: vertical;"
+                        placeholder="Additional notes..."
+                    ></textarea>
+                </div>
+
+                <!-- Category (optional) -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="category">Category</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
+                    </label>
+                    <select id="manualTxnCategory" class="auth-input" style="width: 100%;">
+                        <option value="" data-translate="selectCategory">Select category</option>
+                        <!-- Categories will be populated dynamically -->
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="modal-button" onclick="closeAddManualTransactionModal()">
+                <span data-translate="cancel">Cancel</span>
+            </button>
+            <button class="modal-button primary" onclick="document.getElementById('manualTransactionForm').requestSubmit()">
+                <span data-translate="save">Save</span>
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Scroll to Top Button (APRÈS la modal) -->
 <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
