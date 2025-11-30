@@ -600,9 +600,10 @@ body.dark-mode {
     }
     
     #bankAccountsModal .modal-content {
-        width: 95% !important;
-        max-width: 95% !important;
-        max-height: 90dvh !important;
+       width: 95% !important;
+       max-width: 95% !important;
+       max-height: 85dvh !important; /* ✅ RÉDUIT de 90dvh à 85dvh */
+       margin: auto !important; /* ✅ AJOUTÉ pour centrer verticalement */
     }
     
     #bankAccountsModal .modal-header {
@@ -614,7 +615,9 @@ body.dark-mode {
     }
     
     #bankAccountsModal .modal-body {
-        padding: 12px !important;
+       padding: 12px !important;
+       max-height: calc(85dvh - 140px) !important; /* ✅ AJOUTÉ - hauteur = modal - header - footer */
+       overflow-y: auto !important;
     }
     
     #bankAccountsModal .modal-footer {
