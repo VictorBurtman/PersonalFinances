@@ -1042,6 +1042,13 @@ body.dark-mode .transaction-details {
     color: #e0e0e0 !important;
 }
 
+/* Dark mode for toolbar */
+body.dark-mode .toolbar-btn {
+    background: #2a2a3e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
 /* Better centering for excluded transactions modal */
 #excludedTransactionsModal .modal-content {
     margin: auto;
