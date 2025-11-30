@@ -524,12 +524,9 @@ body.dark-mode {
         line-height: 1 !important;
     }
 
-    .toolbar-btn-text {
-        display: none !important; /* ✅ Force avec !important */
-    }
-    
-    .toolbar-btn span {
-        display: none !important; /* ✅ Au cas où */
+    /* ✅ MODIFIÉ : Cibler uniquement les spans avec data-translate */
+    .toolbar-btn span[data-translate] {
+        display: none !important;
     }
     
     /* Filters */
