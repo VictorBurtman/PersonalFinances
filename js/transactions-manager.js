@@ -746,6 +746,25 @@ function renderTransaction(txn) {
 }
 
 /**
+ * Toggle Bank Synchronization section
+ */
+function toggleBankSync() {
+    const content = document.getElementById('bankSyncContent');
+    const toggle = document.getElementById('bankSyncToggle');
+    
+    if (content && toggle) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '▼';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '▶';
+        }
+    }
+}
+
+
+/**
  * Get category emoji
  */
 function getCategoryEmoji(category) {
