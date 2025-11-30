@@ -514,17 +514,22 @@ body.dark-mode {
     }
     
     .toolbar-btn {
-        flex: 1;
-        min-width: 0;
-        padding: 8px 6px; /* ✅ Réduit la hauteur */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.4em; /* ✅ Emoji grand */
+        flex: 1 !important;
+        min-width: 0 !important;
+        padding: 10px 8px !important; /* ✅ Hauteur réduite */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.5em !important; /* ✅ Emoji */
+        line-height: 1 !important;
     }
 
     .toolbar-btn-text {
-        display: none; /* ✅ Masquer le texte sur mobile */
+        display: none !important; /* ✅ Force avec !important */
+    }
+    
+    .toolbar-btn span {
+        display: none !important; /* ✅ Au cas où */
     }
     
     /* Filters */
