@@ -1,5 +1,6 @@
 {
   "appId": "com.victor.personalfinances",
   "appName": "PersonalFinances",
-  "webDir": "."
+  "webDir": "www",
+  "bundledWebRuntime": false
 }
