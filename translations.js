@@ -241,7 +241,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 Bank Accounts",
+        bankAccountsConfig: "Bank Accounts",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Setup Max Credentials",
@@ -262,7 +262,7 @@ const translations = {
         loadingTransactions: "Loading transactions...",
         noTransactionsYet: "No transactions yet",
         clickSyncToStart: "Click \"Sync All\" to get started",
-        filters: "🔍 Filters",
+        filters: "Filters",
         showAll: "All",
         showOnlyUnlabeled: "Unlabeled only",
         showOnlyLabeled: "Labeled only",
@@ -632,7 +632,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 Comptes Bancaires",
+        bankAccountsConfig: "Comptes Bancaires",
         maxLeumi: "💳 Max.co.il (Leumi Card)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Configurer Max",
@@ -653,7 +653,7 @@ const translations = {
         loadingTransactions: "Chargement des transactions...",
         noTransactionsYet: "Aucune transaction",
         clickSyncToStart: "Cliquez sur \"Tout Synchroniser\" pour commencer",
-        filters: "🔍 Filtres",
+        filters: "Filtres",
         showAll: "Tous",
         showOnlyUnlabeled: "Non étiquetés seulement",
         showOnlyLabeled: "Étiquetés seulement",
@@ -1013,7 +1013,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 חשבונות בנק",
+        bankAccountsConfig: "חשבונות בנק",
         maxLeumi: "💳 Max.co.il (כרטיס לאומי)",
         isracard: "💳 ישראכרט",
         setupMaxCredentials: "🔐 הגדרת Max",
@@ -1034,7 +1034,7 @@ const translations = {
         loadingTransactions: "טוען עסקאות...",
         noTransactionsYet: "אין עדיין עסקאות",
         clickSyncToStart: "לחץ על \"סנכרן הכל\" כדי להתחיל",
-        filters: "🔍 סינון",
+        filters: "סינון",
         showAll: "הכל",
         showOnlyUnlabeled: "ללא תווית בלבד",
         showOnlyLabeled: "עם תווית בלבד",
@@ -1392,7 +1392,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 Cuentas Bancarias",
+        bankAccountsConfig: "Cuentas Bancarias",
         maxLeumi: "💳 Max.co.il (Tarjeta Leumi)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Configurar Max",
@@ -1413,7 +1413,7 @@ const translations = {
         loadingTransactions: "Cargando transacciones...",
         noTransactionsYet: "Aún no hay transacciones",
         clickSyncToStart: "Haz clic en \"Sincronizar Todo\" para comenzar",
-        filters: "🔍 Filtros",
+        filters: "Filtros",
         showAll: "Todos",
         showOnlyUnlabeled: "Sin etiquetar solamente",
         showOnlyLabeled: "Etiquetados solamente",
@@ -1772,7 +1772,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 Банковские Счета",
+        bankAccountsConfig: "Банковские Счета",
         maxLeumi: "💳 Max.co.il (Карта Леуми)",
         isracard: "💳 Isracard",
         setupMaxCredentials: "🔐 Настроить Max",
@@ -1793,7 +1793,7 @@ const translations = {
         loadingTransactions: "Загрузка транзакций...",
         noTransactionsYet: "Пока нет транзакций",
         clickSyncToStart: "Нажмите \"Синхронизировать Все\" для начала",
-        filters: "🔍 Фильтры",
+        filters: "Фильтры",
         showAll: "Все",
         showOnlyUnlabeled: "Только без меток",
         showOnlyLabeled: "Только с метками",
@@ -2153,7 +2153,7 @@ const translations = {
         close: "✕",
         
         // Transactions tab
-        bankAccountsConfig: "🏦 الحسابات البنكية",
+        bankAccountsConfig: "الحسابات البنكية",
         maxLeumi: "💳 Max.co.il (بطاقة ليئومي)",
         isracard: "💳 إسراكارد",
         setupMaxCredentials: "🔐 إعداد Max",
@@ -2174,7 +2174,7 @@ const translations = {
         loadingTransactions: "جاري تحميل المعاملات...",
         noTransactionsYet: "لا توجد معاملات بعد",
         clickSyncToStart: "انقر على \"مزامنة الكل\" للبدء",
-        filters: "🔍 المرشحات",
+        filters: "المرشحات",
         showAll: "الكل",
         showOnlyUnlabeled: "غير الموسومة فقط",
         showOnlyLabeled: "الموسومة فقط",
@@ -2291,6 +2291,7 @@ const translations = {
         show2000: "عرض 2000",
     }
 };
+
 
 
 
