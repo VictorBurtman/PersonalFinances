@@ -519,7 +519,12 @@ body.dark-mode {
         font-size: 0.75em;
         padding: 6px 10px;
     }
-    
+
+       /* ✅ AJOUTÉ : Masquer le texte des boutons toolbar sur mobile */
+    .toolbar-btn-text {
+        display: none;
+    }
+   
     /* Filters */
     .filters-row {
         flex-direction: column;
