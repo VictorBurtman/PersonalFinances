@@ -603,7 +603,7 @@ body.dark-mode {
        width: 95% !important;
        max-width: 95% !important;
        max-height: 85dvh !important; /* ✅ RÉDUIT de 90dvh à 85dvh */
-       margin: auto !important; /* ✅ AJOUTÉ pour centrer verticalement */
+       margin: 8dvh auto !important;
     }
     
     #bankAccountsModal .modal-header {
