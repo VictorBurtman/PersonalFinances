@@ -859,6 +859,7 @@ async function saveManualTransaction(event) {
     const amount = parseFloat(document.getElementById('manualTxnAmount').value);
     const currency = document.getElementById('manualTxnCurrency').value;
     const memo = document.getElementById('manualTxnMemo').value.trim();
+    const bankName = document.getElementById('manualTxnBankName').value.trim(); // ✅ AJOUTÉ
     const category = document.getElementById('manualTxnCategory').value;
     
     if (!name || !date || !amount) {
@@ -888,6 +889,7 @@ async function saveManualTransaction(event) {
             chargedAmount: -Math.abs(amount), // Negative for expense
             currency: currency,
             memo: memo || '',
+            bankName: bankName || 'Manual', // ✅ AJOUTÉ
             source: 'manual',
             isManual: true,
             isLabeled: category ? true : false,
