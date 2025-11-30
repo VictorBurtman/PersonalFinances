@@ -2,6 +2,20 @@
    TAB SYSTEM STYLES
    ============================================ */
 
+/* Variables pour light/dark mode */
+:root {
+    --block-bg: #f8f9fa;
+    --block-border: #dee2e6;
+    --inner-block-bg: white;
+}
+
+body.dark-mode {
+    --block-bg: rgba(255, 255, 255, 0.05);
+    --block-border: rgba(255, 255, 255, 0.1);
+    --inner-block-bg: rgba(255, 255, 255, 0.03);
+}
+
+
 .app-tabs {
     display: flex;
     gap: 10px;
@@ -700,7 +714,7 @@
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: 70vh;
+    max-height: 85vh;
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     display: flex;
