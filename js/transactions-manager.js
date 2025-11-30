@@ -2793,16 +2793,27 @@ function toggleFiltersRow() {
     const btn = document.getElementById('filtersToggleBtn');
     
     if (filtersRow && icon && btn) {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        
         if (filtersRow.style.display === 'none') {
+            // Ouvrir les filtres
             filtersRow.style.display = 'flex';
             icon.textContent = '▲';
             btn.style.background = '#667eea';
             btn.style.color = 'white';
         } else {
+            // Fermer les filtres
             filtersRow.style.display = 'none';
             icon.textContent = '▼';
-            btn.style.background = 'white';
-            btn.style.color = '#333';
+            
+            // ✅ MODIFIÉ : Adapter au mode
+            if (isDarkMode) {
+                btn.style.background = 'rgba(255, 255, 255, 0.1)'; // Fond sombre transparent
+                btn.style.color = '#e0e0e0'; // Texte clair
+            } else {
+                btn.style.background = 'white';
+                btn.style.color = '#333';
+            }
         }
     }
 }
