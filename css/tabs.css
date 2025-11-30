@@ -510,32 +510,23 @@ body.dark-mode {
     
     /* Toolbar */
     .toolbar-row {
-        gap: 4px; /* ✅ RÉDUIT de 8px à 4px */
+        gap: 6px;
     }
     
     .toolbar-btn {
-       flex: 1;
-       min-width: 0;
-       padding: 6px 3px; /* ✅ RÉDUIT le padding */
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       justify-content: center;
-       gap: 2px;
-       font-size: 1.5em; /* ✅ TAILLE EMOJI (grand) */
-       line-height: 1;
+        flex: 1;
+        min-width: 0;
+        padding: 8px 6px; /* ✅ Réduit la hauteur */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4em; /* ✅ Emoji grand */
     }
 
-   .toolbar-btn-text {
-       display: none; /* ✅ Masquer le texte sur mobile */
-   }
-   
-   .toolbar-btn-text {
-       font-size: 0.5em; /* ✅ TEXTE TRÈS PETIT (par rapport à l'emoji) */
-       font-weight: 600;
-       white-space: nowrap;
-       text-align: center;
-   }
+    .toolbar-btn-text {
+        display: none; /* ✅ Masquer le texte sur mobile */
+    }
+    
     /* Filters */
     .filters-row {
         flex-direction: column;
@@ -610,16 +601,16 @@ body.dark-mode {
         max-width: none;
     }
    
-     /* ✅ AJOUTE ICI - Bank Accounts Modal sur mobile */
+    /* Bank Accounts Modal sur mobile */
     #bankAccountsModal {
         padding: 10px !important;
     }
     
     #bankAccountsModal .modal-content {
-       width: 95% !important;
-       max-width: 95% !important;
-       max-height: 85dvh !important; /* ✅ RÉDUIT de 90dvh à 85dvh */
-       margin: 8dvh auto !important;
+        width: 95% !important;
+        max-width: 95% !important;
+        max-height: 85dvh !important;
+        margin: 8dvh auto !important;
     }
     
     #bankAccountsModal .modal-header {
@@ -631,15 +622,14 @@ body.dark-mode {
     }
     
     #bankAccountsModal .modal-body {
-       padding: 12px !important;
-       max-height: calc(85dvh - 140px) !important; /* ✅ AJOUTÉ - hauteur = modal - header - footer */
-       overflow-y: auto !important;
+        padding: 12px !important;
+        max-height: calc(85dvh - 140px) !important;
+        overflow-y: auto !important;
     }
     
     #bankAccountsModal .modal-footer {
         padding: 10px 12px !important;
     }
-
 }
 
 .filter-radio-group {
