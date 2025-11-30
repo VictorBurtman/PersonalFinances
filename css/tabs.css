@@ -510,21 +510,28 @@ body.dark-mode {
     
     /* Toolbar */
     .toolbar-row {
-        gap: 8px;
+        gap: 4px; /* ✅ RÉDUIT de 8px à 4px */
     }
     
     .toolbar-btn {
-        flex: 1;
-        min-width: 0;
-        font-size: 0.7em; /* ✅ RÉDUIT de 0.75em à 0.7em */
-        padding: 8px 6px; /* ✅ MODIFIÉ */
-        display: flex;
-        flex-direction: column; /* ✅ AJOUTÉ : emoji au-dessus du texte */
-        align-items: center;
-        gap: 2px;
-        line-height: 1.2;
+       flex: 1;
+       min-width: 0;
+       padding: 6px 3px; /* ✅ RÉDUIT le padding */
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+       gap: 2px;
+       font-size: 1.3em; /* ✅ TAILLE EMOJI (grand) */
+       line-height: 1;
     }
 
+   .toolbar-btn-text {
+       font-size: 0.5em; /* ✅ TEXTE TRÈS PETIT (par rapport à l'emoji) */
+       font-weight: 600;
+       white-space: nowrap;
+       text-align: center;
+   }
     /* Filters */
     .filters-row {
         flex-direction: column;
