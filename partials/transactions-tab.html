@@ -8,10 +8,10 @@
             <span data-translate="bankAccountsConfig">🏦 Bank Accounts</span>
         </button>
         <button class="toolbar-btn" onclick="openExcludedTransactionsModal()">
-            🚫 <span data-translate="excluded">Excluded</span>
+            🚫 <span data-translate="excluded" class="toolbar-btn-text">Excluded</span>
         </button>
         <button class="toolbar-btn" onclick="openAddManualTransactionModal()">
-        ➕ <span data-translate="addTransaction">Add Transaction</span>
+            ➕ <span data-translate="addTransaction" class="toolbar-btn-text">Add Transaction</span>
         </button>
     </div>
     
@@ -337,7 +337,7 @@
 
 <!-- Add Manual Transaction Modal -->
 <div id="addManualTransactionModal" class="modal">
-    <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-content" style="max-width: 500px; margin: 10vh auto;">
         <div class="modal-header">
             <h2>➕ <span data-translate="addManualTransaction">Add Transaction</span></h2>
             <button class="modal-close" onclick="closeAddManualTransactionModal()">✕</button>
