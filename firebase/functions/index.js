@@ -81,8 +81,10 @@ function getMonthsAgo(monthsBack = 6) {
 
 export const scrapeMaxTransactions = onCall(
   { 
-    timeoutSeconds: 540,
-    memory: '2GiB'
+    timeoutSeconds: 840,
+    memory: '2GiB',
+    maxInstances: 10,  // Limite le nombre d'instances
+    cpu: 2  // Plus de CPU = plus rapide
   },
   async (request) => {
     if (!request.auth) {
@@ -90,7 +92,37 @@ export const scrapeMaxTransactions = onCall(
     }
 
     const userId = request.auth.uid;
-    const { startDate } = request.data;
+    let { startDate, monthsBack } = request.data;
+
+    // Si pas de startDate fourni, calculer depuis la dernière transaction
+    if (!startDate) {
+        try {
+            const lastTransactionSnapshot = await db.collection('users')
+                .doc(userId)
+                .collection('transactions')
+                .where('source', '==', 'max')
+                .orderBy('date', 'desc')
+                .limit(1)
+                .get();
+            
+            if (!lastTransactionSnapshot.empty) {
+                const lastDate = new Date(lastTransactionSnapshot.docs[0].data().date);
+                // Remonter de 10 jours pour la sécurité
+                lastDate.setDate(lastDate.getDate() - 10);
+                startDate = lastDate.toISOString();
+                console.log(`Using incremental sync from: ${startDate}`);
+            } else {
+                // Première sync - utiliser monthsBack ou défaut 3 mois
+                const months = monthsBack || 6;  // ← 6 par défaut
+                startDate = getMonthsAgo(months).toISOString();
+                console.log(`First sync - using ${months} months back`);
+            }
+        } catch (error) {
+            console.error('Error calculating incremental sync date:', error);
+            // Fallback : 3 mois
+            startDate = getMonthsAgo(3).toISOString();
+        }
+    }
 
     try {
       console.log(`Starting scrape for user ${userId}`);
@@ -159,7 +191,11 @@ export const scrapeMaxTransactions = onCall(
       let transactionCount = 0;
 
       scrapeResult.accounts.forEach((account) => {
-        account.txns.forEach((txn) => {
+          account.txns.forEach((txn) => {
+              // Ignorer les transactions positives (revenus, remboursements) et zéro
+              if (txn.chargedAmount >= 0) {
+                  return;
+              }
           allTransactions.push({
             accountNumber: account.accountNumber,
             date: txn.date,
@@ -227,6 +263,189 @@ export const scrapeMaxTransactions = onCall(
     }
   }
 );
+
+
+/**
+ * Save Isracard credentials (encrypted)
+ */
+export const saveIsracardCredentials = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = request.auth.uid;
+  const { id, card6Digits, password } = request.data;
+
+  if (!id || !card6Digits || !password) {
+    throw new HttpsError('invalid-argument', 'ID, card digits, and password are required');
+  }
+
+  try {
+    const encrypted = encryptCredentials({ id, card6Digits, password });
+
+    await db.collection('users').doc(userId).set({
+      isracardCredentials: {
+        encrypted: encrypted,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }
+    }, { merge: true });
+
+    console.log(`Isracard credentials saved for user ${userId}`);
+
+    return {
+      success: true,
+      message: 'Isracard credentials saved successfully'
+    };
+
+  } catch (error) {
+    console.error('Error saving Isracard credentials:', error);
+    throw new HttpsError('internal', 'Failed to save Isracard credentials');
+  }
+});
+
+/**
+ * Scrape Isracard transactions
+ */
+export const scrapeIsracardTransactions = onCall(
+  {
+    timeoutSeconds: 840,
+    memory: '2GiB',
+    maxInstances: 10,  // Limite le nombre d'instances
+    cpu: 2  // Plus de CPU = plus rapide
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'User must be authenticated');
+    }
+
+    const userId = request.auth.uid;
+    const { startDate } = request.data;
+
+    try {
+      console.log(`Starting Isracard scrape for user ${userId}`);
+
+      const userDoc = await db.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        throw new HttpsError('not-found', 'User not found');
+      }
+
+      const userData = userDoc.data();
+      
+      if (!userData.isracardCredentials || !userData.isracardCredentials.encrypted) {
+        throw new HttpsError('failed-precondition', 'Isracard credentials not set.');
+      }
+
+      const credentials = decryptCredentials(userData.isracardCredentials.encrypted);
+      
+      console.log('Isracard credentials decrypted, starting scraper...');
+
+      // Configure Puppeteer avec Chromium
+      const executablePath = await chromium.executablePath();
+      process.env.PUPPETEER_EXECUTABLE_PATH = executablePath;
+
+      const scraperOptions = {
+        companyId: CompanyTypes.isracard,
+        startDate: startDate ? new Date(startDate) : getMonthsAgo(6),
+        combineInstallments: false,
+        showBrowser: false,
+        verbose: true,
+        args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox']
+      };
+
+      console.log('Creating Isracard scraper');
+
+      const scraper = createScraper(scraperOptions);
+      const scrapeResult = await scraper.scrape(credentials);
+
+      if (!scrapeResult.success) {
+        console.error('Isracard scrape failed:', scrapeResult.errorType, scrapeResult.errorMessage);
+        throw new HttpsError(
+          'internal',
+          `Isracard scraping failed: ${scrapeResult.errorType || 'Unknown error'}`,
+          { errorType: scrapeResult.errorType, errorMessage: scrapeResult.errorMessage }
+        );
+      }
+
+      console.log(`Isracard scrape successful, found ${scrapeResult.accounts.length} accounts`);
+
+      const allTransactions = [];
+      let transactionCount = 0;
+
+      scrapeResult.accounts.forEach((account) => {
+        account.txns.forEach((txn) => {
+          // Ignorer les transactions positives (revenus, remboursements)
+          if (txn.chargedAmount >= 0 || txn.chargedAmount === 0) {
+            return;
+          }
+          
+          allTransactions.push({
+            accountNumber: account.accountNumber,
+            date: txn.date,
+            processedDate: txn.processedDate,
+            originalAmount: txn.originalAmount,
+            originalCurrency: txn.originalCurrency,
+            chargedAmount: txn.chargedAmount,
+            chargedCurrency: txn.chargedCurrency || 'ILS',
+            description: txn.description,
+            memo: txn.memo,
+            type: txn.type,
+            status: txn.status,
+            category: null,
+            isLabeled: false
+          });
+          transactionCount++;
+        });
+      });
+
+      console.log(`Processed ${transactionCount} Isracard transactions`);
+
+      // Save to Firestore
+      const batch = db.batch();
+      const transactionsRef = db.collection('users').doc(userId).collection('transactions');
+
+      allTransactions.forEach((transaction) => {
+        const transactionId = CryptoJS.MD5(
+          `${transaction.date}-${transaction.description}-${transaction.chargedAmount}-isracard`
+        ).toString();
+        
+        const docRef = transactionsRef.doc(transactionId);
+        batch.set(docRef, {
+          ...transaction,
+          source: 'isracard',
+          scrapedAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      });
+
+      await batch.commit();
+
+      await db.collection('users').doc(userId).set({
+        lastIsracardSync: admin.firestore.FieldValue.serverTimestamp(),
+        lastIsracardSyncTransactionCount: transactionCount
+      }, { merge: true });
+
+      console.log(`Saved ${transactionCount} Isracard transactions`);
+
+      return {
+        success: true,
+        transactionCount: transactionCount,
+        accounts: scrapeResult.accounts.length,
+        message: `Successfully scraped ${transactionCount} Isracard transactions`
+      };
+
+    } catch (error) {
+      console.error('Error in scrapeIsracardTransactions:', error);
+      
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+      
+      throw new HttpsError('internal', `Isracard scraping error: ${error.message}`);
+    }
+  }
+);
+
 /**
  * Cloud Function: Get user transactions
  * Returns transactions with optional filters
@@ -300,8 +519,8 @@ export const labelTransaction = onCall(async (request) => {
   const userId = request.auth.uid;
   const { transactionId, category } = request.data;
 
-  if (!transactionId || !category) {
-    throw new HttpsError('invalid-argument', 'Transaction ID and category are required');
+  if (!transactionId) {
+    throw new HttpsError('invalid-argument', 'Transaction ID is required');
   }
 
   try {
@@ -311,59 +530,229 @@ export const labelTransaction = onCall(async (request) => {
       .doc(transactionId);
 
     const transactionDoc = await transactionRef.get();
-    
+
     if (!transactionDoc.exists) {
       throw new HttpsError('not-found', 'Transaction not found');
     }
 
     const transaction = transactionDoc.data();
 
-    // Update transaction
+    // Update the main transaction
     await transactionRef.update({
       category: category,
-      isLabeled: true,
-      labeledAt: admin.firestore.FieldValue.serverTimestamp()
+      isLabeled: category !== null,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    // Extract keywords from description and create labeling rules
-    const keywords = extractKeywords(transaction.description);
-    
-    const rulesRef = db.collection('users').doc(userId).collection('labelingRules');
-    
-    for (const keyword of keywords) {
-      const ruleId = keyword.toLowerCase().replace(/[^a-z0-9]/g, '_');
-      await rulesRef.doc(ruleId).set({
-        pattern: keyword.toLowerCase(),
-        category: category,
-        matchType: 'contains',
-        confidence: 0.8,
-        timesMatched: admin.firestore.FieldValue.increment(1),
-        lastMatched: admin.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+    console.log(`Transaction ${transactionId} labeled as ${category}`);
+
+    // If labeling (not unlabeling), find and label similar transactions
+    let similarCount = 0;
+    if (category) {
+      // Extract keywords from transaction description
+      const description = transaction.description.toLowerCase();
+      const keywords = extractKeywords(description);
+
+      console.log(`Extracted keywords for "${description}":`, keywords);
+
+      if (keywords.length > 0) {
+        // Find unlabeled transactions with similar descriptions
+        const allTransactionsSnapshot = await db.collection('users')
+          .doc(userId)
+          .collection('transactions')
+          .where('isLabeled', '==', false)
+          .get();
+
+        const batch = db.batch();
+        
+        allTransactionsSnapshot.docs.forEach(doc => {
+          const txn = doc.data();
+          const txnDescription = txn.description.toLowerCase();
+          
+          // Check if any keyword matches (more flexible)
+          const hasMatch = keywords.some(keyword => {
+            // For short keywords (< 4 chars), require exact match
+            if (keyword.length < 4) {
+              return txnDescription.includes(keyword);
+            }
+            // For longer keywords, allow partial matches
+            // This helps with variations like "אי.אם.פי" vs "אי אם פי"
+            const cleanKeyword = keyword.replace(/[.\s:]/g, '');
+            const cleanTxnDesc = txnDescription.replace(/[.\s:]/g, '');
+            return cleanTxnDesc.includes(cleanKeyword);
+          });
+          
+          if (hasMatch && doc.id !== transactionId) {
+            batch.update(doc.ref, {
+              category: category,
+              isLabeled: true,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            similarCount++;
+            console.log(`  → Auto-labeled similar transaction: ${txn.description}`);
+          }
+        });
+
+        if (similarCount > 0) {
+          await batch.commit();
+          console.log(`Auto-labeled ${similarCount} similar transactions`);
+        }
+      }
     }
 
     return {
       success: true,
-      message: 'Transaction labeled successfully'
+      message: category ? 
+        `Labeled ${1 + similarCount} transaction${similarCount > 0 ? 's' : ''}` :
+        'Label removed',
+      similarCount: similarCount
     };
 
   } catch (error) {
     console.error('Error labeling transaction:', error);
-    throw new HttpsError('internal', 'Failed to label transaction');
+    throw new HttpsError('internal', `Failed to label transaction: ${error.message}`);
+  }
+});
+
+
+
+/**
+ * Rename a category and update all associated transactions
+ */
+export const renameCategory = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = request.auth.uid;
+  const { oldName, newName } = request.data;
+
+  if (!oldName || !newName) {
+    throw new HttpsError('invalid-argument', 'Both old and new category names are required');
+  }
+
+  if (oldName === newName) {
+    return { success: true, message: 'No change needed' };
+  }
+
+  try {
+    // Update all transactions with this category
+    const transactionsRef = db.collection('users').doc(userId).collection('transactions');
+    const snapshot = await transactionsRef.where('category', '==', oldName).get();
+
+    if (!snapshot.empty) {
+      const batch = db.batch();
+      
+      snapshot.docs.forEach(doc => {
+        batch.update(doc.ref, {
+          category: newName,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      });
+
+      await batch.commit();
+      console.log(`Updated ${snapshot.size} transactions from ${oldName} to ${newName}`);
+    }
+
+    return {
+      success: true,
+      updatedCount: snapshot.size,
+      message: `Category renamed and ${snapshot.size} transaction(s) updated`
+    };
+
+  } catch (error) {
+    console.error('Error renaming category:', error);
+    throw new HttpsError('internal', `Failed to rename category: ${error.message}`);
   }
 });
 
 /**
- * Helper: Extract keywords from transaction description
+ * Delete a category and unlabel all associated transactions
+ */
+export const deleteCategory = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = request.auth.uid;
+  const { categoryName } = request.data;
+
+  if (!categoryName) {
+    throw new HttpsError('invalid-argument', 'Category name is required');
+  }
+
+  try {
+    // Unlabel all transactions with this category
+    const transactionsRef = db.collection('users').doc(userId).collection('transactions');
+    const snapshot = await transactionsRef.where('category', '==', categoryName).get();
+
+    if (!snapshot.empty) {
+      const batch = db.batch();
+      
+      snapshot.docs.forEach(doc => {
+        batch.update(doc.ref, {
+          category: null,
+          isLabeled: false,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      });
+
+      await batch.commit();
+      console.log(`Unlabeled ${snapshot.size} transactions from deleted category ${categoryName}`);
+    }
+
+    return {
+      success: true,
+      unlabeledCount: snapshot.size,
+      message: `Category deleted and ${snapshot.size} transaction(s) unlabeled`
+    };
+
+  } catch (error) {
+    console.error('Error deleting category:', error);
+    throw new HttpsError('internal', `Failed to delete category: ${error.message}`);
+  }
+});
+
+
+/**
+ * Extract meaningful keywords from transaction description
+ * Supports Hebrew, English, and numbers
  */
 function extractKeywords(description) {
-  // Remove special characters and split
-  const cleaned = description.replace(/[^\w\s]/g, ' ').toLowerCase();
-  const words = cleaned.split(/\s+/).filter(word => word.length > 2);
+  // Remove common noise words (Hebrew and English)
+  const noiseWords = [
+    'ltd', 'inc', 'llc', 'co', 'corp', 'limited', 'the', 'israel', 
+    'tel aviv', 'jerusalem', 'בעמ', 'בע"מ', 'ישראל', 'תל אביב'
+  ];
   
-  // Return unique words
-  return [...new Set(words)];
+  // Clean the description but KEEP Hebrew characters
+  // This regex keeps: Hebrew (א-ת), English (a-zA-Z), numbers (0-9), and spaces
+  let cleaned = description
+    .toLowerCase()
+    .replace(/[^\u0590-\u05FFa-z0-9\s]/gi, ' ') // Keep Hebrew, English, numbers
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .trim();
+  
+  // Split by spaces
+  let words = cleaned
+    .split(/\s+/)
+    .filter(word => word.length > 2) // Keep words longer than 2 chars
+    .filter(word => !noiseWords.includes(word));
+  
+  // Remove duplicates
+  words = [...new Set(words)];
+  
+  // For Hebrew text, if we have long words, use them
+  // For mixed text, take the most significant parts
+  if (words.length === 0) {
+    // Fallback: use the whole cleaned description
+    return [cleaned];
+  }
+  
+  // Return top 3 most significant words (or the whole thing if short)
+  return words.slice(0, 3);
 }
+
 
 /**
  * Cloud Function: Auto-label transactions
@@ -433,3 +822,5 @@ export const autoLabelTransactions = onCall(async (request) => {
     throw new HttpsError('internal', 'Failed to auto-label transactions');
   }
 });
+
+
