@@ -1321,157 +1321,164 @@
                         </div>
                     </div>
 
-                    <div class="expenses-list" id="expensesList">
-                        <div class="category-section income-category" id="category-income" style="display: none;">
-                            <div class="category-title" style="color: #28a745; border-color: #28a745;">
-                                <span data-translate="income">Income</span>
-                                <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>
-                            </div>
-                            <div id="incomeExpenses"></div>
+                     <div class="expenses-list" id="expensesList">
+                    <!-- Income Category -->
+                    <div class="category-section income-category" id="category-income" style="display: none;">
+                        <div class="category-title" style="color: #28a745; border-color: #28a745;">
+                            <span data-translate="income">Income</span>
+                            <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
                         </div>
-
-                        <div class="category-section" id="category-housing">
-                            <div class="category-title">
-                                🏠 Housing
-                                <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="housingStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="housingExpenses"></div>
+                        <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>
                         </div>
-
-                        <div class="category-section" id="category-tech">
-                            <div class="category-title">
-                                📱 Communications & Tech
-                                <button class="rename-btn" onclick="renameCategory('tech')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="techStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="techExpenses"></div>
-                        </div>
-
-                        <div class="category-section" id="category-pet">
-                            <div class="category-title">
-                                🐱 Pet Care
-                                <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="petStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="petExpenses"></div>
-                        </div>
-
-                        <div class="category-section" id="category-subscriptions">
-                            <div class="category-title">
-                                🎬 Subscriptions
-                                <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="subscriptionsStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="subscriptionsExpenses"></div>
-                        </div>
-
-                        <div class="category-section" id="category-groceries">
-                            <div class="category-title">
-                                🛒 Groceries
-                                <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="groceriesStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="groceriesExpenses"></div>
-                        </div>
-
-                        <div class="category-section" id="category-other">
-                            <div class="category-title">
-                                💸 Other Expenses
-                                <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
-                            </div>
-                            <div class="category-stats" id="otherStats"></div>
-                            <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                    <span data-translate="moveUp">↑ Move Up</span>
-                                </button>
-                                <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                    <span data-translate="moveDown">↓ Move Down</span>
-                                </button>
-                                <button class="category-btn" onclick="addItemToCategory('housing')">
-                                    <span data-translate="addItem">➕ Add Item</span>
-                                </button>
-                                <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                                </button>
-                            </div>
-                            <div id="otherExpenses"></div>
-                        </div>
+                        <div id="incomeExpenses"></div>
                     </div>
+                
+                    <!-- Housing Category -->
+                    <div class="category-section" id="category-housing">
+                        <div class="category-title">
+                            🏠 Housing
+                            <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="housingStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('housing')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('housing')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('housing')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('housing')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="housingExpenses"></div>
+                    </div>
+                
+                    <!-- Subscriptions Category -->
+                    <div class="category-section" id="category-subscriptions">
+                        <div class="category-title">
+                            🎬 Subscriptions
+                            <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="subscriptionsStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('subscriptions')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('subscriptions')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('subscriptions')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('subscriptions')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="subscriptionsExpenses"></div>
+                    </div>
+                
+                    <!-- Groceries Category -->
+                    <div class="category-section" id="category-groceries">
+                        <div class="category-title">
+                            🛒 Groceries
+                            <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="groceriesStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('groceries')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('groceries')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('groceries')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('groceries')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="groceriesExpenses"></div>
+                    </div>
+                
+                    <!-- Pet Care Category -->
+                    <div class="category-section" id="category-pet">
+                        <div class="category-title">
+                            🐱 Pet Care
+                            <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="petStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('pet')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('pet')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('pet')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('pet')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="petExpenses"></div>
+                    </div>
+                
+                    <!-- Hobbies Category (NEW) -->
+                    <div class="category-section" id="category-hobbies">
+                        <div class="category-title">
+                            🎮 Hobbies
+                            <button class="rename-btn" onclick="renameCategory('hobbies')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="hobbiesStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('hobbies')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('hobbies')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('hobbies')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('hobbies')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="hobbiesExpenses"></div>
+                    </div>
+                
+                    <!-- Other Expenses Category -->
+                    <div class="category-section" id="category-other">
+                        <div class="category-title">
+                            💸 Other Expenses
+                            <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
+                        </div>
+                        <div class="category-stats" id="otherStats"></div>
+                        <div class="category-controls">
+                            <button class="category-btn" onclick="moveCategoryUp('other')">
+                                <span data-translate="moveUp">↑ Move Up</span>
+                            </button>
+                            <button class="category-btn" onclick="moveCategoryDown('other')">
+                                <span data-translate="moveDown">↓ Move Down</span>
+                            </button>
+                            <button class="category-btn" onclick="addItemToCategory('other')">
+                                <span data-translate="addItem">➕ Add Item</span>
+                            </button>
+                            <button class="category-btn danger" onclick="deleteCategory('other')">
+                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                            </button>
+                        </div>
+                        <div id="otherExpenses"></div>
+                    </div>
+                </div>
 
                     <button id="resetBtn" class="reset-button" onclick="resetExpenses()">
                         <span data-translate="resetAll">Reset All Expenses</span>
@@ -1700,7 +1707,7 @@
         let currentUser = null;
         let isSignUpMode = false;
         let isEditMode = false;
-        let categoryOrder = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+        let categoryOrder = ['income', 'housing', 'subscriptions', 'groceries', 'pet', 'hobbies', 'other'];
         let useIncome = true;
         let currency = '₪'; // Default currency symbol
         let currencyOptions = {
@@ -2023,29 +2030,29 @@
             ],
             housing: [
                 { name: 'Rent', amount: 0 },
-                { name: 'Arnona', amount: 0 },
+                { name: 'Residence tax', amount: 0 },
                 { name: 'Electricity', amount: 0 },
                 { name: 'Gas', amount: 0 },
                 { name: 'Water', amount: 0 }
             ],
-            tech: [
-                { name: 'Phone Plan', amount: 0 },
-                { name: 'Internet', amount: 0 },
-                { name: 'iCloud', amount: 0 }
-            ],
-            pet: [
-                { name: 'Cat Food', amount: 0 },
-                { name: 'Litter', amount: 0 }
-            ],
             subscriptions: [
-                { name: 'YouTube Premium', amount: 0 },
-                { name: 'Claude Pro', amount: 0 },
-                { name: 'Therapist', amount: 0 }
+                { name: 'Internet', amount: 0 },
+                { name: 'Phone Plan', amount: 0 },
+                { name: 'Spotify', amount: 0 },
+                { name: 'Gym', amount: 0 }
             ],
             groceries: [
                 { name: 'Food', amount: 0 },
-                { name: 'Household Products', amount: 0 },
-                { name: 'Personal Care', amount: 0 }
+                { name: 'Household Products', amount: 0 }
+            ],
+            pet: [
+                { name: 'Pet Food and Litter', amount: 0 },
+                { name: 'Vet', amount: 0 }
+            ],
+            hobbies: [
+                { name: 'Restaurant', amount: 0 },
+                { name: 'Cinema', amount: 0 },
+                { name: 'Video Games', amount: 0 }
             ],
             other: [
                 { name: 'Other Expenses', amount: 0 }
