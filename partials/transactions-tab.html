@@ -270,7 +270,7 @@
                 
                     <div id="bankSyncContent" style="display: none; margin-top: 20px;">
                         <!-- Max.co.il Credentials -->
-                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
                             <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
                             <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
                                 <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
@@ -281,7 +281,7 @@
                         </div>
                         
                         <!-- Isracard Credentials -->
-                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
                             <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
                             <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
                                 <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
@@ -292,9 +292,9 @@
                         </div>
                         
                         <!-- Sync Section -->
-                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; border: 1px solid var(--block-border, #dee2e6);">
                             <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
-                            <div style="margin-bottom: 15px; padding: 10px; background: rgba(255, 255, 255, 0.03); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <div style="margin-bottom: 15px; padding: 10px; background: var(--inner-block-bg, white); border-radius: 6px; border: 1px solid var(--block-border, #e9ecef);">
                                 <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
                                     <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
                                     <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
@@ -313,13 +313,13 @@
                 </div>
             </div>
 
-            <!-- ✅ NOUVEAU : Clear All Transactions (déplacé depuis Settings) -->
-            <div class="bank-section" style="border-top: 2px solid #e0e0e0; margin-top: 20px; padding-top: 20px;">
-                <h4 data-translate="clearData">🗑️ Clear Data</h4>
-                <button class="settings-btn danger" onclick="clearAllTransactions()" style="max-width: 400px; width: 100%; padding: 12px; font-size: 1em;">
+            <!-- Clear All Transactions (déplacé depuis Settings) -->
+            <div class="bank-section" style="border-top: 2px solid #e0e0e0; margin-top: 20px; padding-top: 20px; text-align: center;">
+                <h4 data-translate="clearData" style="text-align: center;">🗑️ Clear Data</h4>
+                <button class="settings-btn danger" onclick="clearAllTransactions()" style="max-width: 400px; width: 100%; padding: 12px; font-size: 1em; margin: 0 auto; display: block;">
                     <span data-translate="clearAllTransactions">Clear All Transactions</span>
                 </button>
-                <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d;" data-translate="clearTransactionsWarning">
+                <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d; text-align: center;" data-translate="clearTransactionsWarning">
                     Remove all synced transactions from the database. This cannot be undone.
                 </p>
             </div>
