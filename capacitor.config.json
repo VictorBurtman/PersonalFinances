@@ -2,5 +2,9 @@
   "appId": "com.victor.personalfinances",
   "appName": "PersonalFinances",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "server": {
+    "hostname": "expense-tracker-b086e.firebaseapp.com",
+    "androidScheme": "https"
+  }
 }
