@@ -32,13 +32,38 @@ function decryptCredentials(encryptedData) {
 
 /**
  * Cloud Function: Save Max credentials (encrypted)
- * Called from frontend to store user's Max credentials securely
+ * ✅ PROTECTED: Whitelist check
  */
 export const saveMaxCredentials = onCall(async (request) => {
   // Verify authentication
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'User must be authenticated');
   }
+
+  const userId = request.auth.uid;
+
+  // ✅ WHITELIST CHECK
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    
+    if (!userDoc.exists) {
+      throw new HttpsError('not-found', 'User not found');
+    }
+    
+    const userData = userDoc.data();
+    if (!userData.allowBankScraping) {
+      throw new HttpsError(
+        'permission-denied', 
+        'You are not authorized to configure bank scraping. Please contact the administrator.'
+      );
+    }
+  } catch (error) {
+    if (error instanceof HttpsError) {
+      throw error;
+    }
+    throw new HttpsError('internal', 'Failed to verify permissions');
+  }
+  // ✅ END WHITELIST CHECK
 
   const { username, password } = request.data;
   
@@ -51,7 +76,7 @@ export const saveMaxCredentials = onCall(async (request) => {
     const encrypted = encryptCredentials({ username, password });
     
     // Save to Firestore
-    await db.collection('users').doc(request.auth.uid).set({
+    await db.collection('users').doc(userId).set({
       maxCredentials: {
         encrypted: encrypted,
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
@@ -78,13 +103,16 @@ function getMonthsAgo(monthsBack = 6) {
   return date;
 }
 
-
+/**
+ * Scrape Max.co.il transactions
+ * ✅ PROTECTED: Whitelist check
+ */
 export const scrapeMaxTransactions = onCall(
   { 
     timeoutSeconds: 840,
     memory: '2GiB',
-    maxInstances: 10,  // Limite le nombre d'instances
-    cpu: 2  // Plus de CPU = plus rapide
+    maxInstances: 10,
+    cpu: 2
   },
   async (request) => {
     if (!request.auth) {
@@ -92,6 +120,30 @@ export const scrapeMaxTransactions = onCall(
     }
 
     const userId = request.auth.uid;
+
+    // ✅ WHITELIST CHECK
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        throw new HttpsError('not-found', 'User not found');
+      }
+      
+      const userData = userDoc.data();
+      if (!userData.allowBankScraping) {
+        throw new HttpsError(
+          'permission-denied', 
+          'You are not authorized to use bank scraping. Please contact the administrator.'
+        );
+      }
+    } catch (error) {
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+      throw new HttpsError('internal', 'Failed to verify permissions');
+    }
+    // ✅ END WHITELIST CHECK
+
     let { startDate, monthsBack } = request.data;
 
     // Si pas de startDate fourni, calculer depuis la dernière transaction
@@ -112,8 +164,8 @@ export const scrapeMaxTransactions = onCall(
                 startDate = lastDate.toISOString();
                 console.log(`Using incremental sync from: ${startDate}`);
             } else {
-                // Première sync - utiliser monthsBack ou défaut 3 mois
-                const months = monthsBack || 6;  // ← 6 par défaut
+                // Première sync - utiliser monthsBack ou défaut 6 mois
+                const months = monthsBack || 6;
                 startDate = getMonthsAgo(months).toISOString();
                 console.log(`First sync - using ${months} months back`);
             }
@@ -151,11 +203,10 @@ export const scrapeMaxTransactions = onCall(
       // Configure scraper avec options Puppeteer custom
       const scraperOptions = {
         companyId: CompanyTypes.max,
-        startDate: startDate ? new Date(startDate) : getMonthsAgo(6), // 6 derniers mois complets
+        startDate: startDate ? new Date(startDate) : getMonthsAgo(6),
         combineInstallments: false,
         showBrowser: false,
         verbose: true,
-        // Options Puppeteer directes
         puppeteerOptions: {
           executablePath: executablePath,
           args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
@@ -264,9 +315,9 @@ export const scrapeMaxTransactions = onCall(
   }
 );
 
-
 /**
  * Save Isracard credentials (encrypted)
+ * ✅ PROTECTED: Whitelist check
  */
 export const saveIsracardCredentials = onCall(async (request) => {
   if (!request.auth) {
@@ -274,6 +325,30 @@ export const saveIsracardCredentials = onCall(async (request) => {
   }
 
   const userId = request.auth.uid;
+
+  // ✅ WHITELIST CHECK
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    
+    if (!userDoc.exists) {
+      throw new HttpsError('not-found', 'User not found');
+    }
+    
+    const userData = userDoc.data();
+    if (!userData.allowBankScraping) {
+      throw new HttpsError(
+        'permission-denied', 
+        'You are not authorized to configure bank scraping. Please contact the administrator.'
+      );
+    }
+  } catch (error) {
+    if (error instanceof HttpsError) {
+      throw error;
+    }
+    throw new HttpsError('internal', 'Failed to verify permissions');
+  }
+  // ✅ END WHITELIST CHECK
+
   const { id, card6Digits, password } = request.data;
 
   if (!id || !card6Digits || !password) {
@@ -305,13 +380,14 @@ export const saveIsracardCredentials = onCall(async (request) => {
 
 /**
  * Scrape Isracard transactions
+ * ✅ PROTECTED: Whitelist check
  */
 export const scrapeIsracardTransactions = onCall(
   {
     timeoutSeconds: 840,
     memory: '2GiB',
-    maxInstances: 10,  // Limite le nombre d'instances
-    cpu: 2  // Plus de CPU = plus rapide
+    maxInstances: 10,
+    cpu: 2
   },
   async (request) => {
     if (!request.auth) {
@@ -319,6 +395,30 @@ export const scrapeIsracardTransactions = onCall(
     }
 
     const userId = request.auth.uid;
+
+    // ✅ WHITELIST CHECK
+    try {
+      const userDoc = await db.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        throw new HttpsError('not-found', 'User not found');
+      }
+      
+      const userData = userDoc.data();
+      if (!userData.allowBankScraping) {
+        throw new HttpsError(
+          'permission-denied', 
+          'You are not authorized to use bank scraping. Please contact the administrator.'
+        );
+      }
+    } catch (error) {
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+      throw new HttpsError('internal', 'Failed to verify permissions');
+    }
+    // ✅ END WHITELIST CHECK
+
     const { startDate } = request.data;
 
     try {

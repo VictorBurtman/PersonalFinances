@@ -1123,15 +1123,61 @@ function fallbackCopyToClipboard(text, btn, originalText) {
     }
     document.body.removeChild(textArea);
 }
+
 /**
- * Open Bank Accounts Modal
+ * Check if user is allowed to use bank scraping
  */
-function openBankAccountsModal() {
+async function checkBankScrapingPermission() {
+    const user = firebase.auth().currentUser;
+    
+    if (!user) {
+        console.error('No user logged in');
+        return false;
+    }
+    
+    try {
+        const userDoc = await firebase.firestore()
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        
+        const userData = userDoc.data();
+        const canUseBankScraping = userData?.allowBankScraping || false;
+        
+        // Show/hide UI elements based on permission
+        const bankSyncSection = document.getElementById('bankSyncSection');
+        const notAllowedMessage = document.getElementById('bankSyncNotAllowed');
+        
+        if (canUseBankScraping) {
+            // User is allowed - show bank sync section
+            if (bankSyncSection) bankSyncSection.style.display = 'block';
+            if (notAllowedMessage) notAllowedMessage.style.display = 'none';
+        } else {
+            // User is NOT allowed - hide bank sync section and show message
+            if (bankSyncSection) bankSyncSection.style.display = 'none';
+            if (notAllowedMessage) notAllowedMessage.style.display = 'block';
+        }
+        
+        return canUseBankScraping;
+        
+    } catch (error) {
+        console.error('Error checking bank scraping permission:', error);
+        return false;
+    }
+}
+
+/**
+ * Open bank accounts modal with permission check
+ */
+async function openBankAccountsModal() {
+    // Check permissions first
+    await checkBankScrapingPermission();
+    
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
         modal.style.display = 'block';
         
-        // ✅ AJOUTE CETTE LIGNE - Désactiver le scroll
+        // Désactiver le scroll
         document.body.style.overflow = 'hidden';
         
         // Update credentials status
