@@ -10,10 +10,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="css/auth-screen.css">
+    
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="translations.js"></script>
+    <link rel="stylesheet" href="css/auth-screen.css">
     <script src="js/auth-manager.js"></script>
 
     <script>
@@ -1219,40 +1220,64 @@
     <link rel="stylesheet" href="css/tabs.css">
 </head>
 <body>
-    <div id="authScreen">
+    <!-- ========== DÉBUT DE L'ÉCRAN DE CONNEXION ========== -->
+    <!-- Auth Screen -->
+    <div id="auth-screen" style="display: block;">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <button onclick="authManager.applyLanguage('en'); updateLanguageButtons('en')" data-lang="en">EN</button>
+            <button onclick="authManager.applyLanguage('fr'); updateLanguageButtons('fr')" data-lang="fr">FR</button>
+            <button onclick="authManager.applyLanguage('he'); updateLanguageButtons('he')" data-lang="he">עב</button>
+            <button onclick="authManager.applyLanguage('es'); updateLanguageButtons('es')" data-lang="es">ES</button>
+            <button onclick="authManager.applyLanguage('ru'); updateLanguageButtons('ru')" data-lang="ru">РУ</button>
+            <button onclick="authManager.applyLanguage('ar'); updateLanguageButtons('ar')" data-lang="ar">عر</button>
+        </div>
+        
         <div class="auth-container">
-            <h1 class="auth-title">Expense Tracker</h1>
-            <p class="auth-subtitle">Sign in to sync your expenses</p>
+            <h2 data-translate="appTitle">💰 Expense Tracker</h2>
+            <p data-translate="authSubtitle">Sign in to sync your expenses</p>
             
-            <div class="auth-error" id="authError"></div>
+            <!-- Error message container -->
+            <div id="authError" class="auth-error" style="display: none;"></div>
             
-            <form class="auth-form" id="authForm" onsubmit="handleAuth(event)">
-                <input 
-                    type="email" 
-                    id="authEmail" 
-                    class="auth-input" 
+            <div class="auth-form">
+                <input type="email" 
+                    id="email" 
                     placeholder="Email" 
-                    required
-                />
-                <input 
-                    type="password" 
-                    id="authPassword" 
-                    class="auth-input" 
+                    data-translate-placeholder="email"
+                    autocomplete="email">
+                
+                <input type="password" 
+                    id="password" 
                     placeholder="Password (min 6 characters)" 
-                    minlength="6"
-                    required
-                />
-                <button type="submit" class="auth-button" id="authSubmitBtn">
-                    Sign In
-                </button>
-            </form> 
+                    data-translate-placeholder="password"
+                    autocomplete="current-password">
+                
+                <!-- Remember Me Checkbox -->
+                <div class="remember-me-container">
+                    <label for="rememberMe">
+                        <input type="checkbox" id="rememberMe">
+                        <span data-translate="rememberMe">Remember me</span>
+                    </label>
+                </div>
+                
+                <div class="auth-buttons">
+                    <button id="signInBtn" 
+                            onclick="handleSignIn()" 
+                            data-translate="signIn">Sign In</button>
+                    <button id="signUpBtn" 
+                            onclick="handleSignUp()" 
+                            data-translate="signUp">Sign Up</button>
+                </div>
+            </div>
             
-            <div class="auth-toggle">
-                <span id="authToggleText">Don't have an account?</span>
-                <button onclick="toggleAuthMode()" id="authToggleBtn">Sign Up</button>
+            <div class="auth-switch">
+                <span data-translate="noAccount">Don't have an account?</span>
+                <a onclick="toggleAuthMode()" data-translate="signUp">Sign Up</a>
             </div>
         </div>
     </div>
+    <!-- ========== FIN DE L'ÉCRAN DE CONNEXION ========== -->
 
     <div id="appScreen">
     <div class="container">
@@ -1708,7 +1733,6 @@
 
         // Global variables
         let currentUser = null;
-        let isSignUpMode = false;
         let isEditMode = false;
         let categoryOrder = ['income', 'housing', 'subscriptions', 'groceries', 'pet', 'hobbies', 'other'];
         let useIncome = true;
@@ -1734,6 +1758,159 @@
         let categoryMetadata = {};
 
         let currentLanguage = 'en'; // Variable pour la langue actuelle
+
+
+        // ========== DÉBUT DU CODE POUR L'ÉCRAN DE CONNEXION ==========
+
+        // Variables globales pour l'authentification
+        let isSignUpMode = false;
+
+        // Fonction de connexion améliorée
+        async function handleSignIn() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('rememberMe').checked;
+            
+            if (!email || !password) {
+                showAuthError('Please fill in all fields');
+                return;
+            }
+            
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            // Désactiver les boutons pendant la connexion
+            signInBtn.disabled = true;
+            signUpBtn.disabled = true;
+            signInBtn.textContent = translations[currentLanguage]?.signingIn || 'Signing in...';
+            
+            try {
+                await authManager.signIn(email, password, remember);
+                // La redirection est gérée par onAuthStateChanged
+            } catch (error) {
+                console.error('Sign in error:', error);
+                showAuthError(getAuthErrorMessage(error));
+            } finally {
+                signInBtn.disabled = false;
+                signUpBtn.disabled = false;
+                signInBtn.textContent = translations[currentLanguage]?.signIn || 'Sign In';
+            }
+        }
+
+        // Fonction d'inscription améliorée
+        async function handleSignUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('rememberMe').checked;
+            
+            if (!email || !password) {
+                showAuthError('Please fill in all fields');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAuthError('Password must be at least 6 characters');
+                return;
+            }
+            
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            // Désactiver les boutons pendant l'inscription
+            signInBtn.disabled = true;
+            signUpBtn.disabled = true;
+            signUpBtn.textContent = translations[currentLanguage]?.creatingAccount || 'Creating account...';
+            
+            try {
+                await authManager.signUp(email, password, remember);
+                // La redirection est gérée par onAuthStateChanged
+            } catch (error) {
+                console.error('Sign up error:', error);
+                showAuthError(getAuthErrorMessage(error));
+            } finally {
+                signInBtn.disabled = false;
+                signUpBtn.disabled = false;
+                signUpBtn.textContent = translations[currentLanguage]?.signUp || 'Sign Up';
+            }
+        }
+
+
+        // Afficher les erreurs d'authentification
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authError');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                // Cacher l'erreur après 5 secondes
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Traduire les messages d'erreur Firebase
+        function getAuthErrorMessage(error) {
+            const errorMessages = {
+                'auth/email-already-in-use': 'This email is already registered',
+                'auth/invalid-email': 'Invalid email address',
+                'auth/weak-password': 'Password is too weak',
+                'auth/user-not-found': 'No account found with this email',
+                'auth/wrong-password': 'Incorrect password',
+                'auth/network-request-failed': 'Network error, please try again',
+                'auth/too-many-requests': 'Too many attempts, please try again later',
+                'auth/user-disabled': 'This account has been disabled'
+            };
+            
+            return errorMessages[error.code] || error.message || 'An error occurred';
+        }
+
+        // Mettre à jour le bouton de langue actif
+        function updateLanguageButtons(langCode) {
+            document.querySelectorAll('.language-selector button').forEach(btn => {
+                if (btn.dataset.lang === langCode) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Gérer la touche Entrée pour soumettre le formulaire
+        function setupAuthKeyboardHandlers() {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            
+            if (emailInput) {
+                emailInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        passwordInput.focus();
+                    }
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        if (isSignUpMode) {
+                            handleSignUp();
+                        } else {
+                            handleSignIn();
+                        }
+                    }
+                });
+            }
+        }
+
+        // ========== FIN DU CODE POUR L'ÉCRAN DE CONNEXION ==========
+
+
+
+
+
+
+
+
 
         // Fonction pour obtenir une traduction
         function t(key) {
@@ -1941,41 +2118,6 @@
             }, 5000);
         }
 
-        async function handleAuth(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const submitBtn = document.getElementById('authSubmitBtn');
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = isSignUpMode ? 'Creating account...' : 'Signing in...';
-            
-            try {
-                if (isSignUpMode) {
-                    await auth.createUserWithEmailAndPassword(email, password);
-                } else {
-                    await auth.signInWithEmailAndPassword(email, password);
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                let errorMessage = 'An error occurred. Please try again.';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'This email is already in use. Try signing in instead.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email address.';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Password should be at least 6 characters.';
-                } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    errorMessage = 'Invalid email or password.';
-                }
-                
-                showAuthError(errorMessage);
-                submitBtn.disabled = false;
-                submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
-            }
-        }
 
         function handleLogout() {
             const t = translations[currentLanguage] || translations['en'];
@@ -3922,26 +4064,33 @@
         
         // === GESTION DE L'ÉTAT D'AUTHENTIFICATION FIREBASE ===
         // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
-        auth.onAuthStateChanged(user => {
+
+        auth.onAuthStateChanged(async user => {
             const authScreen = document.getElementById('auth-screen');
-            const mainApp = document.getElementById('main-app');
-        
+            const mainApp = document.getElementById('appScreen'); // OU 'main-app' selon ton code
+            
             if (user) {
                 // Utilisateur connecté
                 currentUser = user;
-        
+                
                 if (authScreen && mainApp) {
                     authScreen.style.display = 'none';
                     mainApp.style.display = 'block';
                 }
                 
-                // Charger ou mettre à jour les données de l'utilisateur
-                loadUserData(); 
+                // Vérifier si c'est la première connexion
+                const isFirstLaunch = await authManager.checkFirstLaunch(user.uid);
+                if (isFirstLaunch) {
+                    const config = await authManager.setupInitialConfig(user.uid);
+                    console.log('Initial config set:', config);
+                }
                 
-                // ===> APPEL CRITIQUE ICI <===
-                // Force le retour en haut de page DÈS QUE l'app principale est affichée
+                // Charger les données de l'utilisateur
+                await loadUserData(); 
+                
+                // Force le retour en haut de page
                 scrollToTop(); 
-        
+                
             } else {
                 // Utilisateur déconnecté
                 currentUser = null;
@@ -3950,11 +4099,15 @@
                     authScreen.style.display = 'block';
                     mainApp.style.display = 'none';
                 }
-        
-                // Réinitialiser l'interface utilisateur ou afficher le formulaire de connexion
-                // ... (votre code pour vider les données si besoin) ...
+                
+                // Initialiser l'écran de connexion
+                authManager.initAuthScreen();
             }
         });
+        
+        
+        
+        
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             setTimeout(() => {

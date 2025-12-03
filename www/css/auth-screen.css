@@ -1,0 +1,376 @@
+/* auth-screen.css
+   Styles pour l'écran de connexion avec support dark mode et RTL */
+
+/* ============================================
+   VARIABLES CSS
+   ============================================ */
+:root {
+    /* Light mode colors */
+    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --auth-card-bg: white;
+    --auth-text: #333;
+    --auth-text-secondary: #666;
+    --auth-input-bg: #f8f9fa;
+    --auth-input-border: #dee2e6;
+    --auth-input-focus: #667eea;
+    --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --auth-btn-secondary: #6c757d;
+    --auth-link: #667eea;
+    --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode colors */
+body.dark-mode {
+    --auth-bg: linear-gradient(135deg, #2d3561 0%, #3b2667 100%);
+    --auth-card-bg: #1e1e2e;
+    --auth-text: #e0e0e0;
+    --auth-text-secondary: #a0a0a0;
+    --auth-input-bg: #2a2a3e;
+    --auth-input-border: #3a3a4e;
+    --auth-input-focus: #667eea;
+    --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --auth-btn-secondary: #4a4a5e;
+    --auth-link: #9ca3ff;
+    --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   AUTH SCREEN CONTAINER
+   ============================================ */
+#auth-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--auth-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.auth-container {
+    background: var(--auth-card-bg);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--auth-shadow);
+    transition: all 0.3s ease;
+}
+
+/* Animation d'entrée */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-container {
+    animation: fadeIn 0.4s ease;
+}
+
+/* ============================================
+   TITRE ET SOUS-TITRE
+   ============================================ */
+.auth-container h2 {
+    text-align: center;
+    color: var(--auth-text);
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.auth-container p {
+    text-align: center;
+    color: var(--auth-text-secondary);
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+/* ============================================
+   FORMULAIRE
+   ============================================ */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--auth-input-border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--auth-input-bg);
+    color: var(--auth-text);
+    transition: all 0.3s ease;
+}
+
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--auth-input-focus);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.auth-form input::placeholder {
+    color: var(--auth-text-secondary);
+    opacity: 0.7;
+}
+
+/* ============================================
+   CHECKBOX REMEMBER ME
+   ============================================ */
+.remember-me-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+    user-select: none;
+}
+
+.remember-me-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #667eea;
+}
+
+.remember-me-container label {
+    color: var(--auth-text);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============================================
+   BOUTONS
+   ============================================ */
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.auth-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#signInBtn {
+    background: var(--auth-btn-primary);
+    color: white;
+}
+
+#signUpBtn {
+    background: var(--auth-btn-secondary);
+    color: white;
+}
+
+.auth-buttons button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.auth-buttons button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Loading state */
+.auth-buttons button:disabled {
+    position: relative;
+}
+
+.auth-buttons button:disabled::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spinner 0.6s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spinner {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ============================================
+   SWITCH MODE (Sign In / Sign Up)
+   ============================================ */
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--auth-text-secondary);
+    font-size: 14px;
+}
+
+.auth-switch a {
+    color: var(--auth-link);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   MESSAGES D'ERREUR
+   ============================================ */
+.auth-error {
+    background: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+    animation: shake 0.5s ease;
+}
+
+body.dark-mode .auth-error {
+    background: #4a2020;
+    border-color: #6a3030;
+    color: #ffaaaa;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ============================================
+   SÉLECTEUR DE LANGUE (OPTIONNEL)
+   ============================================ */
+.language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+html[dir="rtl"] .language-selector {
+    right: auto;
+    left: 20px;
+}
+
+.language-selector button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.language-selector button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.language-selector button.active {
+    background: white;
+    color: #667eea;
+}
+
+body.dark-mode .language-selector button.active {
+    background: var(--auth-card-bg);
+    color: var(--auth-link);
+}
+
+/* ============================================
+   SUPPORT RTL (Right-to-Left)
+   ============================================ */
+html[dir="rtl"] .auth-container {
+    direction: rtl;
+}
+
+html[dir="rtl"] .auth-form input {
+    text-align: right;
+    direction: rtl;
+}
+
+html[dir="rtl"] .remember-me-container {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .auth-buttons {
+    flex-direction: row-reverse;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+    
+    .auth-container h2 {
+        font-size: 24px;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+    }
+    
+    .auth-buttons button {
+        width: 100%;
+    }
+    
+    .language-selector {
+        top: 10px;
+        right: 10px;
+    }
+    
+    html[dir="rtl"] .language-selector {
+        left: 10px;
+        right: auto;
+    }
+}
+
+/* ============================================
+   TRANSITIONS DARK MODE
+   ============================================ */
+body,
+#auth-screen,
+.auth-container,
+.auth-form input,
+.auth-buttons button,
+.auth-switch a {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
