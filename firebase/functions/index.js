@@ -924,3 +924,37 @@ export const autoLabelTransactions = onCall(async (request) => {
 });
 
 
+/**
+ * Get user preferences (language, currency, etc.)
+ */
+export const getUserPreferences = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = request.auth.uid;
+
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    
+    if (!userDoc.exists) {
+      return {
+        language: 'en',
+        currency: 'USD',
+        darkMode: false
+      };
+    }
+    
+    const userData = userDoc.data();
+    return {
+      language: userData.language || 'en',
+      currency: userData.currency || 'USD',
+      darkMode: userData.darkMode || false,
+      setupCompleted: userData.setupCompleted || false
+    };
+
+  } catch (error) {
+    console.error('Error getting user preferences:', error);
+    throw new HttpsError('internal', 'Failed to get user preferences');
+  }
+});

@@ -10,9 +10,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-functions-compat.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="css/auth-screen.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="translations.js"></script>
+    <script src="js/auth-manager.js"></script>
+
     <script>
     // ✅ APP VERSION - Facile à modifier
     const APP_VERSION = '0.0.1';
@@ -1986,46 +1989,47 @@
         }
 
         // Auth state observer
-        auth.onAuthStateChanged(async (user) => {
+        // Remplacer l'ancien bloc auth.onAuthStateChanged par :
+        auth.onAuthStateChanged(async user => {
+            const authScreen = document.getElementById('auth-screen');
+            const mainApp = document.getElementById('main-app');
+
             if (user) {
+                // Utilisateur connecté
                 currentUser = user;
-                window.currentUser = user;  // ← AJOUTE
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('appScreen').classList.add('show');
+
+                if (authScreen && mainApp) {
+                    authScreen.style.display = 'none';
+                    mainApp.style.display = 'block';
+                }
                 
-                // Load user data from Firestore
-                await loadUserData();
-                loadDarkModePreference();  // ← AJOUTE CETTE LIGNE
+                // Vérifier si c'est la première connexion
+                const isFirstLaunch = await authManager.checkFirstLaunch(user.uid);
+                if (isFirstLaunch) {
+                    const config = await authManager.setupInitialConfig(user.uid);
+                    console.log('Initial config set:', config);
+                }
+                
+                // Charger les données de l'utilisateur
+                await loadUserData(); 
+                
+                // Force le retour en haut de page
+                scrollToTop(); 
 
             } else {
+                // Utilisateur déconnecté
                 currentUser = null;
-                window.currentUser = null;  // ← AJOUTE
-    
-                // Charger la langue préférée même sans connexion
-                const savedLang = localStorage.getItem('preferredLanguage') || 'en';
-                currentLanguage = savedLang;
                 
-                // ✅ Vérifier que l'élément existe avant de le modifier
-                const langSelect = document.getElementById('languageSelect');
-                if (langSelect) {
-                    langSelect.value = savedLang;
+                if (authScreen && mainApp) {
+                    authScreen.style.display = 'block';
+                    mainApp.style.display = 'none';
                 }
                 
-                if (currentLanguage === 'ar' || currentLanguage === 'he') {
-                    document.documentElement.setAttribute('dir', 'rtl');
-                } else {
-                    document.documentElement.setAttribute('dir', 'ltr');
-                }
-                
-                // ✅ Appeler updateUILanguage() avec un petit délai pour être sûr que le DOM est prêt
-                setTimeout(() => {
-                    updateUILanguage();
-                }, 100);
-                
-                document.getElementById('authScreen').style.display = 'flex';
-                document.getElementById('appScreen').classList.remove('show');
+                // Initialiser l'écran de connexion
+                authManager.initAuthScreen();
             }
         });
+
 
         const defaultExpenses = {
             income: [

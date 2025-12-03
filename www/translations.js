@@ -85,6 +85,7 @@ const translations = {
         transactionAdded: 'Transaction added successfully!',
         appVersion: 'App Version',
         versionInfo: 'Current version of your Personal Finance app',
+        rememberMe: 'Remember me',
         
 
         // Alerts & notifications
@@ -474,6 +475,7 @@ const translations = {
         transactionAdded: 'Transaction ajoutée avec succès!',
         appVersion: 'Version de l\'App',
         versionInfo: 'Version actuelle de votre app Finance',
+        rememberMe: 'Se souvenir de moi',
 
 
 
@@ -854,8 +856,7 @@ const translations = {
         transactionAdded: 'העסקה נוספה בהצלחה!',
         appVersion: 'גרסת האפליקציה',
         versionInfo: 'גרסה נוכחית של אפליקציית הפיננסים',
-
-
+        rememberMe: 'זכור אותי',
 
 
         // Toasts & notifications
@@ -1235,6 +1236,7 @@ const translations = {
         transactionAdded: '¡Transacción agregada exitosamente!',
         appVersion: 'Versión de la App',
         versionInfo: 'Versión actual de tu app de Finanzas',
+        rememberMe: 'Recuérdame',
 
 
         // Toasts & notifications
@@ -1614,6 +1616,7 @@ const translations = {
         transactionAdded: 'Транзакция успешно добавлена!',
         appVersion: 'Версия приложения',
         versionInfo: 'Текущая версия вашего приложения',
+        rememberMe: 'Запомнить меня',
 
 
 
@@ -1994,8 +1997,7 @@ const translations = {
         transactionAdded: 'تمت إضافة المعاملة بنجاح!',
         appVersion: 'إصدار التطبيق',
         versionInfo: 'الإصدار الحالي لتطبيق التمويل الخاص بك',
-
-
+        rememberMe: 'تذكرني',
 
 
         // Toasts & notifications
