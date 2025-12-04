@@ -353,7 +353,43 @@ html[dir="rtl"] .auth-buttons {
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 480px) {
+
+/* Petits écrans (< 400px) - Ex: Pixel 4a */
+@media (max-width: 400px) {
+    .auth-container {
+        padding: 25px 15px !important;
+    }
+    
+    .auth-container h2 {
+        font-size: 22px !important;
+    }
+    
+    .auth-buttons {
+        flex-direction: column !important;
+        gap: 15px !important; /* ✅ Plus d'espace pour petits écrans */
+    }
+    
+    .auth-buttons button {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 14px !important; /* ✅ Boutons plus grands */
+    }
+    
+    .language-selector {
+        top: 10px !important;
+        right: 10px !important;
+        gap: 12px !important; /* ✅ Plus d'espace entre boutons langue */
+    }
+    
+    .language-selector button {
+        padding: 7px 11px !important;
+        font-size: 13px !important;
+        margin: 0 !important;
+    }
+}
+
+/* Écrans moyens (401px - 480px) */
+@media (min-width: 401px) and (max-width: 480px) {
     .auth-container {
         padding: 30px 20px !important;
     }
@@ -364,7 +400,7 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column !important;
-        gap: 12px !important; /* Valeur intermédiaire entre 12px et 18px */
+        gap: 12px !important;
     }
     
     .auth-buttons button {
@@ -383,7 +419,6 @@ html[dir="rtl"] .auth-buttons {
         font-size: 13px !important;
         margin: 0 !important;
     }
-    
 }
 
 /* ============================================
