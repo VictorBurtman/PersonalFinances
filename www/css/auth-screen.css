@@ -105,15 +105,25 @@ body.dark-mode {
 }
 
 .auth-form input[type="email"],
-.auth-form input[type="password"] {
+.auth-form input[type="password"],
+.auth-form input[type="text"]#password {  /* ✅ Ajoute cette ligne */
     width: 100%;
     padding: 12px 15px;
+    padding-right: 45px; /* ✅ Espace pour le bouton œil */
     border: 1px solid var(--auth-input-border);
     border-radius: 10px;
     font-size: 14px;
     background: var(--auth-input-bg);
     color: var(--auth-text);
     transition: all 0.3s ease;
+}
+
+.auth-form input[type="email"]:focus,
+.auth-form input[type="password"]:focus,
+.auth-form input[type="text"]#password:focus {  /* ✅ Ajoute cette ligne */
+    outline: none;
+    border-color: var(--auth-input-focus);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .auth-form input[type="email"]:focus,
@@ -343,6 +353,7 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column;
+        gap: 15px; /* ✅ Plus d'espace */
     }
     
     .auth-buttons button {
@@ -352,6 +363,12 @@ html[dir="rtl"] .auth-buttons {
     .language-selector {
         top: 10px;
         right: 10px;
+        gap: 10px; /* ✅ Plus d'espace entre les boutons */
+    }
+    
+    .language-selector button {
+        padding: 6px 10px;
+        font-size: 13px;
     }
     
     html[dir="rtl"] .language-selector {
