@@ -901,9 +901,6 @@
             display: none;
         }
         
-        #appScreen.show {
-            display: block;
-        }
         
         /* ============================================
            MOBILE RESPONSIVE (ALL IN ONE PLACE)
@@ -1223,13 +1220,16 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             padding: 20px !important;
             box-sizing: border-box !important;
         }
-
+        
+        #auth-screen:not([style*="display: none"]) {
+            display: flex !important;
+        }
+        
         .auth-container {
             width: 100%;
             max-width: 400px;
@@ -2255,49 +2255,6 @@
                 });
             }
         }
-
-        // Auth state observer
-        // Remplacer l'ancien bloc auth.onAuthStateChanged par :
-        auth.onAuthStateChanged(async user => {
-            const authScreen = document.getElementById('auth-screen');
-            const mainApp = document.getElementById('main-app');
-
-            if (user) {
-                // Utilisateur connecté
-                currentUser = user;
-
-                if (authScreen && mainApp) {
-                    authScreen.style.display = 'none';
-                    mainApp.style.display = 'block';
-                }
-                
-                // Vérifier si c'est la première connexion
-                const isFirstLaunch = await authManager.checkFirstLaunch(user.uid);
-                if (isFirstLaunch) {
-                    const config = await authManager.setupInitialConfig(user.uid);
-                    console.log('Initial config set:', config);
-                }
-                
-                // Charger les données de l'utilisateur
-                await loadUserData(); 
-                
-                // Force le retour en haut de page
-                scrollToTop(); 
-
-            } else {
-                // Utilisateur déconnecté
-                currentUser = null;
-                
-                if (authScreen && mainApp) {
-                    authScreen.style.display = 'block';
-                    mainApp.style.display = 'none';
-                }
-                
-                // Initialiser l'écran de connexion
-                authManager.initAuthScreen();
-            }
-        });
-
 
         const defaultExpenses = {
             income: [
@@ -4192,45 +4149,65 @@
         // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
 
         auth.onAuthStateChanged(async user => {
+            console.log('🔴 onAuthStateChanged triggered');
+            console.log('👤 User:', user ? user.email : 'null');
+            
             const authScreen = document.getElementById('auth-screen');
-            const mainApp = document.getElementById('appScreen'); // OU 'main-app' selon ton code
+            const mainApp = document.getElementById('appScreen');
+            
+            console.log('🖥️ authScreen:', authScreen);
+            console.log('📱 mainApp:', mainApp);
             
             if (user) {
-                // Utilisateur connecté
+                console.log('✅ User is logged in - showing main app');
                 currentUser = user;
                 
                 if (authScreen && mainApp) {
+                    console.log('🔄 Hiding auth screen, showing main app...');
                     authScreen.style.display = 'none';
-                    mainApp.style.display = 'block';
+                    // ✅ CORRECTION ICI : enlever le !important en JS
+                    mainApp.style.display = 'block';;
+                } else {
+                    console.log('❌ Elements not found!');
                 }
                 
                 // Vérifier si c'est la première connexion
+                console.log('🔍 Checking first launch...');
                 const isFirstLaunch = await authManager.checkFirstLaunch(user.uid);
+                console.log('📋 First launch:', isFirstLaunch);
+                
                 if (isFirstLaunch) {
                     const config = await authManager.setupInitialConfig(user.uid);
-                    console.log('Initial config set:', config);
+                    console.log('⚙️ Initial config set:', config);
                 }
                 
                 // Charger les données de l'utilisateur
+                console.log('📥 Loading user data...');
                 await loadUserData(); 
+                console.log('✅ User data loaded');
                 
                 // Force le retour en haut de page
                 scrollToTop(); 
                 
             } else {
-                // Utilisateur déconnecté
+                console.log('❌ User is logged out - showing auth screen');
                 currentUser = null;
                 
                 if (authScreen && mainApp) {
+                    console.log('🔄 Hiding main app, showing auth screen...');
                     authScreen.style.display = 'block';
-                    mainApp.style.display = 'none';
+                    mainApp.style.setProperty('display', 'none', 'important');
+                } else {
+                    console.log('❌ Elements not found!');
                 }
                 
                 // Initialiser l'écran de connexion
+                console.log('🎨 Initializing auth screen...');
                 authManager.initAuthScreen();
+                console.log('✅ Auth screen initialized');
             }
         });
-        
+                        
         
         
         
