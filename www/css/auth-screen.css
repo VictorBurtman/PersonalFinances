@@ -172,6 +172,8 @@ body.dark-mode {
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    height: auto !important; /* ✅ Ajoute cette ligne */
+    min-height: auto !important; /* ✅ Et celle-ci */
 }
 
 .auth-buttons button {
@@ -354,6 +356,7 @@ html[dir="rtl"] .auth-buttons {
    RESPONSIVE
    ============================================ */
 
+/* Petits écrans (< 400px) - Ex: Pixel 4a */
 @media (max-width: 400px) {
     .auth-container {
         padding: 25px 15px !important;
@@ -365,29 +368,48 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column !important;
-        gap: 18px !important; /* ✅ Augmente un peu */
+        gap: 0 !important; /* ✅ Désactive le gap qui ne fonctionne pas */
+        height: auto !important;
+        min-height: auto !important;
     }
     
     .auth-buttons button {
         width: 100% !important;
-        margin: 0 !important;
-        padding: 15px !important; /* ✅ Augmente le padding */
-        flex: none !important; /* ✅ RETIRE le flex: 1 */
+        margin: 12px 0 !important; /* ✅ Force l'espacement avec margin */
+        padding: 16px !important;
+        flex: none !important;
+    }
+    
+    .auth-buttons button:first-child {
+        margin-top: 0 !important; /* ✅ Pas de marge en haut du premier bouton */
+    }
+    
+    .auth-buttons button:last-child {
+        margin-bottom: 0 !important; /* ✅ Pas de marge en bas du dernier bouton */
     }
     
     .language-selector {
         top: 10px !important;
         right: 10px !important;
-        gap: 14px !important; /* ✅ Augmente */
+        gap: 0 !important; /* ✅ Désactive le gap */
     }
     
     .language-selector button {
-        padding: 8px 12px !important; /* ✅ Augmente */
+        padding: 8px 14px !important;
         font-size: 13px !important;
-        margin: 0 !important;
+        margin: 0 6px !important; /* ✅ Force l'espacement avec margin */
+    }
+    
+    .language-selector button:first-child {
+        margin-left: 0 !important; /* ✅ Pas de marge à gauche du premier */
+    }
+    
+    .language-selector button:last-child {
+        margin-right: 0 !important; /* ✅ Pas de marge à droite du dernier */
     }
 }
 
+/* Écrans moyens (401px - 480px) */
 @media (min-width: 401px) and (max-width: 480px) {
     .auth-container {
         padding: 30px 20px !important;
@@ -399,25 +421,44 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column !important;
-        gap: 15px !important;
+        gap: 0 !important; /* ✅ Désactive le gap */
+        height: auto !important;
+        min-height: auto !important;
     }
     
     .auth-buttons button {
         width: 100% !important;
-        margin: 0 !important;
-        flex: none !important; /* ✅ RETIRE aussi ici */
+        margin: 10px 0 !important; /* ✅ Force l'espacement avec margin */
+        padding: 14px !important;
+        flex: none !important;
+    }
+    
+    .auth-buttons button:first-child {
+        margin-top: 0 !important;
+    }
+    
+    .auth-buttons button:last-child {
+        margin-bottom: 0 !important;
     }
     
     .language-selector {
         top: 10px !important;
         right: 10px !important;
-        gap: 12px !important;
+        gap: 0 !important; /* ✅ Désactive le gap */
     }
     
     .language-selector button {
         padding: 7px 11px !important;
         font-size: 13px !important;
-        margin: 0 !important;
+        margin: 0 5px !important; /* ✅ Force l'espacement avec margin */
+    }
+    
+    .language-selector button:first-child {
+        margin-left: 0 !important;
+    }
+    
+    .language-selector button:last-child {
+        margin-right: 0 !important;
     }
 }
 
