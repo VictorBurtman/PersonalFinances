@@ -234,17 +234,25 @@ class AuthManager {
         if (signUpBtn && !signUpBtn.disabled) signUpBtn.textContent = trans.signUp;
         
         // Liens de changement de mode
-        const switchLink = document.querySelector('.auth-switch a');
-        if (switchLink) {
-            const isSignUp = switchLink.textContent.includes('Sign In');
-            switchLink.textContent = isSignUp ? trans.signIn : trans.signUp;
-            
-            const switchText = switchLink.parentElement;
-            if (switchText) {
-                const textNode = switchText.childNodes[0];
-                if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-                    textNode.textContent = isSignUp ? trans.hasAccount + ' ' : trans.noAccount + ' ';
-                }
+        const authSwitch = document.querySelector('.auth-switch');
+        if (authSwitch) {
+            const switchLink = authSwitch.querySelector('a');
+            if (switchLink) {
+                const isSignUpMode = switchLink.textContent.includes('Sign In');
+                
+                // Vider et reconstruire complètement
+                authSwitch.innerHTML = '';
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = (isSignUpMode ? trans.hasAccount : trans.noAccount) + ' ';
+                
+                const link = document.createElement('a');
+                link.onclick = function() { toggleAuthMode(); };
+                link.textContent = isSignUpMode ? trans.signIn : trans.signUp;
+                link.style.cursor = 'pointer';
+                
+                authSwitch.appendChild(textSpan);
+                authSwitch.appendChild(link);
             }
         }
     }
