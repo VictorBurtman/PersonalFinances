@@ -1303,7 +1303,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
         }
-        
+
     </style>
     <link rel="stylesheet" href="css/tabs.css">
 </head>
@@ -1853,11 +1853,21 @@
         // Variables globales pour l'authentification
         let isSignUpMode = false;
 
-        // Fonction de connexion améliorée
+        // Vérifier que authManager existe
+        if (typeof authManager === 'undefined') {
+            console.error('⚠️ authManager not loaded! Check if auth-manager.js is included before this script');
+        }
+
         async function handleSignIn() {
+            console.log('🔵 handleSignIn called');
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const remember = document.getElementById('rememberMe').checked;
+            
+            console.log('📧 Email:', email);
+            console.log('🔐 Password length:', password.length);
+            console.log('💾 Remember me:', remember);
             
             if (!email || !password) {
                 showAuthError('Please fill in all fields');
@@ -1867,16 +1877,18 @@
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
-            // Désactiver les boutons pendant la connexion
             signInBtn.disabled = true;
             signUpBtn.disabled = true;
             signInBtn.textContent = translations[currentLanguage]?.signingIn || 'Signing in...';
             
             try {
+                console.log('🔄 Calling authManager.signIn...');
                 await authManager.signIn(email, password, remember);
-                // La redirection est gérée par onAuthStateChanged
+                console.log('✅ Sign in successful');
             } catch (error) {
-                console.error('Sign in error:', error);
+                console.error('❌ Sign in error:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
                 showAuthError(getAuthErrorMessage(error));
             } finally {
                 signInBtn.disabled = false;
