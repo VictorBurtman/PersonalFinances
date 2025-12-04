@@ -354,7 +354,6 @@ html[dir="rtl"] .auth-buttons {
    RESPONSIVE
    ============================================ */
 
-/* Petits écrans (< 400px) - Ex: Pixel 4a */
 @media (max-width: 400px) {
     .auth-container {
         padding: 25px 15px !important;
@@ -366,29 +365,29 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column !important;
-        gap: 15px !important; /* ✅ Plus d'espace pour petits écrans */
+        gap: 18px !important; /* ✅ Augmente un peu */
     }
     
     .auth-buttons button {
         width: 100% !important;
         margin: 0 !important;
-        padding: 14px !important; /* ✅ Boutons plus grands */
+        padding: 15px !important; /* ✅ Augmente le padding */
+        flex: none !important; /* ✅ RETIRE le flex: 1 */
     }
     
     .language-selector {
         top: 10px !important;
         right: 10px !important;
-        gap: 12px !important; /* ✅ Plus d'espace entre boutons langue */
+        gap: 14px !important; /* ✅ Augmente */
     }
     
     .language-selector button {
-        padding: 7px 11px !important;
+        padding: 8px 12px !important; /* ✅ Augmente */
         font-size: 13px !important;
         margin: 0 !important;
     }
 }
 
-/* Écrans moyens (401px - 480px) */
 @media (min-width: 401px) and (max-width: 480px) {
     .auth-container {
         padding: 30px 20px !important;
@@ -400,22 +399,23 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column !important;
-        gap: 12px !important;
+        gap: 15px !important;
     }
     
     .auth-buttons button {
         width: 100% !important;
         margin: 0 !important;
+        flex: none !important; /* ✅ RETIRE aussi ici */
     }
     
     .language-selector {
         top: 10px !important;
         right: 10px !important;
-        gap: 10px !important;
+        gap: 12px !important;
     }
     
     .language-selector button {
-        padding: 6px 10px !important;
+        padding: 7px 11px !important;
         font-size: 13px !important;
         margin: 0 !important;
     }
