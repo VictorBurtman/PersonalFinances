@@ -1216,24 +1216,56 @@
             border-color: #3a3a4e;
         }
         
-        /* Fix centrage mobile */
+        /* Fix centrage et espacement mobile */
         #auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
             padding: 20px;
         }
 
         .auth-container {
             width: 100%;
             max-width: 400px;
-            margin: 0 auto;
+            margin: auto;
         }
 
         .language-selector {
-            position: fixed;
+            position: absolute;  /* Pas fixed */
+            top: 20px;
+            right: 20px;
             z-index: 1000;
+        }
+
+        /* Espacement des éléments du formulaire */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;  /* Espace entre les éléments */
+        }
+
+        .auth-form input {
+            margin-bottom: 10px;
+        }
+
+        .remember-me-container {
+            margin: 10px 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;  /* Espace entre Sign In et Sign Up */
+            margin-top: 20px;
+        }
+
+        .auth-buttons button {
+            flex: 1;
+            padding: 12px;
         }
 
 
@@ -2128,6 +2160,32 @@
                 toggleText.textContent = "Don't have an account?";
                 toggleBtn.textContent = 'Sign Up';
             }
+        }
+
+
+        function handleAuth(event) {
+            if (event) event.preventDefault();
+            const email = document.getElementById('email').value;  // Changé !
+            const password = document.getElementById('password').value;  // Changé !
+            
+            if (isSignUpMode) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .catch(error => alert(error.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => alert(error.message));
+            }
+        }
+
+        // Et ajoute les alias pour les nouvelles fonctions
+        function handleSignIn() {
+            isSignUpMode = false;
+            handleAuth();
+        }
+
+        function handleSignUp() {
+            isSignUpMode = true;
+            handleAuth();
         }
 
         function showAuthError(message) {
