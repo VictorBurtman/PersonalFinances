@@ -1319,6 +1319,22 @@
             color: white;
         }
 
+
+        /* ============================================
+        RESPONSIVE AUTH SCREEN - FIX MOBILE
+        ============================================ */
+        @media (max-width: 768px) {
+            #auth-screen .auth-buttons {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            
+            #auth-screen .language-selector {
+                gap: 12px !important;
+            }
+        }
+
+
     </style>
     <link rel="stylesheet" href="css/tabs.css">
 </head>

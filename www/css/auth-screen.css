@@ -353,22 +353,24 @@ html[dir="rtl"] .auth-buttons {
     
     .auth-buttons {
         flex-direction: column;
-        gap: 15px; /* ✅ Plus d'espace */
+        gap: 18px; /* ✅ Plus d'espace */
     }
     
     .auth-buttons button {
         width: 100%;
+        margin: 0; /* ✅ Pas de marge */
     }
     
     .language-selector {
         top: 10px;
         right: 10px;
-        gap: 10px; /* ✅ Plus d'espace entre les boutons */
+        gap: 10px; /* ✅ Espace entre boutons */
     }
     
     .language-selector button {
         padding: 6px 10px;
         font-size: 13px;
+        margin: 0; /* ✅ Pas de marge */
     }
     
     html[dir="rtl"] .language-selector {
