@@ -999,15 +999,6 @@
                 margin: 0 !important;
             }
             
-            .language-selector {
-                gap: 8px !important;
-            }
-            
-            .language-selector button {
-                padding: 6px 10px !important;
-            }
-
-
         }
             /* Compare month selector */
         #compareMonth {
@@ -1251,13 +1242,6 @@
             margin: auto;
         }
 
-        .language-selector {
-            position: absolute;  /* Pas fixed */
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
         /* Espacement des éléments du formulaire */
         .auth-form {
             display: flex;
@@ -1302,37 +1286,10 @@
             margin-right: 8px;
         }
 
-        .language-selector {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            gap: 4px; /* Espace entre les boutons */
-        }
-
-        .language-selector button {
-            padding: 4px 8px; /* Plus petit */
-            font-size: 12px;  /* Police plus petite */
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-        }
-
 
         /* ============================================
         RESPONSIVE AUTH SCREEN - FIX MOBILE
         ============================================ */
-        @media (max-width: 768px) {
-            #auth-screen .auth-buttons {
-                flex-direction: column !important;
-                gap: 20px !important;
-            }
-            
-            #auth-screen .language-selector {
-                gap: 12px !important;
-            }
-        }
 
 
     </style>
