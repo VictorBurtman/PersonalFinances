@@ -53,9 +53,11 @@ PersonalFinances/
 │   ├── index.html                ← Page principale (SPA - Single Page Application)
 │   ├── css/
 │   │   └── tabs.css            ← Styles principaux + dark mode
+│   │   └── auth-screen.css     ← Styles écran de connexion + dark mode
 │   ├── js/
 │   │   ├── tabs-manager.js       ← Gestion des onglets (Dashboard, Transactions, Categories, Settings)
 │   │   ├── transactions-manager.js  ← Gestion transactions + scraping bancaire
+│   │   └── auth-manager.js     ← Gestion écran de connexion
 │   ├── partials/
 │   │   ├── transactions-tab.html ← Onglet Transactions + modal banques
 │   └── translations.js           ← Traductions i18n (6 langues)
@@ -308,26 +310,5 @@ PersonalFinances/
 - À l'aise avec terminal, Git basique, Android Studio
 - Besoin d'explications pour concepts avancés
 
----
-
-## 📁 Fichiers joints
-
-J'ai joint les fichiers principaux du projet pour que tu aies le contexte complet :
-
-**Frontend :**
-- `www/index.html` - Page principale
-- `www/css/tabs.css` - Styles
-- `www/js/tabs-manager.js` - Manages tab switching and dynamic content loading
-- `www/js/transactions-manager.js` - Logique transactions
-- `www/translations.js` - Traductions
-
-**Backend :**
-- `firebase/functions/index.js` - Cloud Functions
-
-**Config :**
-- `capacitor.config.json` - Config Capacitor
-- `firebase.json` - Config Firebase
-
----
 
 **Merci de m'aider sur ce projet ! 🚀**

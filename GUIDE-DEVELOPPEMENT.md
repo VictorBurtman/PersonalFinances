@@ -1,7 +1,7 @@
 # 📱 Guide de Développement - PersonalFinances
 
 **Application de gestion budgétaire personnelle avec sync bancaire**
-
+## VS Code Preview (Ctrl+Shift+V)
 ---
 
 ## 📋 Table des matières
