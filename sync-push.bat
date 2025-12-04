@@ -39,11 +39,24 @@ echo.
 echo [3/5] Git commit...
 git commit -m "%commit_msg%"
 if %errorlevel% neq 0 (
-    echo Rien a committer (aucun changement)
-    pause
-    exit /b 0
+    echo [!] Rien a committer (aucun changement local)
+    echo.
+    
+    REM Verifier s'il y a des commits en attente de push
+    git status | findstr /C:"Your branch is ahead" >nul
+    if %errorlevel% equ 0 (
+        echo [!] MAIS il y a des commits en attente de push!
+        echo [!] On continue pour les envoyer sur GitHub...
+        echo.
+        goto push
+    ) else (
+        echo [!] Aucun changement a envoyer.
+        pause
+        exit /b 0
+    )
 )
 
+:push
 echo.
 echo [4/5] Git push...
 git push origin main
@@ -67,40 +80,3 @@ echo ====================================
 echo  Changements synchronises!
 echo ====================================
 pause
-```
-
----
-
-## **🔍 Ce que fait cette version améliorée :**
-
-1. **Avant tout** : `git fetch origin` → récupère l'état du remote SANS modifier ton code local
-2. **Vérifie si tu es en retard** : Si GitHub a des commits que tu n'as pas, il te **bloque immédiatement**
-3. **Message d'alerte clair** : Te dit explicitement de lancer `sync-pull.bat` d'abord
-4. **Double protection** : Même si la vérification échoue, Git lui-même refusera le push
-
----
-
-## **📋 Exemple d'utilisation :**
-
-### **Scénario problématique :**
-
-1. **Sur le laptop** → Tu push un changement ✅
-2. **Sur le PC fixe** → Tu oublies de pull et tu modifies du code ❌
-3. **Tu lances `sync-push.bat`** sur le PC fixe
-
-**Résultat avec le nouveau script :**
-```
-====================================
- Synchronisation - PUSH
-====================================
-
-[0/5] Verification remote...
-
-╔════════════════════════════════════════╗
-║  ATTENTION - OUBLI DE PULL DETECTE!   ║
-╚════════════════════════════════════════╝
-
-Tu dois PULL avant de PUSH!
-Tape "sync-pull.bat" d'abord.
-
-Appuyez sur une touche pour continuer...
