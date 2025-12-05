@@ -2051,45 +2051,35 @@
         
         // Fonction pour mettre à jour toute l'interface
         function updateUILanguage() {
-            // Vérifier que les éléments existent avant de les modifier
-            const authTitle = document.querySelector('.auth-title');
-            if (!authTitle) return; // Sortir si les éléments ne sont pas encore chargés
-            
-            // Auth screen
-            document.querySelector('.auth-title').textContent = t('appTitle');
-            document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
-            document.getElementById('authEmail').placeholder = t('email');
-            document.getElementById('authPassword').placeholder = t('password');
-            
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const isSignUp = submitBtn.textContent.includes('Sign Up') || 
-                             submitBtn.textContent.includes('S\'inscrire') ||
-                             submitBtn.textContent.includes('Зарегистрироваться') ||
-                             submitBtn.textContent.includes('הירשם') ||
-                             submitBtn.textContent.includes('Registrarse') ||
-                             submitBtn.textContent.includes('إنشاء حساب');
-            
-            document.getElementById('authSubmitBtn').textContent = isSignUp ? t('signUp') : t('signIn');
-            document.getElementById('authToggleText').textContent = isSignUp ? t('hasAccount') : t('noAccount');
-            document.getElementById('authToggleBtn').textContent = isSignUp ? t('signIn') : t('signUp');
-            
             // Main app header
-            document.querySelector('.header h1').textContent = t('monthlyExpenses');
+            const mainAppHeader = document.querySelector('.header h1');
+            if (mainAppHeader) mainAppHeader.textContent = t('monthlyExpenses');
             
             // Total section
-            document.querySelector('.total-section h2').textContent = t('totalExpenses');
+            const totalSection = document.querySelector('.total-section h2');
+            if (totalSection) totalSection.textContent = t('totalExpenses');
+            
             const incomeH3 = document.querySelector('#incomeDisplay h3');
             if (incomeH3) incomeH3.textContent = t('totalIncome');
+            
             const remainingH3 = document.querySelector('#remainingDisplay h3');
             if (remainingH3) remainingH3.textContent = t('remaining');
             
             // Modals
-            document.querySelector('#colorEditorModal .modal-header h2').textContent = t('customizeColors');
-            document.querySelector('#colorEditorModal .modal-footer .secondary').textContent = t('resetToDefault');
-            document.querySelector('#colorEditorModal .modal-footer .primary').textContent = t('done');
+            const colorModalTitle = document.querySelector('#colorEditorModal .modal-header h2');
+            if (colorModalTitle) colorModalTitle.textContent = t('customizeColors');
             
-            document.querySelector('#settingsModal .modal-header h2').textContent = t('settingsTitle');
-            document.querySelector('#settingsModal .modal-footer .primary').textContent = t('done');
+            const colorModalReset = document.querySelector('#colorEditorModal .modal-footer .secondary');
+            if (colorModalReset) colorModalReset.textContent = t('resetToDefault');
+            
+            const colorModalDone = document.querySelector('#colorEditorModal .modal-footer .primary');
+            if (colorModalDone) colorModalDone.textContent = t('done');
+            
+            const settingsModalTitle = document.querySelector('#settingsModal .modal-header h2');
+            if (settingsModalTitle) settingsModalTitle.textContent = t('settingsTitle');
+            
+            const settingsModalDone = document.querySelector('#settingsModal .modal-footer .primary');
+            if (settingsModalDone) settingsModalDone.textContent = t('done');
             
             // Settings sections
             const accountTitle = document.getElementById('accountTitle');
@@ -2150,11 +2140,33 @@
             }
             
             // === AJUSTEMENT DU TITRE ===
-            // Appel immédiat
             fitAppTitle();
-            // Appel différé pour assurer le rendu correct
             setTimeout(fitAppTitle, 50);
         }
+
+        // Fonction pour mettre à jour l'écran de connexion uniquement
+        function updateAuthScreenLanguage() {
+            const authTitle = document.querySelector('.auth-title');
+            if (!authTitle) return; // L'écran de connexion n'est pas visible
+            
+            document.querySelector('.auth-title').textContent = t('appTitle');
+            document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
+            document.getElementById('authEmail').placeholder = t('email');
+            document.getElementById('authPassword').placeholder = t('password');
+            
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const isSignUp = submitBtn.textContent.includes('Sign Up') || 
+                            submitBtn.textContent.includes('S\'inscrire') ||
+                            submitBtn.textContent.includes('Зарегистрироваться') ||
+                            submitBtn.textContent.includes('הירשם') ||
+                            submitBtn.textContent.includes('Registrarse') ||
+                            submitBtn.textContent.includes('إنشاء حساب');
+            
+            document.getElementById('authSubmitBtn').textContent = isSignUp ? t('signUp') : t('signIn');
+            document.getElementById('authToggleText').textContent = isSignUp ? t('hasAccount') : t('noAccount');
+            document.getElementById('authToggleBtn').textContent = isSignUp ? t('signIn') : t('signUp');
+        }
+
 
 
         /**
@@ -2291,50 +2303,58 @@
                 
                 if (userDoc.exists) {
                     const data = userDoc.data();
-                    expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
-                    customColors = data.customColors || {};
-                    currentChartType = data.chartType || 'doughnut';
-                    // ✅ Mettre à jour l'état des boutons SEULEMENT après chargement Firebase
-                    if (typeof window.updateChartButtonsState === 'function') {
-                        window.updateChartButtonsState();
-                    }
-                    categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
-                    useIncome = data.useIncome !== undefined ? data.useIncome : true;
-                    currency = data.currency || '₪';
-                    percentageMode = data.percentageMode || 'expenses';
-                    categoryMetadata = data.categoryMetadata || {};
                     
-                    // ✅ LOGIQUE DE LANGUE AMÉLIORÉE
+                    // ✅ DÉFINIR LA LANGUE EN PREMIER - AVANT TOUT
                     const firestoreLang = data.language;
-                    const localStorageLang = localStorage.getItem('language'); // Utilise 'language' maintenant
+                    const localStorageLang = localStorage.getItem('language');
+                    
+                    console.log('🔍 LANGUE DEBUG:');
+                    console.log('  Firestore lang:', firestoreLang);
+                    console.log('  localStorage lang:', localStorageLang);
                     
                     if (firestoreLang && translations[firestoreLang]) {
-                        // Priorité 1 : Firestore (choix dans l'app)
                         currentLanguage = firestoreLang;
+                        console.log('  ✅ Utilise Firestore:', firestoreLang);
                     } else if (localStorageLang && translations[localStorageLang]) {
-                        // Priorité 2 : localStorage (choix écran de connexion)
                         currentLanguage = localStorageLang;
-                        // Sauvegarder dans Firestore pour synchroniser
+                        console.log('  ✅ Utilise localStorage:', localStorageLang);
                         await db.collection('users').doc(currentUser.uid).set({
                             language: localStorageLang
                         }, { merge: true });
                     } else {
-                        // Priorité 3 : Langue système par défaut
                         currentLanguage = 'en';
+                        console.log('  ✅ Utilise défaut: en');
                     }
+                    
+                    console.log('  → currentLanguage final:', currentLanguage);
                     
                     document.getElementById('languageSelect').value = currentLanguage;
                     
-                    // Appliquer RTL si nécessaire
+                    // Appliquer RTL immédiatement
                     if (currentLanguage === 'ar' || currentLanguage === 'he') {
                         document.documentElement.setAttribute('dir', 'rtl');
                     } else {
                         document.documentElement.setAttribute('dir', 'ltr');
                     }
                     
+                    // ✅ MAINTENANT charger le reste des données
+                    expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
+                    customColors = data.customColors || {};
+                    currentChartType = data.chartType || 'doughnut';
+                    
+                    // ✅ Mettre à jour l'état des boutons SEULEMENT après chargement Firebase
+                    if (typeof window.updateChartButtonsState === 'function') {
+                        window.updateChartButtonsState();
+                    }
+                    
+                    categoryOrder = data.categoryOrder || ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
+                    useIncome = data.useIncome !== undefined ? data.useIncome : true;
+                    currency = data.currency || '₪';
+                    percentageMode = data.percentageMode || 'expenses';
+                    categoryMetadata = data.categoryMetadata || {};
+                    
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
-                    
                     
                     // Hide default categories that were deleted by the user
                     const defaultCategories = ['income', 'housing', 'tech', 'pet', 'subscriptions', 'groceries', 'other'];
@@ -2418,7 +2438,6 @@
                 console.error('Error loading user data:', error);
             }
         }
-
 
         // AJOUTE ICI : Language change handler
         document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
@@ -4156,7 +4175,7 @@
         // === GESTION DE L'ÉTAT D'AUTHENTIFICATION FIREBASE ===
         // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
 
-        auth.onAuthStateChanged(async user => {
+        auth.onAuthStateChanged(async (user) => {
             console.log('🔴 onAuthStateChanged triggered');
             console.log('👤 User:', user ? user.email : 'null');
             
@@ -4170,52 +4189,55 @@
                 console.log('✅ User is logged in - showing main app');
                 currentUser = user;
                 
-                if (authScreen && mainApp) {
-                    console.log('🔄 Hiding auth screen, showing main app...');
+                console.log('🔄 Hiding auth screen, showing main app...');
+                if (authScreen) {
                     authScreen.style.display = 'none';
-                    // ✅ CORRECTION ICI : enlever le !important en JS
-                    mainApp.style.display = 'block';;
-                } else {
-                    console.log('❌ Elements not found!');
                 }
                 
-                // Vérifier si c'est la première connexion
-                console.log('🔍 Checking first launch...');
-                const isFirstLaunch = await authManager.checkFirstLaunch(user.uid);
-                console.log('📋 First launch:', isFirstLaunch);
+                const isFirst = await authManager.checkFirstLaunch(user.uid);
+                console.log('📋 First launch:', isFirst);
                 
-                if (isFirstLaunch) {
-                    const config = await authManager.setupInitialConfig(user.uid);
-                    console.log('⚙️ Initial config set:', config);
+                if (isFirst) {
+                    await authManager.setupInitialConfig(user.uid);
                 }
                 
-                // Charger les données de l'utilisateur
                 console.log('📥 Loading user data...');
-                await loadUserData(); 
+                await loadUserData();
                 console.log('✅ User data loaded');
                 
-                // Force le retour en haut de page
-                scrollToTop(); 
+                // ✅ FORCE la mise à jour de l'interface avec la bonne langue
+                console.log('🌍 Applying language:', currentLanguage);
+                updateUILanguage();
+                
+                // ✅ Appliquer aussi la direction RTL si nécessaire
+                if (currentLanguage === 'ar' || currentLanguage === 'he') {
+                    document.documentElement.setAttribute('dir', 'rtl');
+                } else {
+                    document.documentElement.setAttribute('dir', 'ltr');
+                }
+                
+                console.log('📱 Showing main app...');
+                if (mainApp) {
+                    mainApp.style.display = 'block';
+                }
                 
             } else {
                 console.log('❌ User is logged out - showing auth screen');
                 currentUser = null;
                 
-                if (authScreen && mainApp) {
-                    console.log('🔄 Hiding main app, showing auth screen...');
-                    authScreen.style.display = 'block';
-                    mainApp.style.setProperty('display', 'none', 'important');
-                } else {
-                    console.log('❌ Elements not found!');
+                console.log('🔄 Hiding main app, showing auth screen...');
+                if (mainApp) {
+                    mainApp.style.display = 'none';
                 }
-                
-                // Initialiser l'écran de connexion
-                console.log('🎨 Initializing auth screen...');
-                authManager.initAuthScreen();
-                console.log('✅ Auth screen initialized');
+                if (authScreen) {
+                    authScreen.style.display = 'flex';
+                    console.log('🎨 Initializing auth screen...');
+                    authManager.initAuthScreen();
+                    console.log('✅ Auth screen initialized');
+                }
             }
         });
-                        
+                                
         
         
         
