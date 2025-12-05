@@ -2020,18 +2020,11 @@
 
 
 
-
-
-
-
-
-
         // Fonction pour obtenir une traduction
         function t(key) {
             return translations[currentLanguage][key] || key;
         }
         
-        // Fonction pour changer de langue
         function changeLanguage(lang) {
             currentLanguage = lang;
             
@@ -2040,9 +2033,10 @@
                 db.collection('users').doc(currentUser.uid).set({
                     language: lang
                 }, { merge: true });
-            } else {
-                localStorage.setItem('preferredLanguage', lang);
             }
+            
+            // ✅ Toujours sauvegarder dans localStorage aussi (pour sync entre écran de co et app)
+            localStorage.setItem('language', lang);
             
             // Mettre à jour l'attribut dir pour RTL (arabe et hébreu)
             if (lang === 'ar' || lang === 'he') {
@@ -2310,8 +2304,25 @@
                     percentageMode = data.percentageMode || 'expenses';
                     categoryMetadata = data.categoryMetadata || {};
                     
-                    // Charger la langue préférée
-                    currentLanguage = data.language || localStorage.getItem('preferredLanguage') || 'en';
+                    // ✅ LOGIQUE DE LANGUE AMÉLIORÉE
+                    const firestoreLang = data.language;
+                    const localStorageLang = localStorage.getItem('language'); // Utilise 'language' maintenant
+                    
+                    if (firestoreLang && translations[firestoreLang]) {
+                        // Priorité 1 : Firestore (choix dans l'app)
+                        currentLanguage = firestoreLang;
+                    } else if (localStorageLang && translations[localStorageLang]) {
+                        // Priorité 2 : localStorage (choix écran de connexion)
+                        currentLanguage = localStorageLang;
+                        // Sauvegarder dans Firestore pour synchroniser
+                        await db.collection('users').doc(currentUser.uid).set({
+                            language: localStorageLang
+                        }, { merge: true });
+                    } else {
+                        // Priorité 3 : Langue système par défaut
+                        currentLanguage = 'en';
+                    }
+                    
                     document.getElementById('languageSelect').value = currentLanguage;
                     
                     // Appliquer RTL si nécessaire
@@ -2389,8 +2400,16 @@
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
+                    
+                    // ✅ Pour nouveau compte : utiliser langue de localStorage si existe
+                    const localStorageLang = localStorage.getItem('language');
+                    if (localStorageLang && translations[localStorageLang]) {
+                        currentLanguage = localStorageLang;
+                    }
+                    
                     await saveUserData();
                 }
+                
                 // Mettre à jour l'interface avec la langue chargée
                 updateUILanguage();
                 updateDisplay();
