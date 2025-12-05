@@ -3839,6 +3839,10 @@
             // ✅ Bloquer le scroll en arrière-plan
             document.body.classList.add('modal-open');
             
+            // ✅ Supprimer le style inline s'il existe
+            modal.style.display = '';
+            
+            // ✅ Utiliser la classe .show
             modal.classList.add('show');
         }
 
@@ -4376,17 +4380,6 @@
             }
         }
 
-        // Fonction pour ouvrir Settings depuis le footer
-        function openSettings() {
-            const settingsModal = document.getElementById('settingsModal');
-            if (settingsModal) {
-                settingsModal.style.display = 'flex';
-            }
-        }
-
-
-
-        
         
         // Wait for Chart.js to load before initializing
         function initializeApp() {
