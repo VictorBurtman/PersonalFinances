@@ -255,6 +255,12 @@ class AuthManager {
                 authSwitch.appendChild(link);
             }
         }
+        // ✅ AJOUTE CETTE PARTIE
+        // Traduire "Forgot password?"
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        if (forgotPasswordLink) {
+            forgotPasswordLink.textContent = trans.forgotPassword;
+        }
     }
 
     /**

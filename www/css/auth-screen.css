@@ -35,6 +35,51 @@ body.dark-mode {
 }
 
 /* ============================================
+   FORCE LIGHT MODE SUR AUTH SCREEN
+   ============================================ */
+#auth-screen {
+    /* Force les couleurs light mode */
+    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    --auth-card-bg: white !important;
+    --auth-text: #333 !important;
+    --auth-text-secondary: #666 !important;
+    --auth-input-bg: #f8f9fa !important;
+    --auth-input-border: #dee2e6 !important;
+    --auth-input-focus: #667eea !important;
+    --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    --auth-btn-secondary: #6c757d !important;
+    --auth-link: #667eea !important;
+    --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Désactiver dark mode sur auth-screen spécifiquement */
+body.dark-mode #auth-screen {
+    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    --auth-card-bg: white !important;
+    --auth-text: #333 !important;
+    --auth-text-secondary: #666 !important;
+    --auth-input-bg: #f8f9fa !important;
+    --auth-input-border: #dee2e6 !important;
+}
+
+body.dark-mode #auth-screen .auth-container {
+    background: white !important;
+    color: #333 !important;
+}
+
+body.dark-mode #auth-screen input {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    border-color: #dee2e6 !important;
+}
+
+body.dark-mode #auth-screen .language-selector button {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+/* ============================================
    AUTH SCREEN CONTAINER
    ============================================ */
 #auth-screen {
