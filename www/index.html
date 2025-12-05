@@ -2224,31 +2224,6 @@
         }
 
 
-        function handleAuth(event) {
-            if (event) event.preventDefault();
-            const email = document.getElementById('email').value;  // Changé !
-            const password = document.getElementById('password').value;  // Changé !
-            
-            if (isSignUpMode) {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .catch(error => alert(error.message));
-            } else {
-                auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => alert(error.message));
-            }
-        }
-
-        // Et ajoute les alias pour les nouvelles fonctions
-        function handleSignIn() {
-            isSignUpMode = false;
-            handleAuth();
-        }
-
-        function handleSignUp() {
-            isSignUpMode = true;
-            handleAuth();
-        }
-
         function showAuthError(message) {
             const errorDiv = document.getElementById('authError');
             errorDiv.textContent = message;
