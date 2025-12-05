@@ -387,6 +387,120 @@ class AuthManager {
         const systemLanguage = this.detectSystemLanguage();
         this.applyLanguage(systemLanguage);
     }
+    
+    /**
+     * Affiche le dialog de réinitialisation de mot de passe
+     */
+    showForgotPasswordDialog() {
+        const trans = translations[currentLanguage];
+        
+        const email = prompt(trans.resetPasswordDesc);
+        
+        if (!email || !email.trim()) {
+            return; // Annulé ou vide
+        }
+        
+        // Validation email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.showAuthError(trans.errorEmailInvalid);
+            return;
+        }
+        
+        this.handlePasswordReset(email.trim());
+    }
+
+    async handlePasswordReset(email) {
+        const trans = translations[currentLanguage];
+        
+        try {
+            await auth.sendPasswordResetEmail(email);
+            alert(trans.resetEmailSent);
+        } catch (error) {
+            console.error('Password reset error:', error);
+            const errorMessage = this.getErrorMessage(error.code);
+            this.showAuthError(errorMessage);
+        }
+    }
+    // ✅ FIN DE L'AJOUT
+
+    getErrorMessage(errorCode) {
+        const trans = translations[currentLanguage];
+        
+        const errorMap = {
+            'auth/invalid-email': trans.errorEmailInvalid,
+            'auth/user-not-found': trans.errorUserNotFound,
+            'auth/wrong-password': trans.errorWrongPassword,
+            'auth/email-already-in-use': trans.errorEmailAlreadyUsed,
+            'auth/weak-password': trans.errorWeakPassword,
+            'auth/too-many-requests': trans.errorTooManyRequests,
+            'auth/network-request-failed': trans.errorNetworkFailed,
+            'auth/user-disabled': trans.errorUserNotFound,
+            'auth/operation-not-allowed': trans.errorUnknown
+        };
+        
+        return errorMap[errorCode] || trans.errorUnknown;
+    }
+
+    /**
+     * Affiche un message d'erreur dans l'interface
+     * @param {string} message - Message à afficher
+     */
+    showAuthError(message) {
+        // Chercher ou créer le conteneur d'erreur
+        let errorDiv = document.querySelector('.auth-error');
+        
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'auth-error';
+            
+            // Insérer avant les boutons
+            const authButtons = document.querySelector('.auth-buttons');
+            if (authButtons) {
+                authButtons.parentNode.insertBefore(errorDiv, authButtons);
+            }
+        }
+        
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        
+        // Masquer après 5 secondes
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    /**
+     * Valide les champs du formulaire
+     * @param {string} email
+     * @param {string} password
+     * @returns {string|null} Message d'erreur ou null si OK
+     */
+    validateAuthForm(email, password) {
+        const trans = translations[currentLanguage];
+        
+        if (!email || !email.trim()) {
+            return trans.errorEmailRequired;
+        }
+        
+        if (!password || !password.trim()) {
+            return trans.errorPasswordRequired;
+        }
+        
+        // Validation basique de l'email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return trans.errorEmailInvalid;
+        }
+        
+        if (password.length < 6) {
+            return trans.errorPasswordTooShort;
+        }
+        
+        return null; // Pas d'erreur
+    }
+
+
 }
 
 // Créer une instance globale
@@ -396,3 +510,5 @@ const authManager = new AuthManager();
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AuthManager;
 }
+
+

@@ -1312,6 +1312,16 @@
                     </button>
                 </div>
                 
+                <!-- ✅ AJOUTE CE LIEN -->
+                <div style="text-align: right; margin-top: -5px; margin-bottom: 10px;">
+                    <a id="forgotPasswordLink" 
+                    onclick="showForgotPasswordDialog()" 
+                    style="font-size: 13px; color: var(--auth-link); cursor: pointer; text-decoration: none;"
+                    data-translate="forgotPassword">
+                        Forgot password?
+                    </a>
+                </div>
+
                 <!-- Remember Me Checkbox -->
                 <div class="remember-me-container">
                     <label for="rememberMe">
@@ -1830,81 +1840,68 @@
         }
 
         async function handleSignIn() {
-            console.log('🔵 handleSignIn called');
-            
+            const trans = translations[currentLanguage];
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const remember = document.getElementById('rememberMe').checked;
             
-            console.log('📧 Email:', email);
-            console.log('🔐 Password length:', password.length);
-            console.log('💾 Remember me:', remember);
-            
-            if (!email || !password) {
-                showAuthError('Please fill in all fields');
+            // Validation du formulaire
+            const validationError = authManager.validateAuthForm(email, password);
+            if (validationError) {
+                authManager.showAuthError(validationError);
                 return;
             }
             
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
-            signInBtn.disabled = true;
-            signUpBtn.disabled = true;
-            signInBtn.textContent = translations[currentLanguage]?.signingIn || 'Signing in...';
-            
             try {
-                console.log('🔄 Calling authManager.signIn...');
+                signInBtn.disabled = true;
+                signUpBtn.disabled = true;
+                
                 await authManager.signIn(email, password, remember);
-                console.log('✅ Sign in successful');
+                
             } catch (error) {
-                console.error('❌ Sign in error:', error);
-                console.error('Error code:', error.code);
-                console.error('Error message:', error.message);
-                showAuthError(getAuthErrorMessage(error));
-            } finally {
+                console.error('Sign in error:', error);
+                const errorMessage = authManager.getErrorMessage(error.code);
+                authManager.showAuthError(errorMessage);
+                
                 signInBtn.disabled = false;
                 signUpBtn.disabled = false;
-                signInBtn.textContent = translations[currentLanguage]?.signIn || 'Sign In';
             }
         }
 
-        // Fonction d'inscription améliorée
         async function handleSignUp() {
+            const trans = translations[currentLanguage];
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const remember = document.getElementById('rememberMe').checked;
             
-            if (!email || !password) {
-                showAuthError('Please fill in all fields');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showAuthError('Password must be at least 6 characters');
+            // Validation du formulaire
+            const validationError = authManager.validateAuthForm(email, password);
+            if (validationError) {
+                authManager.showAuthError(validationError);
                 return;
             }
             
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
-            // Désactiver les boutons pendant l'inscription
-            signInBtn.disabled = true;
-            signUpBtn.disabled = true;
-            signUpBtn.textContent = translations[currentLanguage]?.creatingAccount || 'Creating account...';
-            
             try {
+                signInBtn.disabled = true;
+                signUpBtn.disabled = true;
+                
                 await authManager.signUp(email, password, remember);
-                // La redirection est gérée par onAuthStateChanged
+                
             } catch (error) {
                 console.error('Sign up error:', error);
-                showAuthError(getAuthErrorMessage(error));
-            } finally {
+                const errorMessage = authManager.getErrorMessage(error.code);
+                authManager.showAuthError(errorMessage);
+                
                 signInBtn.disabled = false;
                 signUpBtn.disabled = false;
-                signUpBtn.textContent = translations[currentLanguage]?.signUp || 'Sign Up';
             }
         }
-
 
         // ========== TOGGLE PASSWORD VISIBILITY ==========
         document.addEventListener('DOMContentLoaded', function() {
