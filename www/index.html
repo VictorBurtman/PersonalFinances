@@ -1840,16 +1840,15 @@
         }
 
         async function handleSignIn() {
-            const trans = translations[currentLanguage];
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('rememberMe').checked;
             
-            // Validation du formulaire
+            // ✅ Validation STRICTE avant tout
             const validationError = authManager.validateAuthForm(email, password);
             if (validationError) {
                 authManager.showAuthError(validationError);
-                return;
+                return; // STOP ICI - Ne pas appeler Firebase
             }
             
             const signInBtn = document.getElementById('signInBtn');
@@ -1872,16 +1871,15 @@
         }
 
         async function handleSignUp() {
-            const trans = translations[currentLanguage];
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('rememberMe').checked;
             
-            // Validation du formulaire
+            // ✅ Validation STRICTE avant tout
             const validationError = authManager.validateAuthForm(email, password);
             if (validationError) {
                 authManager.showAuthError(validationError);
-                return;
+                return; // STOP ICI - Ne pas appeler Firebase
             }
             
             const signInBtn = document.getElementById('signInBtn');
