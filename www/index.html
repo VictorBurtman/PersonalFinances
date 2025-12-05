@@ -659,7 +659,25 @@
             background-color: rgba(0, 0, 0, 0.5);
             padding: 15px;
         }
-        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            /* ✅ Empêcher le scroll du body en arrière-plan */
+            overflow-y: auto;
+        }
+
+        /* ✅ Quand le modal est ouvert, bloquer le scroll du body */
+        body.modal-open {
+            overflow: hidden;
+        }
+
         .modal.show {
             display: flex;
             align-items: center;
@@ -1416,17 +1434,6 @@
         <div class="header">
             <button class="settings-btn-header" onclick="openSettings()" title="Settings">⚙️</button>
         </div>
-        
-        <!-- ONGLETS -->
-        <div class="app-tabs">
-            <button class="app-tab active" data-tab="budget" onclick="switchTab('budget')">
-                <span data-translate="budgetTab">Budget</span>
-            </button>
-            <button class="app-tab" data-tab="transactions" onclick="switchTab('transactions')">
-                <span data-translate="transactionsTab">Transactions</span>
-            </button>
-        </div>
-
             <div class="dashboard">
                 <!-- ========================================
                     ONGLET BUDGET
@@ -2425,6 +2432,14 @@
                         document.documentElement.setAttribute('dir', 'rtl');
                     } else {
                         document.documentElement.setAttribute('dir', 'ltr');
+                    }
+                    
+                    // ✅ CHARGER DARK MODE
+                    const darkMode = data.darkMode || false;
+                    if (darkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
                     }
                     
                     // ✅ MAINTENANT charger le reste des données
@@ -3812,7 +3827,6 @@
             const percentageModeSelect = document.getElementById('percentageModeSelect');
             const percentageModeSection = document.getElementById('percentageModeSection');
             
-            // ✅ Vérifications ajoutées
             if (!modal) {
                 console.error('Settings modal not found');
                 return;
@@ -3834,19 +3848,22 @@
                 settingsUserEmail.textContent = currentUser.email;
             }
             
-            // Prevent background scrolling
-            document.body.style.overflow = 'hidden';
+            // ✅ Bloquer le scroll en arrière-plan
+            document.body.classList.add('modal-open');
             
             modal.classList.add('show');
         }
 
         function closeSettings() {
             const modal = document.getElementById('settingsModal');
-            modal.classList.remove('show');
-            
-            // Restore background scrolling
-            document.body.style.overflow = '';
+            if (modal) {
+                modal.classList.remove('show');
+                // ✅ Réactiver le scroll
+                document.body.classList.remove('modal-open');
+            }
         }
+
+
 
         function updateCurrency(currencyCode) {
             currency = currencyOptions[currencyCode];
