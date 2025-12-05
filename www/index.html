@@ -658,17 +658,6 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             padding: 15px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 15px;
             /* ✅ Empêcher le scroll du body en arrière-plan */
             overflow-y: auto;
         }
@@ -1432,7 +1421,6 @@
     <div id="appScreen">
     <div class="container">
         <div class="header">
-            <button class="settings-btn-header" onclick="openSettings()" title="Settings">⚙️</button>
         </div>
             <div class="dashboard">
                 <!-- ========================================
@@ -3855,11 +3843,16 @@
         }
 
         function closeSettings() {
+            console.log('🔴 closeSettings() appelée');
             const modal = document.getElementById('settingsModal');
+            console.log('📱 Modal:', modal);
+            console.log('📱 Classes avant:', modal?.className);
+            
             if (modal) {
                 modal.classList.remove('show');
-                // ✅ Réactiver le scroll
                 document.body.classList.remove('modal-open');
+                console.log('📱 Classes après:', modal.className);
+                console.log('✅ Modal fermé');
             }
         }
 
