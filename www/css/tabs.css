@@ -516,19 +516,14 @@ body.dark-mode {
     .toolbar-btn {
         flex: 1 !important;
         min-width: 0 !important;
-        padding: 10px 8px !important; /* ✅ Hauteur réduite */
+        padding: 10px 8px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 1.5em !important; /* ✅ Emoji */
+        font-size: 1.5em !important;
         line-height: 1 !important;
     }
-
-   .toolbar-btn span[data-translate] {
-       display: none !important;
-   }
-      
-    /* ✅ MODIFIÉ : Cibler uniquement les spans avec data-translate */
+    
     .toolbar-btn span[data-translate] {
         display: none !important;
     }
@@ -609,32 +604,30 @@ body.dark-mode {
    
     /* Bank Accounts Modal sur mobile */
     #bankAccountsModal {
-        padding: 10px !important;
+        padding: 10px;
     }
     
     #bankAccountsModal .modal-content {
-        width: 95% !important;
-        max-width: 95% !important;
-        max-height: 85dvh !important;
-        margin: 8dvh auto !important;
+        width: 95%;
+        max-width: 95%;
+        max-height: calc(100vh - 140px); /* ✅ Plus de place sur mobile */
+        max-height: calc(100dvh - 140px); /* ✅ iOS */
     }
     
     #bankAccountsModal .modal-header {
-        padding: 10px 12px !important;
+        padding: 12px 15px;
     }
     
     #bankAccountsModal .modal-header h2 {
-        font-size: 1.1em !important;
+        font-size: 1.1em;
     }
     
     #bankAccountsModal .modal-body {
-        padding: 12px !important;
-        max-height: calc(85dvh - 140px) !important;
-        overflow-y: auto !important;
+        padding: 15px;
     }
     
     #bankAccountsModal .modal-footer {
-        padding: 10px 12px !important;
+        padding: 12px 15px;
     }
 }
 
@@ -731,7 +724,7 @@ body.dark-mode .filter-radio-label:has(input:checked) {
 #bankAccountsModal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 10000;
     left: 0;
     top: 0;
     width: 100%;
@@ -741,14 +734,21 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     padding: 20px;
 }
 
+#bankAccountsModal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
 #bankAccountsModal .modal-content {
     background: white;
-    margin: 10vh auto;
+    margin: auto;
     padding: 0;
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: 85vh;
+    max-height: calc(100vh - 160px); /* ✅ Limité */
+    max-height: calc(100dvh - 160px); /* ✅ Pour iOS */
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -761,6 +761,7 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 #bankAccountsModal .modal-header h2 {
@@ -773,12 +774,14 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     padding: 25px;
     overflow-y: auto;
     flex: 1;
+    -webkit-overflow-scrolling: touch;
 }
 
 #bankAccountsModal .modal-footer {
     padding: 15px 25px;
     border-top: 2px solid #e9ecef;
     text-align: right;
+    flex-shrink: 0;
 }
 
 .bank-section {
@@ -797,7 +800,6 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     color: #495057;
 }
 
-/* ✅ AJOUTE CES STYLES ICI */
 .bank-section .btn {
     padding: 12px 20px !important;
     font-size: 0.95em !important;
@@ -808,6 +810,7 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     padding: 12px 20px !important;
     min-height: 44px !important;
 }
+
 .csv-import-section {
     margin-top: 20px;
 }
@@ -1190,7 +1193,7 @@ body {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 120px; /* Espace pour le footer */
+    padding-bottom: 100px; /* ✅ Réduit de 120px à 100px */
 }
 
 /* Header sticky reste en haut */
@@ -1202,14 +1205,16 @@ body {
     flex-shrink: 0; /* Ne pas rétrécir */
 }
 
-/* Footer reste en bas */
 .app-footer {
     position: fixed;
     bottom: 0;
+    bottom: env(safe-area-inset-bottom, 0); /* ✅ Pour iOS */
     left: 0;
     right: 0;
     z-index: 1000;
     flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0); /* ✅ Padding interne */
+    box-shadow: none !important;
 }
 
 
