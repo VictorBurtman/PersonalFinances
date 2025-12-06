@@ -646,23 +646,42 @@ body.dark-mode {
 }
 
 .filter-radio-label {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
     font-size: 0.85em;
     white-space: nowrap;
     font-weight: 500;
 }
 
+.filter-radio-label:has(input:checked) {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
 .filter-radio-label input[type="radio"] {
+    margin: 0;
     cursor: pointer;
     width: 16px;
     height: 16px;
 }
 
-.filter-radio-label:hover {
-    color: #667eea;
+body.dark-mode .filter-radio-label {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .filter-radio-label:has(input:checked) {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
 }
 
 /* ============================================
@@ -1111,4 +1130,13 @@ body.dark-mode #restoreSimilarCheckbox {
 
 .modal {
     z-index: 10000;
+}
+
+/* ============================================
+   HEADER VISIBILITY CONDITIONNELLE
+   ============================================ */
+
+.budget-only,
+.transactions-only {
+    display: none;
 }

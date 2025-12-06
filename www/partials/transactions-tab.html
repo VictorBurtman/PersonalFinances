@@ -1,86 +1,3 @@
-<!-- Sticky Toolbar for Transactions with Integrated Filters -->
-<div class="transactions-sticky-toolbar">
-    <div class="toolbar-row">
-        <button class="toolbar-btn" id="filtersToggleBtn" onclick="toggleFiltersRow()">
-            🔍 <span data-translate="filters" class="toolbar-btn-text">Filters</span> <span id="filterToggleIcon">▼</span>
-        </button>
-        <button class="toolbar-btn" onclick="openBankAccountsModal()">
-            🏦 <span data-translate="bankAccountsConfig" class="toolbar-btn-text">Bank Accounts</span>
-        </button>
-        <button class="toolbar-btn" onclick="openExcludedTransactionsModal()">
-            🚫 <span data-translate="excluded" class="toolbar-btn-text">Excluded</span>
-        </button>
-        <button class="toolbar-btn" onclick="openAddManualTransactionModal()">
-            ➕ <span data-translate="addTransaction" class="toolbar-btn-text">Add Transaction</span>
-        </button>
-    </div>
-    
-    <!-- Filters Row (inside sticky toolbar, hidden by default) -->
-    <div class="filters-row" id="filtersRow" style="display: none;">
-        <!-- Label filter with radio buttons -->
-        <div class="filter-radio-group" style="display: flex; gap: 12px; align-items: center;">
-            <label class="filter-radio-label">
-                <input type="radio" name="labelFilter" value="all" onchange="applyFilters()" checked>
-                <span data-translate="showAll">All</span>
-            </label>
-            <label class="filter-radio-label">
-                <input type="radio" name="labelFilter" value="unlabeled" onchange="applyFilters()">
-                <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
-            </label>
-            <label class="filter-radio-label">
-                <input type="radio" name="labelFilter" value="labeled" onchange="applyFilters()">
-                <span data-translate="showOnlyLabeled">Labeled only</span>
-            </label>
-        </div>
-        
-        <select id="monthFilter" onchange="applyFilters()" class="filter-select">
-            <option value="" data-translate="allMonths">All months</option>
-        </select>
-        
-        <!-- ✅ AJOUTE CE NOUVEAU SELECT -->
-        <select id="sourceFilter" onchange="applyFilters()" class="filter-select">
-            <option value="" data-translate="allSources">All sources</option>
-            <option value="max">🏦 Max (Leumi)</option>
-            <option value="isracard">💳 Isracard</option>
-            <!-- Les CSV seront ajoutés dynamiquement -->
-        </select>
-        
-        <select id="categoryFilter" onchange="applyFilters()" class="filter-select">
-            <option value="" data-translate="allCategories">All categories</option>
-        </select>
-        
-        <input 
-            type="text" 
-            id="searchFilter" 
-            data-translate-placeholder="search"
-            placeholder="Search..." 
-            oninput="applyFilters()"
-            class="filter-search"
-        />
-        
-        <button class="filter-clear-btn" onclick="clearFilters()">
-            <span data-translate="clear">Clear</span>
-        </button>
-        <select id="sortFilter" onchange="changeSortOrder(this.value)" class="filter-select">
-            <option value="date-desc" data-translate="sortDateNewest">📅 Date (newest)</option>
-            <option value="date-asc" data-translate="sortDateOldest">📅 Date (oldest)</option>
-            <option value="amount-desc" data-translate="sortAmountHighest">💰 Amount (highest)</option>
-            <option value="amount-asc" data-translate="sortAmountLowest">💰 Amount (lowest)</option>
-            <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
-            <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
-        </select>
-        
-        <!-- ✅ AJOUTE CE NOUVEAU SELECT -->
-        <select id="limitFilter" onchange="changeTransactionLimit(this.value)" class="filter-select">
-            <option value="2000" data-translate="show2000">Show 2000</option>
-            <option value="1000" data-translate="show1000">Show 1000</option>
-            <option value="500" data-translate="show500">Show 500</option>
-            <option value="50" data-translate="show50">Show 50</option>
-        </select>
-    </div>
-</div>
-
-
 <!-- All Transactions - Always visible -->
 <div class="transactions-section" id="allTransactionsSection">
     <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -107,6 +24,120 @@
         <div><span data-translate="noTransactionsYet">No transactions yet</span></div>
         <div style="margin-top: 10px; font-size: 0.9em;">
             <span data-translate="clickSyncToStart">Click "Sync All" to get started</span>
+        </div>
+    </div>
+</div>
+
+<!-- Filters Modal -->
+<div id="filtersModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔍 <span data-translate="filters">Filters</span></h2>
+            <button class="modal-close" onclick="closeFiltersModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <!-- Label filter -->
+            <div style="margin-bottom: 20px;">
+                <h4 style="margin-bottom: 10px;" data-translate="labelStatus">Label Status</h4>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <label class="filter-radio-label">
+                        <input type="radio" name="labelFilter" value="all" onchange="applyFilters()" checked>
+                        <span data-translate="showAll">All</span>
+                    </label>
+                    <label class="filter-radio-label">
+                        <input type="radio" name="labelFilter" value="unlabeled" onchange="applyFilters()">
+                        <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
+                    </label>
+                    <label class="filter-radio-label">
+                        <input type="radio" name="labelFilter" value="labeled" onchange="applyFilters()">
+                        <span data-translate="showOnlyLabeled">Labeled only</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Month filter -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="month">Month</span>
+                </label>
+                <select id="monthFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                    <option value="" data-translate="allMonths">All months</option>
+                </select>
+            </div>
+            
+            <!-- Source filter -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="source">Source</span>
+                </label>
+                <select id="sourceFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                    <option value="" data-translate="allSources">All sources</option>
+                    <option value="max">🏦 Max (Leumi)</option>
+                    <option value="isracard">💳 Isracard</option>
+                </select>
+            </div>
+            
+            <!-- Category filter -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="category">Category</span>
+                </label>
+                <select id="categoryFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                    <option value="" data-translate="allCategories">All categories</option>
+                </select>
+            </div>
+            
+            <!-- Search -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="search">Search</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="searchFilter" 
+                    data-translate-placeholder="search"
+                    placeholder="Search..." 
+                    oninput="applyFilters()"
+                    class="auth-input"
+                    style="width: 100%;"
+                />
+            </div>
+            
+            <!-- Sort -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="sortBy">Sort by</span>
+                </label>
+                <select id="sortFilter" onchange="changeSortOrder(this.value)" class="settings-select" style="width: 100%;">
+                    <option value="date-desc" data-translate="sortDateNewest">📅 Date (newest)</option>
+                    <option value="date-asc" data-translate="sortDateOldest">📅 Date (oldest)</option>
+                    <option value="amount-desc" data-translate="sortAmountHighest">💰 Amount (highest)</option>
+                    <option value="amount-asc" data-translate="sortAmountLowest">💰 Amount (lowest)</option>
+                    <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
+                    <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
+                </select>
+            </div>
+            
+            <!-- Limit -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                    <span data-translate="showTransactions">Show transactions</span>
+                </label>
+                <select id="limitFilter" onchange="changeTransactionLimit(this.value)" class="settings-select" style="width: 100%;">
+                    <option value="2000" data-translate="show2000">Show 2000</option>
+                    <option value="1000" data-translate="show1000">Show 1000</option>
+                    <option value="500" data-translate="show500">Show 500</option>
+                    <option value="50" data-translate="show50">Show 50</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: space-between;">
+            <button class="modal-button secondary" onclick="clearFilters()">
+                <span data-translate="clear">Clear</span>
+            </button>
+            <button class="modal-button primary" onclick="closeFiltersModal()">
+                <span data-translate="done">Done</span>
+            </button>
         </div>
     </div>
 </div>
@@ -208,7 +239,6 @@
     </div>
 </div>
 
-
 <!-- Bank Accounts Modal -->
 <div id="bankAccountsModal" class="modal">
     <div class="modal-content">
@@ -218,7 +248,7 @@
         </div>
         <div class="modal-body">
             
-            <!-- ✅ NOUVEAU : CSV Import Section EN HAUT -->
+            <!-- CSV Import Section -->
             <div class="bank-section">
                 <h4>📥 <span data-translate="importCSVExcel">Import CSV / Excel</span></h4>
                 <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
@@ -262,7 +292,7 @@
                 </div>
             </div>
 
-            <!-- ✅ NOUVEAU : Bank Synchronization (Collapsible) -->
+            <!-- Bank Synchronization (Collapsible) -->
             <div id="bankSyncSection" class="bank-section" style="border-top: 2px solid #e0e0e0; margin-top: 20px; padding-top: 20px; display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleBankSync()">
                     <h4>
@@ -271,51 +301,51 @@
                     </h4>
                 </div>
                 
-                    <div id="bankSyncContent" style="display: none; margin-top: 20px;">
-                        <!-- Max.co.il Credentials -->
-                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
-                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
-                            <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
-                                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
-                            </div>
-                            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
-                                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
-                            </button>
+                <div id="bankSyncContent" style="display: none; margin-top: 20px;">
+                    <!-- Max.co.il Credentials -->
+                    <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
+                        <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
+                        <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
+                            <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
                         </div>
-                        
-                        <!-- Isracard Credentials -->
-                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
-                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
-                            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
-                                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
-                            </div>
-                            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
-                                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
-                            </button>
+                        <button class="btn btn-primary" onclick="openCredentialsModal('max')">
+                            <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Isracard Credentials -->
+                    <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
+                        <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
+                        <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
+                            <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
                         </div>
-                        
-                        <!-- Sync Section -->
-                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; border: 1px solid var(--block-border, #dee2e6);">
-                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
-                            <div style="margin-bottom: 15px; padding: 10px; background: var(--inner-block-bg, white); border-radius: 6px; border: 1px solid var(--block-border, #e9ecef);">
-                                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
-                                    <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
-                                    <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
-                                </div>
+                        <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
+                            <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Sync Section -->
+                    <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; border: 1px solid var(--block-border, #dee2e6);">
+                        <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
+                        <div style="margin-bottom: 15px; padding: 10px; background: var(--inner-block-bg, white); border-radius: 6px; border: 1px solid var(--block-border, #e9ecef);">
+                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
+                                <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
+                                <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
                             </div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
-                                    <span data-translate="syncAll">🔄 Sync All</span>
-                                </button>
-                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
-                                    <span data-translate="autoLabel">🏷️ Auto-label</span>
-                                </button>
-                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
+                                <span data-translate="syncAll">🔄 Sync All</span>
+                            </button>
+                            <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
+                                <span data-translate="autoLabel">🏷️ Auto-label</span>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            <!-- Clear All Transactions (déplacé depuis Settings) -->
+            <!-- Clear All Transactions -->
             <div class="bank-section" style="margin-top: 20px; padding-top: 20px; text-align: center;">
                 <h4 data-translate="clearData" style="text-align: center;">🗑️ Clear Data</h4>
                 <button class="settings-btn danger" onclick="clearAllTransactions()" style="max-width: 400px; width: 100%; padding: 12px; font-size: 1em; margin: 0 auto; display: block;">
@@ -343,7 +373,7 @@
             <button class="modal-close" onclick="closeAddManualTransactionModal()">✕</button>
         </div>
         <div class="modal-body">
-            <!-- ✅ NOUVEAU : Message si pas autorisé -->
+            <!-- Message si pas autorisé -->
             <div id="bankSyncNotAllowed" style="display: none; background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
                 <h4 style="color: #856404; margin: 0 0 10px 0;">🔒 Bank Synchronization Restricted</h4>
                 <p style="color: #856404; margin: 0;">
@@ -351,7 +381,6 @@
                 </p>
             </div>
 
-            <!-- ✅ NOUVEAU : CSV Import Section (visible pour TOUS) -->
             <form id="manualTransactionForm" onsubmit="saveManualTransaction(event)">
                 <!-- Name -->
                 <div style="margin-bottom: 15px;">
@@ -421,7 +450,7 @@
                     ></textarea>
                 </div>
 
-                <!-- ✅ NOUVEAU : Bank Name -->
+                <!-- Bank Name -->
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 500;">
                         <span data-translate="bankName">Bank Name</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
@@ -461,7 +490,7 @@
     </div>
 </div>
 
-<!-- Scroll to Top Button (APRÈS la modal) -->
+<!-- Scroll to Top Button -->
 <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
     ↑
 </button>
@@ -469,7 +498,7 @@
 <!-- Toast Notifications Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ✅ AJOUTE ICI : Loading Overlay -->
+<!-- Loading Overlay -->
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-overlay-content">
         <div class="loading-overlay-spinner"></div>

@@ -1462,31 +1462,49 @@
     <!-- ========== FIN DE L'ÉCRAN DE CONNEXION ========== -->
 
     <div id="appScreen">
-    <div class="container">
-        <div class="header">
-        </div>
+        <div class="container">
+            <!-- ✅ HEADER STICKY UNIFIÉ -->
+            <div class="edit-mode-controls">
+                <!-- Boutons Budget (visibles uniquement sur onglet Budget) -->
+                <button class="edit-mode-btn budget-only" id="editModeBtn" onclick="toggleEditMode()">
+                    <span id="editBtnText" data-translate="editCategories">✏️ Edit</span>
+                </button>
+                
+                <button class="edit-mode-btn budget-only" onclick="addNewCategory()" style="display: none;">
+                    <span data-translate="addCategory">➕ Add</span>
+                </button>
+                
+                <button class="edit-mode-btn budget-only" id="compareBtn" onclick="toggleCompareMode()">
+                    <span data-translate="compare">📊 Compare</span>
+                </button>
+                
+                <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: none;">
+                    <!-- Options dynamiques -->
+                </select>
+                
+                <!-- Boutons Transactions (visibles uniquement sur onglet Transactions) -->
+                <button class="edit-mode-btn transactions-only" onclick="openFiltersModal()" style="display: none;">
+                    <span data-translate="filters">🔍 Filters</span>
+                </button>
+                
+                <button class="edit-mode-btn transactions-only" onclick="openBankAccountsModal()" style="display: none;">
+                    <span data-translate="bankAccountsConfig">🏦 Banks</span>
+                </button>
+                
+                <button class="edit-mode-btn transactions-only" onclick="openExcludedTransactionsModal()" style="display: none;">
+                    <span data-translate="excluded">🚫 Excluded</span>
+                </button>
+                
+                <button class="edit-mode-btn transactions-only" onclick="openAddManualTransactionModal()" style="display: none;">
+                    <span data-translate="addTransaction">➕ Add</span>
+                </button>
+            </div>
+            
             <div class="dashboard">
                 <!-- ========================================
                     ONGLET BUDGET
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
-                    <div class="edit-mode-controls">
-                        <button class="edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">
-                            <span id="editBtnText" data-translate="editCategories">Edit Categories</span>
-                        </button>
-                        <button class="edit-mode-btn" id="compareBtn" onclick="toggleCompareMode()" style="background: white; border-color: #667eea; color: #667eea;">
-                            <span data-translate="compare">Compare</span>
-                        </button>
-                        
-                        <!-- ✅ AJOUTE CE BOUTON ICI -->
-                        <button class="edit-mode-btn" onclick="addNewCategory()" style="display: none; border-color: #28a745; color: #28a745;">
-                            <span data-translate="addCategory">➕ Add Category</span>
-                        </button>
-                        
-                        <select id="compareMonth" onchange="loadRealSpending()">
-                        </select>
-                    </div>
-
                     <div class="total-section">
                         <div id="incomeDisplay" style="display: none; margin-bottom: 15px; opacity: 0.9;">
                             <h3 style="font-size: 1em; margin-bottom: 5px;" data-translate="totalIncome">Total Income</h3>
@@ -1521,164 +1539,164 @@
                         </div>
                     </div>
 
-                     <div class="expenses-list" id="expensesList">
-                    <!-- Income Category -->
-                    <div class="category-section income-category" id="category-income" style="display: none;">
-                        <div class="category-title" style="color: #28a745; border-color: #28a745;">
-                            <span data-translate="income">Income</span>
-                            <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
+                    <div class="expenses-list" id="expensesList">
+                        <!-- Income Category -->
+                        <div class="category-section income-category" id="category-income" style="display: none;">
+                            <div class="category-title" style="color: #28a745; border-color: #28a745;">
+                                <span data-translate="income">Income</span>
+                                <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>
+                            </div>
+                            <div id="incomeExpenses"></div>
                         </div>
-                        <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>
+                    
+                        <!-- Housing Category -->
+                        <div class="category-section" id="category-housing">
+                            <div class="category-title">
+                                🏠 Housing
+                                <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="housingStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('housing')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('housing')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('housing')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('housing')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="housingExpenses"></div>
                         </div>
-                        <div id="incomeExpenses"></div>
+                    
+                        <!-- Subscriptions Category -->
+                        <div class="category-section" id="category-subscriptions">
+                            <div class="category-title">
+                                🎬 Subscriptions
+                                <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="subscriptionsStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('subscriptions')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('subscriptions')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('subscriptions')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('subscriptions')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="subscriptionsExpenses"></div>
+                        </div>
+                    
+                        <!-- Groceries Category -->
+                        <div class="category-section" id="category-groceries">
+                            <div class="category-title">
+                                🛒 Groceries
+                                <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="groceriesStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('groceries')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('groceries')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('groceries')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('groceries')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="groceriesExpenses"></div>
+                        </div>
+                    
+                        <!-- Pet Care Category -->
+                        <div class="category-section" id="category-pet">
+                            <div class="category-title">
+                                🐱 Pet Care
+                                <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="petStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('pet')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('pet')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('pet')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('pet')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="petExpenses"></div>
+                        </div>
+                    
+                        <!-- Hobbies Category (NEW) -->
+                        <div class="category-section" id="category-hobbies">
+                            <div class="category-title">
+                                🎮 Hobbies
+                                <button class="rename-btn" onclick="renameCategory('hobbies')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="hobbiesStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('hobbies')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('hobbies')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('hobbies')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('hobbies')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="hobbiesExpenses"></div>
+                        </div>
+                    
+                        <!-- Other Expenses Category -->
+                        <div class="category-section" id="category-other">
+                            <div class="category-title">
+                                💸 Other Expenses
+                                <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
+                            </div>
+                            <div class="category-stats" id="otherStats"></div>
+                            <div class="category-controls">
+                                <button class="category-btn" onclick="moveCategoryUp('other')">
+                                    <span data-translate="moveUp">↑ Move Up</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('other')">
+                                    <span data-translate="moveDown">↓ Move Down</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('other')">
+                                    <span data-translate="addItem">➕ Add Item</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('other')">
+                                    <span data-translate="deleteCategory">🗑️ Delete Category</span>
+                                </button>
+                            </div>
+                            <div id="otherExpenses"></div>
+                        </div>
                     </div>
-                
-                    <!-- Housing Category -->
-                    <div class="category-section" id="category-housing">
-                        <div class="category-title">
-                            🏠 Housing
-                            <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="housingStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('housing')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('housing')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('housing')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('housing')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="housingExpenses"></div>
-                    </div>
-                
-                    <!-- Subscriptions Category -->
-                    <div class="category-section" id="category-subscriptions">
-                        <div class="category-title">
-                            🎬 Subscriptions
-                            <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="subscriptionsStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('subscriptions')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('subscriptions')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('subscriptions')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('subscriptions')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="subscriptionsExpenses"></div>
-                    </div>
-                
-                    <!-- Groceries Category -->
-                    <div class="category-section" id="category-groceries">
-                        <div class="category-title">
-                            🛒 Groceries
-                            <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="groceriesStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('groceries')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('groceries')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('groceries')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('groceries')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="groceriesExpenses"></div>
-                    </div>
-                
-                    <!-- Pet Care Category -->
-                    <div class="category-section" id="category-pet">
-                        <div class="category-title">
-                            🐱 Pet Care
-                            <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="petStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('pet')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('pet')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('pet')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('pet')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="petExpenses"></div>
-                    </div>
-                
-                    <!-- Hobbies Category (NEW) -->
-                    <div class="category-section" id="category-hobbies">
-                        <div class="category-title">
-                            🎮 Hobbies
-                            <button class="rename-btn" onclick="renameCategory('hobbies')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="hobbiesStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('hobbies')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('hobbies')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('hobbies')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('hobbies')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="hobbiesExpenses"></div>
-                    </div>
-                
-                    <!-- Other Expenses Category -->
-                    <div class="category-section" id="category-other">
-                        <div class="category-title">
-                            💸 Other Expenses
-                            <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
-                        </div>
-                        <div class="category-stats" id="otherStats"></div>
-                        <div class="category-controls">
-                            <button class="category-btn" onclick="moveCategoryUp('other')">
-                                <span data-translate="moveUp">↑ Move Up</span>
-                            </button>
-                            <button class="category-btn" onclick="moveCategoryDown('other')">
-                                <span data-translate="moveDown">↓ Move Down</span>
-                            </button>
-                            <button class="category-btn" onclick="addItemToCategory('other')">
-                                <span data-translate="addItem">➕ Add Item</span>
-                            </button>
-                            <button class="category-btn danger" onclick="deleteCategory('other')">
-                                <span data-translate="deleteCategory">🗑️ Delete Category</span>
-                            </button>
-                        </div>
-                        <div id="otherExpenses"></div>
-                    </div>
-                </div>
 
                     <button id="resetBtn" class="reset-button" onclick="resetExpenses()">
                         <span data-translate="resetAll">Reset All Expenses</span>
@@ -1697,11 +1715,11 @@
             </div>
             <!-- FIN DE DASHBOARD -->
 
-                
         </div> <!-- Fin container -->
-        <!-- ============================================
-            FOOTER NAVIGATION
-            ============================================ -->
+    
+    <!-- ============================================
+        FOOTER NAVIGATION
+        ============================================ -->
         <div class="app-footer">
             <button class="footer-nav-btn active" id="budgetTabBtn" onclick="switchTab('budget')">
                 <span class="icon">💰</span>
@@ -4402,16 +4420,35 @@
                                 
         
 
-        // Fonction pour changer d'onglet
         function switchTab(tabName) {
-            // Retirer la classe active de tous les boutons
+            // Retirer la classe active de tous les boutons du footer
             document.querySelectorAll('.footer-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
+            });
+            
+            // Cacher tous les boutons du header
+            document.querySelectorAll('.budget-only').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            document.querySelectorAll('.transactions-only').forEach(btn => {
+                btn.style.display = 'none';
             });
             
             if (tabName === 'budget') {
                 // Activer l'onglet Budget
                 document.getElementById('budgetTabBtn').classList.add('active');
+                
+                // Afficher les boutons Budget
+                document.querySelectorAll('.budget-only').forEach(btn => {
+                    // Respecter les règles de visibilité existantes
+                    if (btn.id === 'compareMonth' && !compareMode) {
+                        // Ne pas afficher si compare mode inactif
+                    } else if (btn.onclick && btn.onclick.toString().includes('addNewCategory') && !isEditMode) {
+                        // Ne pas afficher Add Category si pas en mode edit
+                    } else {
+                        btn.style.display = 'inline-block';
+                    }
+                });
                 
                 // Afficher le contenu Budget
                 document.getElementById('expensesList').style.display = 'block';
@@ -4422,6 +4459,11 @@
             } else if (tabName === 'transactions') {
                 // Activer l'onglet Transactions
                 document.getElementById('transactionsTabBtn').classList.add('active');
+                
+                // Afficher les boutons Transactions
+                document.querySelectorAll('.transactions-only').forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
                 
                 // Cacher le contenu Budget
                 document.getElementById('expensesList').style.display = 'none';
@@ -4437,8 +4479,25 @@
                 }
             }
         }
-
         
+
+
+        function openFiltersModal() {
+            const modal = document.getElementById('filtersModal');
+            if (modal) {
+                document.body.classList.add('modal-open');
+                modal.classList.add('show');
+            }
+        }
+
+        function closeFiltersModal() {
+            const modal = document.getElementById('filtersModal');
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+            }
+        }
+
         // Wait for Chart.js to load before initializing
         function initializeApp() {
             setTimeout(() => {
