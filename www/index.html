@@ -562,7 +562,7 @@
             border-bottom: 2px solid #f0f0f0;
             z-index: 100;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
         }
         
         .edit-mode-btn {
@@ -2535,6 +2535,7 @@
 
         // Global variables
         let currentUser = null;
+        window.currentUser = null; // ✅ AJOUTER cette ligne
         let isEditMode = false;
         let categoryOrder = ['income', 'housing', 'subscriptions', 'groceries', 'pet', 'hobbies', 'other'];
         let useIncome = true;
@@ -4958,7 +4959,7 @@
             if (user) {
                 console.log('✅ User is logged in - showing main app');
                 currentUser = user;
-                
+                window.currentUser = user; // ✅ AJOUTER cette ligne
                 console.log('🔄 Hiding auth screen, showing main app...');
                 if (authScreen) {
                     authScreen.style.display = 'none';
@@ -5099,6 +5100,17 @@
             console.log('🔍 Ouverture modal Filters');
             const modal = document.getElementById('filtersModal');
             if (modal) {
+                // ✅ Remplir les menus déroulants avant d'ouvrir le modal
+                if (typeof populateMonthFilter === 'function') {
+                    populateMonthFilter();
+                }
+                if (typeof populateCategoryFilter === 'function') {
+                    populateCategoryFilter();
+                }
+                if (typeof populateSourceFilter === 'function') {
+                    populateSourceFilter();
+                }
+                
                 document.body.classList.add('modal-open');
                 modal.classList.add('show');
             }
