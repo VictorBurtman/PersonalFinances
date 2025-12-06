@@ -2471,7 +2471,7 @@
                     console.log('🔍 LANGUE DEBUG:');
                     console.log('  Firestore lang:', firestoreLang);
                     console.log('  localStorage lang:', localStorageLang);
-                    currentChartType = data.chartType || 'doughnut';
+                    
                     if (firestoreLang && translations[firestoreLang]) {
                         currentLanguage = firestoreLang;
                         console.log('  ✅ Utilise Firestore:', firestoreLang);
@@ -2603,6 +2603,13 @@
                 updateChartIndicators();
                 updateDisplay();
                 updateChartButtonsState();
+                
+                // ✅ AJOUTER : Forcer l'affichage de l'onglet Budget au démarrage
+                setTimeout(() => {
+                    console.log('🚀 Initialisation onglet Budget');
+                    switchTab('budget');
+                }, 100);
+                
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
