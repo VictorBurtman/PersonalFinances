@@ -4429,7 +4429,7 @@
 
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);
-            
+            console.trace('📍 Appelé depuis:'); // ← AJOUTER CETTE LIGNE
             // Retirer la classe active de tous les boutons du footer
             document.querySelectorAll('.footer-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
