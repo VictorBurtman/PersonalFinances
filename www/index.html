@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
 
     <title>Monthly Expenses Tracker</title>
     <!-- ✅ PWA Manifest -->
@@ -551,18 +552,17 @@
         .edit-mode-controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
-            margin-left: -20px;
-            margin-right: -20px;
-            margin-top: -20px;
             padding: 12px 20px;
             flex-wrap: wrap;
             position: sticky;
             top: 0;
+            top: env(safe-area-inset-top, 0); /* ✅ AJOUTE pour iOS */
+            padding-top: calc(12px + env(safe-area-inset-top, 0)); /* ✅ AJOUTE */
             background: white;
             border-bottom: 2px solid #f0f0f0;
             z-index: 100;
             align-items: center;
+            margin-bottom: 20px;
         }
         
         .edit-mode-btn {
@@ -2471,7 +2471,7 @@
                     console.log('🔍 LANGUE DEBUG:');
                     console.log('  Firestore lang:', firestoreLang);
                     console.log('  localStorage lang:', localStorageLang);
-                    
+                    currentChartType = data.chartType || 'doughnut';
                     if (firestoreLang && translations[firestoreLang]) {
                         currentLanguage = firestoreLang;
                         console.log('  ✅ Utilise Firestore:', firestoreLang);
@@ -2600,6 +2600,7 @@
                 
                 // Mettre à jour l'interface avec la langue chargée
                 updateUILanguage();
+                updateChartIndicators();
                 updateDisplay();
                 updateChartButtonsState();
             } catch (error) {
@@ -3237,7 +3238,6 @@
 
 
         
-        // Edit Mode Functions
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
@@ -3248,13 +3248,16 @@
             // Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
+            // ✅ AJOUTER : Gérer le bouton Add Category dans le header
+            const addCategoryBtn = document.querySelector('.edit-mode-controls button[onclick*="addNewCategory"]');
+            
             if (isEditMode) {
                 // Mode Edit activé
                 if (editBtn) editBtn.classList.add('active');
                 if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
                 
-                const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
-                if (addBtn) addBtn.style.display = 'block';
+                // ✅ Afficher le bouton Add Category
+                if (addCategoryBtn) addCategoryBtn.style.display = 'inline-block';
                 
                 categoryControls.forEach(c => c.classList.add('show'));
                 renameButtons.forEach(btn => {
@@ -3267,15 +3270,14 @@
                 if (editBtn) editBtn.classList.remove('active');
                 if (editBtnText) editBtnText.textContent = t.editCategories || 'Edit Categories';
                 
-                const addBtn = document.querySelector('button[onclick*="addNewCategory"]');
-                if (addBtn) addBtn.style.display = 'none';
+                // ✅ Cacher le bouton Add Category
+                if (addCategoryBtn) addCategoryBtn.style.display = 'none';
                 
                 categoryControls.forEach(c => c.classList.remove('show'));
                 renameButtons.forEach(btn => btn.style.display = 'none');
             }
             
             // Force refresh to update item buttons
-            // ✅ MODIFIÉ : Ne pas appeler updateDisplay() - juste mettre à jour les boutons des items
             const itemBtns = document.querySelectorAll('.item-controls button');
             itemBtns.forEach(btn => {
                 if (isEditMode) {
@@ -3285,7 +3287,6 @@
                 }
             }); 
         }
-        
         // ============================================
         // COMPARE MODE - Real Spending vs Budget
         // ============================================
@@ -4418,7 +4419,7 @@
             }
         });
                                 
-        
+
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);
             
@@ -4434,9 +4435,14 @@
                 const budgetBtn = document.getElementById('budgetTabBtn');
                 if (budgetBtn) budgetBtn.classList.add('active');
                 
-                // Afficher les boutons Budget
+                // Afficher les boutons Budget (sauf Add Category qui dépend du mode édition)
                 document.querySelectorAll('.budget-only').forEach(btn => {
-                    btn.style.display = 'inline-block';
+                    // Si c'est le bouton Add Category, vérifier le mode édition
+                    if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
+                        btn.style.display = isEditMode ? 'inline-block' : 'none';
+                    } else {
+                        btn.style.display = 'inline-block';
+                    }
                 });
                 
                 // Cacher les boutons Transactions
@@ -4460,8 +4466,8 @@
                 if (expensesList) expensesList.style.display = 'block';
                 
                 // Cacher le contenu Transactions
-                const transactionsContainer = document.getElementById('transactionsContainer');
-                if (transactionsContainer) transactionsContainer.style.display = 'none';
+                const transactionsTab = document.getElementById('transactionsTab');
+                if (transactionsTab) transactionsTab.style.display = 'none';
                 
             } else if (tabName === 'transactions') {
                 console.log('💳 Activation onglet Transactions');
@@ -4488,8 +4494,8 @@
                 if (expensesList) expensesList.style.display = 'none';
                 
                 // Afficher le contenu Transactions
-                const transactionsContainer = document.getElementById('transactionsContainer');
-                if (transactionsContainer) transactionsContainer.style.display = 'block';
+                const transactionsTab = document.getElementById('transactionsTab');
+                if (transactionsTab) transactionsTab.style.display = 'block';
                 
                 // Charger les transactions si la fonction existe
                 if (typeof loadTransactions === 'function') {
@@ -4672,7 +4678,7 @@
             updateChart();
             updateChartIndicators();
             
-            // Sauvegarder la préférence
+            // ✅ Sauvegarder la préférence
             if (currentUser) {
                 saveUserData();
             }
