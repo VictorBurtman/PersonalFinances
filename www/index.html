@@ -209,64 +209,94 @@
         }
         
         /* ============================================
-           CHART SECTION
-           ============================================ */
-        
+        CHART SECTION REDESIGN
+        ============================================ */
+
         .chart-section {
             margin-bottom: 20px;
+            position: relative;
         }
-        
-        .chart-controls {
+
+        .chart-header {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        .chart-indicators {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chart-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .chart-dot.active {
+            width: 24px;
+            border-radius: 4px;
+            background: #667eea;
+        }
+
+        body.dark-mode .chart-dot {
+            background: #4a4a5e;
+        }
+
+        body.dark-mode .chart-dot.active {
+            background: #9ca3ff;
+        }
+
+        .color-btn-mini {
+            background: rgba(102, 126, 234, 0.1);
+            border: none;
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
-        
-        .chart-toggle-btn {
-            padding: 10px 20px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 8px;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .color-btn-mini:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: scale(1.1);
         }
-        
-        .chart-toggle-btn:hover {
-            background: #f0f0f0;
+
+        body.dark-mode .color-btn-mini {
+            background: rgba(156, 163, 255, 0.1);
         }
-        
-        .chart-toggle-btn.active {
-            background: #667eea;
-            color: white;
+
+        body.dark-mode .color-btn-mini:hover {
+            background: rgba(156, 163, 255, 0.2);
         }
-        
-        .color-customize-btn {
-            padding: 10px 20px;
-            border: 2px solid #28a745;
-            background: white;
-            color: #28a745;
-            border-radius: 8px;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .chart-container-wrapper {
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-y;
+            cursor: grab;
         }
-        
-        .color-customize-btn:hover {
-            background: #28a745;
-            color: white;
+
+        .chart-container-wrapper:active {
+            cursor: grabbing;
         }
-        
+
         .chart-container {
             position: relative;
             height: 350px;
-            margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
-        
         /* ============================================
            EXPENSES LIST
            ============================================ */
@@ -1472,19 +1502,22 @@
                     </div>
 
                     <div class="chart-section">
-                        <div class="chart-controls">
-                            <button id="pieChartBtn" class="chart-toggle-btn active" data-type="doughnut">
-                                <span data-translate="pieChart">Pie Chart</span>
-                            </button>
-                            <button id="barChartBtn" class="chart-toggle-btn" data-type="bar">
-                                <span data-translate="barChart">Bar Chart</span>
-                            </button>
-                            <button id="colorsBtn" class="color-customize-btn" onclick="openColorEditor()">
-                                <span data-translate="colors">Colors</span>
+                        <!-- Indicateur de graphique + bouton couleurs -->
+                        <div class="chart-header">
+                            <div class="chart-indicators">
+                                <span class="chart-dot active" data-chart="doughnut"></span>
+                                <span class="chart-dot" data-chart="bar"></span>
+                            </div>
+                            <button class="color-btn-mini" onclick="openColorEditor()" title="Customize colors">
+                                🎨
                             </button>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="expensesChart"></canvas>
+                        
+                        <!-- Conteneur du graphique (swipeable) -->
+                        <div class="chart-container-wrapper" id="chartWrapper">
+                            <div class="chart-container">
+                                <canvas id="myChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -2821,7 +2854,8 @@
                 return;
             }
         
-            const ctx = document.getElementById('expensesChart').getContext('2d');
+            const ctx = document.getElementById('myChart').getContext('2d');
+
         
             // === CORRECTION DARK MODE ===
             // On déclare les variables de couleur UNE SEULE FOIS ici
@@ -4474,7 +4508,111 @@
         });
 
 
+        // ============================================
+        // CHART SWIPE FUNCTIONALITY
+        // ============================================
 
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        function initChartSwipe() {
+            const wrapper = document.getElementById('chartWrapper');
+            if (!wrapper) return;
+            
+            // Touch events
+            wrapper.addEventListener('touchstart', handleSwipeStart);
+            wrapper.addEventListener('touchmove', handleSwipeMove);
+            wrapper.addEventListener('touchend', handleSwipeEnd);
+            
+            // Mouse events (pour desktop)
+            wrapper.addEventListener('mousedown', handleSwipeStart);
+            wrapper.addEventListener('mousemove', handleSwipeMove);
+            wrapper.addEventListener('mouseup', handleSwipeEnd);
+            wrapper.addEventListener('mouseleave', handleSwipeEnd);
+        }
+
+        function handleSwipeStart(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+            currentX = startX;
+        }
+
+        function handleSwipeMove(e) {
+            if (!isDragging) return;
+            
+            currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+            const diff = currentX - startX;
+            
+            // Visual feedback (optionnel)
+            const container = document.querySelector('.chart-container');
+            if (container && Math.abs(diff) > 10) {
+                container.style.transform = `translateX(${diff * 0.3}px)`;
+            }
+        }
+
+        function handleSwipeEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const diff = currentX - startX;
+            const container = document.querySelector('.chart-container');
+            
+            // Reset visual
+            if (container) {
+                container.style.transform = '';
+            }
+            
+            // Swipe threshold: 50px
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    // Swipe right → graphique précédent
+                    switchToChart('doughnut');
+                } else {
+                    // Swipe left → graphique suivant
+                    switchToChart('bar');
+                }
+            }
+        }
+
+        function switchToChart(type) {
+            if (type === currentChartType) return;
+            
+            currentChartType = type;
+            updateChart();
+            updateChartIndicators();
+            
+            // Sauvegarder la préférence
+            if (currentUser) {
+                saveUserData();
+            }
+        }
+
+        function updateChartIndicators() {
+            const dots = document.querySelectorAll('.chart-dot');
+            dots.forEach(dot => {
+                const chartType = dot.getAttribute('data-chart');
+                if (chartType === currentChartType) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Permettre de cliquer sur les dots pour changer
+        document.querySelectorAll('.chart-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const chartType = this.getAttribute('data-chart');
+                switchToChart(chartType);
+            });
+        });
+
+        // Initialiser au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            initChartSwipe();
+            updateChartIndicators();
+        });
 
 
 
