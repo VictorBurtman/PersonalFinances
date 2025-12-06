@@ -1136,28 +1136,15 @@ body.dark-mode #restoreSimilarCheckbox {
    HEADER VISIBILITY CONDITIONNELLE
    ============================================ */
 
+/* Par défaut, tout est caché */
 .budget-only,
 .transactions-only {
     display: none;
 }
 
-
-/* ============================================
-   HEADER VISIBILITY - INITIAL STATE
-   ============================================ */
-
-/* Au chargement, afficher les boutons Budget par défaut */
-.budget-only {
-    display: inline-block !important;
-}
-
-.transactions-only {
-    display: none !important;
-}
-
 /* Le select compareMonth reste caché par défaut */
 #compareMonth {
-    display: none !important;
+    display: none;
 }
 
 /* ============================================
