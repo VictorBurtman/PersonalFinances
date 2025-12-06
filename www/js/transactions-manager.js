@@ -913,7 +913,7 @@ async function saveManualTransaction(event) {
         });
 
         console.log('Manual transaction added:', { id: docRef.id, ...transaction });
-        
+
         // Close modal
         closeAddManualTransactionModal();
         
@@ -1351,15 +1351,7 @@ function getTimeAgoText(date) {
     }
 }
 
-/**
- * Close modal when clicking outside
- */
-window.addEventListener('click', (event) => {
-    const modal = document.getElementById('bankAccountsModal');
-    if (event.target === modal) {
-        closeBankAccountsModal();
-    }
-});
+
 
 /**
  * Escape HTML to prevent XSS

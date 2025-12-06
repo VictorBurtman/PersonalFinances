@@ -610,8 +610,13 @@ body.dark-mode {
     #bankAccountsModal .modal-content {
         width: 95%;
         max-width: 95%;
-        max-height: calc(100vh - 140px); /* ✅ Plus de place sur mobile */
-        max-height: calc(100dvh - 140px); /* ✅ iOS */
+        max-height: calc(100vh - 180px) !important; /* ✅ Augmenté de 140px à 180px */
+        max-height: calc(100dvh - 180px) !important; /* ✅ iOS */
+    }
+    /* Add Manual Transaction Modal sur mobile */
+    #addManualTransactionModal .modal-content {
+        max-height: calc(100vh - 180px) !important;
+        max-height: calc(100dvh - 180px) !important;
     }
     
     #bankAccountsModal .modal-header {
@@ -747,8 +752,8 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: calc(100vh - 160px); /* ✅ Limité */
-    max-height: calc(100dvh - 160px); /* ✅ Pour iOS */
+    max-height: calc(100vh - 200px); /* ✅ Réduit de 160px à 200px */
+    max-height: calc(100dvh - 200px); /* ✅ iOS */
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -1193,7 +1198,8 @@ body {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 100px; /* ✅ Réduit de 120px à 100px */
+    padding-top: 10px; /* ✅ Petit gap en haut */
+    padding-bottom: 110px; /* ✅ Gap confortable avant footer */
 }
 
 /* Header sticky reste en haut */
@@ -1207,8 +1213,7 @@ body {
 
 .app-footer {
     position: fixed;
-    bottom: 0;
-    bottom: env(safe-area-inset-bottom, 0); /* ✅ Pour iOS */
+    bottom: env(safe-area-inset-bottom, 0); /* ✅ Respecte notch iOS */
     left: 0;
     right: 0;
     z-index: 1000;
@@ -1242,6 +1247,12 @@ body {
     display: flex !important;
     align-items: center;
     justify-content: center;
+}
+
+/* Tous les modals sur mobile */
+.modal .modal-content {
+    max-height: calc(100vh - 180px) !important;
+    max-height: calc(100dvh - 180px) !important;
 }
 
 /* Contenu modal limité en hauteur */
