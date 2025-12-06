@@ -5096,7 +5096,18 @@
         }
 
 
+
+
+        // ✅ Fermer tous les modals ouverts
+        function closeAllModals() {
+            document.querySelectorAll('.modal.show').forEach(modal => {
+                modal.classList.remove('show');
+            });
+            document.body.classList.remove('modal-open');
+        }
+
         function openFiltersModal() {
+            closeAllModals(); // ✅ AJOUTER cette ligne
             console.log('🔍 Ouverture modal Filters');
             const modal = document.getElementById('filtersModal');
             if (modal) {

@@ -791,6 +791,7 @@ function toggleBankSync() {
  * Open Add Manual Transaction Modal
  */
 function openAddManualTransactionModal() {
+    if (typeof closeAllModals === 'function') closeAllModals(); // ✅ AJOUTER
     const modal = document.getElementById('addManualTransactionModal');
     if (!modal) return;
     
@@ -886,27 +887,32 @@ async function saveManualTransaction(event) {
         
         // Create transaction object
         const transaction = {
-            id: `manual-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             description: name,
             date: date,
             chargedAmount: -Math.abs(amount), // Negative for expense
             currency: currency,
             memo: memo || '',
-            bankName: bankName || 'Manual', // ✅ AJOUTÉ
+            bankName: bankName || 'Manual',
             source: 'manual',
             isManual: true,
             isLabeled: category ? true : false,
             category: category || null,
-            createdAt: new Date().toISOString()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
-        
-        // Save to Firebase
-        await db.collection('transactions').add({
-            userId: window.currentUser.uid,
-            ...transaction
+
+        // ✅ Save to user's subcollection (consistent with other transactions)
+        const docRef = await db.collection('users')
+            .doc(window.currentUser.uid)
+            .collection('transactions')
+            .doc(); // Create new doc with auto-generated ID
+
+        // Add the document ID to the transaction
+        await docRef.set({
+            ...transaction,
+            id: docRef.id // Use Firestore auto-generated ID
         });
-        
-        console.log('Manual transaction added:', transaction);
+
+        console.log('Manual transaction added:', { id: docRef.id, ...transaction });
         
         // Close modal
         closeAddManualTransactionModal();
@@ -1170,9 +1176,11 @@ async function checkBankScrapingPermission() {
  * Open bank accounts modal with permission check
  */
 async function openBankAccountsModal() {
+    if (typeof closeAllModals === 'function') closeAllModals(); // ✅ AJOUTER
+
     // Check permissions first
     await checkBankScrapingPermission();
-    
+       
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
         modal.style.display = 'block';
@@ -1892,6 +1900,8 @@ async function excludeTransaction(transactionId, excludeSimilar) {
  * Open excluded transactions modal
  */
 async function openExcludedTransactionsModal() {
+    if (typeof closeAllModals === 'function') closeAllModals(); // ✅ AJOUTER
+
     const modal = document.getElementById('excludedTransactionsModal');
     const listEl = document.getElementById('excludedTransactionsList');
     const noExcludedEl = document.getElementById('noExcludedTransactions');
