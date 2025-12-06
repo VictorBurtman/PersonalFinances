@@ -4419,46 +4419,61 @@
         });
                                 
         
-
         function switchTab(tabName) {
+            console.log('🔄 switchTab appelé:', tabName);
+            
             // Retirer la classe active de tous les boutons du footer
             document.querySelectorAll('.footer-nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Cacher tous les boutons du header
-            document.querySelectorAll('.budget-only').forEach(btn => {
-                btn.style.display = 'none';
-            });
-            document.querySelectorAll('.transactions-only').forEach(btn => {
-                btn.style.display = 'none';
-            });
-            
             if (tabName === 'budget') {
-                // Activer l'onglet Budget
-                document.getElementById('budgetTabBtn').classList.add('active');
+                console.log('📊 Activation onglet Budget');
+                
+                // Activer l'onglet Budget dans le footer
+                const budgetBtn = document.getElementById('budgetTabBtn');
+                if (budgetBtn) budgetBtn.classList.add('active');
                 
                 // Afficher les boutons Budget
                 document.querySelectorAll('.budget-only').forEach(btn => {
-                    // Respecter les règles de visibilité existantes
-                    if (btn.id === 'compareMonth' && !compareMode) {
-                        // Ne pas afficher si compare mode inactif
-                    } else if (btn.onclick && btn.onclick.toString().includes('addNewCategory') && !isEditMode) {
-                        // Ne pas afficher Add Category si pas en mode edit
-                    } else {
-                        btn.style.display = 'inline-block';
-                    }
+                    btn.style.display = 'inline-block';
                 });
                 
-                // Afficher le contenu Budget
-                document.getElementById('expensesList').style.display = 'block';
-                if (document.getElementById('transactionsContainer')) {
-                    document.getElementById('transactionsContainer').style.display = 'none';
+                // Cacher les boutons Transactions
+                document.querySelectorAll('.transactions-only').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+                
+                // Gérer la visibilité du select compareMonth selon le mode
+                const compareMonth = document.getElementById('compareMonth');
+                if (compareMonth && window.compareMode) {
+                    compareMonth.style.display = 'inline-block';
+                } else if (compareMonth) {
+                    compareMonth.style.display = 'none';
                 }
                 
+                // Afficher le contenu Budget
+                const budgetTab = document.getElementById('budgetTab');
+                if (budgetTab) budgetTab.style.display = 'block';
+                
+                const expensesList = document.getElementById('expensesList');
+                if (expensesList) expensesList.style.display = 'block';
+                
+                // Cacher le contenu Transactions
+                const transactionsContainer = document.getElementById('transactionsContainer');
+                if (transactionsContainer) transactionsContainer.style.display = 'none';
+                
             } else if (tabName === 'transactions') {
-                // Activer l'onglet Transactions
-                document.getElementById('transactionsTabBtn').classList.add('active');
+                console.log('💳 Activation onglet Transactions');
+                
+                // Activer l'onglet Transactions dans le footer
+                const transactionsBtn = document.getElementById('transactionsTabBtn');
+                if (transactionsBtn) transactionsBtn.classList.add('active');
+                
+                // Cacher les boutons Budget
+                document.querySelectorAll('.budget-only').forEach(btn => {
+                    btn.style.display = 'none';
+                });
                 
                 // Afficher les boutons Transactions
                 document.querySelectorAll('.transactions-only').forEach(btn => {
@@ -4466,23 +4481,27 @@
                 });
                 
                 // Cacher le contenu Budget
-                document.getElementById('expensesList').style.display = 'none';
+                const budgetTab = document.getElementById('budgetTab');
+                if (budgetTab) budgetTab.style.display = 'none';
+                
+                const expensesList = document.getElementById('expensesList');
+                if (expensesList) expensesList.style.display = 'none';
                 
                 // Afficher le contenu Transactions
-                if (document.getElementById('transactionsContainer')) {
-                    document.getElementById('transactionsContainer').style.display = 'block';
-                }
+                const transactionsContainer = document.getElementById('transactionsContainer');
+                if (transactionsContainer) transactionsContainer.style.display = 'block';
                 
                 // Charger les transactions si la fonction existe
                 if (typeof loadTransactions === 'function') {
+                    console.log('📥 Chargement des transactions...');
                     loadTransactions();
                 }
             }
         }
-        
 
 
         function openFiltersModal() {
+            console.log('🔍 Ouverture modal Filters');
             const modal = document.getElementById('filtersModal');
             if (modal) {
                 document.body.classList.add('modal-open');
@@ -4491,6 +4510,7 @@
         }
 
         function closeFiltersModal() {
+            console.log('❌ Fermeture modal Filters');
             const modal = document.getElementById('filtersModal');
             if (modal) {
                 modal.classList.remove('show');
@@ -4680,6 +4700,7 @@
 
         // Initialiser au chargement
         document.addEventListener('DOMContentLoaded', function() {
+            switchTab('budget');
             initChartSwipe();
             updateChartIndicators();
         });
