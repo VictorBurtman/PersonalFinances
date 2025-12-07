@@ -1732,6 +1732,7 @@
         let customColors = {};
 
         // Firestore functions
+
         async function loadUserData() {
             if (!currentUser) return;
             
@@ -1781,6 +1782,15 @@
                     } else {
                         document.body.classList.remove('dark-mode');
                     }
+                    
+                    // ✅ AJOUTÉ : Cocher la checkbox
+                    const darkModeCheckbox = document.getElementById('darkModeCheckbox');
+                    if (darkModeCheckbox) {
+                        darkModeCheckbox.checked = darkMode;
+                    }
+                    
+                    // ✅ AJOUTÉ : Mettre à jour la couleur iOS
+                    updateThemeColor();
                     
                     // ✅ MAINTENANT charger le reste des données
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
@@ -1891,6 +1901,7 @@
                 console.error('Error loading user data:', error);
             }
         }
+
 
         // AJOUTE ICI : Language change handler
         document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
@@ -3354,8 +3365,30 @@
                     console.error('Error saving dark mode preference:', error);
                 });
             }
+            updateThemeColor();
+        }
+
+        // ============================================
+        // Met à jour la couleur du theme iOS (safe-area)
+        // ============================================
+        function updateThemeColor() {
+            const isDark = document.body.classList.contains('dark-mode');
+            let metaTheme = document.querySelector('meta[name="theme-color"]');
+            
+            // Créer la meta si elle n'existe pas
+            if (!metaTheme) {
+                metaTheme = document.createElement('meta');
+                metaTheme.name = 'theme-color';
+                document.head.appendChild(metaTheme);
+            }
+            
+            metaTheme.setAttribute('content', isDark ? '#1e1e2e' : '#ffffff');
         }
         
+        // Appeler au chargement
+        document.addEventListener('DOMContentLoaded', updateThemeColor);
+        
+
         /**
          * Load dark mode preference
          */

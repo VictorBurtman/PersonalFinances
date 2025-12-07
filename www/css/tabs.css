@@ -1317,7 +1317,7 @@ body.dark-mode .empty-state-trans {
 
 .floating-add-btn {
     position: fixed;
-    bottom: 90px;
+    bottom: 120px;
     right: 20px;
     width: 56px;
     height: 56px;
@@ -2164,7 +2164,7 @@ body.dark-mode .chartjs-legend span {
     
     /* Floating button */
     .floating-add-btn {
-        bottom: 80px;
+        bottom: 110px;
         right: 15px;
         width: 50px;
         height: 50px;
@@ -2251,79 +2251,68 @@ body.dark-mode .chartjs-legend span {
    iOS PWA - FIX FINAL
    ============================================ */
 @supports (-webkit-touch-callout: none) {
-    /* 1. On gère la Safe Area du haut sur le container global */
+    /* Force le background de toute la page */
+    html,
+    body {
+        background-color: white !important;
+    }
+    
+    body.dark-mode html,
+    body.dark-mode body {
+        background-color: #1e1e2e !important;
+    }
+    
+    /* Container avec safe-area */
     .container {
         padding-top: env(safe-area-inset-top, 0) !important;
-        height: 100% !important; /* Force la hauteur */
+        height: 100% !important;
     }
 
+    /* Footer fixe */
     .app-footer {
         position: fixed !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        
-        /* 1. POSITIONNEMENT NORMAL */
-        /* On le pose normalement à 0. Si ça flotte, l'extension en dessous fera le travail. */
         bottom: 0 !important;
-        
-        /* 2. ESPACEMENT INTERNE */
-        /* Juste ce qu'il faut pour que ce soit joli, sans excès */
-        padding-bottom: 15px !important;
+        padding-bottom: calc(15px + env(safe-area-inset-bottom, 0)) !important; /* ✅ MODIFIÉ */
         padding-top: 12px !important;
         height: auto !important;
-        
-        /* 3. STYLE */
         background-color: white !important;
-        border-radius: 20px 20px 0 0 !important; /* Arrondi haut uniquement */
+        border-radius: 20px 20px 0 0 !important;
         border-top: 1px solid #e0e0e0;
-        
-        /* On s'assure que le footer est bien visible */
         overflow: visible !important;
         transform: none !important;
     }
 
-
-    /* 4. LE BOUCHE-TROU FIXE (C'est lui qui sauve la mise) */
+    /* Pseudo-élément qui comble le vide */
     .app-footer::after {
         content: '' !important;
-        
-        /* L'astuce : Fixed par rapport à l'ÉCRAN, pas au footer */
-        position: fixed !important; 
+        position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         width: 100% !important;
-        
-        /* Une hauteur fixe suffisante pour couvrir la zone noire */
-        height: 40px !important; 
-        
-        /* On le met DERRIÈRE le contenu du footer (-1) */
+        height: calc(40px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ MODIFIÉ */
         z-index: -1 !important;
-        
-        /* Il prend la même couleur que le footer */
-        background-color: inherit !important;
-        
-        /* On le cache si on n'est pas collé en bas (sécurité) */
+        background-color: white !important; /* ✅ Couleur fixe blanche */
         pointer-events: none;
     }
     
-    /* 5. GESTION COULEUR DARK MODE */
+    /* Dark mode */
     body.dark-mode .app-footer {
         background-color: #1e1e2e !important;
         border-top: 1px solid #3a3a4e !important;
     }
+    
+    body.dark-mode .app-footer::after {
+        background-color: #1e1e2e !important; /* ✅ Couleur fixe dark */
+    }
 
-    /* 3. Le Dashboard : C'est LUI SEUL qui doit scroller */
+    /* Dashboard scrollable */
     .dashboard {
-        /* Il prend toute la hauteur dispo */
-        height: 100% !important; 
-        
-        /* On lui met une marge en bas pour ne pas que le contenu soit caché par le footer */
-        /* 60px (hauteur approx boutons) + Safe Area + un peu d'espace */
-        padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+        height: 100% !important;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)) !important;
         margin-bottom: 0 !important;
-        
-        /* On active le scroll uniquement ici */
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
     }
