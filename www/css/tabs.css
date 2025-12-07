@@ -2257,67 +2257,46 @@ body.dark-mode .chartjs-legend span {
         height: 100% !important; /* Force la hauteur */
     }
 
-    /* 1. Configuration de base du footer */
     .app-footer {
         position: fixed !important;
-        bottom: 0 !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
         
-        /* HAUTEUR AUTO */
-        height: auto !important;
-
-        /* --- CORRECTION ICI --- */
-        /* On enlève le calcul automatique qui était trop grand (~34px). */
-        /* On met 20px fixes : assez pour ne pas toucher la barre blanche, */
-        /* mais assez bas pour être esthétique. */
-        padding-bottom: 20px !important;
+        /* 1. ON LE FORCE À DESCENDRE DANS LA ZONE NOIRE */
+        /* On tire le footer 40px plus bas que la limite "0" */
+        bottom: -40px !important;
+        
+        /* 2. ON COMPENSE AVEC DU PADDING */
+        /* 40px (pour remonter le niveau 0) + 20px (espace souhaité) = 60px */
+        padding-bottom: 60px !important;
         padding-top: 12px !important;
-        /* ---------------------- */
         
-        /* Arrondi en haut uniquement */
-        border-radius: 20px 20px 0 0 !important;
+        /* Hauteur automatique */
+        height: auto !important;
         
-        /* Couleurs & Style */
+        /* Style */
         background-color: white !important;
+        border-radius: 20px 20px 0 0 !important; /* Arrondi haut seulement */
         border-top: 1px solid #e0e0e0;
         
-        /* Pas de transformations */
+        /* On nettoie tout le reste */
         transform: none !important;
-        
-        /* Permet à l'élément ::after d'être visible hors du cadre */
-        overflow: visible !important; 
+        box-shadow: none !important;
     }
 
 
-    /* Dark Mode */
+    /* 3. COULEUR DARK MODE */
+    /* Le footer va maintenant physiquement occuper le bas de l'écran */
     body.dark-mode .app-footer {
-        background-color: #1e1e2e !important; 
+        background-color: #1e1e2e !important; /* La couleur de votre thème sombre */
         border-top: 1px solid #3a3a4e !important;
     }
 
-    /* LE FOND EXTENSIBLE (Le "Béton Armé") */
-    /* C'est lui qui colorie la zone tout en bas, quelle que soit la hauteur du footer */
+    /* 4. NETTOYAGE */
+    /* On supprime l'ancien hack qui ne marchait pas */
     .app-footer::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        
-        /* Commence exactement au bas du footer */
-        top: 99%; 
-        
-        /* Descend très bas pour couvrir tout rebond élastique éventuel */
-        height: 200px; 
-        
-        /* Copie la couleur du footer (blanc ou sombre) */
-        background-color: inherit; 
-        
-        z-index: -1;
-        
-        /* S'assure qu'on ne voit pas de ligne de démarcation */
-        border-top: 1px solid transparent; 
+        display: none !important;
     }
 
     /* 3. Le Dashboard : C'est LUI SEUL qui doit scroller */
