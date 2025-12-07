@@ -2258,7 +2258,7 @@ body.dark-mode .chartjs-legend span {
         min-height: calc(70px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 60px à 70px */
         padding: 10px 0 !important;
         padding-bottom: calc(30px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 20px à 30px */
-        transform: translate3d(0, 0, 0) !important;
+        transform: translateY(env(safe-area-inset-bottom, 34px)) !important; /* ✅ AJOUTÉ : Descend de 34px */
         -webkit-transform: translate3d(0, 0, 0) !important;
         will-change: auto !important;
         backface-visibility: hidden !important;
@@ -2276,14 +2276,14 @@ body.dark-mode .chartjs-legend span {
         user-select: none !important;
     }
     
-    /* Prolonge le footer vers le bas (PLUS AGRESSIF) */
+    /* Prolonge le footer vers le bas */
     .app-footer::after {
         content: '';
         position: absolute;
-        bottom: -300px !important; /* ✅ AUGMENTÉ de -200px à -300px */
+        bottom: -200px !important;
         left: 0;
         right: 0;
-        height: 300px !important; /* ✅ AUGMENTÉ de 200px à 300px */
+        height: 200px !important;
         background: white;
         z-index: -1;
     }

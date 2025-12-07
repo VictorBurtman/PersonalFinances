@@ -4028,15 +4028,17 @@
                     if (isLocking) return;
                     isLocking = true;
                     
-                    // Force la position avec tous les attributs
+                    // Force la position avec translateY pour descendre
+                    const safeAreaBottom = getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)') || '34px';
+                    
                     footer.style.cssText = `
                         position: fixed !important;
                         bottom: 0px !important;
                         left: 0px !important;
                         right: 0px !important;
-                        transform: translate3d(0, 0, 0) !important;
-                        -webkit-transform: translate3d(0, 0, 0) !important;
-                        will-change: auto !important;
+                        transform: translateY(${safeAreaBottom}) !important;
+                        -webkit-transform: translateY(${safeAreaBottom}) !important;
+                        will-change: transform !important;
                     `;
                     
                     requestAnimationFrame(() => {
@@ -4109,7 +4111,7 @@
                 });
             }
         }
-        
+
     </script>
     <script src="js/transactions-manager.js"></script>
         <!-- Loading Overlay -->
