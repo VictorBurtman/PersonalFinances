@@ -4016,56 +4016,81 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA (Version FINALE)
+        // FIX FOOTER iOS PWA (Version ULTRA FINALE)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-            const lockFooter = () => {
-                const footer = document.querySelector('.app-footer');
-                if (!footer) return;
+            const footer = document.querySelector('.app-footer');
+            
+            if (footer) {
+                // Force la position de manière PERMANENTE
+                const forcePosition = () => {
+                    footer.style.cssText = `
+                        position: fixed !important;
+                        bottom: 0px !important;
+                        left: 0px !important;
+                        right: 0px !important;
+                        transform: translate3d(0, 0, 0) !important;
+                        -webkit-transform: translate3d(0, 0, 0) !important;
+                        will-change: auto !important;
+                        z-index: 1000 !important;
+                    `;
+                };
                 
-                // Lock position absolue
-                footer.style.position = 'fixed';
-                footer.style.bottom = '0px';
-                footer.style.left = '0px';
-                footer.style.right = '0px';
+                // Lock immédiat
+                forcePosition();
                 
-                // Empêche TOUT mouvement
-                footer.style.transform = 'translate3d(0, 0, 0)';
-                footer.style.webkitTransform = 'translate3d(0, 0, 0)';
+                // Re-force à chaque frame pendant 3 secondes au démarrage
+                let frameCount = 0;
+                const lockAnimation = () => {
+                    forcePosition();
+                    frameCount++;
+                    if (frameCount < 180) { // 3 secondes à 60fps
+                        requestAnimationFrame(lockAnimation);
+                    }
+                };
+                requestAnimationFrame(lockAnimation);
                 
-                // Désactive les interactions qui pourraient le déplacer
-                footer.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                }, { passive: false });
-            };
-            
-            // Lock immédiat
-            lockFooter();
-            
-            // Re-lock après chargement
-            window.addEventListener('load', lockFooter);
-            
-            // Re-lock au scroll (agressif)
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        lockFooter();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            }, { passive: true });
-            
-            // Re-lock toutes les 100ms pendant 2 secondes au démarrage
-            let count = 0;
-            const interval = setInterval(() => {
-                lockFooter();
-                count++;
-                if (count > 20) clearInterval(interval);
-            }, 100);
+                // Re-force au scroll (ultra-agressif)
+                let scrollTicking = false;
+                const onScroll = () => {
+                    if (!scrollTicking) {
+                        requestAnimationFrame(() => {
+                            forcePosition();
+                            scrollTicking = false;
+                        });
+                        scrollTicking = true;
+                    }
+                };
+                window.addEventListener('scroll', onScroll, { passive: true });
+                document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+                
+                // Re-force au touchmove ET touchend
+                document.addEventListener('touchmove', forcePosition, { passive: true });
+                document.addEventListener('touchend', () => {
+                    forcePosition();
+                    setTimeout(forcePosition, 50);
+                    setTimeout(forcePosition, 100);
+                }, { passive: true });
+                
+                // Re-force au resize
+                window.addEventListener('resize', forcePosition);
+                
+                // Re-force toutes les 200ms pendant 10 secondes
+                let intervalCount = 0;
+                const interval = setInterval(() => {
+                    forcePosition();
+                    intervalCount++;
+                    if (intervalCount > 50) clearInterval(interval);
+                }, 200);
+                
+                // Observer les changements de style (au cas où quelque chose modifierait le footer)
+                const observer = new MutationObserver(forcePosition);
+                observer.observe(footer, { 
+                    attributes: true, 
+                    attributeFilter: ['style'] 
+                });
+            }
         }
-
 
 
 

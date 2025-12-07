@@ -85,10 +85,16 @@ body.dark-mode html {
 .dashboard::after {
     content: '';
     display: block;
-    height: 130px; /* ✅ AUGMENTÉ de 140px → 130px suffit maintenant */
+    height: 20px; /* Desktop : petit gap */
     flex-shrink: 0;
-    background: transparent; /* ✅ AJOUTÉ : Espace transparent visible */
-    border-radius: 0 0 20px 20px; /* ✅ AJOUTÉ : Coins arrondis en bas */
+    background: transparent;
+}
+
+/* Mobile : grand gap */
+@media (max-width: 600px) {
+    .dashboard::after {
+        height: 140px !important; /* ✅ Augmenté avec !important */
+    }
 }
 
 body.dark-mode .dashboard {
@@ -1515,9 +1521,17 @@ body.modal-open .dashboard {
 
 
 #bankAccountsModal .modal-content {
-    max-height: 100vh; /* ✅ CHANGÉ : utilise % au lieu de px */
-    max-height: 100dvh;
+    max-height: 85vh; /* ✅ CHANGÉ : utilise % au lieu de px */
+    max-height: 85dvh;
     margin: auto;
+}
+
+/* Mobile : Encore plus grand */
+@media (max-width: 600px) {
+    #bankAccountsModal .modal-content {
+        max-height: 90vh !important; /* ✅ Plus grand sur mobile */
+        max-height: 90dvh !important;
+    }
 }
 
 #bankAccountsModal .modal-header {
