@@ -21,6 +21,35 @@ function initTransactions() {
     }
 }
 
+
+
+/**
+ * Update credentials alert when Bank Config menu is opened
+ */
+async function updateCredentialsStatus() {
+    if (!window.currentUser || !db) return;
+    
+    try {
+        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+        
+        // Check Max credentials
+        const maxAlertEl = document.getElementById('maxCredentialsAlert');
+        if (maxAlertEl && userDoc.exists && userDoc.data().maxCredentials?.encrypted) {
+            maxAlertEl.textContent = 'Credentials configured ✓';
+            maxAlertEl.className = 'alert-trans alert-success-trans';
+        }
+        
+        // Check Isracard credentials
+        const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
+        if (isracardAlertEl && userDoc.exists && userDoc.data().isracardCredentials?.encrypted) {
+            isracardAlertEl.textContent = 'Credentials configured ✓';
+            isracardAlertEl.className = 'alert-trans alert-success-trans';
+        }
+    } catch (error) {
+        console.error('Error checking credentials:', error);
+    }
+}
+
 /**
  * Load transactions from Firebase
  */
@@ -30,29 +59,29 @@ async function loadTransactions() {
         return;
     }
     
-    // ✅ AJOUTÉ : Appliquer les traductions dès le début
+    // Appliquer les traductions dès le début
     if (typeof updateTransactionsLanguage === 'function') {
         updateTransactionsLanguage();
     }
     
-    // Show loading inside All Transactions section
+    // Récupérer les éléments DOM
     const transactionsLoading = document.getElementById('transactionsLoading');
     const allTransactionsList = document.getElementById('allTransactionsList');
     const emptyState = document.getElementById('emptyState');
     const allTransactionsSection = document.getElementById('allTransactionsSection');
     const filtersSection = document.getElementById('filtersSection');
     
-    // Show All Transactions section with loading
+    // Afficher le loading
     if (allTransactionsSection) allTransactionsSection.style.display = 'block';
     if (transactionsLoading) transactionsLoading.style.display = 'block';
     if (allTransactionsList) allTransactionsList.innerHTML = '';
     if (emptyState) emptyState.style.display = 'none';
     
     try {
-        // IMPORTANT : Load saved UI states FIRST
+        // Charger les états UI sauvegardés
         await loadSectionStates();
         
-        // Force filters to stay collapsed if no saved preference
+        // Forcer les filtres à rester fermés si pas de préférence sauvegardée
         const filtersContent = document.getElementById('filtersContent');
         const filtersToggle = document.getElementById('filtersToggle');
         if (filtersContent && filtersToggle && filtersContent.style.display !== 'block') {
@@ -60,11 +89,11 @@ async function loadTransactions() {
             filtersToggle.textContent = '▶';
         }
         
-        // Check if credentials exist (without forcing menu open)
+        // Charger le document utilisateur
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         
         if (userDoc.exists) {
-            // Load transaction limit preference
+            // Charger la limite de transactions
             if (userDoc.data().transactionLimit) {
                 transactionLimit = userDoc.data().transactionLimit;
                 const limitFilter = document.getElementById('limitFilter');
@@ -73,10 +102,10 @@ async function loadTransactions() {
                 }
             }
             
-            // ✅ MODIFIÉ : Récupérer les traductions
+            // Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
-            // Update Max credentials status
+            // Mettre à jour le statut des credentials Max
             const maxAlertEl = document.getElementById('maxCredentialsAlert');
             if (userDoc.data().maxCredentials && userDoc.data().maxCredentials.encrypted) {
                 if (maxAlertEl) {
@@ -90,7 +119,7 @@ async function loadTransactions() {
                 }
             }
             
-            // Check Isracard credentials
+            // Mettre à jour le statut des credentials Isracard
             const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
             if (userDoc.data().isracardCredentials && userDoc.data().isracardCredentials.encrypted) {
                 if (isracardAlertEl) {
@@ -104,21 +133,21 @@ async function loadTransactions() {
                 }
             }
 
-            // ✅ Force refresh des traductions APRÈS avoir modifié le HTML
+            // Rafraîchir les traductions après modification du HTML
             setTimeout(() => {
                 if (typeof updateTransactionsLanguage === 'function') {
                     updateTransactionsLanguage();
                 }
             }, 100);
             
-            // Update Max sync status
+            // Mettre à jour le statut de sync Max
             if (userDoc.data().lastMaxSync) {
                 const lastSync = userDoc.data().lastMaxSync.toDate();
                 const count = userDoc.data().lastMaxSyncTransactionCount;
                 updateSyncStatus(lastSync, count, 'max');
             }
             
-            // Update Isracard sync status
+            // Mettre à jour le statut de sync Isracard
             if (userDoc.data().lastIsracardSync) {
                 const lastSync = userDoc.data().lastIsracardSync.toDate();
                 const count = userDoc.data().lastIsracardSyncTransactionCount;
@@ -126,15 +155,15 @@ async function loadTransactions() {
             }
         }
         
-        // Load transactions from Cloud Function (Max/Isracard)
+        // Charger les transactions depuis Cloud Function (Max/Isracard)
         const getTransactions = transactionsFunctions.httpsCallable('getTransactions');
         const result = await getTransactions({ limit: 2000 });
         
         let bankTransactions = result.data.transactions || [];
-        // Filter out excluded transactions
+        // Filtrer les transactions exclues
         bankTransactions = bankTransactions.filter(txn => !txn.excluded);
         
-        // ✅ NOUVEAU : Load manual transactions from Firestore
+        // Charger les transactions manuelles depuis Firestore
         let manualTransactions = [];
         const manualSnapshot = await db.collection('transactions')
             .where('userId', '==', window.currentUser.uid)
@@ -151,15 +180,15 @@ async function loadTransactions() {
         
         console.log(`Loaded ${bankTransactions.length} bank transactions and ${manualTransactions.length} manual transactions`);
         
-        // ✅ NOUVEAU : Combiner les deux sources
+        // Combiner les deux sources
         transactionsData = [...bankTransactions, ...manualTransactions];
         
-        // Populate filters
+        // Populer les filtres
         populateMonthFilter();
         populateCategoryFilter();
         populateSourceFilter();
         
-        // ✅ NOUVEAU : Charger les filtres sauvegardés
+        // Charger les filtres sauvegardés
         if (userDoc.exists && userDoc.data().transactionFilters) {
             const savedFilters = userDoc.data().transactionFilters;
             
@@ -194,61 +223,37 @@ async function loadTransactions() {
             }
         }
         
-        // Apply filters and render
+        // Appliquer les filtres et render
         applyFilters();
         
-        // Hide loading
+        // Cacher le loading
         if (transactionsLoading) transactionsLoading.style.display = 'none';
-        if (filtersSection) filtersSection.style.display = 'block';
+        
+        // Note : renderTransactions() va gérer l'affichage de emptyState et filtersSection
         
     } catch (error) {
         console.error('Error loading transactions:', error);
         const t = translations[currentLanguage] || translations['en'];
         showToast(t.errorLoadingTransactions + ' ' + error.message, 'error');
         
-        // Hide loading
+        // Cacher le loading
         if (transactionsLoading) transactionsLoading.style.display = 'none';
         
-        // Show error
+        // Afficher l'erreur dans l'empty state
         if (emptyState) {
             emptyState.innerHTML = `
                 <div class="empty-state-icon">⚠️</div>
-                <div>Error loading transactions</div>
-                <div style="margin-top: 10px; font-size: 0.9em;">${error.message}</div>
+                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">Error loading transactions</div>
+                <div style="font-size: 0.9em; opacity: 0.8;">${error.message}</div>
             `;
             emptyState.style.display = 'block';
         }
+        
+        // Cacher les sections
+        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        if (filtersSection) filtersSection.style.display = 'none';
     }
 }
-
-/**
- * Update credentials alert when Bank Config menu is opened
- */
-async function updateCredentialsStatus() {
-    if (!window.currentUser || !db) return;
-    
-    try {
-        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
-        
-        // Check Max credentials
-        const maxAlertEl = document.getElementById('maxCredentialsAlert');
-        if (maxAlertEl && userDoc.exists && userDoc.data().maxCredentials?.encrypted) {
-            maxAlertEl.textContent = 'Credentials configured ✓';
-            maxAlertEl.className = 'alert-trans alert-success-trans';
-        }
-        
-        // Check Isracard credentials
-        const isracardAlertEl = document.getElementById('isracardCredentialsAlert');
-        if (isracardAlertEl && userDoc.exists && userDoc.data().isracardCredentials?.encrypted) {
-            isracardAlertEl.textContent = 'Credentials configured ✓';
-            isracardAlertEl.className = 'alert-trans alert-success-trans';
-        }
-    } catch (error) {
-        console.error('Error checking credentials:', error);
-    }
-}
-
-
 
 /**
  * Populate month filter dropdown with available months
