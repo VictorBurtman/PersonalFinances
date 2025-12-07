@@ -2531,11 +2531,19 @@
 
 
         function toggleEditMode() {
+            console.log('🔧 toggleEditMode() appelée !');
+            console.log('isEditMode avant:', isEditMode);
+            
             isEditMode = !isEditMode;
+            
+            console.log('isEditMode après:', isEditMode);
+            
             const editBtn = document.getElementById('editModeBtn');
             const editBtnText = document.getElementById('editBtnText');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
+            
+            console.log('Nombre de .item-move-btns trouvés:', document.querySelectorAll('.item-move-btns').length);
             
             // Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
@@ -2544,6 +2552,8 @@
             const addCategoryBtn = document.querySelector('.edit-mode-controls button[onclick*="addNewCategory"]');
             
             if (isEditMode) {
+                console.log('✅ MODE ÉDITION ACTIVÉ');
+                
                 // Mode Edit activé
                 if (editBtn) editBtn.classList.add('active');
                 if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
@@ -2561,17 +2571,23 @@
                     }
                 });
                 
-                // ✅ AJOUTÉ : Afficher les boutons de déplacement des ITEMS
-                document.querySelectorAll('.item-move-btns').forEach(btns => {
+                // ✅ Afficher les boutons de déplacement des ITEMS
+                const itemMoveBtns = document.querySelectorAll('.item-move-btns');
+                console.log('Affichage de', itemMoveBtns.length, 'boutons item-move-btns');
+                itemMoveBtns.forEach(btns => {
                     btns.classList.add('show');
                 });
                 
-                // ✅ AJOUTÉ : Afficher les boutons de renommage des ITEMS
-                document.querySelectorAll('.item-rename-btn').forEach(btn => {
+                // ✅ Afficher les boutons de renommage des ITEMS
+                const itemRenameBtns = document.querySelectorAll('.item-rename-btn');
+                console.log('Affichage de', itemRenameBtns.length, 'boutons item-rename-btn');
+                itemRenameBtns.forEach(btn => {
                     btn.classList.add('show');
                 });
                 
             } else {
+                console.log('❌ MODE ÉDITION DÉSACTIVÉ');
+                
                 // Mode Edit désactivé
                 if (editBtn) editBtn.classList.remove('active');
                 if (editBtnText) editBtnText.textContent = t.editCategories || 'Edit Categories';
@@ -2585,12 +2601,12 @@
                 // Cacher les boutons de renommage de catégories
                 renameButtons.forEach(btn => btn.style.display = 'none');
                 
-                // ✅ AJOUTÉ : Cacher les boutons de déplacement des ITEMS
+                // ✅ Cacher les boutons de déplacement des ITEMS
                 document.querySelectorAll('.item-move-btns').forEach(btns => {
                     btns.classList.remove('show');
                 });
                 
-                // ✅ AJOUTÉ : Cacher les boutons de renommage des ITEMS
+                // ✅ Cacher les boutons de renommage des ITEMS
                 document.querySelectorAll('.item-rename-btn').forEach(btn => {
                     btn.classList.remove('show');
                 });
