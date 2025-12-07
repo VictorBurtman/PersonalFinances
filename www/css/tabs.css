@@ -71,13 +71,14 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 120px; /* ✅ Augmenté de 110px à 120px */
+    padding-bottom: 130px; /* ✅ CHANGÉ de 120px à 130px pour voir les bords arrondis */
     padding-left: 20px;
     padding-right: 20px;
     background: white;
     border-radius: 20px;
     box-shadow: none;
-    margin-bottom: 0; /* ✅ CHANGÉ de 20px à 0 */
+    margin-bottom: 0;
+    margin-top: 8px; /* ✅ AJOUTÉ : Gap visible en haut */
 }
 
 body.dark-mode .dashboard {
@@ -91,7 +92,7 @@ body.dark-mode .dashboard {
 
 .edit-mode-controls {
     position: sticky;
-    top: env(safe-area-inset-top, 0); /* ✅ CHANGÉ : top utilise safe-area */
+    top: env(safe-area-inset-top, 0);
     left: 0;
     right: 0;
     background: white;
@@ -99,10 +100,27 @@ body.dark-mode .dashboard {
     display: flex;
     gap: 10px;
     padding: 12px 15px;
-    padding-top: 12px; /* ✅ CHANGÉ : padding simple, plus de calc */
+    padding-top: 12px;
     border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); /* ✅ RÉDUIT : moins prononcé */
     flex-shrink: 0;
+    margin-bottom: 0; /* ✅ AJOUTÉ : Pas de margin */
+}
+
+/* ✅ AJOUTÉ : Prolongement du header pour iOS */
+.edit-mode-controls::before {
+    content: '';
+    position: absolute;
+    top: calc(-1 * env(safe-area-inset-top, 0)); /* Monte jusqu'au status bar */
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0);
+    background: white; /* Même couleur que le header */
+    z-index: -1;
+}
+
+body.dark-mode .edit-mode-controls::before {
+    background: #2a2a3e;
 }
 
 body.dark-mode .edit-mode-controls {
@@ -182,10 +200,28 @@ body.dark-mode .edit-mode-btn.active {
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;
-    padding-bottom: env(safe-area-inset-bottom, 10px); /* ✅ CHANGÉ : calc supprimé */
+    padding-bottom: env(safe-area-inset-bottom, 10px);
     z-index: 1000;
     flex-shrink: 0;
     box-shadow: none !important;
+    transform: translateZ(0); /* ✅ AJOUTÉ : Force accélération GPU */
+    -webkit-transform: translateZ(0); /* ✅ iOS */
+}
+
+/* ✅ AJOUTÉ : Prolongement du footer pour iOS */
+.app-footer::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0));
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-bottom, 0);
+    background: white;
+    z-index: -1;
+}
+
+body.dark-mode .app-footer::after {
+    background: #1e1e2e;
 }
 
 body.dark-mode .app-footer {
@@ -1418,6 +1454,28 @@ body.modal-open .dashboard {
    BANK ACCOUNTS MODAL (Spécifique)
    ============================================ */
 
+
+/* ✅ AJOUTÉ : Définition du modal lui-même */
+#bankAccountsModal {
+    display: none;
+    position: fixed;
+    z-index: 11000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+#bankAccountsModal.show {
+    display: flex !important;
+}
+
 #bankAccountsModal .modal-content {
     max-height: calc(100vh - 280px); /* ✅ Réduit de 220px à 280px pour mieux centrer */
     max-height: calc(100dvh - 220px);
@@ -1750,7 +1808,7 @@ body.dark-mode .settings-select {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 10001 !important;
+    z-index: 12000 !important; /* ✅ Au-dessus des modals */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2070,8 +2128,8 @@ body.dark-mode .chartjs-legend span {
     #bankAccountsModal .modal-content {
         width: 95%;
         max-width: 95%;
-        max-height: calc(100vh - 280px) !important; /* ✅ Cohérent avec desktop */
-        max-height: calc(100dvh - 280px) !important;
+        max-height: calc(100vh - 300px) !important; /* ✅ CHANGÉ de 280px à 300px */
+        max-height: calc(100dvh - 300px) !important;
     }
     
     #bankAccountsModal .modal-header {
