@@ -63,7 +63,7 @@ body.dark-mode html {
     flex-direction: column;
     overflow: hidden;
     height: 100%;
-    padding-top: env(safe-area-inset-top, 0); /* ✅ AJOUTÉ : Compense le header iOS */
+    /*padding-top: env(safe-area-inset-top, 0); /* ✅ AJOUTÉ : Compense le header iOS */
 }
 
 /* Dashboard scrollable */
@@ -1325,7 +1325,7 @@ body.dark-mode .empty-state-trans {
     /* Dashboard et Container */
     .dashboard {
         margin-top: 8px;
-        margin-bottom: 8px !important; /* ✅ AJOUTÉ : Gap visible sur iOS */
+        margin-bottom: 80px !important; /* ✅ AUGMENTÉ de 8px à 80px */
         padding-bottom: 20px !important;
     }
     
