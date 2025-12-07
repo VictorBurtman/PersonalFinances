@@ -186,10 +186,6 @@
                 <button class="edit-mode-btn transactions-only" onclick="openExcludedTransactionsModal()" style="display: none;">
                     <span data-translate="excluded">🚫 Excluded</span>
                 </button>
-                
-                <button class="edit-mode-btn transactions-only" onclick="openAddManualTransactionModal()" style="display: none;">
-                    <span data-translate="addTransaction">➕ Add</span>
-                </button>
             </div>
             
             <div class="dashboard">
@@ -426,12 +422,19 @@
                         <!-- Empty state -->
                         <div class="empty-state-trans" id="emptyState" style="display: none;">
                             <div class="empty-state-icon">📭</div>
-                            <div><span data-translate="noTransactionsYet">No transactions yet</span></div>
-                            <div style="margin-top: 10px; font-size: 0.9em;">
-                                <span data-translate="clickSyncToStart">Click "Sync All" to get started</span>
+                            <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                                <span data-translate="noTransactionsAdded">No transactions added yet</span>
+                            </div>
+                            <div style="font-size: 0.9em; opacity: 0.8;">
+                                <span data-translate="addTransactionToStart">Add a transaction to get started</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- ✅ AJOUTÉ : Bouton flottant + -->
+                    <button class="floating-add-btn" onclick="openAddManualTransactionModal()" title="Add transaction">
+                        +
+                    </button>
 
                     <!-- Filters Modal -->
                     <div id="filtersModal" class="modal">

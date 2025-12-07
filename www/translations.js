@@ -104,6 +104,8 @@ const translations = {
         errorTooManyRequests: "Too many failed attempts. Please try again later.",
         errorNetworkFailed: "Network error. Check your connection.",
         errorUnknown: "An error occurred. Please try again.",
+        noTransactionsAdded: "No transactions added yet",
+        addTransactionToStart: "Add a transaction to get started",
 
 
         // Alerts & notifications
@@ -512,6 +514,8 @@ const translations = {
         errorTooManyRequests: "Trop de tentatives échouées. Réessayez plus tard.",
         errorNetworkFailed: "Erreur réseau. Vérifiez votre connexion.",
         errorUnknown: "Une erreur s'est produite. Veuillez réessayer.",
+        noTransactionsAdded: "Aucune transaction ajoutée",
+        addTransactionToStart: "Ajoutez une transaction pour commencer",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -909,6 +913,8 @@ const translations = {
         errorTooManyRequests: "יותר מדי ניסיונות כושלים. נסה שוב מאוחר יותר.",
         errorNetworkFailed: "שגיאת רשת. בדוק את החיבור שלך.",
         errorUnknown: "אירעה שגיאה. אנא נסה שוב.",
+        noTransactionsAdded: "עדיין לא נוספו עסקאות",
+        addTransactionToStart: "הוסף עסקה כדי להתחיל",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1306,6 +1312,8 @@ const translations = {
         errorTooManyRequests: "Demasiados intentos fallidos. Inténtalo más tarde.",
         errorNetworkFailed: "Error de red. Verifica tu conexión.",
         errorUnknown: "Ocurrió un error. Por favor inténtalo de nuevo.",
+        noTransactionsAdded: "Aún no se han añadido transacciones",
+        addTransactionToStart: "Añade una transacción para empezar",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1703,6 +1711,8 @@ const translations = {
         errorTooManyRequests: "Слишком много неудачных попыток. Попробуйте позже.",
         errorNetworkFailed: "Ошибка сети. Проверьте соединение.",
         errorUnknown: "Произошла ошибка. Пожалуйста, попробуйте снова.",
+        noTransactionsAdded: "Транзакции ещё не добавлены",
+        addTransactionToStart: "Добавьте транзакцию, чтобы начать",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2100,6 +2110,8 @@ const translations = {
         errorTooManyRequests: "محاولات فاشلة كثيرة جدًا. حاول مرة أخرى لاحقًا.",
         errorNetworkFailed: "خطأ في الشبكة. تحقق من اتصالك.",
         errorUnknown: "حدث خطأ. يرجى المحاولة مرة أخرى.",
+        noTransactionsAdded: "لم تتم إضافة أي معاملات بعد",
+        addTransactionToStart: "أضف معاملة للبدء",
 
         
         // Toasts & notifications

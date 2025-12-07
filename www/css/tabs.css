@@ -2178,18 +2178,6 @@ body.dark-mode .chartjs-legend span {
         min-width: 100px;
     }
     
-    /* Spacer pour gap footer */
-    .footer-spacer {
-        height: 30px; /* Desktop : petit gap */
-        flex-shrink: 0;
-        background: transparent;
-    }
-
-    @media (max-width: 600px) {
-        .footer-spacer {
-            height: 55px !important; /* Mobile : grand gap */
-        }
-    }
     /* Modals */
     .modal {
         padding: 10px;
@@ -2263,5 +2251,62 @@ body.dark-mode .chartjs-legend span {
     .edit-mode-controls {
         gap: 4px;
         padding: 8px 10px;
+    }
+}
+
+
+/* ============================================
+   FLOATING ADD BUTTON (Transactions)
+   ============================================ */
+
+.floating-add-btn {
+    position: fixed;
+    bottom: 90px; /* Au-dessus du footer */
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: 300;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    display: none; /* Caché par défaut */
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 900;
+    opacity: 0.9;
+}
+
+.floating-add-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.floating-add-btn:active {
+    transform: scale(0.95);
+}
+
+/* Visible uniquement sur l'onglet Transactions */
+.tab-content.active .floating-add-btn {
+    display: flex;
+}
+
+body.dark-mode .floating-add-btn {
+    background: linear-gradient(135deg, #7c8cff 0%, #8c62c2 100%);
+}
+
+/* Mobile : ajuste la position */
+@media (max-width: 600px) {
+    .floating-add-btn {
+        bottom: 80px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
     }
 }
