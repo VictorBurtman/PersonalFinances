@@ -200,6 +200,7 @@ body.dark-mode .edit-mode-btn.active {
     right: 0;
     background: white;
     border-top: 1px solid #e0e0e0;
+    border-radius: 20px 20px 0 0; /* ✅ AJOUTÉ : Coins arrondis en haut */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -237,6 +238,7 @@ body.dark-mode .app-footer::after {
 body.dark-mode .app-footer {
     background: #1e1e2e;
     border-top-color: #3a3a4e;
+    border-radius: 20px 20px 0 0; /* ✅ AJOUTÉ : Même chose en dark */
 }
 
 .footer-nav-btn {
@@ -2148,11 +2150,18 @@ body.dark-mode .chartjs-legend span {
         min-width: 100px;
     }
     
-    /* ✅ AJOUTÉ : Gap footer via spacer */
+    /* Spacer pour gap footer */
     .footer-spacer {
-        height: 130px !important;
+        height: 20px; /* Desktop : petit gap */
+        flex-shrink: 0;
+        background: transparent;
     }
-    
+
+    @media (max-width: 600px) {
+        .footer-spacer {
+            height: 130px !important; /* Mobile : grand gap */
+        }
+    }
     /* Modals */
     .modal {
         padding: 10px;
@@ -2167,10 +2176,10 @@ body.dark-mode .chartjs-legend span {
     
     /* ✅ MODIFIÉ : Bank Accounts Modal TRÈS grand */
     #bankAccountsModal .modal-content {
-        width: 98% !important;
-        max-width: 98% !important;
-        max-height: 95vh !important;
-        max-height: 95dvh !important;
+        width: 95% !important;
+        max-width: 95% !important;
+        max-height: 90vh !important;
+        max-height: 90dvh !important;
     }
     
     #bankAccountsModal .modal-header {
