@@ -4017,72 +4017,71 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA (Version définitive)
+        // FIX FOOTER iOS PWA (Version corrigée)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
             const footer = document.querySelector('.app-footer');
             
-            if (!footer) return;
-            
-            // Variables de verrouillage
-            let isLocked = false;
-            
-            const lockFooter = () => {
-                if (isLocked) return;
-                isLocked = true;
+            if (footer) { // ✅ CHANGÉ : if au lieu de return
+                // Variables de verrouillage
+                let isLocked = false;
                 
-                // Force la position avec cssText (priorité maximale)
-                footer.style.cssText = footer.style.cssText + `
-                    position: fixed !important;
-                    bottom: 0px !important;
-                    left: 0px !important;
-                    right: 0px !important;
-                    transform: translate3d(0, 0, 0) !important;
-                    -webkit-transform: translate3d(0, 0, 0) !important;
-                `;
+                const lockFooter = () => {
+                    if (isLocked) return;
+                    isLocked = true;
+                    
+                    // Force la position avec cssText (priorité maximale)
+                    footer.style.cssText = footer.style.cssText + `
+                        position: fixed !important;
+                        bottom: 0px !important;
+                        left: 0px !important;
+                        right: 0px !important;
+                        transform: translate3d(0, 0, 0) !important;
+                        -webkit-transform: translate3d(0, 0, 0) !important;
+                    `;
+                    
+                    setTimeout(() => { isLocked = false; }, 50);
+                };
                 
-                setTimeout(() => { isLocked = false; }, 50);
-            };
-            
-            // Empêche le touchmove sur le footer lui-même
-            footer.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                // Empêche le touchmove sur le footer lui-même
+                footer.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    lockFooter();
+                }, { passive: false });
+                
+                // Empêche le touchstart qui pourrait initier un drag
+                footer.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                }, { passive: true });
+                
+                // Lock au touchend
+                footer.addEventListener('touchend', () => {
+                    lockFooter();
+                    setTimeout(lockFooter, 50);
+                    setTimeout(lockFooter, 100);
+                }, { passive: true });
+                
+                // Lock initial
                 lockFooter();
-            }, { passive: false });
-            
-            // Empêche le touchstart qui pourrait initier un drag
-            footer.addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-            }, { passive: true });
-            
-            // Lock au touchend
-            footer.addEventListener('touchend', () => {
-                lockFooter();
-                setTimeout(lockFooter, 50);
-                setTimeout(lockFooter, 100);
-            }, { passive: true });
-            
-            // Lock initial
-            lockFooter();
-            
-            // Lock après chargement
-            window.addEventListener('load', () => {
-                setTimeout(lockFooter, 100);
-                setTimeout(lockFooter, 500);
-            });
-            
-            // Lock au scroll (léger)
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(lockFooter, 150);
-            }, { passive: true });
-            
-            // Lock au resize
-            window.addEventListener('resize', lockFooter);
+                
+                // Lock après chargement
+                window.addEventListener('load', () => {
+                    setTimeout(lockFooter, 100);
+                    setTimeout(lockFooter, 500);
+                });
+                
+                // Lock au scroll (léger)
+                let scrollTimeout;
+                window.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(lockFooter, 150);
+                }, { passive: true });
+                
+                // Lock au resize
+                window.addEventListener('resize', lockFooter);
+            } // ✅ AJOUTÉ : fermeture du if (footer)
         }
-
 
 
     </script>
