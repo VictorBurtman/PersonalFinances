@@ -82,12 +82,13 @@ body.dark-mode html {
     margin-top: 8px;
 }
 
-/* ✅ AJOUTÉ : Pseudo-élément pour créer le gap */
 .dashboard::after {
     content: '';
     display: block;
-    height: 140px; /* Gap visible avant le footer */
+    height: 130px; /* ✅ AUGMENTÉ de 140px → 130px suffit maintenant */
     flex-shrink: 0;
+    background: transparent; /* ✅ AJOUTÉ : Espace transparent visible */
+    border-radius: 0 0 20px 20px; /* ✅ AJOUTÉ : Coins arrondis en bas */
 }
 
 body.dark-mode .dashboard {
@@ -1335,12 +1336,27 @@ body.dark-mode .empty-state-trans {
         margin-top: env(safe-area-inset-top, 0);
     }
     
-    /* Footer sur mobile uniquement */
-    @media (max-width: 600px) {
-        .app-footer {
-            bottom: 0;
-            padding-bottom: max(10px, env(safe-area-inset-bottom, 0));
-        }
+    /* Footer iOS - Descend jusqu'en bas */
+    .app-footer {
+        bottom: 0 !important;
+        padding-bottom: env(safe-area-inset-bottom, 10px) !important;
+    }
+    
+    /* Prolonge le footer vers le bas */
+    .app-footer::after {
+        bottom: calc(-1 * env(safe-area-inset-bottom, 0) - 50px) !important;
+        height: calc(env(safe-area-inset-bottom, 0) + 50px) !important;
+    }
+
+    /* Force le background pour éviter la bande colorée */ /* ✅ AJOUTÉ (optionnel) */
+    html,
+    body {
+        background: white !important;
+    }
+    
+    body.dark-mode html,
+    body.dark-mode body {
+        background: #1a1a2e !important;
     }
 }
 
@@ -1499,8 +1515,8 @@ body.modal-open .dashboard {
 
 
 #bankAccountsModal .modal-content {
-    max-height: 80vh; /* ✅ CHANGÉ : utilise % au lieu de px */
-    max-height: 80dvh;
+    max-height: 100vh; /* ✅ CHANGÉ : utilise % au lieu de px */
+    max-height: 100dvh;
     margin: auto;
 }
 
