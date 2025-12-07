@@ -18,19 +18,29 @@ body.dark-mode {
    LAYOUT - APP STRUCTURE
    ============================================ */
 
-/* Bloquer le scroll du body */
-body {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+   /* À ajouter/modifier au tout début de tabs.css */
+
+/* 🚀 BASE DE L'APPLICATION ET VERROUILLAGE iOS */
+html {
     background: #f5f5f5;
-    min-height: 100vh;
+}
+
+body {
+    background: #f5f5f5;
+    /* Pour gérer le viewport iOS de façon plus fiable */
+    min-height: 100vh; 
     min-height: -webkit-fill-available;
 }
 
-html {
-    background: #f5f5f5;
+/* Verrouillage crucial de l'écran global pour empêcher le rebond iOS */
+html, body {
+    width: 100%;
+    height: 100%;
+    
+    /* BLOQUE LE SCROLL ET LE REBOND */
+    overflow: hidden; 
+    overscroll-behavior: none; 
+    position: fixed; /* Verrouille le viewport en place */
 }
 
 body.dark-mode {
@@ -2238,50 +2248,59 @@ body.dark-mode .chartjs-legend span {
 }
 
 /* ============================================
-   iOS PWA - FIX CLEAN
+   iOS PWA - FIX FINAL
    ============================================ */
 @supports (-webkit-touch-callout: none) {
-    /* Container : PAS de padding-top pour laisser la status bar gérer */
+    /* 1. On gère la Safe Area du haut sur le container global */
     .container {
-        padding-top: env(safe-area-inset-top, 0) !important; 
+        padding-top: env(safe-area-inset-top, 0) !important;
+        height: 100% !important; /* Force la hauteur */
     }
 
-    /* Footer iOS */
+    /* 2. Le Footer : Collé, Fixe et Rembourré */
     .app-footer {
         position: fixed !important;
         bottom: 0 !important;
-        /* On ne touche PAS à left/right/transform ici */
+        left: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
         
-        /* On ajoute juste le padding pour que le contenu ne soit pas sous la barre */
+        /* La magie : on ajoute la safe-area au padding du bas */
         padding-bottom: env(safe-area-inset-bottom, 20px) !important;
         
-        /* Ajustement de la hauteur min pour inclure ce padding */
-        min-height: calc(60px + env(safe-area-inset-bottom, 20px)) !important;
+        /* On s'assure que la hauteur s'adapte au contenu + padding */
+        height: auto !important;
+        min-height: auto !important;
         
-        /* IMPORTANT : Supprime le transform translateY qui causait le décalage */
-        transform: none !important; 
-        -webkit-transform: none !important;
+        /* On annule les transformations qui le faisaient flotter */
+        transform: none !important;
+        
+        /* Couleur de fond explicite pour couvrir la zone */
+        background: white !important; 
+        border-top: 1px solid #e0e0e0;
+        
+        /* Empêche le footer lui-même d'être une zone de scroll */
+        touch-action: none; 
     }
     
-    /* On s'assure que le footer va bien jusqu'en bas visuellement */
-    .app-footer::after {
-        content: '';
-        position: absolute;
-        top: 0; /* On remplit tout le footer */
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: inherit; /* Prend la couleur du footer */
-        z-index: -1;
+    /* Dark mode pour le footer */
+    body.dark-mode .app-footer {
+        background: #1e1e2e !important;
+        border-top-color: #3a3a4e;
     }
 
-    /* Force le background sur toute la hauteur pour éviter les bandes blanches */
-    html, body {
-        height: 100% !important;
-        background-color: #f5f5f5; /* Ou la couleur de ton thème clair */
-    }
-    
-    body.dark-mode, body.dark-mode html {
-        background-color: #1a1a2e; /* Ou la couleur de ton thème sombre */
+    /* 3. Le Dashboard : C'est LUI SEUL qui doit scroller */
+    .dashboard {
+        /* Il prend toute la hauteur dispo */
+        height: 100% !important; 
+        
+        /* On lui met une marge en bas pour ne pas que le contenu soit caché par le footer */
+        /* 60px (hauteur approx boutons) + Safe Area + un peu d'espace */
+        padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+        margin-bottom: 0 !important;
+        
+        /* On active le scroll uniquement ici */
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
 }
