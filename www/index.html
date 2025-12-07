@@ -2530,9 +2530,6 @@
         }
 
 
-
-
-        
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const editBtn = document.getElementById('editModeBtn');
@@ -2543,7 +2540,7 @@
             // Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
-            // ✅ AJOUTER : Gérer le bouton Add Category dans le header
+            // Gérer le bouton Add Category dans le header
             const addCategoryBtn = document.querySelector('.edit-mode-controls button[onclick*="addNewCategory"]');
             
             if (isEditMode) {
@@ -2551,37 +2548,56 @@
                 if (editBtn) editBtn.classList.add('active');
                 if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
                 
-                // ✅ Afficher le bouton Add Category
+                // Afficher le bouton Add Category
                 if (addCategoryBtn) addCategoryBtn.style.display = 'inline-block';
                 
+                // Afficher les contrôles de catégories
                 categoryControls.forEach(c => c.classList.add('show'));
+                
+                // Afficher les boutons de renommage de catégories
                 renameButtons.forEach(btn => {
                     if (!btn.classList.contains('rename-btn-income')) {
                         btn.style.display = 'inline-block';
                     }
                 });
+                
+                // ✅ AJOUTÉ : Afficher les boutons de déplacement des ITEMS
+                document.querySelectorAll('.item-move-btns').forEach(btns => {
+                    btns.classList.add('show');
+                });
+                
+                // ✅ AJOUTÉ : Afficher les boutons de renommage des ITEMS
+                document.querySelectorAll('.item-rename-btn').forEach(btn => {
+                    btn.classList.add('show');
+                });
+                
             } else {
                 // Mode Edit désactivé
                 if (editBtn) editBtn.classList.remove('active');
                 if (editBtnText) editBtnText.textContent = t.editCategories || 'Edit Categories';
                 
-                // ✅ Cacher le bouton Add Category
+                // Cacher le bouton Add Category
                 if (addCategoryBtn) addCategoryBtn.style.display = 'none';
                 
+                // Cacher les contrôles de catégories
                 categoryControls.forEach(c => c.classList.remove('show'));
+                
+                // Cacher les boutons de renommage de catégories
                 renameButtons.forEach(btn => btn.style.display = 'none');
+                
+                // ✅ AJOUTÉ : Cacher les boutons de déplacement des ITEMS
+                document.querySelectorAll('.item-move-btns').forEach(btns => {
+                    btns.classList.remove('show');
+                });
+                
+                // ✅ AJOUTÉ : Cacher les boutons de renommage des ITEMS
+                document.querySelectorAll('.item-rename-btn').forEach(btn => {
+                    btn.classList.remove('show');
+                });
             }
-            
-            // Force refresh to update item buttons
-            const itemBtns = document.querySelectorAll('.item-controls button');
-            itemBtns.forEach(btn => {
-                if (isEditMode) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            }); 
         }
+
+
         // ============================================
         // COMPARE MODE - Real Spending vs Budget
         // ============================================
