@@ -63,6 +63,7 @@ body.dark-mode html {
     flex-direction: column;
     overflow: hidden;
     height: 100%;
+    padding-top: env(safe-area-inset-top, 0); /* ✅ AJOUTÉ : Compense le header iOS */
 }
 
 /* Dashboard scrollable */
@@ -71,14 +72,14 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 130px; /* ✅ CHANGÉ de 120px à 130px pour voir les bords arrondis */
+    padding-bottom: 140px; /* ✅ AUGMENTÉ de 130px à 140px */
     padding-left: 20px;
     padding-right: 20px;
     background: white;
     border-radius: 20px;
     box-shadow: none;
-    margin-bottom: 0;
-    margin-top: 8px; /* ✅ AJOUTÉ : Gap visible en haut */
+    margin-bottom: 8px; /* ✅ AJOUTÉ : Gap en bas aussi */
+    margin-top: 8px;
 }
 
 body.dark-mode .dashboard {
@@ -204,8 +205,12 @@ body.dark-mode .edit-mode-btn.active {
     z-index: 1000;
     flex-shrink: 0;
     box-shadow: none !important;
-    transform: translateZ(0); /* ✅ AJOUTÉ : Force accélération GPU */
-    -webkit-transform: translateZ(0); /* ✅ iOS */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    /* ✅ AJOUTÉ : Force la position sur iOS */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
 }
 
 /* ✅ AJOUTÉ : Prolongement du footer pour iOS */
@@ -1303,6 +1308,14 @@ body.dark-mode .empty-state-trans {
     -webkit-backdrop-filter: blur(8px);
 }
 
+/* ✅ AJOUTÉ : Force le backdrop sur iOS */
+@supports (-webkit-touch-callout: none) {
+    .modal {
+        -webkit-backdrop-filter: blur(8px) !important;
+        backdrop-filter: blur(8px) !important;
+    }
+}
+
 .modal.show {
     display: flex !important;
     align-items: center;
@@ -1477,8 +1490,8 @@ body.modal-open .dashboard {
 }
 
 #bankAccountsModal .modal-content {
-    max-height: calc(100vh - 280px); /* ✅ Réduit de 220px à 280px pour mieux centrer */
-    max-height: calc(100dvh - 220px);
+    max-height: calc(100vh - 350px); /* ✅ AUGMENTÉ de 300px à 350px */
+    max-height: calc(100dvh - 350px);
 }
 
 #bankAccountsModal .modal-header {
@@ -2128,8 +2141,8 @@ body.dark-mode .chartjs-legend span {
     #bankAccountsModal .modal-content {
         width: 95%;
         max-width: 95%;
-        max-height: calc(100vh - 300px) !important; /* ✅ CHANGÉ de 280px à 300px */
-        max-height: calc(100dvh - 300px) !important;
+        max-height: calc(100vh - 350px) !important; /* ✅ AUGMENTÉ de 300px à 350px */
+        max-height: calc(100dvh - 350px) !important;
     }
     
     #bankAccountsModal .modal-header {
