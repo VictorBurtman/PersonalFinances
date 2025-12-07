@@ -2266,7 +2266,7 @@ body.dark-mode .chartjs-legend span {
         
         /* MODIFICATION ICI : On réduit l'espace du bas */
         /* On met seulement la zone de sécurité, sans pixels supplémentaires */
-        padding-bottom: env(safe-area-inset-bottom) !important;
+        padding-bottom: 15px !important;
         
         /* On ajuste le haut pour équilibrer (réduis ce chiffre si le footer est trop épais) */
         padding-top: 10px !important; 
