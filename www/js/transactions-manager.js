@@ -543,18 +543,24 @@ function renderTransactions() {
     const filtersSection = document.getElementById('filtersSection');
     const transactionCount = document.getElementById('transactionCount');
     const allTransactionsList = document.getElementById('allTransactionsList');
-    
+        
     if (transactionsData.length === 0) {
         // No transactions at all
         if (emptyState) {
+            const t = translations[currentLanguage] || translations['en'];
             emptyState.innerHTML = `
                 <div class="empty-state-icon">📭</div>
-                <div>No transactions yet</div>
-                <div style="margin-top: 10px; font-size: 0.9em;">Click "Sync Now" to get started</div>
+                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                    <span data-translate="noTransactionsAdded">${t.noTransactionsAdded || 'No transactions added yet'}</span>
+                </div>
+                <div style="font-size: 0.9em; opacity: 0.8;">
+                    <span data-translate="addTransactionToStart">${t.addTransactionToStart || 'Add a transaction to get started'}</span>
+                </div>
             `;
             emptyState.style.display = 'block';
         }
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        if (filtersSection) filtersSection.style.display = 'none'; // ✅ AJOUTÉ : Cache aussi les filtres
         return;
     }
     
@@ -611,14 +617,14 @@ function renderTransactions() {
     }
     
     // Render transactions
-    if (allTransactionsList) {
-        if (filteredTransactionsData.length === 0) {
-            allTransactionsList.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #6c757d;">
-                    No transactions match the current filters
-                </div>
-            `;
-        } else {
+    if (filteredTransactionsData.length === 0) {
+        const t = translations[currentLanguage] || translations['en'];
+        allTransactionsList.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #6c757d;">
+                <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
+            </div>
+        `;
+    }else {
             // Limiter le nombre de transactions affichées
             const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
             const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;

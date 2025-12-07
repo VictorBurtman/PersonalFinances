@@ -106,7 +106,7 @@ const translations = {
         errorUnknown: "An error occurred. Please try again.",
         noTransactionsAdded: "No transactions added yet",
         addTransactionToStart: "Add a transaction to get started",
-
+        noMatchingTransactions: "No transactions match the current filters",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -516,6 +516,8 @@ const translations = {
         errorUnknown: "Une erreur s'est produite. Veuillez réessayer.",
         noTransactionsAdded: "Aucune transaction ajoutée",
         addTransactionToStart: "Ajoutez une transaction pour commencer",
+        noMatchingTransactions: "Aucune transaction ne correspond aux filtres actuels",
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -915,6 +917,8 @@ const translations = {
         errorUnknown: "אירעה שגיאה. אנא נסה שוב.",
         noTransactionsAdded: "עדיין לא נוספו עסקאות",
         addTransactionToStart: "הוסף עסקה כדי להתחיל",
+        noMatchingTransactions: "אין עסקאות התואמות למסננים הנוכחיים",
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1314,6 +1318,7 @@ const translations = {
         errorUnknown: "Ocurrió un error. Por favor inténtalo de nuevo.",
         noTransactionsAdded: "Aún no se han añadido transacciones",
         addTransactionToStart: "Añade una transacción para empezar",
+        noMatchingTransactions: "No hay transacciones que coincidan con los filtros actuales",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1713,6 +1718,7 @@ const translations = {
         errorUnknown: "Произошла ошибка. Пожалуйста, попробуйте снова.",
         noTransactionsAdded: "Транзакции ещё не добавлены",
         addTransactionToStart: "Добавьте транзакцию, чтобы начать",
+        noMatchingTransactions: "Нет транзакций, соответствующих текущим фильтрам",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2112,6 +2118,7 @@ const translations = {
         errorUnknown: "حدث خطأ. يرجى المحاولة مرة أخرى.",
         noTransactionsAdded: "لم تتم إضافة أي معاملات بعد",
         addTransactionToStart: "أضف معاملة للبدء",
+        noMatchingTransactions: "لا توجد معاملات تطابق المرشحات الحالية",
 
         
         // Toasts & notifications

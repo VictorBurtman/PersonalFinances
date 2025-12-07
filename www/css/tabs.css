@@ -1360,7 +1360,7 @@ body.dark-mode .empty-state-trans {
     /* Verrouille les boutons */
     .footer-nav-btn {
         pointer-events: auto !important;
-        touch-action: none !important; /* ✅ CHANGÉ de manipulation à none */
+        touch-action: manipulation !important; /* ✅ CHANGÉ de none à manipulation */
         -webkit-user-drag: none !important; /* ✅ AJOUTÉ */
         user-select: none !important; /* ✅ AJOUTÉ */
     }
@@ -2077,6 +2077,10 @@ body.dark-mode .chartjs-legend span {
         padding: 10px 16px;
     }
     
+    .footer-spacer {
+        height: 55px !important; /* Mobile */
+    }
+
     /* Total */
     .total-amount {
         font-size: 2.5em;
@@ -2281,6 +2285,11 @@ body.dark-mode .chartjs-legend span {
     opacity: 0.9;
 }
 
+/* Visible sur l'onglet Transactions */
+#transactionsTab .floating-add-btn {
+    display: flex !important;
+}
+
 .floating-add-btn:hover {
     opacity: 1;
     transform: scale(1.1);
@@ -2289,6 +2298,11 @@ body.dark-mode .chartjs-legend span {
 
 .floating-add-btn:active {
     transform: scale(0.95);
+}
+
+/* ✅ AJOUTÉ : Visible quand l'onglet Transactions est actif */
+#transactionsTab.active .floating-add-btn {
+    display: flex !important;
 }
 
 /* Visible uniquement sur l'onglet Transactions */
