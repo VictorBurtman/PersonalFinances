@@ -2363,12 +2363,20 @@ body.dark-mode .chartjs-legend span {
         display: none !important; 
     }
 
-    /* 7. Dashboard scrollable (Intouché) */
+/* 7. Dashboard scrollable (Correction Hauteur) */
     .dashboard {
         height: 100% !important;
-        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)) !important;
-        margin-bottom: 0 !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
+        
+        /* Marge du bas (pour le footer) : inchangé */
+        padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+        
+        /* --- CORRECTION ICI --- */
+        /* On enlève "env(safe-area-inset-top)" car le container le fait déjà. */
+        /* On met juste la hauteur physique de la barre de boutons. */
+        /* Essaie 60px. Si c'est encore trop bas, mets 50px. Si ça chevauche, mets 70px. */
+        padding-top: 60px !important;
+        /* ---------------------- */
     }
 }
