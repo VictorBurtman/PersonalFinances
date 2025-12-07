@@ -752,8 +752,8 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: calc(100vh - 200px); /* ✅ Réduit de 160px à 200px */
-    max-height: calc(100dvh - 200px); /* ✅ iOS */
+    max-height: calc(100vh - 220px); /* ✅ Réduit encore (était 200px) */
+    max-height: calc(100dvh - 220px); /* ✅ iOS */
     overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -1202,23 +1202,36 @@ body {
     padding-bottom: 110px; /* ✅ Gap confortable avant footer */
 }
 
-/* Header sticky reste en haut */
 .edit-mode-controls {
     position: sticky;
-    top: env(safe-area-inset-top, 0); /* ✅ Respecte la status bar iOS */
-    padding-top: calc(12px + env(safe-area-inset-top, 0)); /* ✅ Ajoute padding en haut */
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
     z-index: 100;
-    flex-shrink: 0; /* Ne pas rétrécir */
+    display: flex;
+    gap: 10px;
+    padding: 12px 15px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0)); /* ✅ iOS notch */
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
 }
 
 .app-footer {
     position: fixed;
-    bottom: env(safe-area-inset-bottom, 0); /* ✅ Respecte notch iOS */
+    bottom: 0;
     left: 0;
     right: 0;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)); /* ✅ iOS home indicator */
     z-index: 1000;
     flex-shrink: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0); /* ✅ Padding interne */
     box-shadow: none !important;
 }
 
@@ -1229,18 +1242,19 @@ body {
    FIX MODAL - HAUTEUR LIMITÉE
    ============================================ */
 
-/* Tous les modals */
+/* Backdrop flouté pour TOUS les modals */
 .modal {
     display: none;
     position: fixed;
-    z-index: 10000;
+    z-index: 10000; /* ✅ Au-dessus de tout */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    padding: 20px;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* ✅ Fond sombre */
+    backdrop-filter: blur(8px); /* ✅ Flou iOS/Safari */
+    -webkit-backdrop-filter: blur(8px); /* ✅ Flou iOS/Safari */
 }
 
 .modal.show {
@@ -1249,25 +1263,21 @@ body {
     justify-content: center;
 }
 
-/* Tous les modals sur mobile */
 .modal .modal-content {
-    max-height: calc(100vh - 180px) !important;
-    max-height: calc(100dvh - 180px) !important;
-}
-
-/* Contenu modal limité en hauteur */
-.modal .modal-content {
+    position: relative;
+    z-index: 10001; /* ✅ Au-dessus du backdrop */
     background: white;
+    margin: auto;
+    padding: 0;
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: calc(100vh - 160px); /* ✅ Limité : viewport - header/footer */
-    max-height: calc(100dvh - 160px); /* ✅ Pour iOS */
+    max-height: calc(100vh - 160px);
+    max-height: calc(100dvh - 160px);
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    margin: auto;
 }
 
 /* Header et footer fixes */
@@ -1292,11 +1302,6 @@ body.dark-mode .modal .modal-content {
 
 
 
-
-
-
-
-
 /* ============================================
    BLOQUER SCROLL DERRIÈRE MODAL
    ============================================ */
@@ -1311,4 +1316,26 @@ body.modal-open #appScreen {
 
 body.modal-open .dashboard {
     overflow: hidden !important;
+}
+
+
+/* ========================================
+   PWA iOS - FIX BANDE BLANCHE
+   ======================================== */
+html {
+    background: white;
+}
+
+body {
+    background: white;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+}
+
+body.dark-mode {
+    background: #1a1a2e;
+}
+
+body.dark-mode html {
+    background: #1a1a2e;
 }
