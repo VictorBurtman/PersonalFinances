@@ -2238,78 +2238,50 @@ body.dark-mode .chartjs-legend span {
 }
 
 /* ============================================
-   iOS PWA - Tous les fixes (FINAL)
+   iOS PWA - FIX CLEAN
    ============================================ */
 @supports (-webkit-touch-callout: none) {
-    /* Container : PAS de padding-top */
+    /* Container : PAS de padding-top pour laisser la status bar gérer */
     .container {
-        padding-top: 0 !important;
-        margin-top: env(safe-area-inset-top, 0);
+        padding-top: env(safe-area-inset-top, 0) !important; 
     }
-    
 
-    /* Footer iOS - Descend VRAIMENT jusqu'en bas */
+    /* Footer iOS */
     .app-footer {
         position: fixed !important;
         bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: auto !important;
-        min-height: calc(70px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 60px à 70px */
-        padding: 10px 0 !important;
-        padding-bottom: calc(30px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 20px à 30px */
-        transform: translateY(env(safe-area-inset-bottom, 34px)) !important; /* ✅ AJOUTÉ : Descend de 34px */
-        -webkit-transform: translate3d(0, 0, 0) !important;
-        will-change: auto !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-        pointer-events: auto !important;
-        overscroll-behavior: contain !important;
-        -webkit-overflow-scrolling: auto !important;
+        /* On ne touche PAS à left/right/transform ici */
+        
+        /* On ajoute juste le padding pour que le contenu ne soit pas sous la barre */
+        padding-bottom: env(safe-area-inset-bottom, 20px) !important;
+        
+        /* Ajustement de la hauteur min pour inclure ce padding */
+        min-height: calc(60px + env(safe-area-inset-bottom, 20px)) !important;
+        
+        /* IMPORTANT : Supprime le transform translateY qui causait le décalage */
+        transform: none !important; 
+        -webkit-transform: none !important;
     }
     
-    /* Boutons footer cliquables */
-    .footer-nav-btn {
-        pointer-events: auto !important;
-        touch-action: manipulation !important;
-        -webkit-user-drag: none !important;
-        user-select: none !important;
-    }
-    
-    /* Prolonge le footer vers le bas */
+    /* On s'assure que le footer va bien jusqu'en bas visuellement */
     .app-footer::after {
         content: '';
         position: absolute;
-        bottom: -200px !important;
+        top: 0; /* On remplit tout le footer */
         left: 0;
         right: 0;
-        height: 200px !important;
-        background: white;
+        bottom: 0;
+        background: inherit; /* Prend la couleur du footer */
         z-index: -1;
     }
-    
-    body.dark-mode .app-footer::after {
-        background: #1e1e2e;
-    }
 
-    /* Force le background */
-    html,
-    body {
-        background: white !important;
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
+    /* Force le background sur toute la hauteur pour éviter les bandes blanches */
+    html, body {
+        height: 100% !important;
+        background-color: #f5f5f5; /* Ou la couleur de ton thème clair */
     }
     
-    body.dark-mode html,
-    body.dark-mode body {
-        background: #1a1a2e !important;
+    body.dark-mode, body.dark-mode html {
+        background-color: #1a1a2e; /* Ou la couleur de ton thème sombre */
     }
-
-    /* Dashboard avec gap */
-    .dashboard {
-        margin-top: 8px;
-        margin-bottom: 100px !important; /* ✅ AUGMENTÉ de 80px à 100px pour compenser footer plus grand */
-        padding-bottom: 20px !important;
-    }
-    
 }
