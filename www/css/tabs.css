@@ -2328,17 +2328,11 @@ body.dark-mode .chartjs-legend span {
     }
 
     body.dark-mode .app-footer::after {
-        background-color: red !important; /* ✅ TEST */
+        background-color: #1e1e2e !important; /* ✅ TEST */
     }
     
-    /* ✅ AJOUTÉ : Force le footer-spacer */
     .footer-spacer {
-        background-color: white !important;
-        display: none !important; /* ✅ Ou carrément le cacher sur iOS */
-    }
-    
-    body.dark-mode .footer-spacer {
-        background-color: #1e1e2e !important;
+        display: none !important; /* ✅ Pas besoin sur iOS */
     }
 
     /* 7. Dashboard scrollable */
