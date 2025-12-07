@@ -223,10 +223,10 @@ body.dark-mode .edit-mode-btn.active {
 .app-footer::after {
     content: '';
     position: absolute;
-    bottom: -100px; /* ✅ CHANGÉ : Descend encore plus bas */
+    bottom: -200px !important;
     left: 0;
     right: 0;
-    height: 100px; /* ✅ CHANGÉ : Plus haut */
+    height: 200px !important;
     background: white;
     z-index: -1;
 }
@@ -1325,6 +1325,7 @@ body.dark-mode .empty-state-trans {
     /* Dashboard et Container */
     .dashboard {
         margin-top: 8px;
+        margin-bottom: 20px !important; /* ✅ AJOUTÉ : Gap visible sur iOS */
         padding-bottom: 20px !important;
     }
     
@@ -1343,7 +1344,7 @@ body.dark-mode .empty-state-trans {
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        padding-bottom: env(safe-area-inset-bottom, 10px) !important;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important; /* ✅ MODIFIÉ */
         transform: translate3d(0, 0, 0) !important;
         -webkit-transform: translate3d(0, 0, 0) !important;
         will-change: auto !important;
@@ -2173,14 +2174,14 @@ body.dark-mode .chartjs-legend span {
     
     /* Spacer pour gap footer */
     .footer-spacer {
-        height: 20px; /* Desktop : petit gap */
+        height: 30px; /* Desktop : petit gap */
         flex-shrink: 0;
         background: transparent;
     }
 
     @media (max-width: 600px) {
         .footer-spacer {
-            height: 130px !important; /* Mobile : grand gap */
+            height: 80px !important; /* Mobile : grand gap */
         }
     }
     /* Modals */
