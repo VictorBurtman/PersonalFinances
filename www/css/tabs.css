@@ -2262,7 +2262,7 @@ body.dark-mode .chartjs-legend span {
         right: 0 !important;
         height: auto !important;
         min-height: calc(60px + env(safe-area-inset-bottom, 0)) !important;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom, 0)) !important; /* ✅ CHANGÉ de 10px à 20px */
         transform: translate3d(0, 0, 0) !important;
         -webkit-transform: translate3d(0, 0, 0) !important;
         will-change: auto !important;

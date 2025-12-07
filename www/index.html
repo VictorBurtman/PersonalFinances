@@ -4016,47 +4016,100 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA (Version finale corrigée)
+        // FIX FOOTER iOS PWA (Version ultra-renforcée)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
             const footer = document.querySelector('.app-footer');
             
             if (footer) {
-                const lockFooter = () => {
-                    footer.style.position = 'fixed';
-                    footer.style.bottom = '0px';
-                    footer.style.left = '0px';
-                    footer.style.right = '0px';
-                    footer.style.transform = 'translate3d(0, 0, 0)';
-                    footer.style.webkitTransform = 'translate3d(0, 0, 0)';
+                let isLocking = false;
+                
+                const forceFooterPosition = () => {
+                    if (isLocking) return;
+                    isLocking = true;
+                    
+                    // Force la position avec tous les attributs
+                    footer.style.cssText = `
+                        position: fixed !important;
+                        bottom: 0px !important;
+                        left: 0px !important;
+                        right: 0px !important;
+                        transform: translate3d(0, 0, 0) !important;
+                        -webkit-transform: translate3d(0, 0, 0) !important;
+                        will-change: auto !important;
+                    `;
+                    
+                    requestAnimationFrame(() => {
+                        isLocking = false;
+                    });
                 };
                 
-                // Lock initial
-                lockFooter();
+                // Empêche TOUT mouvement sur le footer lui-même
+                footer.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                }, { passive: true });
+                
+                footer.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    forceFooterPosition();
+                    return false;
+                }, { passive: false });
+                
+                footer.addEventListener('touchend', (e) => {
+                    forceFooterPosition();
+                    setTimeout(forceFooterPosition, 0);
+                    setTimeout(forceFooterPosition, 16);
+                    setTimeout(forceFooterPosition, 50);
+                    setTimeout(forceFooterPosition, 100);
+                }, { passive: true });
+                
+                // Lock initial très agressif
+                forceFooterPosition();
+                setTimeout(forceFooterPosition, 0);
+                setTimeout(forceFooterPosition, 16);
+                setTimeout(forceFooterPosition, 50);
+                setTimeout(forceFooterPosition, 100);
+                setTimeout(forceFooterPosition, 300);
+                setTimeout(forceFooterPosition, 500);
+                setTimeout(forceFooterPosition, 1000);
                 
                 // Lock après chargement
                 window.addEventListener('load', () => {
-                    lockFooter();
-                    setTimeout(lockFooter, 100);
+                    forceFooterPosition();
+                    setTimeout(forceFooterPosition, 100);
+                    setTimeout(forceFooterPosition, 500);
                 });
                 
-                // Lock au scroll (léger)
-                let scrollTimeout;
+                // Lock au scroll (très fréquent)
+                let scrollRaf;
                 window.addEventListener('scroll', () => {
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(lockFooter, 150);
-                }, { passive: true });
-                
-                // Lock au touchend SEULEMENT (pas touchmove)
-                footer.addEventListener('touchend', () => {
-                    setTimeout(lockFooter, 50);
+                    if (scrollRaf) cancelAnimationFrame(scrollRaf);
+                    scrollRaf = requestAnimationFrame(forceFooterPosition);
                 }, { passive: true });
                 
                 // Lock au resize
-                window.addEventListener('resize', lockFooter);
+                window.addEventListener('resize', forceFooterPosition);
+                
+                // Re-lock toutes les 100ms pendant 3 secondes au démarrage
+                let count = 0;
+                const interval = setInterval(() => {
+                    forceFooterPosition();
+                    count++;
+                    if (count > 30) clearInterval(interval);
+                }, 100);
+                
+                // Observer pour détecter les changements de style
+                const observer = new MutationObserver(() => {
+                    forceFooterPosition();
+                });
+                observer.observe(footer, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
             }
         }
-
+        
     </script>
     <script src="js/transactions-manager.js"></script>
         <!-- Loading Overlay -->
