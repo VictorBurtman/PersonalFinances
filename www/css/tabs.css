@@ -1543,8 +1543,8 @@ body.modal-open .dashboard {
    ============================================ */
 
 #bankAccountsModal .modal-content {
-    max-height: 85vh;
-    max-height: 85dvh;
+    max-height: 80vh;
+    max-height: 80dvh;
     margin: auto;
 }
 
