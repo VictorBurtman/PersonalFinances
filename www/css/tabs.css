@@ -2328,7 +2328,7 @@ body.dark-mode .chartjs-legend span {
     }
 
     body.dark-mode .app-footer::after {
-        background-color: #1e1e2e !important;
+    background-color: red !important; /* ✅ TEST */
     }
 
     /* 7. Dashboard scrollable */
