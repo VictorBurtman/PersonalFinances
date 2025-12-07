@@ -2181,7 +2181,7 @@ body.dark-mode .chartjs-legend span {
 
     @media (max-width: 600px) {
         .footer-spacer {
-            height: 60px !important; /* Mobile : grand gap */
+            height: 55px !important; /* Mobile : grand gap */
         }
     }
     /* Modals */
