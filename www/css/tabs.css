@@ -1325,7 +1325,7 @@ body.dark-mode .empty-state-trans {
     /* Dashboard et Container */
     .dashboard {
         margin-top: 8px;
-        margin-bottom: 20px !important; /* ✅ AJOUTÉ : Gap visible sur iOS */
+        margin-bottom: 8px !important; /* ✅ AJOUTÉ : Gap visible sur iOS */
         padding-bottom: 20px !important;
     }
     
@@ -1338,25 +1338,31 @@ body.dark-mode .empty-state-trans {
         margin-top: env(safe-area-inset-top, 0);
     }
     
-    /* Footer iOS - VERROUILLÉ */
+    /* Footer iOS - Position absolue en bas */
     .app-footer {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important; /* ✅ MODIFIÉ */
+        height: auto !important; /* ✅ AJOUTÉ */
+        min-height: calc(60px + env(safe-area-inset-bottom, 0)) !important; /* ✅ AJOUTÉ */
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important;
         transform: translate3d(0, 0, 0) !important;
         -webkit-transform: translate3d(0, 0, 0) !important;
         will-change: auto !important;
         backface-visibility: hidden !important;
         -webkit-backface-visibility: hidden !important;
-        pointer-events: auto !important; /* ✅ AJOUTÉ */
+        pointer-events: auto !important;
+        overscroll-behavior: contain !important; /* ✅ AJOUTÉ */
+        -webkit-overflow-scrolling: auto !important; /* ✅ AJOUTÉ */
     }
     
     /* Verrouille les boutons */
     .footer-nav-btn {
         pointer-events: auto !important;
-        touch-action: manipulation !important; /* ✅ Empêche le drag */
+        touch-action: none !important; /* ✅ CHANGÉ de manipulation à none */
+        -webkit-user-drag: none !important; /* ✅ AJOUTÉ */
+        user-select: none !important; /* ✅ AJOUTÉ */
     }
     
     /* Prolonge le footer vers le bas */
