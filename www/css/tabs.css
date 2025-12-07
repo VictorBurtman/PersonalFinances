@@ -24,13 +24,13 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: white;
+    background: #f5f5f5; /* ✅ CHANGÉ de white à #f5f5f5 */
     min-height: 100vh;
     min-height: -webkit-fill-available;
 }
 
 html {
-    background: white;
+    background: #f5f5f5; /* ✅ CHANGÉ de white à #f5f5f5 */
 }
 
 body.dark-mode {
@@ -71,13 +71,13 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 110px;
-    background: white;
-    border-radius: 20px;
+    padding-bottom: 120px; /* ✅ Augmenté de 110px à 120px */
     padding-left: 20px;
     padding-right: 20px;
+    background: white;
+    border-radius: 20px;
     box-shadow: none;
-    margin-bottom: 20px;
+    margin-bottom: 0; /* ✅ CHANGÉ de 20px à 0 */
 }
 
 body.dark-mode .dashboard {
@@ -91,7 +91,7 @@ body.dark-mode .dashboard {
 
 .edit-mode-controls {
     position: sticky;
-    top: 0;
+    top: env(safe-area-inset-top, 0); /* ✅ CHANGÉ : top utilise safe-area */
     left: 0;
     right: 0;
     background: white;
@@ -99,7 +99,7 @@ body.dark-mode .dashboard {
     display: flex;
     gap: 10px;
     padding: 12px 15px;
-    padding-top: calc(12px + env(safe-area-inset-top, 0));
+    padding-top: 12px; /* ✅ CHANGÉ : padding simple, plus de calc */
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     flex-shrink: 0;
@@ -182,7 +182,7 @@ body.dark-mode .edit-mode-btn.active {
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0));
+    padding-bottom: env(safe-area-inset-bottom, 10px); /* ✅ CHANGÉ : calc supprimé */
     z-index: 1000;
     flex-shrink: 0;
     box-shadow: none !important;
@@ -1256,7 +1256,7 @@ body.dark-mode .empty-state-trans {
 .modal {
     display: none;
     position: fixed;
-    z-index: 10000;
+    z-index: 11000; /* ✅ Augmenté de 10000 à 11000 */
     left: 0;
     top: 0;
     width: 100%;
@@ -1281,7 +1281,7 @@ body.dark-mode .empty-state-trans {
 
 .modal .modal-content {
     position: relative;
-    z-index: 10001;
+    z-index: 11001; /* ✅ Augmenté de 10001 à 11001 */
     background: white;
     margin: auto;
     padding: 0;
@@ -1419,7 +1419,7 @@ body.modal-open .dashboard {
    ============================================ */
 
 #bankAccountsModal .modal-content {
-    max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 280px); /* ✅ Réduit de 220px à 280px pour mieux centrer */
     max-height: calc(100dvh - 220px);
 }
 
@@ -2070,8 +2070,8 @@ body.dark-mode .chartjs-legend span {
     #bankAccountsModal .modal-content {
         width: 95%;
         max-width: 95%;
-        max-height: calc(100vh - 220px) !important;
-        max-height: calc(100dvh - 220px) !important;
+        max-height: calc(100vh - 280px) !important; /* ✅ Cohérent avec desktop */
+        max-height: calc(100dvh - 280px) !important;
     }
     
     #bankAccountsModal .modal-header {
