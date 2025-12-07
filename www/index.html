@@ -4016,37 +4016,61 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA
+        // FIX FOOTER iOS PWA (Version ultra-agressive)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-            const footer = document.querySelector('.app-footer');
+            // Fonction qui force VRAIMENT la position
+            const forceFooterPosition = () => {
+                const footer = document.querySelector('.app-footer');
+                if (!footer) return;
+                
+                // Calcule la hauteur du viewport
+                const vh = window.innerHeight;
+                const footerHeight = footer.offsetHeight;
+                
+                // Force la position en pixels absolus
+                footer.style.cssText = `
+                    position: fixed !important;
+                    bottom: 0px !important;
+                    left: 0px !important;
+                    right: 0px !important;
+                    height: ${footerHeight}px !important;
+                    transform: translate3d(0, 0, 0) !important;
+                    -webkit-transform: translate3d(0, 0, 0) !important;
+                    will-change: auto !important;
+                `;
+            };
             
-            if (footer) {
-                let ticking = false;
-                
-                const fixFooter = () => {
-                    footer.style.position = 'fixed';
-                    footer.style.bottom = '0';
-                    ticking = false;
-                };
-                
-                // Fix au scroll
-                window.addEventListener('scroll', () => {
-                    if (!ticking) {
-                        window.requestAnimationFrame(fixFooter);
-                        ticking = true;
-                    }
-                }, { passive: true });
-                
-                // Fix au resize (quand le clavier apparaît/disparaît)
-                window.addEventListener('resize', fixFooter);
-                
-                // Fix au chargement
-                fixFooter();
-                
-                // Re-fix après 100ms (pour être sûr)
-                setTimeout(fixFooter, 100);
-            }
+            // Execute immédiatement
+            forceFooterPosition();
+            
+            // Re-force après chargement
+            window.addEventListener('load', () => {
+                setTimeout(forceFooterPosition, 100);
+                setTimeout(forceFooterPosition, 500);
+                setTimeout(forceFooterPosition, 1000);
+            });
+            
+            // Re-force au scroll (avec debounce)
+            let scrollTimer;
+            document.addEventListener('scroll', () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(forceFooterPosition, 100);
+            }, { passive: true, capture: true });
+            
+            // Re-force au resize
+            window.addEventListener('resize', forceFooterPosition);
+            
+            // Re-force au touchmove (quand l'utilisateur glisse)
+            document.addEventListener('touchmove', () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(forceFooterPosition, 50);
+            }, { passive: true });
+            
+            // Re-force au touchend (quand l'utilisateur relâche)
+            document.addEventListener('touchend', () => {
+                setTimeout(forceFooterPosition, 50);
+            }, { passive: true });
         }
 
 

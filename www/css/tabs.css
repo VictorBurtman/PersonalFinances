@@ -72,14 +72,22 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 150px !important; /* ✅ TEST : Force un gap énorme */
+    padding-bottom: 0; /* ✅ ENLEVÉ le padding-bottom */
     padding-left: 20px;
     padding-right: 20px;
     background: white;
     border-radius: 20px;
     box-shadow: none;
-    margin-bottom: 8px; /* ✅ AJOUTÉ : Gap en bas aussi */
+    margin-bottom: 0;
     margin-top: 8px;
+}
+
+/* ✅ AJOUTÉ : Pseudo-élément pour créer le gap */
+.dashboard::after {
+    content: '';
+    display: block;
+    height: 140px; /* Gap visible avant le footer */
+    flex-shrink: 0;
 }
 
 body.dark-mode .dashboard {
@@ -1476,9 +1484,9 @@ body.modal-open .dashboard {
 
 
 #bankAccountsModal .modal-content {
-    max-height: calc(100vh - 400px); /* ✅ AUGMENTÉ de 350px à 400px */
-    max-height: calc(100dvh - 400px);
-    margin: auto; /* ✅ AJOUTÉ : Force le centrage */
+    max-height: 70vh; /* ✅ CHANGÉ : utilise % au lieu de px */
+    max-height: 70dvh;
+    margin: auto;
 }
 
 #bankAccountsModal .modal-header {

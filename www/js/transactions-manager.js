@@ -791,7 +791,8 @@ function toggleBankSync() {
  * Open Add Manual Transaction Modal
  */
 function openAddManualTransactionModal() {
-    if (typeof closeAllModals === 'function') closeAllModals(); // ✅ AJOUTER
+    if (typeof closeAllModals === 'function') closeAllModals();
+    
     const modal = document.getElementById('addManualTransactionModal');
     if (!modal) return;
     
@@ -809,9 +810,9 @@ function openAddManualTransactionModal() {
     // Populate categories
     populateManualTxnCategories();
     
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden'; // ✅ AJOUTÉ
-
+    modal.classList.add('show'); // ✅ CHANGÉ
+    modal.style.zIndex = '99999'; // ✅ AJOUTÉ
+    document.body.classList.add('modal-open'); // ✅ CHANGÉ
 }
 
 /**
@@ -820,8 +821,8 @@ function openAddManualTransactionModal() {
 function closeAddManualTransactionModal() {
     const modal = document.getElementById('addManualTransactionModal');
     if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = ''; // ✅ AJOUTÉ
+        modal.classList.remove('show'); // ✅ CHANGÉ
+        document.body.classList.remove('modal-open'); // ✅ CHANGÉ
     }
 }
 
@@ -1176,17 +1177,16 @@ async function checkBankScrapingPermission() {
  * Open bank accounts modal with permission check
  */
 async function openBankAccountsModal() {
-    if (typeof closeAllModals === 'function') closeAllModals(); // ✅ AJOUTER
+    if (typeof closeAllModals === 'function') closeAllModals();
 
     // Check permissions first
     await checkBankScrapingPermission();
        
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
-        modal.style.display = 'block';
-        
-        // Désactiver le scroll
-        document.body.style.overflow = 'hidden';
+        modal.classList.add('show'); // ✅ CHANGÉ
+        modal.style.zIndex = '99999'; // ✅ AJOUTÉ
+        document.body.classList.add('modal-open'); // ✅ CHANGÉ
         
         // Update credentials status
         updateCredentialsStatusInModal();
@@ -1210,10 +1210,8 @@ async function openBankAccountsModal() {
 function closeBankAccountsModal() {
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
-        modal.style.display = 'none';
-        
-        // ✅ AJOUTE CETTE LIGNE - Réactiver le scroll
-        document.body.style.overflow = '';
+        modal.classList.remove('show'); // ✅ Ferme le modal
+        document.body.classList.remove('modal-open'); // ✅ Réactive le scroll (via CSS)
     }
 }
 
@@ -1899,8 +1897,9 @@ async function openExcludedTransactionsModal() {
     const noExcludedEl = document.getElementById('noExcludedTransactions');
     
     if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        modal.classList.add('show'); // ✅ CHANGÉ de style.display = 'flex' à classList
+        modal.style.zIndex = '99999'; // ✅ AJOUTÉ
+        document.body.classList.add('modal-open'); // ✅ CHANGÉ
     }
     
     try {
@@ -1959,8 +1958,8 @@ async function openExcludedTransactionsModal() {
 function closeExcludedTransactionsModal() {
     const modal = document.getElementById('excludedTransactionsModal');
     if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+        modal.classList.remove('show'); // ✅ CHANGÉ
+        document.body.classList.remove('modal-open'); // ✅ CHANGÉ
     }
 }
 
