@@ -1,8 +1,7 @@
 /* ============================================
-   TAB SYSTEM STYLES
+   VARIABLES CSS
    ============================================ */
 
-/* Variables pour light/dark mode */
 :root {
     --block-bg: #f8f9fa;
     --block-border: #dee2e6;
@@ -15,6 +14,229 @@ body.dark-mode {
     --inner-block-bg: rgba(255, 255, 255, 0.03);
 }
 
+/* ============================================
+   LAYOUT - APP STRUCTURE
+   ============================================ */
+
+/* Bloquer le scroll du body */
+body {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: white;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+}
+
+html {
+    background: white;
+}
+
+body.dark-mode {
+    background: #1a1a2e;
+}
+
+body.dark-mode html {
+    background: #1a1a2e;
+}
+
+/* AppScreen prend toute la hauteur */
+#appScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+}
+
+/* Container flexible */
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Dashboard scrollable */
+.dashboard {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 10px;
+    padding-bottom: 110px;
+    background: white;
+    border-radius: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: none;
+    margin-bottom: 20px;
+}
+
+body.dark-mode .dashboard {
+    background: #2a2a3e;
+    color: #e0e0e0;
+}
+
+/* ============================================
+   HEADER STICKY (Edit Mode Controls)
+   ============================================ */
+
+.edit-mode-controls {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+    padding: 12px 15px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0));
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+body.dark-mode .edit-mode-controls {
+    background: #2a2a3e;
+    border-bottom-color: #3a3a4e;
+}
+
+.edit-mode-btn {
+    padding: 8px 16px;
+    border: 2px solid #fd7e14;
+    background: white;
+    color: #fd7e14;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-mode-btn:hover {
+    background: #fd7e14;
+    color: white;
+}
+
+.edit-mode-btn.active {
+    background: #fd7e14;
+    color: white;
+}
+
+body.dark-mode .edit-mode-btn {
+    background: #1f1f2e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode .edit-mode-btn:hover {
+    background: #2a2a3e;
+    border-color: #667eea;
+}
+
+body.dark-mode .edit-mode-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Header visibility conditionnelle */
+.budget-only,
+.transactions-only {
+    display: none;
+}
+
+#compareMonth {
+    display: none;
+    padding: 10px 14px;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    font-size: 0.85em;
+    cursor: pointer;
+    font-weight: 600;
+    color: #667eea;
+    background: white;
+}
+
+/* ============================================
+   FOOTER NAVIGATION (STICKY)
+   ============================================ */
+
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0));
+    z-index: 1000;
+    flex-shrink: 0;
+    box-shadow: none !important;
+}
+
+body.dark-mode .app-footer {
+    background: #1e1e2e;
+    border-top-color: #3a3a4e;
+}
+
+.footer-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+body.dark-mode .footer-nav-btn {
+    color: #a0a0a0;
+}
+
+.footer-nav-btn .icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.footer-nav-btn.active {
+    color: #667eea;
+}
+
+body.dark-mode .footer-nav-btn.active {
+    color: #9ca3ff;
+}
+
+.footer-nav-btn:hover:not(.active) {
+    color: #333;
+}
+
+body.dark-mode .footer-nav-btn:hover:not(.active) {
+    color: #e0e0e0;
+}
+
+/* ============================================
+   TAB SYSTEM
+   ============================================ */
 
 .app-tabs {
     display: flex;
@@ -77,6 +299,372 @@ body.dark-mode {
 }
 
 /* ============================================
+   TOTAL SECTION (Budget Tab)
+   ============================================ */
+
+.total-section {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.total-section h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.total-amount {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+/* ============================================
+   CHART SECTION
+   ============================================ */
+
+.chart-section {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.chart-indicators {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.chart-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.chart-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: #667eea;
+}
+
+body.dark-mode .chart-dot {
+    background: #4a4a5e;
+}
+
+body.dark-mode .chart-dot.active {
+    background: #9ca3ff;
+}
+
+.color-btn-mini {
+    background: rgba(102, 126, 234, 0.1);
+    border: none;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-btn-mini:hover {
+    background: rgba(102, 126, 234, 0.2);
+    transform: scale(1.1);
+}
+
+body.dark-mode .color-btn-mini {
+    background: rgba(156, 163, 255, 0.1);
+}
+
+body.dark-mode .color-btn-mini:hover {
+    background: rgba(156, 163, 255, 0.2);
+}
+
+.chart-container-wrapper {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: grab;
+}
+
+.chart-container-wrapper:active {
+    cursor: grabbing;
+}
+
+.chart-container {
+    position: relative;
+    height: 350px;
+    transition: transform 0.3s ease;
+}
+
+/* ============================================
+   EXPENSES LIST (Budget Tab)
+   ============================================ */
+
+.expenses-list {
+    display: grid;
+    gap: 10px;
+}
+
+.category-section {
+    margin-bottom: 15px;
+}
+
+.category-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.category-stats {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.category-stats .amount {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.category-stats .percentage {
+    color: #999;
+    margin-left: 8px;
+}
+
+.expense-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.expense-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+body.dark-mode .expense-item {
+    background: #1f1f2e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .expense-item:hover {
+    background: #2a2a3e;
+}
+
+.expense-name {
+    font-weight: 500;
+    color: #495057;
+    flex: 1;
+}
+
+body.dark-mode .expense-name {
+    color: #e0e0e0 !important;
+}
+
+.expense-input {
+    width: 120px;
+    padding: 8px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: right;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.expense-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .expense-input {
+    background: #2a2a3e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+.expense-delete-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+}
+
+.expense-delete-btn:hover {
+    opacity: 1;
+    background: #fee;
+}
+
+.currency {
+    margin-left: 8px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.reset-button {
+    width: 100%;
+    padding: 15px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+/* ============================================
+   EDIT MODE - CATEGORY CONTROLS
+   ============================================ */
+
+.category-controls {
+    display: none;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.category-controls.show {
+    display: flex;
+}
+
+.category-btn {
+    padding: 5px 10px;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #495057;
+    border-radius: 6px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    background: #f8f9fa;
+}
+
+.category-btn.danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.category-btn.danger:hover {
+    background: #dc3545;
+    color: white;
+}
+
+body.dark-mode .category-btn {
+    background: #1f1f2e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode .category-btn:hover {
+    background: #2a2a3e;
+    border-color: #667eea;
+}
+
+.rename-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 2px 6px;
+    margin-left: 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.rename-btn:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.item-move-btns {
+    display: none;
+    gap: 5px;
+    margin-left: 8px;
+}
+
+.item-move-btns.show {
+    display: flex;
+}
+
+.item-move-btn {
+    background: none;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.3s ease;
+}
+
+.item-move-btn:hover {
+    background: #f8f9fa;
+}
+
+.item-rename-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 2px 6px;
+    margin-left: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.item-rename-btn.show {
+    display: inline-block;
+}
+
+.item-rename-btn:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
    TRANSACTIONS TAB - SECTIONS
    ============================================ */
 
@@ -85,6 +673,11 @@ body.dark-mode {
     padding: 20px;
     background: #f8f9fa;
     border-radius: 15px;
+}
+
+body.dark-mode .transactions-section {
+    background: #2a2a3e;
+    color: #e0e0e0;
 }
 
 .section-title-trans {
@@ -98,7 +691,7 @@ body.dark-mode {
 }
 
 /* ============================================
-   STICKY TOOLBAR (Filters + Bank Accounts)
+   STICKY TOOLBAR (Filters + Actions)
    ============================================ */
 
 .transactions-sticky-toolbar {
@@ -110,6 +703,10 @@ body.dark-mode {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 8px 15px;
     margin-bottom: 15px;
+}
+
+body.dark-mode .transactions-sticky-toolbar {
+    background: rgba(42, 42, 62, 0.98);
 }
 
 .toolbar-row {
@@ -137,7 +734,12 @@ body.dark-mode {
     background: #f0f4ff;
 }
 
-/* Filters Row (inside toolbar) */
+body.dark-mode .toolbar-btn {
+    background: #2a2a3e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
 .filters-row {
     display: flex;
     gap: 10px;
@@ -171,6 +773,19 @@ body.dark-mode {
     background: white;
 }
 
+body.dark-mode .filter-select,
+body.dark-mode .filter-search {
+    background: #1f1f2e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode .filter-select:hover,
+body.dark-mode .filter-search:hover {
+    background: #2a2a3e;
+    border-color: #667eea;
+}
+
 .filter-search {
     flex: 1;
     min-width: 120px;
@@ -191,449 +806,13 @@ body.dark-mode {
     background: #d3d7db;
 }
 
-/* ============================================
-   SYNC STATUS
-   ============================================ */
-
-.sync-status {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 15px;
-    background: white;
-    border-radius: 10px;
-    flex-wrap: wrap;
-    gap: 10px;
+body.dark-mode .filter-clear-btn {
+    background: #3a3a4e;
+    color: #e0e0e0;
 }
 
-.sync-info {
-    font-size: 0.9em;
-    color: #6c757d;
-}
-
-.sync-info strong {
-    color: #667eea;
-}
-
-.sync-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.loading-trans {
-    display: none;
-    text-align: center;
-    padding: 20px;
-    color: #667eea;
-}
-
-.loading-trans.show {
-    display: block;
-}
-
-.spinner-trans {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 10px;
-}
-
-/* ============================================
-   TRANSACTIONS LIST
-   ============================================ */
-
-.transaction-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: white;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-}
-
-.transaction-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.transaction-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.transaction-date {
-    font-size: 0.85em;
-    color: #6c757d;
-}
-
-.transaction-desc {
-    font-weight: 500;
-    margin: 5px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.transaction-amount {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: #667eea;
-    white-space: nowrap;
-    margin-left: 10px;
-}
-
-.category-buttons {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-
-.category-btn-trans {
-    padding: 5px 12px;
-    border: 2px solid #dee2e6;
-    background: white;
-    border-radius: 8px;
-    font-size: 0.85em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.category-btn-trans:hover {
-    border-color: #667eea;
-    background: #f0f4ff;
-}
-
-/* ============================================
-   CATEGORY SECTIONS
-   ============================================ */
-
-.category-section-trans {
-    margin-bottom: 20px;
-}
-
-.category-header-trans {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 12px;
-    background: white;
-    border-radius: 10px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.category-name-trans {
-    font-weight: 600;
-    color: #495057;
-}
-
-.category-total-trans {
-    font-weight: 600;
-    color: #667eea;
-}
-
-.budget-comparison {
-    font-size: 0.9em;
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-.over-budget {
-    color: #dc3545;
-    font-weight: 600;
-}
-
-.under-budget {
-    color: #28a745;
-    font-weight: 600;
-}
-
-/* ============================================
-   ALERTS
-   ============================================ */
-
-.alert-trans {
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.alert-info-trans {
-    background: #d1ecf1;
-    color: #0c5460;
-    border-left: 4px solid #17a2b8;
-}
-
-.alert-success-trans {
-    background: #d4edda;
-    color: #155724;
-    border-left: 4px solid #28a745;
-}
-
-.alert-error-trans {
-    background: #f8d7da;
-    color: #721c24;
-    border-left: 4px solid #dc3545;
-}
-
-.empty-state-trans {
-    text-align: center;
-    padding: 40px;
-    color: #6c757d;
-}
-
-.empty-state-icon {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-/* ============================================
-   COMPARE MODE
-   ============================================ */
-
-.compare-toggle {
-    padding: 8px 12px;
-    background: #fff;
-    border: 2px solid #dee2e6;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.compare-toggle:hover {
-    border-color: #667eea;
-    background: #f8f9ff;
-}
-
-.compare-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    font-size: 0.9em;
-}
-
-.compare-info .budget-label {
-    color: #6c757d;
-}
-
-.compare-info .real-label {
-    font-weight: 600;
-}
-
-.compare-info .diff {
-    font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.compare-info .diff.positive {
-    color: #dc3545;
-    background: #ffe5e8;
-}
-
-.compare-info .diff.negative {
-    color: #28a745;
-    background: #e8f5e9;
-}
-
-.compare-info .diff.neutral {
-    color: #ffc107;
-    background: #fff8e1;
-}
-
-.compare-progress {
-    margin-top: 8px;
-    height: 8px;
-    background: #e9ecef;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.compare-progress-bar {
-    height: 100%;
-    transition: width 0.3s ease;
-}
-
-.compare-progress-bar.over-budget {
-    background: linear-gradient(90deg, #dc3545, #ff6b6b);
-}
-
-.compare-progress-bar.under-budget {
-    background: linear-gradient(90deg, #28a745, #5cb85c);
-}
-
-.compare-progress-bar.near-budget {
-    background: linear-gradient(90deg, #ffc107, #ffcd38);
-}
-
-/* ============================================
-   BUTTONS
-   ============================================ */
-
-.btn-success {
-    background: #28a745;
-    color: white;
-}
-
-.btn-success:hover {
-    background: #218838;
-}
-
-/* ============================================
-   MOBILE RESPONSIVE (ALL IN ONE PLACE)
-   ============================================ */
-
-@media (max-width: 600px) {
-    /* Tabs */
-    .app-tabs {
-        width: 100%;
-    }
-    
-    .app-tab {
-        flex: 1;
-        min-width: 120px;
-        font-size: 0.9em;
-        padding: 10px 16px;
-    }
-    
-    /* Toolbar */
-    .toolbar-row {
-        gap: 6px;
-    }
-    
-    .toolbar-btn {
-        flex: 1 !important;
-        min-width: 0 !important;
-        padding: 10px 8px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 1.5em !important;
-        line-height: 1 !important;
-    }
-    
-    .toolbar-btn span[data-translate] {
-        display: none !important;
-    }
-    
-    /* Filters */
-    .filters-row {
-        flex-direction: column;
-    }
-    
-    .filter-select,
-    .filter-search,
-    .filter-clear-btn {
-        width: 100%;
-    }
-    
-    /* Sync */
-    .sync-status {
-        flex-direction: column;
-    }
-
-    .sync-buttons {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .sync-buttons button {
-        width: 100%;
-    }
-    
-    /* Categories */
-    .category-header-trans {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    /* Transactions */
-    .transaction-desc {
-        font-size: 0.9em;
-    }
-    
-    .transaction-amount {
-        font-size: 1em;
-    }
-    
-    /* Compare */
-    .compare-toggle span {
-        font-size: 0.8em;
-    }
-    
-    .edit-mode-controls {
-        gap: 8px;
-    }
-    
-    #compareBtn {
-        min-width: 100px;
-    }
-    
-    /* Scroll to top button */
-    .scroll-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
-        font-size: 1.3em;
-    }
-    
-    /* Toast notifications */
-    .toast-container {
-        top: 10px;
-        right: 10px;
-        left: 10px;
-    }
-    
-    .toast {
-        min-width: auto;
-        max-width: none;
-    }
-   
-    /* Bank Accounts Modal sur mobile */
-    #bankAccountsModal {
-        padding: 10px;
-    }
-    
-    #bankAccountsModal .modal-content {
-        width: 95%;
-        max-width: 95%;
-        max-height: calc(100vh - 180px) !important; /* ✅ Augmenté de 140px à 180px */
-        max-height: calc(100dvh - 180px) !important; /* ✅ iOS */
-    }
-    /* Add Manual Transaction Modal sur mobile */
-    #addManualTransactionModal .modal-content {
-        max-height: calc(100vh - 180px) !important;
-        max-height: calc(100dvh - 180px) !important;
-    }
-    
-    #bankAccountsModal .modal-header {
-        padding: 12px 15px;
-    }
-    
-    #bankAccountsModal .modal-header h2 {
-        font-size: 1.1em;
-    }
-    
-    #bankAccountsModal .modal-body {
-        padding: 15px;
-    }
-    
-    #bankAccountsModal .modal-footer {
-        padding: 12px 15px;
-    }
+body.dark-mode .filter-clear-btn:hover {
+    background: #4a4a5e;
 }
 
 .filter-radio-group {
@@ -683,50 +862,398 @@ body.dark-mode .filter-radio-label:has(input:checked) {
 }
 
 /* ============================================
-   SCROLL TO TOP BUTTON
+   SYNC STATUS
    ============================================ */
 
-.scroll-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.5em;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 1000;
+.sync-status {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.scroll-to-top.visible {
-    opacity: 1;
-    visibility: visible;
+body.dark-mode .sync-status {
+    background: #1f1f2e;
+    color: #e0e0e0;
 }
 
-.scroll-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+.sync-info {
+    font-size: 0.9em;
+    color: #6c757d;
 }
 
-.scroll-to-top:active {
-    transform: translateY(-2px);
+body.dark-mode .sync-info {
+    color: #a0a0b0;
+}
+
+.sync-info strong {
+    color: #667eea;
+}
+
+.sync-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sync-buttons button {
+    padding: 12px 20px !important;
+    min-height: 44px !important;
+}
+
+.loading-trans {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    color: #667eea;
+}
+
+.loading-trans.show {
+    display: block;
+}
+
+.spinner-trans {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
 }
 
 /* ============================================
-   BANK ACCOUNTS MODAL
+   TRANSACTIONS LIST
    ============================================ */
 
-#bankAccountsModal {
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.transaction-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .transaction-item {
+    background: #1f1f2e;
+    color: #e0e0e0;
+}
+
+.transaction-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.transaction-date {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+body.dark-mode .transaction-date {
+    color: #a0a0b0;
+}
+
+.transaction-desc {
+    font-weight: 500;
+    margin: 5px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.dark-mode .transaction-desc {
+    color: #e0e0e0;
+}
+
+.transaction-amount {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #667eea;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
+.transaction-details {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+body.dark-mode .transaction-details {
+    background: #262638 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .transaction-details strong {
+    color: #e0e0e0 !important;
+}
+
+.category-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.category-btn-trans {
+    padding: 5px 12px;
+    border: 2px solid #dee2e6;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-btn-trans:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+body.dark-mode .category-btn-trans {
+    background: #1f1f2e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode .category-btn-trans:hover {
+    background: #2a2a3e;
+    border-color: #667eea;
+}
+
+/* ============================================
+   CATEGORY SECTIONS (Transactions Tab)
+   ============================================ */
+
+.category-section-trans {
+    margin-bottom: 20px;
+}
+
+.category-header-trans {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 12px;
+    background: white;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+body.dark-mode .category-header-trans {
+    background: #1f1f2e;
+    color: #e0e0e0;
+}
+
+.category-name-trans {
+    font-weight: 600;
+    color: #495057;
+}
+
+body.dark-mode .category-name-trans {
+    color: #e0e0e0;
+}
+
+.category-total-trans {
+    font-weight: 600;
+    color: #667eea;
+}
+
+.budget-comparison {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.over-budget {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.under-budget {
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* ============================================
+   COMPARE MODE
+   ============================================ */
+
+.compare-toggle {
+    padding: 8px 12px;
+    background: #fff;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.compare-toggle:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.compare-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+body.dark-mode .compare-info {
+    background: #1f1f2e;
+}
+
+.compare-info .budget-label {
+    color: #6c757d;
+}
+
+body.dark-mode .compare-info .budget-label,
+body.dark-mode .compare-info .real-label,
+body.dark-mode .compare-info .diff {
+    color: #e0e0e0;
+}
+
+.compare-info .real-label {
+    font-weight: 600;
+}
+
+.compare-info .diff {
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.compare-info .diff.positive {
+    color: #dc3545;
+    background: #ffe5e8;
+}
+
+.compare-info .diff.negative {
+    color: #28a745;
+    background: #e8f5e9;
+}
+
+.compare-info .diff.neutral {
+    color: #ffc107;
+    background: #fff8e1;
+}
+
+.compare-progress {
+    margin-top: 8px;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+body.dark-mode .compare-progress {
+    background: #3a3a4e;
+}
+
+.compare-progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.compare-progress-bar.over-budget {
+    background: linear-gradient(90deg, #dc3545, #ff6b6b);
+}
+
+.compare-progress-bar.under-budget {
+    background: linear-gradient(90deg, #28a745, #5cb85c);
+}
+
+.compare-progress-bar.near-budget {
+    background: linear-gradient(90deg, #ffc107, #ffcd38);
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.alert-trans {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.alert-info-trans {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-success-trans {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-error-trans {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+body.dark-mode .alert-trans {
+    background: #1f1f2e;
+    border-left-width: 4px;
+}
+
+body.dark-mode .alert-info-trans {
+    border-left-color: #17a2b8;
+    color: #5dccdc;
+}
+
+body.dark-mode .alert-success-trans {
+    border-left-color: #28a745;
+    color: #6cd386;
+}
+
+body.dark-mode .alert-error-trans {
+    border-left-color: #dc3545;
+    color: #ff6b7a;
+}
+
+.empty-state-trans {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+body.dark-mode .empty-state-trans {
+    color: #a0a0b0;
+}
+
+.empty-state-icon {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+/* ============================================
+   MODALS - STRUCTURE DE BASE
+   ============================================ */
+
+.modal {
     display: none;
     position: fixed;
     z-index: 10000;
@@ -734,34 +1261,55 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    padding: 20px;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-#bankAccountsModal.show {
+.modal.show {
     display: flex !important;
     align-items: center;
     justify-content: center;
+    animation: fadeIn 0.2s ease;
 }
 
-#bankAccountsModal .modal-content {
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal .modal-content {
+    position: relative;
+    z-index: 10001;
     background: white;
     margin: auto;
     padding: 0;
     border-radius: 20px;
     width: 90%;
     max-width: 600px;
-    max-height: calc(100vh - 220px); /* ✅ Réduit encore (était 200px) */
-    max-height: calc(100dvh - 220px); /* ✅ iOS */
+    max-height: calc(100vh - 160px);
+    max-height: calc(100dvh - 160px);
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
+    animation: slideIn 0.3s ease;
 }
 
-#bankAccountsModal .modal-header {
-    padding: 20px 25px;
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal .modal-header {
+    padding: 20px;
     border-bottom: 2px solid #e9ecef;
     display: flex;
     justify-content: space-between;
@@ -769,24 +1317,143 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     flex-shrink: 0;
 }
 
-#bankAccountsModal .modal-header h2 {
-    margin: 0;
-    font-size: 1.5em;
+.modal .modal-header h2 {
+    font-size: 1.2em;
     color: #667eea;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.3em;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.modal-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px;
+    min-height: 0;
+}
+
+.modal .modal-footer {
+    padding: 15px 20px;
+    border-top: 2px solid #e9ecef;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.modal-button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-button.primary {
+    background: #667eea;
+    color: white;
+}
+
+.modal-button.primary:hover {
+    background: #5568d3;
+}
+
+.modal-button.secondary {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.modal-button.secondary:hover {
+    background: #dee2e6;
+}
+
+/* Dark mode */
+body.dark-mode .modal .modal-content {
+    background: #2a2a3e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .modal .modal-header,
+body.dark-mode .modal .modal-footer {
+    border-color: #3a3a4e;
+}
+
+/* Bloquer scroll derrière modal */
+body.modal-open {
+    overflow: hidden !important;
+}
+
+body.modal-open #appScreen {
+    overflow: hidden !important;
+}
+
+body.modal-open .dashboard {
+    overflow: hidden !important;
+}
+
+/* ============================================
+   BANK ACCOUNTS MODAL (Spécifique)
+   ============================================ */
+
+#bankAccountsModal .modal-content {
+    max-height: calc(100vh - 220px);
+    max-height: calc(100dvh - 220px);
+}
+
+#bankAccountsModal .modal-header {
+    padding: 20px 25px;
+}
+
+#bankAccountsModal .modal-header h2 {
+    font-size: 1.5em;
 }
 
 #bankAccountsModal .modal-body {
     padding: 25px;
-    overflow-y: auto;
-    flex: 1;
-    -webkit-overflow-scrolling: touch;
 }
 
 #bankAccountsModal .modal-footer {
     padding: 15px 25px;
-    border-top: 2px solid #e9ecef;
-    text-align: right;
-    flex-shrink: 0;
+}
+
+body.dark-mode #bankAccountsModal .modal-content {
+    background: #2a2a3e;
+    color: #e0e0e0;
+}
+
+body.dark-mode #bankAccountsModal .modal-header {
+    border-bottom-color: #3a3a4e;
+}
+
+body.dark-mode #bankAccountsModal .modal-header h2 {
+    color: #8b9cff;
+}
+
+body.dark-mode #bankAccountsModal .modal-footer {
+    border-top-color: #3a3a4e;
 }
 
 .bank-section {
@@ -805,14 +1472,17 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     color: #495057;
 }
 
+body.dark-mode .bank-section {
+    border-bottom-color: #3a3a4e;
+}
+
+body.dark-mode .bank-section h4 {
+    color: #e0e0e0;
+}
+
 .bank-section .btn {
     padding: 12px 20px !important;
     font-size: 0.95em !important;
-    min-height: 44px !important;
-}
-
-.sync-buttons button {
-    padding: 12px 20px !important;
     min-height: 44px !important;
 }
 
@@ -894,6 +1564,185 @@ body.dark-mode .filter-radio-label:has(input:checked) {
 }
 
 /* ============================================
+   EXCLUDED TRANSACTIONS MODAL
+   ============================================ */
+
+#excludedTransactionsModal .modal-content {
+    margin: auto;
+    max-height: 80vh;
+}
+
+#excludedTransactionsModal .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+body.dark-mode #excludedTransactionsList > div {
+    background: #1f1f2e !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #excludedTransactionsList > div > div {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #excludedTransactionsList > div > div:last-child {
+    color: #a0a0b0 !important;
+}
+
+body.dark-mode #restoreSimilarCheckbox {
+    accent-color: #667eea;
+}
+
+/* ============================================
+   EXCLUDE MODAL (Smaller)
+   ============================================ */
+
+#excludeModal .modal-content {
+    max-width: 400px;
+    margin: auto;
+}
+
+#excludeModal .modal-body {
+    padding: 15px 20px;
+}
+
+#excludeModal .modal-header {
+    padding: 15px 20px;
+}
+
+#excludeModal .modal-footer {
+    padding: 12px 20px;
+}
+
+/* ============================================
+   COLOR EDITOR MODAL
+   ============================================ */
+
+.color-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.color-item:hover {
+    background: #e9ecef;
+}
+
+.color-item-name {
+    font-weight: 500;
+    color: #495057;
+    flex: 1;
+    font-size: 0.9em;
+}
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-preview {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid #dee2e6;
+    cursor: pointer;
+}
+
+input[type="color"] {
+    width: 40px;
+    height: 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ============================================
+   SETTINGS MODAL
+   ============================================ */
+
+.settings-section {
+    margin-bottom: 25px;
+}
+
+.settings-section h3 {
+    color: #667eea;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+body.dark-mode .settings-section {
+    border-bottom-color: #3a3a4e;
+}
+
+.settings-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.settings-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .settings-select {
+    background: #1f1f2e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+.settings-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.settings-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.settings-description {
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+.settings-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.settings-btn.danger {
+    background: #dc3545;
+    color: white;
+}
+
+.settings-btn.danger:hover {
+    background: #c82333;
+}
+
+/* ============================================
    TOAST NOTIFICATIONS
    ============================================ */
 
@@ -901,7 +1750,7 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 10000;
+    z-index: 10001 !important;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -919,10 +1768,10 @@ body.dark-mode .filter-radio-label:has(input:checked) {
     min-width: 300px;
     max-width: 400px;
     pointer-events: all;
-    animation: slideIn 0.3s ease;
+    animation: slideInToast 0.3s ease;
 }
 
-@keyframes slideIn {
+@keyframes slideInToast {
     from {
         transform: translateX(400px);
         opacity: 0;
@@ -934,10 +1783,10 @@ body.dark-mode .filter-radio-label:has(input:checked) {
 }
 
 .toast.removing {
-    animation: slideOut 0.3s ease forwards;
+    animation: slideOutToast 0.3s ease forwards;
 }
 
-@keyframes slideOut {
+@keyframes slideOutToast {
     to {
         transform: translateX(400px);
         opacity: 0;
@@ -1028,314 +1877,255 @@ body.dark-mode .filter-radio-label:has(input:checked) {
 }
 
 /* ============================================
-   DARK MODE SUPPORT
+   SCROLL TO TOP BUTTON
    ============================================ */
 
-/* Bank section headings in dark mode */
-body.dark-mode .bank-section h4 {
-    color: #e0e0e0;
-}
-
-/* Border color in dark mode */
-body.dark-mode .bank-section {
-    border-bottom-color: #3a3a4e;
-}
-
-/* Bank Accounts Modal in dark mode */
-body.dark-mode #bankAccountsModal .modal-content {
-    background: #2a2a3e;
-    color: #e0e0e0;
-}
-
-body.dark-mode #bankAccountsModal .modal-header {
-    border-bottom-color: #3a3a4e;
-}
-
-body.dark-mode #bankAccountsModal .modal-header h2 {
-    color: #8b9cff;
-}
-
-body.dark-mode #bankAccountsModal .modal-footer {
-    border-top-color: #3a3a4e;
-}
-
-body.dark-mode #bankAccountsModal .modal-body {
-    color: #e0e0e0;
-}
-
-/* Transaction details expandable section in dark mode */
-body.dark-mode .transaction-details {
-    background: #262638 !important;  /* Légèrement plus clair que #1f1f2e */
-    color: #e0e0e0 !important;
-}
-
-/* Dark mode for toolbar */
-body.dark-mode .toolbar-btn {
-    background: #2a2a3e;
-    color: #e0e0e0;
-    border-color: #3a3a4e;
-}
-
-/* Better centering for excluded transactions modal */
-#excludedTransactionsModal .modal-content {
-    margin: auto;
-    max-height: 80vh;
-}
-
-#excludedTransactionsModal .modal-body {
-    max-height: 60vh;
-    overflow-y: auto;
-}
-
-body.dark-mode .transaction-details strong {
-    color: #e0e0e0 !important;
-}
-
-body.dark-mode .expense-name {
-    color: #e0e0e0 !important;
-}
-
-/* Smaller exclude modal */
-#excludeModal .modal-content {
-    max-width: 400px;
-    margin: auto;
-}
-
-#excludeModal .modal-body {
-    padding: 15px 20px;
-}
-
-#excludeModal .modal-header {
-    padding: 15px 20px;
-}
-
-#excludeModal .modal-footer {
-    padding: 12px 20px;
-}
-
-/* Dark mode for excluded transactions list */
-body.dark-mode #excludedTransactionsList > div {
-    background: #1f1f2e !important;
-    color: #e0e0e0 !important;
-}
-
-body.dark-mode #excludedTransactionsList > div > div {
-    color: #e0e0e0 !important;
-}
-
-body.dark-mode #excludedTransactionsList > div > div:last-child {
-    color: #a0a0b0 !important;
-}
-
-body.dark-mode #restoreSimilarCheckbox {
-    accent-color: #667eea;
-}
-
-/* Toast notifications above modals */
-.toast-container {
-    z-index: 10001 !important;
-}
-
-.modal {
-    z-index: 10000;
-}
-
-/* ============================================
-   HEADER VISIBILITY CONDITIONNELLE
-   ============================================ */
-
-/* Par défaut, tout est caché */
-.budget-only,
-.transactions-only {
-    display: none;
-}
-
-/* Le select compareMonth reste caché par défaut */
-#compareMonth {
-    display: none;
-}
-
-/* ============================================
-   FIX iOS PWA SCROLL
-   ============================================ */
-
-/* Empêcher le bounce scroll sur iOS */
-/* Bloquer le scroll du body */
-body {
-    overflow: hidden;
+.scroll-to-top {
     position: fixed;
-    width: 100%;
-    height: 100%;
-}
-
-/* AppScreen prend toute la hauteur */
-#appScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh; /* Pour iOS */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* Container flexible */
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: 100%;
-}
-
-/* Dashboard scrollable */
-.dashboard {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-top: 10px; /* ✅ Petit gap en haut */
-    padding-bottom: 110px; /* ✅ Gap confortable avant footer */
-}
-
-.edit-mode-controls {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    z-index: 100;
-    display: flex;
-    gap: 10px;
-    padding: 12px 15px;
-    padding-top: calc(12px + env(safe-area-inset-top, 0)); /* ✅ iOS notch */
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0;
-}
-
-.app-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)); /* ✅ iOS home indicator */
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5em;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
     z-index: 1000;
-    flex-shrink: 0;
-    box-shadow: none !important;
-}
-
-
-
-
-/* ============================================
-   FIX MODAL - HAUTEUR LIMITÉE
-   ============================================ */
-
-/* Backdrop flouté pour TOUS les modals */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 10000; /* ✅ Au-dessus de tout */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6); /* ✅ Fond sombre */
-    backdrop-filter: blur(8px); /* ✅ Flou iOS/Safari */
-    -webkit-backdrop-filter: blur(8px); /* ✅ Flou iOS/Safari */
-}
-
-.modal.show {
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.modal .modal-content {
-    position: relative;
-    z-index: 10001; /* ✅ Au-dessus du backdrop */
-    background: white;
-    margin: auto;
-    padding: 0;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 600px;
-    max-height: calc(100vh - 160px);
-    max-height: calc(100dvh - 160px);
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Header et footer fixes */
-.modal .modal-header,
-.modal .modal-footer {
-    flex-shrink: 0;
+.scroll-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
 }
 
-/* Body scrollable */
-.modal .modal-body {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 25px;
+.scroll-to-top:active {
+    transform: translateY(-2px);
 }
-
-/* Dark mode */
-body.dark-mode .modal .modal-content {
-    background: #2a2a3e;
-    color: #e0e0e0;
-}
-
-
 
 /* ============================================
-   BLOQUER SCROLL DERRIÈRE MODAL
+   BUTTONS GÉNÉRAUX
    ============================================ */
 
-body.modal-open {
-    overflow: hidden !important;
+.btn-success {
+    background: #28a745;
+    color: white;
 }
 
-body.modal-open #appScreen {
-    overflow: hidden !important;
+.btn-success:hover {
+    background: #218838;
 }
 
-body.modal-open .dashboard {
-    overflow: hidden !important;
+/* ============================================
+   DARK MODE - CHARTJS
+   ============================================ */
+
+body.dark-mode .chartjs-legend,
+body.dark-mode .chartjs-legend span {
+    color: #e0e0e0 !important;
 }
 
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
 
-/* ========================================
-   PWA iOS - FIX BANDE BLANCHE
-   ======================================== */
-html {
-    background: white;
+@media (max-width: 600px) {
+    /* Tabs */
+    .app-tabs {
+        width: 100%;
+    }
+    
+    .app-tab {
+        flex: 1;
+        min-width: 120px;
+        font-size: 0.9em;
+        padding: 10px 16px;
+    }
+    
+    /* Total */
+    .total-amount {
+        font-size: 2.5em;
+    }
+    
+    /* Expenses */
+    .expense-input {
+        width: 100px;
+    }
+    
+    /* Edit Mode */
+    .edit-mode-controls {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding: 10px 15px;
+    }
+    
+    .edit-mode-btn {
+        padding: 6px 12px;
+        font-size: 0.75em;
+        white-space: nowrap;
+    }
+    
+    #compareMonth {
+        font-size: 0.75em;
+        padding: 6px 8px;
+        max-width: 120px;
+        min-width: 0;
+        width: auto;
+    }
+    
+    /* Toolbar */
+    .toolbar-row {
+        gap: 6px;
+    }
+    
+    .toolbar-btn {
+        flex: 1 !important;
+        min-width: 0 !important;
+        padding: 10px 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.5em !important;
+        line-height: 1 !important;
+    }
+    
+    .toolbar-btn span[data-translate] {
+        display: none !important;
+    }
+    
+    /* Filters */
+    .filters-row {
+        flex-direction: column;
+    }
+    
+    .filter-select,
+    .filter-search,
+    .filter-clear-btn {
+        width: 100%;
+    }
+    
+    /* Sync */
+    .sync-status {
+        flex-direction: column;
+    }
+
+    .sync-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .sync-buttons button {
+        width: 100%;
+    }
+    
+    /* Categories */
+    .category-header-trans {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    /* Transactions */
+    .transaction-desc {
+        font-size: 0.9em;
+    }
+    
+    .transaction-amount {
+        font-size: 1em;
+    }
+    
+    /* Compare */
+    .compare-toggle span {
+        font-size: 0.8em;
+    }
+    
+    #compareBtn {
+        min-width: 100px;
+    }
+    
+    /* Modals */
+    .modal {
+        padding: 10px;
+    }
+    
+    .modal .modal-content {
+        max-height: calc(100vh - 200px) !important;
+        max-height: calc(100dvh - 200px) !important;
+    }
+    
+    /* Bank Accounts Modal */
+    #bankAccountsModal .modal-content {
+        width: 95%;
+        max-width: 95%;
+        max-height: calc(100vh - 220px) !important;
+        max-height: calc(100dvh - 220px) !important;
+    }
+    
+    #bankAccountsModal .modal-header {
+        padding: 12px 15px;
+    }
+    
+    #bankAccountsModal .modal-header h2 {
+        font-size: 1.1em;
+    }
+    
+    #bankAccountsModal .modal-body {
+        padding: 15px;
+    }
+    
+    #bankAccountsModal .modal-footer {
+        padding: 12px 15px;
+    }
+    
+    /* Add Manual Transaction Modal */
+    #addManualTransactionModal .modal-content {
+        max-height: calc(100vh - 200px) !important;
+        max-height: calc(100dvh - 200px) !important;
+    }
+    
+    /* Scroll to top */
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3em;
+    }
+    
+    /* Toast */
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: none;
+    }
 }
 
-body {
-    background: white;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-}
-
-body.dark-mode {
-    background: #1a1a2e;
-}
-
-body.dark-mode html {
-    background: #1a1a2e;
+@media (max-width: 480px) {
+    .edit-mode-btn {
+        padding: 5px 8px;
+        font-size: 0.7em;
+    }
+    
+    .edit-mode-controls {
+        gap: 4px;
+        padding: 8px 10px;
+    }
 }
