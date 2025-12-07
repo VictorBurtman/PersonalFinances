@@ -219,16 +219,18 @@ body.dark-mode .edit-mode-btn.active {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     will-change: transform;
+    min-height: 60px; /* ✅ AJOUTÉ : Hauteur minimale garantie */
+
 }
 
-/* ✅ AJOUTÉ : Prolongement du footer pour iOS */
+/* Prolongement du footer vers le bas pour iOS */
 .app-footer::after {
     content: '';
     position: absolute;
-    bottom: calc(-1 * env(safe-area-inset-bottom, 0));
+    bottom: -100px; /* ✅ CHANGÉ : Descend encore plus bas */
     left: 0;
     right: 0;
-    height: env(safe-area-inset-bottom, 0);
+    height: 100px; /* ✅ CHANGÉ : Plus haut */
     background: white;
     z-index: -1;
 }
@@ -256,6 +258,8 @@ body.dark-mode .app-footer {
     color: #666;
     font-size: 12px;
     font-weight: 500;
+    min-height: 50px; /* ✅ AJOUTÉ : Garantit la hauteur */
+    overflow: hidden; /* ✅ AJOUTÉ : Empêche débordement */
 }
 
 body.dark-mode .footer-nav-btn {
@@ -265,6 +269,7 @@ body.dark-mode .footer-nav-btn {
 .footer-nav-btn .icon {
     font-size: 24px;
     margin-bottom: 4px;
+    line-height: 1; /* ✅ AJOUTÉ : Aligne correctement */
 }
 
 .footer-nav-btn.active {
@@ -1316,16 +1321,26 @@ body.dark-mode .empty-state-trans {
     -webkit-backdrop-filter: blur(8px);
 }
 
-/* ET remplace par celle-ci */
+/* ============================================
+   iOS - Tous les fixes
+   ============================================ */
 @supports (-webkit-touch-callout: none) {
+    /* Dashboard et Container */
     .dashboard {
-        margin-top: 8px; /* ✅ Garde juste 8px, pas de calc */
+        margin-top: 8px;
     }
     
-    /* Compense le safe-area sur le container à la place */
     .container {
-        padding-top: 0; /* ✅ Enlève le padding-top si présent */
+        padding-top: 0;
         margin-top: env(safe-area-inset-top, 0);
+    }
+    
+    /* Footer sur mobile uniquement */
+    @media (max-width: 600px) {
+        .app-footer {
+            bottom: 0;
+            padding-bottom: max(10px, env(safe-area-inset-bottom, 0));
+        }
     }
 }
 
@@ -1484,8 +1499,8 @@ body.modal-open .dashboard {
 
 
 #bankAccountsModal .modal-content {
-    max-height: 70vh; /* ✅ CHANGÉ : utilise % au lieu de px */
-    max-height: 70dvh;
+    max-height: 80vh; /* ✅ CHANGÉ : utilise % au lieu de px */
+    max-height: 80dvh;
     margin: auto;
 }
 
