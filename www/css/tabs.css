@@ -2248,99 +2248,97 @@ body.dark-mode .chartjs-legend span {
 }
 
 /* ============================================
-   iOS PWA - FIX FINAL (Couleur corrigée)
+   iOS PWA - FIX FINAL (Architecture CSS Pure)
    ============================================ */
 @supports (-webkit-touch-callout: none) {
-    /* 1. Force le background global PARTOUT */
+    
+    /* 1. Structure globale : On fige l'écran */
+    html, body {
+        height: 100% !important;
+        overflow: hidden !important; /* Empêche le rebond global */
+        width: 100% !important;
+        position: fixed !important;
+    }
+
+    /* 2. Couleurs de fond de base (Sécurité anti-blanc) */
     html {
-        background-color: white !important;
+        background-color: #f5f5f5 !important;
     }
     
     body {
-        background-color: white !important;
-    }
-    
-    /* 2. Viewport iOS - Force le fond jusqu'en bas */
-    html::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: white;
-        z-index: -9999;
-        pointer-events: none;
-    }
-    
-    body.dark-mode html {
-        background-color: #1e1e2e !important;
-    }
-    
-    body.dark-mode body {
-        background-color: #1e1e2e !important;
-    }
-    
-    body.dark-mode html::after {
-        background-color: #1e1e2e;
-    }
-    
-    /* 3. Container avec safe-area du haut */
-    .container {
-        padding-top: env(safe-area-inset-top, 0) !important;
-        height: 100% !important;
+        background-color: #f5f5f5 !important;
     }
 
-    /* 4. Footer - Position normale */
+    body.dark-mode {
+        background-color: #1a1a2e !important;
+    }
+
+    /* 3. Le Container principal qui scrolle */
+    .dashboard {
+        height: 100% !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        
+        /* Marge interne pour ne pas cacher le contenu sous le footer */
+        padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+        padding-top: env(safe-area-inset-top) !important;
+    }
+
+    /* 4. Footer - Fixé en bas */
     .app-footer {
         position: fixed !important;
+        bottom: 0 !important;
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        bottom: 0 !important;
-        padding-bottom: 15px !important;
+        
+        /* Gestion Safe Area : on pousse le contenu vers le haut */
+        padding-bottom: env(safe-area-inset-bottom, 20px) !important;
         padding-top: 12px !important;
+        
         height: auto !important;
-        background-color: white !important;
         border-radius: 20px 20px 0 0 !important;
         border-top: 1px solid #e0e0e0;
-        overflow: visible !important;
-        transform: none !important;
+        
+        /* COULEUR CLAIRE PAR DÉFAUT */
+        background-color: white !important;
+        
+        /* Important pour laisser dépasser l'extension ::after */
+        overflow: visible !important; 
+        transform: translateZ(0); /* Force l'accélération matérielle */
     }
 
-    /* 5. Le bouche-trou du footer */
+    /* 5. L'Extension "Cache-Misère" (Le secret) */
     .app-footer::after {
         content: '' !important;
-        position: fixed !important;
-        bottom: 0 !important;
+        position: absolute !important;
         left: 0 !important;
-        width: 100% !important;
-        height: 60px !important;
+        right: 0 !important;
+        
+        /* On l'accroche SOUS le footer pour qu'il descende dans la zone vide */
+        top: 100% !important; 
+        height: 1000px !important; /* Taille géante pour être sûr */
+        
         z-index: -1 !important;
-        background-color: white !important;
         pointer-events: none;
+        
+        /* COULEUR CLAIRE PAR DÉFAUT (suit le footer) */
+        background-color: white !important; 
     }
-    
-    /* 6. Dark mode */
+
+    /* 6. Gestion du Dark Mode */
     body.dark-mode .app-footer {
         background-color: #1e1e2e !important;
         border-top: 1px solid #3a3a4e !important;
     }
 
+    /* L'extension prend la couleur sombre aussi ! */
     body.dark-mode .app-footer::after {
-        background-color: #1e1e2e !important; /* ✅ TEST */
+        background-color: #1e1e2e !important;
     }
     
+    /* Masquer les spacers inutiles sur mobile */
     .footer-spacer {
-        display: none !important; /* ✅ Pas besoin sur iOS */
-    }
-
-    /* 7. Dashboard scrollable */
-    .dashboard {
-        height: 100% !important;
-        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)) !important;
-        margin-bottom: 0 !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
+        display: none !important;
     }
 }
