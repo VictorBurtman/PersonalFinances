@@ -4014,7 +4014,39 @@
             updateChartIndicators();
         });
 
-
+        // ============================================
+        // FIX FOOTER iOS PWA
+        // ============================================
+        if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            const footer = document.querySelector('.app-footer');
+            
+            if (footer) {
+                let ticking = false;
+                
+                const fixFooter = () => {
+                    footer.style.position = 'fixed';
+                    footer.style.bottom = '0';
+                    ticking = false;
+                };
+                
+                // Fix au scroll
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(fixFooter);
+                        ticking = true;
+                    }
+                }, { passive: true });
+                
+                // Fix au resize (quand le clavier apparaît/disparaît)
+                window.addEventListener('resize', fixFooter);
+                
+                // Fix au chargement
+                fixFooter();
+                
+                // Re-fix après 100ms (pour être sûr)
+                setTimeout(fixFooter, 100);
+            }
+        }
 
 
 

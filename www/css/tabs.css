@@ -72,7 +72,7 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 140px; /* ✅ AUGMENTÉ de 130px à 140px */
+    padding-bottom: 150px !important; /* ✅ TEST : Force un gap énorme */
     padding-left: 20px;
     padding-right: 20px;
     background: white;
@@ -93,7 +93,7 @@ body.dark-mode .dashboard {
 
 .edit-mode-controls {
     position: sticky;
-    top: env(safe-area-inset-top, 0);
+    top: 0; /* ✅ CHANGÉ de env(safe-area-inset-top, 0) à 0 */
     left: 0;
     right: 0;
     background: white;
@@ -101,23 +101,23 @@ body.dark-mode .dashboard {
     display: flex;
     gap: 10px;
     padding: 12px 15px;
-    padding-top: 12px;
+    padding-top: env(safe-area-inset-top, 12px); /* ✅ CHANGÉ de 12px à env(...) */
     border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); /* ✅ RÉDUIT : moins prononcé */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
-    margin-bottom: 0; /* ✅ AJOUTÉ : Pas de margin */
+    margin-bottom: 0;
 }
 
 /* ✅ AJOUTÉ : Prolongement du header pour iOS */
 .edit-mode-controls::before {
     content: '';
     position: absolute;
-    top: calc(-1 * env(safe-area-inset-top, 0)); /* Monte jusqu'au status bar */
+    top: calc(-1 * env(safe-area-inset-top, 0));
     left: 0;
     right: 0;
     height: env(safe-area-inset-top, 0);
-    background: white; /* Même couleur que le header */
-    z-index: -1;
+    background: white;
+    z-index: 0; /* ✅ CHANGÉ de -1 à 0 pour être visible */
 }
 
 body.dark-mode .edit-mode-controls::before {
@@ -1308,11 +1308,15 @@ body.dark-mode .empty-state-trans {
     -webkit-backdrop-filter: blur(8px);
 }
 
-/* ✅ AJOUTÉ : Force le backdrop sur iOS */
+/* ET remplace par celle-ci */
 @supports (-webkit-touch-callout: none) {
-    .modal {
-        -webkit-backdrop-filter: blur(8px) !important;
-        backdrop-filter: blur(8px) !important;
+    .dashboard {
+        margin-top: 8px; /* ✅ Garde juste 8px, pas de calc */
+    }
+    
+    /* Compense le safe-area sur le container à la place */
+    .container {
+        padding-top: 0; /* ✅ Enlève le padding-top si présent */
     }
 }
 
@@ -1490,8 +1494,9 @@ body.modal-open .dashboard {
 }
 
 #bankAccountsModal .modal-content {
-    max-height: calc(100vh - 350px); /* ✅ AUGMENTÉ de 300px à 350px */
-    max-height: calc(100dvh - 350px);
+    max-height: calc(100vh - 400px); /* ✅ AUGMENTÉ de 350px à 400px */
+    max-height: calc(100dvh - 400px);
+    margin: auto; /* ✅ AJOUTÉ : Force le centrage */
 }
 
 #bankAccountsModal .modal-header {
@@ -2130,19 +2135,22 @@ body.dark-mode .chartjs-legend span {
     /* Modals */
     .modal {
         padding: 10px;
+        z-index: 99999 !important; /* ✅ Encore plus haut */
     }
+
     
     .modal .modal-content {
         max-height: calc(100vh - 200px) !important;
         max-height: calc(100dvh - 200px) !important;
+        z-index: 100000 !important;
     }
     
     /* Bank Accounts Modal */
     #bankAccountsModal .modal-content {
         width: 95%;
         max-width: 95%;
-        max-height: calc(100vh - 350px) !important; /* ✅ AUGMENTÉ de 300px à 350px */
-        max-height: calc(100dvh - 350px) !important;
+        max-height: calc(100vh - 400px) !important;
+        max-height: calc(100dvh - 400px) !important;
     }
     
     #bankAccountsModal .modal-header {
