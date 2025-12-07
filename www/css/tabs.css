@@ -2247,22 +2247,17 @@ body.dark-mode .chartjs-legend span {
         margin-top: env(safe-area-inset-top, 0);
     }
     
-    /* Dashboard avec gap */
-    .dashboard {
-        margin-top: 8px;
-        margin-bottom: 80px !important;
-        padding-bottom: 20px !important;
-    }
-    
-    /* Footer iOS - Verrouillé */
+
+    /* Footer iOS - Descend VRAIMENT jusqu'en bas */
     .app-footer {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         height: auto !important;
-        min-height: calc(60px + env(safe-area-inset-bottom, 0)) !important;
-        padding-bottom: calc(20px + env(safe-area-inset-bottom, 0)) !important; /* ✅ CHANGÉ de 10px à 20px */
+        min-height: calc(70px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 60px à 70px */
+        padding: 10px 0 !important;
+        padding-bottom: calc(30px + env(safe-area-inset-bottom, 34px)) !important; /* ✅ AUGMENTÉ de 20px à 30px */
         transform: translate3d(0, 0, 0) !important;
         -webkit-transform: translate3d(0, 0, 0) !important;
         will-change: auto !important;
@@ -2281,14 +2276,14 @@ body.dark-mode .chartjs-legend span {
         user-select: none !important;
     }
     
-    /* Prolonge le footer vers le bas */
+    /* Prolonge le footer vers le bas (PLUS AGRESSIF) */
     .app-footer::after {
         content: '';
         position: absolute;
-        bottom: -200px !important;
+        bottom: -300px !important; /* ✅ AUGMENTÉ de -200px à -300px */
         left: 0;
         right: 0;
-        height: 200px !important;
+        height: 300px !important; /* ✅ AUGMENTÉ de 200px à 300px */
         background: white;
         z-index: -1;
     }
@@ -2309,4 +2304,12 @@ body.dark-mode .chartjs-legend span {
     body.dark-mode body {
         background: #1a1a2e !important;
     }
+
+    /* Dashboard avec gap */
+    .dashboard {
+        margin-top: 8px;
+        margin-bottom: 100px !important; /* ✅ AUGMENTÉ de 80px à 100px pour compenser footer plus grand */
+        padding-bottom: 20px !important;
+    }
+    
 }
