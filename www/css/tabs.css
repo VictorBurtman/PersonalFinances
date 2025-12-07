@@ -24,13 +24,13 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #f5f5f5; /* ✅ CHANGÉ de white à #f5f5f5 */
+    background: #f5f5f5;
     min-height: 100vh;
     min-height: -webkit-fill-available;
 }
 
 html {
-    background: #f5f5f5; /* ✅ CHANGÉ de white à #f5f5f5 */
+    background: #f5f5f5;
 }
 
 body.dark-mode {
@@ -52,7 +52,7 @@ body.dark-mode html {
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
-    display: none; /* Caché par défaut */
+    display: none;
     flex-direction: column;
 }
 
@@ -63,7 +63,6 @@ body.dark-mode html {
     flex-direction: column;
     overflow: hidden;
     height: 100%;
-    /*padding-top: env(safe-area-inset-top, 0); /* ✅ AJOUTÉ : Compense le header iOS */
 }
 
 /* Dashboard scrollable */
@@ -72,7 +71,7 @@ body.dark-mode html {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
-    padding-bottom: 0; /* ✅ ENLEVÉ le padding-bottom */
+    padding-bottom: 0;
     padding-left: 20px;
     padding-right: 20px;
     background: white;
@@ -81,9 +80,6 @@ body.dark-mode html {
     margin-bottom: 0;
     margin-top: 8px;
 }
-
-
-
 
 body.dark-mode .dashboard {
     background: #2a2a3e;
@@ -96,7 +92,7 @@ body.dark-mode .dashboard {
 
 .edit-mode-controls {
     position: sticky;
-    top: 0; /* ✅ CHANGÉ de env(safe-area-inset-top, 0) à 0 */
+    top: 0;
     left: 0;
     right: 0;
     background: white;
@@ -104,14 +100,13 @@ body.dark-mode .dashboard {
     display: flex;
     gap: 10px;
     padding: 12px 15px;
-    padding-top: env(safe-area-inset-top, 12px); /* ✅ CHANGÉ de 12px à env(...) */
+    padding-top: env(safe-area-inset-top, 12px);
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
     margin-bottom: 0;
 }
 
-/* ✅ AJOUTÉ : Prolongement du header pour iOS */
 .edit-mode-controls::before {
     content: '';
     position: absolute;
@@ -120,7 +115,7 @@ body.dark-mode .dashboard {
     right: 0;
     height: env(safe-area-inset-top, 0);
     background: white;
-    z-index: 0; /* ✅ CHANGÉ de -1 à 0 pour être visible */
+    z-index: 0;
 }
 
 body.dark-mode .edit-mode-controls::before {
@@ -171,7 +166,6 @@ body.dark-mode .edit-mode-btn.active {
     border-color: #667eea;
 }
 
-/* Header visibility conditionnelle */
 .budget-only,
 .transactions-only {
     display: none;
@@ -200,7 +194,7 @@ body.dark-mode .edit-mode-btn.active {
     right: 0;
     background: white;
     border-top: 1px solid #e0e0e0;
-    border-radius: 20px 20px 0 0; /* ✅ AJOUTÉ : Coins arrondis en haut */
+    border-radius: 20px 20px 0 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -211,15 +205,12 @@ body.dark-mode .edit-mode-btn.active {
     box-shadow: none !important;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
-    /* ✅ AJOUTÉ : Force la position sur iOS */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     will-change: transform;
-    min-height: 60px; /* ✅ AJOUTÉ : Hauteur minimale garantie */
-
+    min-height: 60px;
 }
 
-/* Prolongement du footer vers le bas pour iOS */
 .app-footer::after {
     content: '';
     position: absolute;
@@ -238,7 +229,7 @@ body.dark-mode .app-footer::after {
 body.dark-mode .app-footer {
     background: #1e1e2e;
     border-top-color: #3a3a4e;
-    border-radius: 20px 20px 0 0; /* ✅ AJOUTÉ : Même chose en dark */
+    border-radius: 20px 20px 0 0;
 }
 
 .footer-nav-btn {
@@ -255,8 +246,8 @@ body.dark-mode .app-footer {
     color: #666;
     font-size: 12px;
     font-weight: 500;
-    min-height: 50px; /* ✅ AJOUTÉ : Garantit la hauteur */
-    overflow: hidden; /* ✅ AJOUTÉ : Empêche débordement */
+    min-height: 50px;
+    overflow: hidden;
 }
 
 body.dark-mode .footer-nav-btn {
@@ -266,7 +257,7 @@ body.dark-mode .footer-nav-btn {
 .footer-nav-btn .icon {
     font-size: 24px;
     margin-bottom: 4px;
-    line-height: 1; /* ✅ AJOUTÉ : Aligne correctement */
+    line-height: 1;
 }
 
 .footer-nav-btn.active {
@@ -283,6 +274,16 @@ body.dark-mode .footer-nav-btn.active {
 
 body.dark-mode .footer-nav-btn:hover:not(.active) {
     color: #e0e0e0;
+}
+
+/* ============================================
+   FOOTER SPACER (Gap entre body et footer)
+   ============================================ */
+
+.footer-spacer {
+    height: 20px;
+    flex-shrink: 0;
+    background: transparent;
 }
 
 /* ============================================
@@ -1301,13 +1302,58 @@ body.dark-mode .empty-state-trans {
 }
 
 /* ============================================
+   FLOATING ADD BUTTON (Transactions)
+   ============================================ */
+
+.floating-add-btn {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 28px;
+    font-weight: 300;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 900;
+    opacity: 0.9;
+}
+
+.floating-add-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.floating-add-btn:active {
+    transform: scale(0.95);
+}
+
+/* Visible quand l'onglet Transactions est actif */
+.tab-content.active .floating-add-btn {
+    display: flex !important;
+}
+
+body.dark-mode .floating-add-btn {
+    background: linear-gradient(135deg, #7c8cff 0%, #8c62c2 100%);
+}
+
+/* ============================================
    MODALS - STRUCTURE DE BASE
    ============================================ */
 
 .modal {
     display: none;
     position: fixed;
-    z-index: 11000; /* ✅ Augmenté de 10000 à 11000 */
+    z-index: 11000;
     left: 0;
     top: 0;
     width: 100%;
@@ -1317,72 +1363,6 @@ body.dark-mode .empty-state-trans {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
-
-/* ============================================
-   iOS - Tous les fixes
-   ============================================ */
-@supports (-webkit-touch-callout: none) {
-    /* Dashboard et Container */
-    .dashboard {
-        margin-top: 8px;
-        margin-bottom: 80px !important; /* ✅ AUGMENTÉ de 8px à 80px */
-        padding-bottom: 20px !important;
-    }
-    
-    .dashboard::after {
-        height: 120px !important;
-    }
-    
-    .container {
-        padding-top: 0;
-        margin-top: env(safe-area-inset-top, 0);
-    }
-    
-    /* Footer iOS - Position absolue en bas */
-    .app-footer {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: auto !important; /* ✅ AJOUTÉ */
-        min-height: calc(60px + env(safe-area-inset-bottom, 0)) !important; /* ✅ AJOUTÉ */
-        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important;
-        transform: translate3d(0, 0, 0) !important;
-        -webkit-transform: translate3d(0, 0, 0) !important;
-        will-change: auto !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-        pointer-events: auto !important;
-        overscroll-behavior: contain !important; /* ✅ AJOUTÉ */
-        -webkit-overflow-scrolling: auto !important; /* ✅ AJOUTÉ */
-    }
-    
-    /* Verrouille les boutons */
-    .footer-nav-btn {
-        pointer-events: auto !important;
-        touch-action: manipulation !important; /* ✅ CHANGÉ de none à manipulation */
-        -webkit-user-drag: none !important; /* ✅ AJOUTÉ */
-        user-select: none !important; /* ✅ AJOUTÉ */
-    }
-    
-    /* Prolonge le footer vers le bas */
-    .app-footer::after {
-        bottom: calc(-1 * env(safe-area-inset-bottom, 0) - 50px) !important;
-        height: calc(env(safe-area-inset-bottom, 0) + 50px) !important;
-    }
-
-    /* Force le background */
-    html,
-    body {
-        background: white !important;
-    }
-    
-    body.dark-mode html,
-    body.dark-mode body {
-        background: #1a1a2e !important;
-    }
-}
-
 
 .modal.show {
     display: flex !important;
@@ -1398,7 +1378,7 @@ body.dark-mode .empty-state-trans {
 
 .modal .modal-content {
     position: relative;
-    z-index: 11001; /* ✅ Augmenté de 10001 à 11001 */
+    z-index: 11001;
     background: white;
     margin: auto;
     padding: 0;
@@ -1507,7 +1487,6 @@ body.dark-mode .empty-state-trans {
     background: #dee2e6;
 }
 
-/* Dark mode */
 body.dark-mode .modal .modal-content {
     background: #2a2a3e;
     color: #e0e0e0;
@@ -1518,7 +1497,6 @@ body.dark-mode .modal .modal-footer {
     border-color: #3a3a4e;
 }
 
-/* Bloquer scroll derrière modal */
 body.modal-open {
     overflow: hidden !important;
 }
@@ -1534,12 +1512,12 @@ body.modal-open .dashboard {
 /* ============================================
    BANK ACCOUNTS MODAL (Spécifique)
    ============================================ */
+
 #bankAccountsModal .modal-content {
-    max-height: 85vh; /* ✅ CHANGÉ : utilise % au lieu de px */
+    max-height: 85vh;
     max-height: 85dvh;
     margin: auto;
 }
-
 
 #bankAccountsModal .modal-header {
     padding: 20px 25px;
@@ -1868,7 +1846,7 @@ body.dark-mode .settings-select {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 12000 !important; /* ✅ Au-dessus des modals */
+    z-index: 12000 !important;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2060,10 +2038,6 @@ body.dark-mode .chartjs-legend span {
    MOBILE RESPONSIVE
    ============================================ */
 
-/* ============================================
-   MOBILE RESPONSIVE
-   ============================================ */
-
 @media (max-width: 600px) {
     /* Tabs */
     .app-tabs {
@@ -2077,10 +2051,11 @@ body.dark-mode .chartjs-legend span {
         padding: 10px 16px;
     }
     
+    /* Footer spacer */
     .footer-spacer {
-        height: 55px !important; /* Mobile */
+        height: 55px !important;
     }
-
+    
     /* Total */
     .total-amount {
         font-size: 2.5em;
@@ -2182,6 +2157,15 @@ body.dark-mode .chartjs-legend span {
         min-width: 100px;
     }
     
+    /* Floating button */
+    .floating-add-btn {
+        bottom: 80px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
     /* Modals */
     .modal {
         padding: 10px;
@@ -2194,7 +2178,7 @@ body.dark-mode .chartjs-legend span {
         z-index: 100000 !important;
     }
     
-    /* ✅ MODIFIÉ : Bank Accounts Modal TRÈS grand */
+    /* Bank Accounts Modal */
     #bankAccountsModal .modal-content {
         width: 95% !important;
         max-width: 95% !important;
@@ -2258,69 +2242,76 @@ body.dark-mode .chartjs-legend span {
     }
 }
 
-
 /* ============================================
-   FLOATING ADD BUTTON (Transactions)
+   iOS PWA - Tous les fixes (FINAL)
    ============================================ */
+@supports (-webkit-touch-callout: none) {
+    /* Container : PAS de padding-top */
+    .container {
+        padding-top: 0 !important;
+        margin-top: env(safe-area-inset-top, 0);
+    }
+    
+    /* Dashboard avec gap */
+    .dashboard {
+        margin-top: 8px;
+        margin-bottom: 80px !important;
+        padding-bottom: 20px !important;
+    }
+    
+    /* Footer iOS - Verrouillé */
+    .app-footer {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: auto !important;
+        min-height: calc(60px + env(safe-area-inset-bottom, 0)) !important;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom, 0)) !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        will-change: auto !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        pointer-events: auto !important;
+        overscroll-behavior: contain !important;
+        -webkit-overflow-scrolling: auto !important;
+    }
+    
+    /* Boutons footer cliquables */
+    .footer-nav-btn {
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+        -webkit-user-drag: none !important;
+        user-select: none !important;
+    }
+    
+    /* Prolonge le footer vers le bas */
+    .app-footer::after {
+        content: '';
+        position: absolute;
+        bottom: -200px !important;
+        left: 0;
+        right: 0;
+        height: 200px !important;
+        background: white;
+        z-index: -1;
+    }
+    
+    body.dark-mode .app-footer::after {
+        background: #1e1e2e;
+    }
 
-.floating-add-btn {
-    position: fixed;
-    bottom: 90px; /* Au-dessus du footer */
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 28px;
-    font-weight: 300;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    display: none; /* Caché par défaut */
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 900;
-    opacity: 0.9;
-}
-
-/* Visible sur l'onglet Transactions */
-#transactionsTab .floating-add-btn {
-    display: flex !important;
-}
-
-.floating-add-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.floating-add-btn:active {
-    transform: scale(0.95);
-}
-
-/* ✅ AJOUTÉ : Visible quand l'onglet Transactions est actif */
-#transactionsTab.active .floating-add-btn {
-    display: flex !important;
-}
-
-/* Visible uniquement sur l'onglet Transactions */
-.tab-content.active .floating-add-btn {
-    display: flex;
-}
-
-body.dark-mode .floating-add-btn {
-    background: linear-gradient(135deg, #7c8cff 0%, #8c62c2 100%);
-}
-
-/* Mobile : ajuste la position */
-@media (max-width: 600px) {
-    .floating-add-btn {
-        bottom: 80px;
-        right: 15px;
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
+    /* Force le background */
+    html,
+    body {
+        background: white !important;
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+    }
+    
+    body.dark-mode html,
+    body.dark-mode body {
+        background: #1a1a2e !important;
     }
 }
