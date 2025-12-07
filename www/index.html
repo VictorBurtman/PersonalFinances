@@ -4016,82 +4016,43 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA (Version ULTRA FINALE)
+        // FIX FOOTER iOS PWA (Version allégée)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
             const footer = document.querySelector('.app-footer');
             
             if (footer) {
-                // Force la position de manière PERMANENTE
                 const forcePosition = () => {
-                    footer.style.cssText = `
-                        position: fixed !important;
-                        bottom: 0px !important;
-                        left: 0px !important;
-                        right: 0px !important;
-                        transform: translate3d(0, 0, 0) !important;
-                        -webkit-transform: translate3d(0, 0, 0) !important;
-                        will-change: auto !important;
-                        z-index: 1000 !important;
-                    `;
+                    footer.style.position = 'fixed';
+                    footer.style.bottom = '0px';
+                    footer.style.left = '0px';
+                    footer.style.right = '0px';
+                    footer.style.transform = 'translate3d(0, 0, 0)';
                 };
                 
-                // Lock immédiat
+                // Force immédiat
                 forcePosition();
                 
-                // Re-force à chaque frame pendant 3 secondes au démarrage
-                let frameCount = 0;
-                const lockAnimation = () => {
-                    forcePosition();
-                    frameCount++;
-                    if (frameCount < 180) { // 3 secondes à 60fps
-                        requestAnimationFrame(lockAnimation);
-                    }
-                };
-                requestAnimationFrame(lockAnimation);
+                // Re-force au chargement
+                window.addEventListener('load', forcePosition);
                 
-                // Re-force au scroll (ultra-agressif)
-                let scrollTicking = false;
-                const onScroll = () => {
-                    if (!scrollTicking) {
-                        requestAnimationFrame(() => {
+                // Re-force au scroll (avec throttle)
+                let scrollTimeout;
+                window.addEventListener('scroll', () => {
+                    if (!scrollTimeout) {
+                        scrollTimeout = setTimeout(() => {
                             forcePosition();
-                            scrollTicking = false;
-                        });
-                        scrollTicking = true;
+                            scrollTimeout = null;
+                        }, 100);
                     }
-                };
-                window.addEventListener('scroll', onScroll, { passive: true });
-                document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-                
-                // Re-force au touchmove ET touchend
-                document.addEventListener('touchmove', forcePosition, { passive: true });
-                document.addEventListener('touchend', () => {
-                    forcePosition();
-                    setTimeout(forcePosition, 50);
-                    setTimeout(forcePosition, 100);
                 }, { passive: true });
                 
-                // Re-force au resize
-                window.addEventListener('resize', forcePosition);
-                
-                // Re-force toutes les 200ms pendant 10 secondes
-                let intervalCount = 0;
-                const interval = setInterval(() => {
-                    forcePosition();
-                    intervalCount++;
-                    if (intervalCount > 50) clearInterval(interval);
-                }, 200);
-                
-                // Observer les changements de style (au cas où quelque chose modifierait le footer)
-                const observer = new MutationObserver(forcePosition);
-                observer.observe(footer, { 
-                    attributes: true, 
-                    attributeFilter: ['style'] 
-                });
+                // Re-force au touchend seulement
+                document.addEventListener('touchend', () => {
+                    setTimeout(forcePosition, 50);
+                }, { passive: true });
             }
         }
-
 
 
 
