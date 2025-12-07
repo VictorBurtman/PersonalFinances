@@ -2051,14 +2051,12 @@
             
             return `
                 <div class="expense-item">
-                    <span class="expense-name">
-                        ${expense.name}
-                        ${renameBtn}
-                        <span class="item-move-btns ${isEditMode ? 'show' : ''}">
-                            ${moveUpBtn}
-                            ${moveDownBtn}
-                        </span>
+                    <span class="expense-name">${expense.name}</span>
+                    <span class="item-move-btns ${isEditMode ? 'show' : ''}">
+                        ${moveUpBtn}
+                        ${moveDownBtn}
                     </span>
+                    <span class="item-rename-btn ${isEditMode ? 'show' : ''}" onclick="renameItem('${category}', ${index})" title="Rename">✏️</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input 
                             type="number" 
