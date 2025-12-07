@@ -397,8 +397,6 @@
                     ======================================== -->
                 <div id="transactionsTab" class="tab-content">
 
-
-
                     <!-- All Transactions - Always visible -->
                     <div class="transactions-section" id="allTransactionsSection">
                         <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
@@ -418,20 +416,19 @@
                         
                         <!-- Transactions list -->
                         <div id="allTransactionsList"></div>
-                        
-                        <!-- Empty state -->
-                        <div class="empty-state-trans" id="emptyState" style="display: none;">
-                            <div class="empty-state-icon">📭</div>
-                            <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
-                                <span data-translate="noTransactionsAdded">No transactions added yet</span>
-                            </div>
-                            <div style="font-size: 0.9em; opacity: 0.8;">
-                                <span data-translate="addTransactionToStart">Add a transaction to get started</span>
-                            </div>
-                        </div>
                     </div>
 
-                    <!-- ✅ AJOUTÉ : Bouton flottant + -->
+                    <!-- ✅ DÉPLACÉ ICI : Empty state HORS de la section -->
+                    <div class="empty-state-trans" id="emptyState" style="display: none;">
+                        <div class="empty-state-icon">📭</div>
+                        <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                            <span data-translate="noTransactionsAdded">No transactions added yet</span>
+                        </div>
+                        <div style="font-size: 0.9em; opacity: 0.8;">
+                            <span data-translate="addTransactionToStart">Add a transaction to get started</span>
+                        </div>
+                    </div>
+                                        <!-- ✅ AJOUTÉ : Bouton flottant + -->
                     <button class="floating-add-btn" onclick="openAddManualTransactionModal()" title="Add transaction">
                         +
                     </button>
