@@ -1319,7 +1319,7 @@ body.dark-mode .empty-state-trans {
     font-weight: 300;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    display: none;
+    display: flex; /* ✅ CHANGÉ de none à flex */
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
@@ -1335,11 +1335,6 @@ body.dark-mode .empty-state-trans {
 
 .floating-add-btn:active {
     transform: scale(0.95);
-}
-
-/* Visible quand l'onglet Transactions est actif */
-.tab-content.active .floating-add-btn {
-    display: flex !important;
 }
 
 body.dark-mode .floating-add-btn {

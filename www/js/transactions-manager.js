@@ -543,9 +543,9 @@ function renderTransactions() {
     const filtersSection = document.getElementById('filtersSection');
     const transactionCount = document.getElementById('transactionCount');
     const allTransactionsList = document.getElementById('allTransactionsList');
-        
+    
+    // Cas 1 : Aucune transaction du tout
     if (transactionsData.length === 0) {
-        // No transactions at all
         if (emptyState) {
             const t = translations[currentLanguage] || translations['en'];
             emptyState.innerHTML = `
@@ -560,28 +560,28 @@ function renderTransactions() {
             emptyState.style.display = 'block';
         }
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
-        if (filtersSection) filtersSection.style.display = 'none'; // ✅ AJOUTÉ : Cache aussi les filtres
+        if (filtersSection) filtersSection.style.display = 'none';
         return;
     }
     
-    // Hide empty state, show transactions
+    // Cas 2 : Il y a des transactions - Cacher l'empty state
     if (emptyState) emptyState.style.display = 'none';
     if (filtersSection) filtersSection.style.display = 'block';
     if (allTransactionsSection) allTransactionsSection.style.display = 'block';
     
-    // Update count and total
+    // Mettre à jour le compteur
     if (transactionCount) {
         transactionCount.textContent = filteredTransactionsData.length;
     }
     
-    // ✅ MODIFIÉ : Calculer le total par devise
+    // Calculer le total par devise
     const totalsByCurrency = {};
     filteredTransactionsData.forEach(txn => {
         // Ignorer les montants positifs (revenus/remboursements)
         if (txn.chargedAmount < 0) {
             let currency = txn.currency || window.currency || '₪';
             
-            // ✅ NOUVEAU : Normaliser les devises vers leurs symboles
+            // Normaliser les devises vers leurs symboles
             if (currency === 'ILS') currency = '₪';
             if (currency === 'EUR') currency = '€';
             if (currency === 'USD') currency = '$';
@@ -594,10 +594,9 @@ function renderTransactions() {
         }
     });
     
-    // ✅ MODIFIÉ : Afficher tous les totaux
+    // Afficher tous les totaux
     const transactionTotal = document.getElementById('transactionTotal');
     if (transactionTotal) {
-        // Trier les devises : devise principale d'abord, puis les autres par ordre alphabétique
         const mainCurrency = window.currency || '₪';
         const currencies = Object.keys(totalsByCurrency).sort((a, b) => {
             if (a === mainCurrency) return -1;
@@ -616,16 +615,18 @@ function renderTransactions() {
         }
     }
     
-    // Render transactions
-    if (filteredTransactionsData.length === 0) {
-        const t = translations[currentLanguage] || translations['en'];
-        allTransactionsList.innerHTML = `
-            <div style="text-align: center; padding: 20px; color: #6c757d;">
-                <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
-            </div>
-        `;
-    }else {
-            // Limiter le nombre de transactions affichées
+    // Afficher les transactions
+    if (allTransactionsList) {
+        // Cas 2a : Aucune transaction ne correspond aux filtres
+        if (filteredTransactionsData.length === 0) {
+            const t = translations[currentLanguage] || translations['en'];
+            allTransactionsList.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #6c757d;">
+                    <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
+                </div>
+            `;
+        } else {
+            // Cas 2b : Afficher les transactions filtrées
             const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
             const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
             
@@ -651,7 +652,8 @@ function renderTransactions() {
             }
         }
     }
-    // Apply translations to dynamically created content
+    
+    // Appliquer les traductions au contenu dynamique
     setTimeout(() => {
         if (typeof updateTransactionsLanguage === 'function') {
             updateTransactionsLanguage();

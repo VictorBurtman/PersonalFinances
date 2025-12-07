@@ -4019,93 +4019,44 @@
         });
 
         // ============================================
-        // FIX FOOTER iOS PWA (Version anti-drag absolue)
+        // FIX FOOTER iOS PWA (Version finale corrigée)
         // ============================================
         if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
             const footer = document.querySelector('.app-footer');
             
             if (footer) {
-                let touchStartY = 0;
-                
                 const lockFooter = () => {
-                    footer.style.cssText = footer.style.cssText + `
-                        position: fixed !important;
-                        bottom: 0px !important;
-                        left: 0px !important;
-                        right: 0px !important;
-                        transform: translate3d(0, 0, 0) !important;
-                        -webkit-transform: translate3d(0, 0, 0) !important;
-                    `;
+                    footer.style.position = 'fixed';
+                    footer.style.bottom = '0px';
+                    footer.style.left = '0px';
+                    footer.style.right = '0px';
+                    footer.style.transform = 'translate3d(0, 0, 0)';
+                    footer.style.webkitTransform = 'translate3d(0, 0, 0)';
                 };
                 
-                // Bloque TOUT touchmove sur le footer
-                footer.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    lockFooter();
-                    return false;
-                }, { passive: false, capture: true });
-                
-                // Capture le touchstart pour bloquer le drag
-                footer.addEventListener('touchstart', (e) => {
-                    touchStartY = e.touches[0].clientY;
-                    e.stopPropagation();
-                    lockFooter();
-                }, { passive: true, capture: true });
-                
-                // Force au touchend
-                footer.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    lockFooter();
-                    setTimeout(lockFooter, 10);
-                    setTimeout(lockFooter, 50);
-                    setTimeout(lockFooter, 100);
-                    return false;
-                }, { passive: false, capture: true });
-                
-                // Bloque aussi sur le document (au cas où)
-                document.addEventListener('touchmove', (e) => {
-                    const touch = e.touches[0];
-                    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                    if (target && footer.contains(target)) {
-                        e.preventDefault();
-                        lockFooter();
-                    }
-                }, { passive: false });
-                
-                // Lock initial agressif
+                // Lock initial
                 lockFooter();
-                setTimeout(lockFooter, 10);
-                setTimeout(lockFooter, 50);
-                setTimeout(lockFooter, 100);
-                setTimeout(lockFooter, 500);
                 
                 // Lock après chargement
                 window.addEventListener('load', () => {
                     lockFooter();
                     setTimeout(lockFooter, 100);
-                    setTimeout(lockFooter, 500);
-                    setTimeout(lockFooter, 1000);
                 });
                 
-                // Lock au scroll
+                // Lock au scroll (léger)
                 let scrollTimeout;
                 window.addEventListener('scroll', () => {
                     clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(lockFooter, 100);
+                    scrollTimeout = setTimeout(lockFooter, 150);
+                }, { passive: true });
+                
+                // Lock au touchend SEULEMENT (pas touchmove)
+                footer.addEventListener('touchend', () => {
+                    setTimeout(lockFooter, 50);
                 }, { passive: true });
                 
                 // Lock au resize
                 window.addEventListener('resize', lockFooter);
-                
-                // Re-lock toutes les 500ms pendant 5 secondes au démarrage
-                let count = 0;
-                const interval = setInterval(() => {
-                    lockFooter();
-                    count++;
-                    if (count > 10) clearInterval(interval);
-                }, 500);
             }
         }
 
