@@ -2257,7 +2257,6 @@ body.dark-mode .chartjs-legend span {
         height: 100% !important; /* Force la hauteur */
     }
 
-    /* 2. Le Footer : Collé, Fixe et Rembourré */
     .app-footer {
         position: fixed !important;
         bottom: 0 !important;
@@ -2265,22 +2264,17 @@ body.dark-mode .chartjs-legend span {
         width: 100% !important;
         z-index: 1000 !important;
         
-        /* La magie : on ajoute la safe-area au padding du bas */
-        padding-bottom: env(safe-area-inset-bottom, 20px) !important;
+        /* MODIFICATION ICI : On réduit l'espace du bas */
+        /* On met seulement la zone de sécurité, sans pixels supplémentaires */
+        padding-bottom: env(safe-area-inset-bottom) !important;
         
-        /* On s'assure que la hauteur s'adapte au contenu + padding */
+        /* On ajuste le haut pour équilibrer (réduis ce chiffre si le footer est trop épais) */
+        padding-top: 10px !important; 
+        
         height: auto !important;
-        min-height: auto !important;
-        
-        /* On annule les transformations qui le faisaient flotter */
-        transform: none !important;
-        
-        /* Couleur de fond explicite pour couvrir la zone */
         background: white !important; 
         border-top: 1px solid #e0e0e0;
-        
-        /* Empêche le footer lui-même d'être une zone de scroll */
-        touch-action: none; 
+        transform: none !important;
     }
     
     /* Dark mode pour le footer */
