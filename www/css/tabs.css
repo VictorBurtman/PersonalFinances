@@ -82,20 +82,8 @@ body.dark-mode html {
     margin-top: 8px;
 }
 
-.dashboard::after {
-    content: '';
-    display: block;
-    height: 20px; /* Desktop : petit gap */
-    flex-shrink: 0;
-    background: transparent;
-}
 
-/* Mobile : grand gap */
-@media (max-width: 600px) {
-    .dashboard::after {
-        height: 140px !important; /* ✅ Augmenté avec !important */
-    }
-}
+
 
 body.dark-mode .dashboard {
     background: #2a2a3e;
@@ -1516,23 +1504,12 @@ body.modal-open .dashboard {
 /* ============================================
    BANK ACCOUNTS MODAL (Spécifique)
    ============================================ */
-
-
-
-
 #bankAccountsModal .modal-content {
     max-height: 85vh; /* ✅ CHANGÉ : utilise % au lieu de px */
     max-height: 85dvh;
     margin: auto;
 }
 
-/* Mobile : Encore plus grand */
-@media (max-width: 600px) {
-    #bankAccountsModal .modal-content {
-        max-height: 90vh !important; /* ✅ Plus grand sur mobile */
-        max-height: 90dvh !important;
-    }
-}
 
 #bankAccountsModal .modal-header {
     padding: 20px 25px;
@@ -2053,6 +2030,10 @@ body.dark-mode .chartjs-legend span {
    MOBILE RESPONSIVE
    ============================================ */
 
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
 @media (max-width: 600px) {
     /* Tabs */
     .app-tabs {
@@ -2167,10 +2148,15 @@ body.dark-mode .chartjs-legend span {
         min-width: 100px;
     }
     
+    /* ✅ AJOUTÉ : Gap footer via spacer */
+    .footer-spacer {
+        height: 130px !important;
+    }
+    
     /* Modals */
     .modal {
         padding: 10px;
-        z-index: 99999 !important; /* ✅ Encore plus haut */
+        z-index: 99999 !important;
     }
     
     .modal .modal-content {
@@ -2179,12 +2165,12 @@ body.dark-mode .chartjs-legend span {
         z-index: 100000 !important;
     }
     
-    /* Bank Accounts Modal */
+    /* ✅ MODIFIÉ : Bank Accounts Modal TRÈS grand */
     #bankAccountsModal .modal-content {
-        width: 95%;
-        max-width: 95%;
-        max-height: calc(100vh - 400px) !important;
-        max-height: calc(100dvh - 400px) !important;
+        width: 98% !important;
+        max-width: 98% !important;
+        max-height: 95vh !important;
+        max-height: 95dvh !important;
     }
     
     #bankAccountsModal .modal-header {
