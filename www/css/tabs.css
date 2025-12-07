@@ -1325,6 +1325,11 @@ body.dark-mode .empty-state-trans {
     /* Dashboard et Container */
     .dashboard {
         margin-top: 8px;
+        padding-bottom: 20px !important;
+    }
+    
+    .dashboard::after {
+        height: 120px !important;
     }
     
     .container {
@@ -1332,10 +1337,25 @@ body.dark-mode .empty-state-trans {
         margin-top: env(safe-area-inset-top, 0);
     }
     
-    /* Footer iOS - Descend jusqu'en bas */
+    /* Footer iOS - VERROUILLÉ */
     .app-footer {
+        position: fixed !important;
         bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
         padding-bottom: env(safe-area-inset-bottom, 10px) !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        will-change: auto !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        pointer-events: auto !important; /* ✅ AJOUTÉ */
+    }
+    
+    /* Verrouille les boutons */
+    .footer-nav-btn {
+        pointer-events: auto !important;
+        touch-action: manipulation !important; /* ✅ Empêche le drag */
     }
     
     /* Prolonge le footer vers le bas */
@@ -1344,7 +1364,7 @@ body.dark-mode .empty-state-trans {
         height: calc(env(safe-area-inset-bottom, 0) + 50px) !important;
     }
 
-    /* Force le background pour éviter la bande colorée */ /* ✅ AJOUTÉ (optionnel) */
+    /* Force le background */
     html,
     body {
         background: white !important;
@@ -1355,6 +1375,7 @@ body.dark-mode .empty-state-trans {
         background: #1a1a2e !important;
     }
 }
+
 
 .modal.show {
     display: flex !important;
