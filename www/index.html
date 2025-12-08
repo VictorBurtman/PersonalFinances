@@ -3819,71 +3819,146 @@
             console.log('✅ Scroll to top button initialized');
         }
 
-
-        // === GESTION DU SWIPE ENTRE ONGLETS ===
+        // === GESTION DU SWIPE ENTRE ONGLETS AVEC FEEDBACK VISUEL ===
         function initSwipeNavigation() {
             console.log('🚀 initSwipeNavigation appelée');
             
             const dashboard = document.querySelector('.dashboard');
+            const budgetTab = document.getElementById('budgetTab');
+            const transactionsTab = document.getElementById('transactionsTab');
             
-            if (!dashboard) {
-                console.log('❌ .dashboard not found');
+            if (!dashboard || !budgetTab || !transactionsTab) {
+                console.log('❌ Éléments manquants pour swipe navigation');
                 return;
             }
             
             let touchStartX = 0;
             let touchStartY = 0;
-            let touchEndX = 0;
-            let touchEndY = 0;
+            let currentX = 0;
+            let isSwiping = false;
+            let initialScrollTop = 0;
             
-            const minSwipeDistance = 50; // Distance minimale pour détecter un swipe (en pixels)
+            const minSwipeDistance = 80; // Distance minimale pour valider le swipe
+            const swipeThreshold = 30; // Distance avant de détecter un swipe horizontal
             
             dashboard.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                touchStartY = e.changedTouches[0].screenY;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                initialScrollTop = dashboard.scrollTop;
+                isSwiping = false;
+            }, { passive: true });
+            
+            dashboard.addEventListener('touchmove', (e) => {
+                if (!isSwiping) {
+                    const diffX = e.touches[0].clientX - touchStartX;
+                    const diffY = e.touches[0].clientY - touchStartY;
+                    
+                    // Détecter si c'est un swipe horizontal (et pas vertical)
+                    if (Math.abs(diffX) > swipeThreshold && Math.abs(diffX) > Math.abs(diffY)) {
+                        isSwiping = true;
+                        dashboard.style.scrollBehavior = 'auto'; // Désactiver smooth scroll pendant swipe
+                    }
+                }
+                
+                if (isSwiping) {
+                    currentX = e.touches[0].clientX - touchStartX;
+                    
+                    // Limiter le mouvement selon l'onglet actif
+                    const budgetActive = budgetTab.classList.contains('active');
+                    const transactionsActive = transactionsTab.classList.contains('active');
+                    
+                    // Budget actif : on peut swiper que vers la gauche (vers Transactions)
+                    if (budgetActive && currentX < 0) {
+                        const progress = Math.min(Math.abs(currentX) / window.innerWidth, 1);
+                        budgetTab.style.transform = `translateX(${currentX}px)`;
+                        budgetTab.style.opacity = 1 - (progress * 0.3);
+                        
+                        // Faire apparaître Transactions depuis la droite
+                        transactionsTab.style.display = 'block';
+                        transactionsTab.style.transform = `translateX(${window.innerWidth + currentX}px)`;
+                        transactionsTab.style.opacity = progress;
+                    }
+                    // Transactions actif : on peut swiper que vers la droite (vers Budget)
+                    else if (transactionsActive && currentX > 0) {
+                        const progress = Math.min(currentX / window.innerWidth, 1);
+                        transactionsTab.style.transform = `translateX(${currentX}px)`;
+                        transactionsTab.style.opacity = 1 - (progress * 0.3);
+                        
+                        // Faire apparaître Budget depuis la gauche
+                        budgetTab.style.display = 'block';
+                        budgetTab.style.transform = `translateX(${-window.innerWidth + currentX}px)`;
+                        budgetTab.style.opacity = progress;
+                    }
+                }
             }, { passive: true });
             
             dashboard.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                touchEndY = e.changedTouches[0].screenY;
-                
-                handleSwipe();
+                if (isSwiping) {
+                    const budgetActive = budgetTab.classList.contains('active');
+                    const transactionsActive = transactionsTab.classList.contains('active');
+                    
+                    // Vérifier si le swipe est suffisant pour changer d'onglet
+                    const shouldSwitch = Math.abs(currentX) > minSwipeDistance;
+                    
+                    if (shouldSwitch) {
+                        // Swipe vers la gauche depuis Budget → aller à Transactions
+                        if (budgetActive && currentX < 0) {
+                            console.log('→ Passage de Budget à Transactions');
+                            animateTabTransition(budgetTab, transactionsTab, 'left');
+                            setTimeout(() => switchTab('transactions'), 300);
+                        }
+                        // Swipe vers la droite depuis Transactions → aller à Budget
+                        else if (transactionsActive && currentX > 0) {
+                            console.log('→ Passage de Transactions à Budget');
+                            animateTabTransition(transactionsTab, budgetTab, 'right');
+                            setTimeout(() => switchTab('budget'), 300);
+                        }
+                    } else {
+                        // Swipe trop court : revenir à la position initiale
+                        resetTabPositions(budgetTab, transactionsTab);
+                    }
+                    
+                    isSwiping = false;
+                    currentX = 0;
+                    dashboard.style.scrollBehavior = ''; // Réactiver smooth scroll
+                }
             }, { passive: true });
             
-            function handleSwipe() {
-                const diffX = touchEndX - touchStartX;
-                const diffY = touchEndY - touchStartY;
+            // Animation de transition finale
+            function animateTabTransition(fromTab, toTab, direction) {
+                const distance = direction === 'left' ? -window.innerWidth : window.innerWidth;
                 
-                // Vérifier que c'est un swipe horizontal (pas vertical)
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
-                    
-                    // Swipe vers la droite
-                    if (diffX > 0) {
-                        console.log('👉 Swipe RIGHT détecté');
-                        // Budget est à gauche de Transactions
-                        // Donc swipe right = aller vers Budget
-                        const currentTab = document.querySelector('.footer-nav-btn.active')?.getAttribute('onclick');
-                        if (currentTab && currentTab.includes('transactions')) {
-                            console.log('→ Passage de Transactions à Budget');
-                            switchTab('budget');
-                        }
-                    }
-                    // Swipe vers la gauche
-                    else {
-                        console.log('👈 Swipe LEFT détecté');
-                        // Swipe left = aller vers Transactions
-                        const currentTab = document.querySelector('.footer-nav-btn.active')?.getAttribute('onclick');
-                        if (currentTab && currentTab.includes('budget')) {
-                            console.log('→ Passage de Budget à Transactions');
-                            switchTab('transactions');
-                        }
-                    }
-                }
+                fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                fromTab.style.transform = `translateX(${distance}px)`;
+                fromTab.style.opacity = '0';
+                
+                toTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                toTab.style.transform = 'translateX(0)';
+                toTab.style.opacity = '1';
+                
+                setTimeout(() => {
+                    resetTabPositions(budgetTab, transactionsTab);
+                }, 300);
             }
             
-            console.log('✅ Swipe navigation initialized');
+            // Réinitialiser les positions des onglets
+            function resetTabPositions(tab1, tab2) {
+                [tab1, tab2].forEach(tab => {
+                    tab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                    tab.style.transform = '';
+                    tab.style.opacity = '';
+                    
+                    setTimeout(() => {
+                        tab.style.transition = '';
+                        if (!tab.classList.contains('active')) {
+                            tab.style.display = 'none';
+                        }
+                    }, 300);
+                });
+            }
+            
+            console.log('✅ Swipe navigation with visual feedback initialized');
         }
-
 
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);

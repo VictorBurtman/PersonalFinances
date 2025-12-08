@@ -357,6 +357,8 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
 
 .tab-content {
     display: none;
+    position: relative; /* Important pour que transform fonctionne */
+    will-change: transform, opacity; /* Optimisation des performances */
 }
 
 .tab-content.active {
