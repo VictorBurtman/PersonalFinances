@@ -107,6 +107,13 @@ const translations = {
         noTransactionsAdded: "No transactions added yet",
         addTransactionToStart: "Add a transaction to get started",
         noMatchingTransactions: "No transactions match the current filters",
+        month: "Month",
+        category: "Category",
+        sortBy: "Sort by",
+        showTransactions: "Show Transactions",
+        bankSynchronization: "Bank Synchronization",
+        supportedFormats: "Supported formats: CSV, XLSX, XLS",
+        labelStatus: "Label Status",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -340,12 +347,12 @@ const translations = {
         cancel: "Cancel",
         
         // CSV Import
-        importCSV: "Import CSV",
+        importCSV: "Import CSV/Excel",
         importCSVDescription: "Import transactions from CSV files (Revolut, N26, etc.)",
         bankName: "Bank Name",
         bankNamePlaceholder: "e.g. Revolut, N26, Wise...",
         bankNameHelp: "This helps you identify transactions from different banks",
-        chooseCSV: "Choose CSV File",
+        chooseCSV: "Choose CSV/Excel file",
         remove: "Remove",
         imported: "Imported",
         
@@ -517,7 +524,13 @@ const translations = {
         noTransactionsAdded: "Aucune transaction ajoutée",
         addTransactionToStart: "Ajoutez une transaction pour commencer",
         noMatchingTransactions: "Aucune transaction ne correspond aux filtres actuels",
-
+        month: "Mois",
+        category: "Catégorie",
+        sortBy: "Trier par",
+        showTransactions: "Afficher les transactions",
+        bankSynchronization: "Synchronisation bancaire",
+        supportedFormats: "Formats supportés : CSV, XLSX, XLS",
+        labelStatus: "État des étiquettes",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -752,12 +765,12 @@ const translations = {
         cancel: "Annuler",
         
         // CSV Import
-        importCSV: "Importer CSV",
+        importCSV: "Importer CSV/Excel",
         importCSVDescription: "Importer des transactions depuis des fichiers CSV (Revolut, N26, etc.)",
         bankName: "Nom de la Banque",
         bankNamePlaceholder: "ex. Revolut, N26, Wise...",
         bankNameHelp: "Cela vous aide à identifier les transactions de différentes banques",
-        chooseCSV: "Choisir un Fichier CSV",
+        chooseCSV: "Choisir un fichier CSV/Excel",
         remove: "Supprimer",
         imported: "Importé",
         
@@ -918,7 +931,13 @@ const translations = {
         noTransactionsAdded: "עדיין לא נוספו עסקאות",
         addTransactionToStart: "הוסף עסקה כדי להתחיל",
         noMatchingTransactions: "אין עסקאות התואמות למסננים הנוכחיים",
-
+        month: "חודש",
+        category: "קטגוריה",
+        sortBy: "מיין לפי",
+        showTransactions: "הצג עסקאות",
+        bankSynchronization: "סנכרון בנק",
+        supportedFormats: "פורמטים נתמכים: CSV, XLSX, XLS",
+        labelStatus: "סטטוס תיוג",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1153,12 +1172,12 @@ const translations = {
         cancel: "בטל",
         
         // CSV Import
-        importCSV: "ייבוא CSV",
+        importCSV: "ייבוא CSV/Excel",
         importCSVDescription: "ייבא עסקאות מקבצי CSV (Revolut, N26, וכו')",
         bankName: "שם הבנק",
         bankNamePlaceholder: "למשל Revolut, N26, Wise...",
         bankNameHelp: "זה עוזר לך לזהות עסקאות מבנקים שונים",
-        chooseCSV: "בחר קובץ CSV",
+        chooseCSV: "בחר קובץ CSV/Excel",
         remove: "הסר",
         imported: "יובא",
         
@@ -1319,6 +1338,13 @@ const translations = {
         noTransactionsAdded: "Aún no se han añadido transacciones",
         addTransactionToStart: "Añade una transacción para empezar",
         noMatchingTransactions: "No hay transacciones que coincidan con los filtros actuales",
+        month: "Mes",
+        category: "Categoría",
+        sortBy: "Ordenar por",
+        showTransactions: "Mostrar transacciones",
+        bankSynchronization: "Sincronización bancaria",
+        supportedFormats: "Formatos compatibles: CSV, XLSX, XLS",
+        labelStatus: "Estado de etiquetas",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1553,12 +1579,12 @@ const translations = {
         cancel: "Cancelar",
         
         // CSV Import
-        importCSV: "Importar CSV",
+        importCSV: "Importar CSV/Excel",
         importCSVDescription: "Importar transacciones desde archivos CSV (Revolut, N26, etc.)",
         bankName: "Nombre del Banco",
         bankNamePlaceholder: "ej. Revolut, N26, Wise...",
         bankNameHelp: "Esto te ayuda a identificar transacciones de diferentes bancos",
-        chooseCSV: "Elegir Archivo CSV",
+        chooseCSV: "Elegir archivo CSV/Excel",
         remove: "Eliminar",
         imported: "Importado",
         
@@ -1719,6 +1745,13 @@ const translations = {
         noTransactionsAdded: "Транзакции ещё не добавлены",
         addTransactionToStart: "Добавьте транзакцию, чтобы начать",
         noMatchingTransactions: "Нет транзакций, соответствующих текущим фильтрам",
+        month: "Месяц",
+        category: "Категория",
+        sortBy: "Сортировать по",
+        showTransactions: "Показать транзакции",
+        bankSynchronization: "Синхронизация банка",
+        supportedFormats: "Поддерживаемые форматы: CSV, XLSX, XLS",
+        labelStatus: "Статус меток",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -1953,12 +1986,12 @@ const translations = {
         cancel: "Отмена",
         
         // CSV Import
-        importCSV: "Импорт CSV",
+        importCSV: "Импорт CSV/Excel",
         importCSVDescription: "Импортировать транзакции из файлов CSV (Revolut, N26 и т.д.)",
         bankName: "Название Банка",
         bankNamePlaceholder: "например Revolut, N26, Wise...",
         bankNameHelp: "Это помогает идентифицировать транзакции из разных банков",
-        chooseCSV: "Выбрать Файл CSV",
+        chooseCSV: "Выбрать файл CSV/Excel",
         remove: "Удалить",
         imported: "Импортировано",
         
@@ -2119,7 +2152,13 @@ const translations = {
         noTransactionsAdded: "لم تتم إضافة أي معاملات بعد",
         addTransactionToStart: "أضف معاملة للبدء",
         noMatchingTransactions: "لا توجد معاملات تطابق المرشحات الحالية",
-
+        month: "الشهر",
+        category: "الفئة",
+        sortBy: "ترتيب حسب",
+        showTransactions: "عرض المعاملات",
+        bankSynchronization: "مزامنة البنك",
+        supportedFormats: "التنسيقات المدعومة: CSV، XLSX، XLS",
+        labelStatus: "حالة التصنيف",
         
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",
@@ -2354,12 +2393,12 @@ const translations = {
         cancel: "إلغاء",
         
         // CSV Import
-        importCSV: "استيراد CSV",
+        importCSV: "استيراد CSV/Excel",
         importCSVDescription: "استيراد المعاملات من ملفات CSV (Revolut، N26، إلخ)",
         bankName: "اسم البنك",
         bankNamePlaceholder: "مثل Revolut، N26، Wise...",
         bankNameHelp: "هذا يساعدك على تحديد المعاملات من بنوك مختلفة",
-        chooseCSV: "اختر ملف CSV",
+        chooseCSV: "اختر ملف CSV/Excel",
         remove: "إزالة",
         imported: "تم الاستيراد",
         

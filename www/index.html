@@ -3656,11 +3656,11 @@
         }
 
         function openFiltersModal() {
-            closeAllModals(); // ✅ AJOUTER cette ligne
+            closeAllModals();
             console.log('🔍 Ouverture modal Filters');
             const modal = document.getElementById('filtersModal');
             if (modal) {
-                // ✅ Remplir les menus déroulants avant d'ouvrir le modal
+                // Remplir les menus déroulants avant d'ouvrir le modal
                 if (typeof populateMonthFilter === 'function') {
                     populateMonthFilter();
                 }
@@ -3673,6 +3673,13 @@
                 
                 document.body.classList.add('modal-open');
                 modal.classList.add('show');
+                
+                // ✅ AJOUTE CES LIGNES ICI
+                setTimeout(() => {
+                    console.log('📝 Application des traductions...');
+                    updateUILanguage();
+                    console.log('✅ Traductions appliquées');
+                }, 100);
             }
         }
 
