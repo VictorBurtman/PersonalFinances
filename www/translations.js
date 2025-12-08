@@ -114,6 +114,7 @@ const translations = {
         bankSynchronization: "Bank Synchronization",
         supportedFormats: "Supported formats: CSV, XLSX, XLS",
         labelStatus: "Label Status",
+        source: "Source",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -531,6 +532,7 @@ const translations = {
         bankSynchronization: "Synchronisation bancaire",
         supportedFormats: "Formats supportés : CSV, XLSX, XLS",
         labelStatus: "État des étiquettes",
+        source: "Source",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -938,6 +940,7 @@ const translations = {
         bankSynchronization: "סנכרון בנק",
         supportedFormats: "פורמטים נתמכים: CSV, XLSX, XLS",
         labelStatus: "סטטוס תיוג",
+        source: "מקור",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1345,6 +1348,7 @@ const translations = {
         bankSynchronization: "Sincronización bancaria",
         supportedFormats: "Formatos compatibles: CSV, XLSX, XLS",
         labelStatus: "Estado de etiquetas",
+        source: "Fuente",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1752,6 +1756,7 @@ const translations = {
         bankSynchronization: "Синхронизация банка",
         supportedFormats: "Поддерживаемые форматы: CSV, XLSX, XLS",
         labelStatus: "Статус меток",
+        source: "Источник",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2159,7 +2164,8 @@ const translations = {
         bankSynchronization: "مزامنة البنك",
         supportedFormats: "التنسيقات المدعومة: CSV، XLSX، XLS",
         labelStatus: "حالة التصنيف",
-        
+        source: "المصدر",
+
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",
         categoryDeletedSuccess: "تم حذف الفئة! {count} معاملة بدون تصنيف.",
