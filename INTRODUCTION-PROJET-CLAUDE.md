@@ -58,8 +58,6 @@ PersonalFinances/
 │   │   ├── tabs-manager.js       ← Gestion des onglets (Dashboard, Transactions, Categories, Settings)
 │   │   ├── transactions-manager.js  ← Gestion transactions + scraping bancaire
 │   │   └── auth-manager.js     ← Gestion écran de connexion
-│   ├── partials/
-│   │   ├── transactions-tab.html ← Onglet Transactions + modal banques
 │   └── translations.js           ← Traductions i18n (6 langues)
 │
 ├── firebase/
@@ -69,8 +67,10 @@ PersonalFinances/
 ├── android/                      ← Projet Android (GÉNÉRÉ par Capacitor, pas dans Git)
 │
 ├── sync-pull.bat                 ← Récupérer changements depuis GitHub
-├── sync-push.bat                 ← Envoyer changements vers GitHub
-├── sync-status.bat               ← Vérifier état du repo
+├── sync-push.bat                 ← Envoyer changements vers GitHub 
+├── deploy-firebase.bat           ← Deployer firebase functions
+├── sync-status.bat               ← Vérifier état du repo 
+├── dev-mobile.bat                ← Lancer l'app dans l'emulateur android
 ├── sync-tag.bat                  ← Créer une version (tag Git)
 ├── sync-tags-list.bat            ← Voir toutes les versions
 │
@@ -310,5 +310,28 @@ PersonalFinances/
 - À l'aise avec terminal, Git basique, Android Studio
 - Besoin d'explications pour concepts avancés
 
+---
+
+## 🚨 Points d'attention pour l'IA
+
+**Architecture actuelle (Décembre 2024) :**
+- ✅ Tout le code est dans `index.html` (SPA complet)
+- ✅ `transactions-tab.html` n'existe plus (intégré dans index.html)
+- ✅ CSS dans `tabs.css` à la racine de `www/`
+- ✅ Header unifié + Footer navigation (pas de sticky bar séparée)
+- ✅ Système de versions avec `version.json` pour auto-update PWA
+
+**Problèmes récents résolus :**
+- Footer iOS PWA (safe-area, couleur, positionnement)
+- Boutons d'édition des items de budget (nécessite `updateDisplay()` dans `toggleEditMode()`)
+- Checkbox dark mode pas cochée au chargement
+- Modal Bank Accounts trop grand sur mobile
+- Empty state transactions non visible (déplacé hors de `#allTransactionsSection`)
+
+**Conventions de code :**
+- Fonctions principales : `updateDisplay()`, `toggleEditMode()`, `renderExpenseItem()`
+- Dark mode : classe `.dark-mode` sur `<body>`
+- Traductions : objet `translations[currentLanguage]`
+- Mode édition : variable globale `isEditMode`
 
 **Merci de m'aider sur ce projet ! 🚀**

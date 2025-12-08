@@ -3769,6 +3769,37 @@
         });
                                 
 
+        // === GESTION DU BOUTON "SCROLL TO TOP" ===
+        function initScrollToTopButton() {
+            const scrollBtn = document.getElementById('scrollToTopBtn');
+            const transactionsTab = document.getElementById('transactionsTab');
+            
+            if (!scrollBtn || !transactionsTab) return;
+            
+            // Détecter le scroll dans l'onglet transactions
+            transactionsTab.addEventListener('scroll', () => {
+                // Afficher le bouton si on a scrollé plus de 300px
+                if (transactionsTab.scrollTop > 300) {
+                    scrollBtn.classList.add('visible');
+                } else {
+                    scrollBtn.classList.remove('visible');
+                }
+            });
+        }
+
+        // Appeler cette fonction APRÈS que l'utilisateur soit connecté
+        // Par exemple dans auth.onAuthStateChanged, après l'affichage de mainApp :
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // ... ton code existant ...
+                
+                // Initialiser le bouton scroll to top
+                setTimeout(() => {
+                    initScrollToTopButton();
+                }, 500); // Petit délai pour s'assurer que le DOM est prêt
+            }
+        });
+
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);
             console.trace('📍 Appelé depuis:'); // ← AJOUTER CETTE LIGNE
