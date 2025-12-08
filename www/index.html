@@ -3674,14 +3674,17 @@
          * Force le défilement de la page au sommet.
          */
         function scrollToTop() {
-            // Un petit délai est crucial pour laisser le temps à l'interface de l'application de s'afficher
-            setTimeout(() => {
-                // Méthode 1 : Scroll vers le haut du body (souvent la plus efficace sur mobile)
-                document.body.scrollIntoView({ behavior: 'auto', block: 'start' });
-                
-                // Méthode 2 : Fallback pour les navigateurs récalcitrants
-                window.scrollTo(0, 0); 
-            }, 100); // 100ms pour être sûr
+            const dashboard = document.querySelector('.dashboard');
+            
+            if (dashboard) {
+                dashboard.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+            } else {
+                // Fallback
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         // Global variables
@@ -3733,6 +3736,10 @@
                 }
                 
                 console.log('📱 Showing main app...');
+                // ✅ Initialiser le bouton scroll-to-top UNE SEULE FOIS
+                setTimeout(() => {
+                    initScrollToTopButton();
+                }, 1000);
                 if (mainApp) {
                     mainApp.style.display = 'block';
                 }
@@ -3760,38 +3767,37 @@
             console.log('🚀 initScrollToTopButton appelée');
             
             const scrollBtn = document.getElementById('scrollToTopBtn');
-            const transactionsTab = document.getElementById('transactionsTab');
+            const dashboard = document.querySelector('.dashboard');
             
             if (!scrollBtn) {
                 console.log('❌ scrollToTopBtn not found');
                 return;
             }
             
-            if (!transactionsTab) {
-                console.log('❌ transactionsTab not found');
+            if (!dashboard) {
+                console.log('❌ .dashboard not found');
                 return;
             }
             
-            // Supprimer l'ancien event listener s'il existe (évite les doublons)
-            const oldListener = transactionsTab._scrollListener;
-            if (oldListener) {
-                transactionsTab.removeEventListener('scroll', oldListener);
+            console.log('✅ Écoute du scroll sur .dashboard');
+            
+            // Supprimer l'ancien listener s'il existe (évite les doublons)
+            if (dashboard._scrollListener) {
+                dashboard.removeEventListener('scroll', dashboard._scrollListener);
             }
             
-            // Créer le nouvel event listener
+            // Créer le listener
             const scrollListener = () => {
-                if (transactionsTab.scrollTop > 300) {
+                if (dashboard.scrollTop > 300) {
                     scrollBtn.classList.add('visible');
                 } else {
                     scrollBtn.classList.remove('visible');
                 }
             };
             
-            // Sauvegarder la référence pour pouvoir le retirer plus tard
-            transactionsTab._scrollListener = scrollListener;
-            
-            // Ajouter l'event listener
-            transactionsTab.addEventListener('scroll', scrollListener);
+            // Sauvegarder et ajouter
+            dashboard._scrollListener = scrollListener;
+            dashboard.addEventListener('scroll', scrollListener, { passive: true });
             
             console.log('✅ Scroll to top button initialized');
         }

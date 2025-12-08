@@ -2248,7 +2248,7 @@ body.dark-mode .chartjs-legend span {
     
     /* Toast */
     .toast-container {
-        top: 10px;
+        top: 50px;
         right: 10px;
         left: 10px;
     }
