@@ -1401,7 +1401,7 @@ body.dark-mode .empty-state-trans {
     font-weight: 300;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    display: flex; /* ✅ CHANGÉ de none à flex */
+    display: none; /* ← Caché par défaut, montré uniquement dans Transactions */
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;

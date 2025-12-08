@@ -432,11 +432,6 @@
                             <span data-translate="addTransactionToStart">Add a transaction to get started</span>
                         </div>
                     </div>
-                                        <!-- ✅ AJOUTÉ : Bouton flottant + -->
-                    <button class="floating-add-btn" onclick="openAddManualTransactionModal()" title="Add transaction">
-                        +
-                    </button>
-
                     <!-- Filters Modal -->
                     <div id="filtersModal" class="modal">
                         <div class="modal-content">
@@ -4110,6 +4105,8 @@
                         transactionsTab.style.display = 'none';
                         transactionsTab.classList.remove('active');
                     }
+                    const floatingAddBtn = document.getElementById('floatingAddBtn');
+                    if (floatingAddBtn) floatingAddBtn.style.display = 'none';
                     
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
@@ -4170,6 +4167,8 @@
                             }
                         }, 400); // ← Délai après l'animation
                     }
+                    const floatingAddBtn = document.getElementById('floatingAddBtn');
+                    if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
                 }
             } finally {
                 // ✅ Débloquer après un délai
@@ -4420,7 +4419,9 @@
     <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
         ↑
     </button>
-
+    <button class="floating-add-btn" id="floatingAddBtn" onclick="openAddManualTransactionModal()" title="Add transaction">
+        +
+    </button>
     <!-- Toast Notifications Container -->
     <div class="toast-container" id="toastContainer"></div>
 </body>
