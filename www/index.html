@@ -3788,12 +3788,22 @@
             
             console.log('✅ Écoute du scroll sur .dashboard');
             
-            // Supprimer l'ancien listener s'il existe (évite les doublons)
+            // ✅ AJOUTER L'EVENT LISTENER POUR LE CLIC
+            scrollBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('🖱️ Clic sur scroll-to-top');
+                dashboard.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+            });
+            
+            // Supprimer l'ancien listener de scroll s'il existe
             if (dashboard._scrollListener) {
                 dashboard.removeEventListener('scroll', dashboard._scrollListener);
             }
             
-            // Créer le listener
+            // Créer le listener de scroll
             const scrollListener = () => {
                 if (dashboard.scrollTop > 300) {
                     scrollBtn.classList.add('visible');
@@ -3802,25 +3812,11 @@
                 }
             };
             
-            // Sauvegarder et ajouter
             dashboard._scrollListener = scrollListener;
             dashboard.addEventListener('scroll', scrollListener, { passive: true });
             
             console.log('✅ Scroll to top button initialized');
         }
-
-        // Appeler cette fonction APRÈS que l'utilisateur soit connecté
-        // Par exemple dans auth.onAuthStateChanged, après l'affichage de mainApp :
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                // ... ton code existant ...
-                
-                // Initialiser le bouton scroll to top
-                setTimeout(() => {
-                    initScrollToTopButton();
-                }, 500); // Petit délai pour s'assurer que le DOM est prêt
-            }
-        });
 
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);
@@ -3904,10 +3900,6 @@
                     console.log('📥 Chargement des transactions...');
                     loadTransactions();
                 }
-                // ✅ AJOUTE CETTE LIGNE ICI
-                setTimeout(() => {
-                    initScrollToTopButton();
-                }, 500); // Petit délai pour s'assurer que l'onglet est bien affiché
             }
         }
 
