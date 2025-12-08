@@ -3746,6 +3746,7 @@
                 // ✅ Initialiser le bouton scroll-to-top UNE SEULE FOIS
                 setTimeout(() => {
                     initScrollToTopButton();
+                    initSwipeNavigation();
                 }, 1000);
                 if (mainApp) {
                     mainApp.style.display = 'block';
@@ -3817,6 +3818,72 @@
             
             console.log('✅ Scroll to top button initialized');
         }
+
+
+        // === GESTION DU SWIPE ENTRE ONGLETS ===
+        function initSwipeNavigation() {
+            console.log('🚀 initSwipeNavigation appelée');
+            
+            const dashboard = document.querySelector('.dashboard');
+            
+            if (!dashboard) {
+                console.log('❌ .dashboard not found');
+                return;
+            }
+            
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+            
+            const minSwipeDistance = 50; // Distance minimale pour détecter un swipe (en pixels)
+            
+            dashboard.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+            
+            dashboard.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                
+                handleSwipe();
+            }, { passive: true });
+            
+            function handleSwipe() {
+                const diffX = touchEndX - touchStartX;
+                const diffY = touchEndY - touchStartY;
+                
+                // Vérifier que c'est un swipe horizontal (pas vertical)
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+                    
+                    // Swipe vers la droite
+                    if (diffX > 0) {
+                        console.log('👉 Swipe RIGHT détecté');
+                        // Budget est à gauche de Transactions
+                        // Donc swipe right = aller vers Budget
+                        const currentTab = document.querySelector('.footer-nav-btn.active')?.getAttribute('onclick');
+                        if (currentTab && currentTab.includes('transactions')) {
+                            console.log('→ Passage de Transactions à Budget');
+                            switchTab('budget');
+                        }
+                    }
+                    // Swipe vers la gauche
+                    else {
+                        console.log('👈 Swipe LEFT détecté');
+                        // Swipe left = aller vers Transactions
+                        const currentTab = document.querySelector('.footer-nav-btn.active')?.getAttribute('onclick');
+                        if (currentTab && currentTab.includes('budget')) {
+                            console.log('→ Passage de Budget à Transactions');
+                            switchTab('transactions');
+                        }
+                    }
+                }
+            }
+            
+            console.log('✅ Swipe navigation initialized');
+        }
+
 
         function switchTab(tabName) {
             console.log('🔄 switchTab appelé:', tabName);

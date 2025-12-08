@@ -363,6 +363,52 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     display: block;
 }
 
+.tab-content {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.tab-content.slide-out-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.tab-content.slide-out-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.tab-content.slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.tab-content.slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+
 .tab-loading {
     text-align: center;
     padding: 40px;
