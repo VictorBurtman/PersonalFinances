@@ -3938,7 +3938,6 @@
                     const budgetActive = budgetTab.classList.contains('active');
                     const transactionsActive = transactionsTab.classList.contains('active');
                     
-                    // Vérifier si le swipe est suffisant pour changer d'onglet
                     const shouldSwitch = Math.abs(currentX) > minSwipeDistance;
                     
                     if (shouldSwitch) {
@@ -3946,20 +3945,24 @@
                         if (budgetActive && currentX < 0) {
                             console.log('→ Passage de Budget à Transactions');
                             animateTabTransition(budgetTab, transactionsTab, 'left');
-                            setTimeout(() => switchTab('transactions'), 300);
+                            // ✅ Appeler switchTab APRÈS l'animation (pas pendant)
+                            setTimeout(() => {
+                                switchTab('transactions');
+                            }, 350); // 350ms au lieu de 300ms
                         }
                         // Swipe vers la droite depuis Transactions → aller à Budget
                         else if (transactionsActive && currentX > 0) {
                             console.log('→ Passage de Transactions à Budget');
                             animateTabTransition(transactionsTab, budgetTab, 'right');
-                            setTimeout(() => switchTab('budget'), 300);
+                            // ✅ Appeler switchTab APRÈS l'animation
+                            setTimeout(() => {
+                                switchTab('budget');
+                            }, 350);
                         }
                         else {
-                            // Swipe dans la mauvaise direction : revenir
                             resetTabPositions(budgetTab, transactionsTab);
                         }
                     } else {
-                        // Swipe trop court : revenir à la position initiale
                         resetTabPositions(budgetTab, transactionsTab);
                     }
                     
@@ -3983,6 +3986,10 @@
             function animateTabTransition(fromTab, toTab, direction) {
                 const distance = direction === 'left' ? -window.innerWidth : window.innerWidth;
                 
+                // Retirer la classe preview immédiatement
+                toTab.classList.remove('swipe-preview');
+                fromTab.classList.remove('swipe-preview');
+                
                 fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
                 fromTab.style.transform = `translateX(${distance}px)`;
                 fromTab.style.opacity = '0';
@@ -3991,24 +3998,44 @@
                 toTab.style.transform = 'translateX(0)';
                 toTab.style.opacity = '1';
                 
+                // ✅ NETTOYER COMPLÈTEMENT après l'animation
                 setTimeout(() => {
-                    resetTabPositions(budgetTab, transactionsTab);
-                }, 300);
+                    // Retirer TOUS les styles inline appliqués pendant le swipe
+                    fromTab.style.transition = '';
+                    fromTab.style.transform = '';
+                    fromTab.style.opacity = '';
+                    fromTab.style.display = ''; // Laisser switchTab() gérer le display
+                    
+                    toTab.style.transition = '';
+                    toTab.style.transform = '';
+                    toTab.style.opacity = '';
+                    // Ne PAS toucher au display de toTab, il doit rester visible
+                }, 350); // Un peu après la fin de l'animation (300ms)
             }
-            
+
+
+
             // Réinitialiser les positions des onglets
             function resetTabPositions(tab1, tab2) {
                 [tab1, tab2].forEach(tab => {
+                    // Retirer la classe preview
+                    tab.classList.remove('swipe-preview');
+                    
                     tab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
                     tab.style.transform = '';
                     tab.style.opacity = '';
                     
                     setTimeout(() => {
+                        // ✅ NETTOYER COMPLÈTEMENT tous les styles inline
                         tab.style.transition = '';
+                        tab.style.transform = '';
+                        tab.style.opacity = '';
+                        
+                        // Cacher seulement si pas actif
                         if (!tab.classList.contains('active')) {
                             tab.style.display = 'none';
                         }
-                    }, 300);
+                    }, 350);
                 });
             }
             
@@ -4017,88 +4044,138 @@
 
 
 
+        // Variable globale pour éviter les appels multiples
+        let isTabSwitching = false;
+
         function switchTab(tabName) {
-            console.log('🔄 switchTab appelé:', tabName);
-            console.trace('📍 Appelé depuis:'); // ← AJOUTER CETTE LIGNE
-            // Retirer la classe active de tous les boutons du footer
-            document.querySelectorAll('.footer-nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            // ✅ Bloquer si un switch est déjà en cours
+            if (isTabSwitching) {
+                console.log('⏸️ Switch already in progress, ignoring:', tabName);
+                return;
+            }
             
-            if (tabName === 'budget') {
-                console.log('📊 Activation onglet Budget');
+            isTabSwitching = true;
+            console.log('🔄 switchTab appelé:', tabName);
+            console.trace('📍 Appelé depuis:');
+            
+            try {
+                // Retirer la classe active de tous les boutons du footer
+                document.querySelectorAll('.footer-nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
                 
-                // Activer l'onglet Budget dans le footer
-                const budgetBtn = document.getElementById('budgetTabBtn');
-                if (budgetBtn) budgetBtn.classList.add('active');
-                
-                // Afficher les boutons Budget (sauf Add Category qui dépend du mode édition)
-                document.querySelectorAll('.budget-only').forEach(btn => {
-                    // Si c'est le bouton Add Category, vérifier le mode édition
-                    if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
-                        btn.style.display = isEditMode ? 'inline-block' : 'none';
-                    } else {
-                        btn.style.display = 'inline-block';
+                if (tabName === 'budget') {
+                    console.log('📊 Activation onglet Budget');
+                    
+                    // Activer l'onglet Budget dans le footer
+                    const budgetBtn = document.getElementById('budgetTabBtn');
+                    if (budgetBtn) budgetBtn.classList.add('active');
+                    
+                    // Afficher les boutons Budget (sauf Add Category qui dépend du mode édition)
+                    document.querySelectorAll('.budget-only').forEach(btn => {
+                        // Si c'est le bouton Add Category, vérifier le mode édition
+                        if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
+                            btn.style.display = isEditMode ? 'inline-block' : 'none';
+                        } else {
+                            btn.style.display = 'inline-block';
+                        }
+                    });
+                    
+                    // Cacher les boutons Transactions
+                    document.querySelectorAll('.transactions-only').forEach(btn => {
+                        btn.style.display = 'none';
+                    });
+                    
+                    // Gérer la visibilité du select compareMonth selon le mode
+                    const compareMonth = document.getElementById('compareMonth');
+                    if (compareMonth && window.compareMode) {
+                        compareMonth.style.display = 'inline-block';
+                    } else if (compareMonth) {
+                        compareMonth.style.display = 'none';
                     }
-                });
-                
-                // Cacher les boutons Transactions
-                document.querySelectorAll('.transactions-only').forEach(btn => {
-                    btn.style.display = 'none';
-                });
-                
-                // Gérer la visibilité du select compareMonth selon le mode
-                const compareMonth = document.getElementById('compareMonth');
-                if (compareMonth && window.compareMode) {
-                    compareMonth.style.display = 'inline-block';
-                } else if (compareMonth) {
-                    compareMonth.style.display = 'none';
+                    
+                    // Afficher le contenu Budget
+                    const budgetTab = document.getElementById('budgetTab');
+                    if (budgetTab) {
+                        budgetTab.style.display = 'block';
+                        budgetTab.classList.add('active');
+                    }
+                    
+                    const expensesList = document.getElementById('expensesList');
+                    if (expensesList) expensesList.style.display = 'block';
+                    
+                    // Cacher le contenu Transactions
+                    const transactionsTab = document.getElementById('transactionsTab');
+                    if (transactionsTab) {
+                        transactionsTab.style.display = 'none';
+                        transactionsTab.classList.remove('active');
+                    }
+                    
+                } else if (tabName === 'transactions') {
+                    console.log('💳 Activation onglet Transactions');
+                    
+                    // Activer l'onglet Transactions dans le footer
+                    const transactionsBtn = document.getElementById('transactionsTabBtn');
+                    if (transactionsBtn) transactionsBtn.classList.add('active');
+                    
+                    // Cacher les boutons Budget
+                    document.querySelectorAll('.budget-only').forEach(btn => {
+                        btn.style.display = 'none';
+                    });
+                    
+                    // Afficher les boutons Transactions
+                    document.querySelectorAll('.transactions-only').forEach(btn => {
+                        btn.style.display = 'inline-block';
+                    });
+                    
+                    // Cacher le contenu Budget
+                    const budgetTab = document.getElementById('budgetTab');
+                    if (budgetTab) {
+                        budgetTab.style.display = 'none';
+                        budgetTab.classList.remove('active');
+                    }
+                    
+                    const expensesList = document.getElementById('expensesList');
+                    if (expensesList) expensesList.style.display = 'none';
+                    
+                    // Afficher le contenu Transactions
+                    const transactionsTab = document.getElementById('transactionsTab');
+                    if (transactionsTab) {
+                        transactionsTab.style.display = 'block';
+                        transactionsTab.classList.add('active');
+                    }
+                    
+                    // ✅ Charger les transactions APRÈS que l'animation soit terminée
+                    if (typeof loadTransactions === 'function') {
+                        // Attendre que l'onglet soit vraiment stable
+                        setTimeout(() => {
+                            const tab = document.getElementById('transactionsTab');
+                            
+                            // Triple vérification
+                            if (tab && 
+                                tab.classList.contains('active') && 
+                                !tab.classList.contains('swipe-preview') &&
+                                tab.style.display === 'block') {
+                                
+                                console.log('📥 Chargement des transactions...');
+                                loadTransactions()
+                                    .then(() => {
+                                        console.log('✅ Transactions chargées avec succès');
+                                    })
+                                    .catch(err => {
+                                        console.error('❌ Erreur chargement transactions:', err);
+                                    });
+                            } else {
+                                console.log('⏸️ Chargement annulé - onglet pas stable');
+                            }
+                        }, 400); // ← Délai après l'animation
+                    }
                 }
-                
-                // Afficher le contenu Budget
-                const budgetTab = document.getElementById('budgetTab');
-                if (budgetTab) budgetTab.style.display = 'block';
-                
-                const expensesList = document.getElementById('expensesList');
-                if (expensesList) expensesList.style.display = 'block';
-                
-                // Cacher le contenu Transactions
-                const transactionsTab = document.getElementById('transactionsTab');
-                if (transactionsTab) transactionsTab.style.display = 'none';
-                
-            } else if (tabName === 'transactions') {
-                console.log('💳 Activation onglet Transactions');
-                
-                // Activer l'onglet Transactions dans le footer
-                const transactionsBtn = document.getElementById('transactionsTabBtn');
-                if (transactionsBtn) transactionsBtn.classList.add('active');
-                
-                // Cacher les boutons Budget
-                document.querySelectorAll('.budget-only').forEach(btn => {
-                    btn.style.display = 'none';
-                });
-                
-                // Afficher les boutons Transactions
-                document.querySelectorAll('.transactions-only').forEach(btn => {
-                    btn.style.display = 'inline-block';
-                });
-                
-                // Cacher le contenu Budget
-                const budgetTab = document.getElementById('budgetTab');
-                if (budgetTab) budgetTab.style.display = 'none';
-                
-                const expensesList = document.getElementById('expensesList');
-                if (expensesList) expensesList.style.display = 'none';
-                
-                // Afficher le contenu Transactions
-                const transactionsTab = document.getElementById('transactionsTab');
-                if (transactionsTab) transactionsTab.style.display = 'block';
-                
-                // Charger les transactions si la fonction existe
-                if (typeof loadTransactions === 'function') {
-                    console.log('📥 Chargement des transactions...');
-                    loadTransactions();
-                }
+            } finally {
+                // ✅ Débloquer après un délai
+                setTimeout(() => {
+                    isTabSwitching = false;
+                }, 500);
             }
         }
 
