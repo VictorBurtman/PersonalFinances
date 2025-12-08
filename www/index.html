@@ -926,7 +926,7 @@
             updateUILanguage();
         }
         
-        // Fonction pour mettre à jour toute l'interface
+
         function updateUILanguage() {
             // Main app header
             const mainAppHeader = document.querySelector('.header h1');
@@ -1028,7 +1028,48 @@
                     btn.textContent = t(key);
                 }
             });
+            
+            // ✅ AJOUTE CETTE PARTIE POUR TRADUIRE AUTOMATIQUEMENT TOUS LES data-translate
+            console.log('🌍 Traduction automatique des data-translate...');
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                const translation = t(key);
+                
+                if (translation) {
+                    // Si c'est un input avec placeholder
+                    if (el.tagName === 'INPUT' && el.hasAttribute('placeholder')) {
+                        el.placeholder = translation;
+                    } 
+                    // Si c'est un élément normal
+                    else {
+                        // Ne remplacer que si ce n'est pas déjà un parent avec du HTML complexe
+                        if (el.children.length === 0) {
+                            el.textContent = translation;
+                        } else {
+                            // Si l'élément a des enfants, ne remplacer que le premier textNode
+                            const textNode = Array.from(el.childNodes).find(node => node.nodeType === 3);
+                            if (textNode) {
+                                textNode.textContent = translation;
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // ✅ AJOUTE AUSSI LA TRADUCTION DES PLACEHOLDERS SPÉCIFIQUES
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-translate-placeholder');
+                const translation = t(key);
+                if (translation) {
+                    el.placeholder = translation;
+                }
+            });
+            
+            console.log('✅ Traductions automatiques appliquées');
         }
+
+
+
 
         // Fonction pour mettre à jour l'écran de connexion uniquement
         function updateAuthScreenLanguage() {
@@ -3655,6 +3696,7 @@
             document.body.classList.remove('modal-open');
         }
 
+
         function openFiltersModal() {
             closeAllModals();
             console.log('🔍 Ouverture modal Filters');
@@ -3674,14 +3716,14 @@
                 document.body.classList.add('modal-open');
                 modal.classList.add('show');
                 
-                // ✅ AJOUTE CES LIGNES ICI
+                // ✅ APPLIQUER LES TRADUCTIONS
                 setTimeout(() => {
-                    console.log('📝 Application des traductions...');
+                    console.log('📝 Application des traductions (Filters Modal)...');
                     updateUILanguage();
-                    console.log('✅ Traductions appliquées');
                 }, 100);
             }
         }
+
 
         function closeFiltersModal() {
             console.log('❌ Fermeture modal Filters');

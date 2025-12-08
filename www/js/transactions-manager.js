@@ -1222,9 +1222,9 @@ async function openBankAccountsModal() {
        
     const modal = document.getElementById('bankAccountsModal');
     if (modal) {
-        modal.classList.add('show'); // ✅ CHANGÉ
-        modal.style.zIndex = '99999'; // ✅ AJOUTÉ
-        document.body.classList.add('modal-open'); // ✅ CHANGÉ
+        modal.classList.add('show');
+        modal.style.zIndex = '99999';
+        document.body.classList.add('modal-open');
         
         // Update credentials status
         updateCredentialsStatusInModal();
@@ -1235,10 +1235,15 @@ async function openBankAccountsModal() {
         // Load imported CSVs list
         loadImportedCSVsList();
         
-        // Apply translations
-        if (typeof updateTransactionsLanguage === 'function') {
-            updateTransactionsLanguage();
-        }
+        // ✅ APPLIQUER LES TRADUCTIONS
+        setTimeout(() => {
+            console.log('📝 Application des traductions (Bank Accounts Modal)...');
+            if (typeof updateUILanguage === 'function') {
+                updateUILanguage();
+            } else if (typeof updateTransactionsLanguage === 'function') {
+                updateTransactionsLanguage();
+            }
+        }, 100);
     }
 }
 
