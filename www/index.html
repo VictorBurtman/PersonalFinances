@@ -432,539 +432,7 @@
                             <span data-translate="addTransactionToStart">Add a transaction to get started</span>
                         </div>
                     </div>
-                    <!-- Filters Modal -->
-                    <div id="filtersModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2>🔍 <span data-translate="filters">Filters</span></h2>
-                                <button class="modal-close" onclick="closeFiltersModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Label filter -->
-                                <div style="margin-bottom: 20px;">
-                                    <h4 style="margin-bottom: 10px;" data-translate="labelStatus">Label Status</h4>
-                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                        <label class="filter-radio-label">
-                                            <input type="radio" name="labelFilter" value="all" onchange="applyFilters()" checked>
-                                            <span data-translate="showAll">All</span>
-                                        </label>
-                                        <label class="filter-radio-label">
-                                            <input type="radio" name="labelFilter" value="unlabeled" onchange="applyFilters()">
-                                            <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
-                                        </label>
-                                        <label class="filter-radio-label">
-                                            <input type="radio" name="labelFilter" value="labeled" onchange="applyFilters()">
-                                            <span data-translate="showOnlyLabeled">Labeled only</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                
-                                <!-- Month filter -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="month">Month</span>
-                                    </label>
-                                    <select id="monthFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
-                                        <option value="" data-translate="allMonths">All months</option>
-                                    </select>
-                                </div>
-                                
-                                <!-- Source filter -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="source">Source</span>
-                                    </label>
-                                    <select id="sourceFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
-                                        <option value="" data-translate="allSources">All sources</option>
-                                        <option value="max">🏦 Max (Leumi)</option>
-                                        <option value="isracard">💳 Isracard</option>
-                                    </select>
-                                </div>
-                                
-                                <!-- Category filter -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="category">Category</span>
-                                    </label>
-                                    <select id="categoryFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
-                                        <option value="" data-translate="allCategories">All categories</option>
-                                    </select>
-                                </div>
-                                
-                                <!-- Search -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="search">Search</span>
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        id="searchFilter" 
-                                        data-translate-placeholder="search"
-                                        placeholder="Search..." 
-                                        oninput="applyFilters()"
-                                        class="auth-input"
-                                        style="width: 100%;"
-                                    />
-                                </div>
-                                
-                                <!-- Sort -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="sortBy">Sort by</span>
-                                    </label>
-                                    <select id="sortFilter" onchange="changeSortOrder(this.value)" class="settings-select" style="width: 100%;">
-                                        <option value="date-desc" data-translate="sortDateNewest">📅 Date (newest)</option>
-                                        <option value="date-asc" data-translate="sortDateOldest">📅 Date (oldest)</option>
-                                        <option value="amount-desc" data-translate="sortAmountHighest">💰 Amount (highest)</option>
-                                        <option value="amount-asc" data-translate="sortAmountLowest">💰 Amount (lowest)</option>
-                                        <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
-                                        <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
-                                    </select>
-                                </div>
-                                
-                                <!-- Limit -->
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                        <span data-translate="showTransactions">Show transactions</span>
-                                    </label>
-                                    <select id="limitFilter" onchange="changeTransactionLimit(this.value)" class="settings-select" style="width: 100%;">
-                                        <option value="2000" data-translate="show2000">Show 2000</option>
-                                        <option value="1000" data-translate="show1000">Show 1000</option>
-                                        <option value="500" data-translate="show500">Show 500</option>
-                                        <option value="50" data-translate="show50">Show 50</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: space-between;">
-                                <button class="modal-button secondary" onclick="clearFilters()">
-                                    <span data-translate="clear">Clear</span>
-                                </button>
-                                <button class="modal-button primary" onclick="closeFiltersModal()">
-                                    <span data-translate="done">Done</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Credentials Modal (supports both Max and Isracard) -->
-                    <div id="credentialsModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 id="credentialsModalTitle"><span data-translate="bankCredentials">🔐 Bank Credentials</span></h2>
-                                <button class="modal-close" onclick="closeCredentialsModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="alert-trans alert-info-trans">
-                                    <span data-translate="credentialsSecure">Your credentials will be encrypted and stored securely in Firebase.</span>
-                                </div>
-                                <form id="credentialsForm" onsubmit="saveCredentials(event)">
-                                    <input type="hidden" id="bankType" value="max" />
-                                    
-                                    <!-- Max fields (visible par défaut) -->
-                                    <div id="maxFields">
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                                <span data-translate="username">Username</span>
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                class="auth-input" 
-                                                id="maxUsername" 
-                                                data-translate-placeholder="yourUsername"
-                                                placeholder="Your username"
-                                            />
-                                        </div>
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                                <span data-translate="password">Password</span>
-                                            </label>
-                                            <input 
-                                                type="password" 
-                                                class="auth-input" 
-                                                id="maxPassword" 
-                                                data-translate-placeholder="yourPassword"
-                                                placeholder="Your password"
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Isracard fields (cachés par défaut) -->
-                                    <div id="isracardFields" style="display: none;">
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                                <span data-translate="idNumber">ID Number</span>
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                class="auth-input" 
-                                                id="isracardId" 
-                                                data-translate-placeholder="yourIsraeliId"
-                                                placeholder="Your Israeli ID"
-                                            />
-                                        </div>
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                                <span data-translate="cardLast6">Last 6 Digits of Card</span>
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                class="auth-input" 
-                                                id="isracardCard6" 
-                                                placeholder="123456"
-                                                maxlength="6"
-                                                pattern="[0-9]{6}"
-                                            />
-                                        </div>
-                                        <div style="margin-bottom: 15px;">
-                                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                                <span data-translate="password">Password</span>
-                                            </label>
-                                            <input 
-                                                type="password" 
-                                                class="auth-input" 
-                                                id="isracardPassword" 
-                                                data-translate-placeholder="yourPassword"
-                                                placeholder="Your password"
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="credentialsError"></div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="modal-button secondary" onclick="closeCredentialsModal()">
-                                    <span data-translate="cancel">Cancel</span>
-                                </button>
-                                <button type="submit" form="credentialsForm" class="modal-button primary" id="saveCredentialsBtn">
-                                    <span data-translate="saveCredentials">Save Credentials</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bank Accounts Modal -->
-                    <div id="bankAccountsModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2>🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span></h2>
-                                <button class="modal-close" onclick="closeBankAccountsModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                
-                                <!-- CSV Import Section -->
-                                <div class="bank-section">
-                                    <h4>📥 <span data-translate="importCSVExcel">Import CSV / Excel</span></h4>
-                                    <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
-                                        <span data-translate="importCSVDescription">Import transactions from CSV or Excel files (Revolut, N26, etc.)</span>
-                                    </p>
-                                    
-                                    <!-- Bank name input -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em;">
-                                            <span data-translate="bankName">Bank Name</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            id="csvBankName" 
-                                            class="auth-input" 
-                                            placeholder="e.g. Revolut, N26, Wise..."
-                                            list="bankSuggestions"
-                                            style="width: 100%;"
-                                        />
-                                        <datalist id="bankSuggestions">
-                                            <option value="Revolut">
-                                            <option value="N26">
-                                            <option value="Wise">
-                                            <option value="Monzo">
-                                            <option value="Starling">
-                                            <option value="Bunq">
-                                        </datalist>
-                                        <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
-                                            <span data-translate="bankNameHelp">This helps you identify transactions from different banks</span>
-                                        </p>
-                                    </div>
-                                    
-                                    <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv,.xlsx,.xls" multiple onchange="handleCSVUpload(event)" />
-                                    <button class="csv-import-btn" onclick="triggerCSVUpload()">
-                                        📥 <span data-translate="chooseFile">Choose CSV/Excel File</span>
-                                    </button>
-                                    
-                                    <!-- Liste des CSV importés -->
-                                    <div class="csv-list" id="csvList">
-                                        <!-- Les CSV importés apparaîtront ici -->
-                                    </div>
-                                </div>
-
-                                <!-- Bank Synchronization (Collapsible) -->
-                                <div id="bankSyncSection" class="bank-section" style="border-top: 2px solid #e0e0e0; margin-top: 20px; padding-top: 20px; display: none;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleBankSync()">
-                                        <h4>
-                                            <span id="bankSyncToggle" style="margin-right: 8px;">▶</span>
-                                            <span data-translate="bankSynchronization">🔄 Bank Synchronization</span>
-                                        </h4>
-                                    </div>
-                                    
-                                    <div id="bankSyncContent" style="display: none; margin-top: 20px;">
-                                        <!-- Max.co.il Credentials -->
-                                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
-                                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
-                                            <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
-                                                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
-                                            </div>
-                                            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
-                                                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
-                                            </button>
-                                        </div>
-                                        
-                                        <!-- Isracard Credentials -->
-                                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
-                                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
-                                            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
-                                                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
-                                            </div>
-                                            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
-                                                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
-                                            </button>
-                                        </div>
-                                        
-                                        <!-- Sync Section -->
-                                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; border: 1px solid var(--block-border, #dee2e6);">
-                                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
-                                            <div style="margin-bottom: 15px; padding: 10px; background: var(--inner-block-bg, white); border-radius: 6px; border: 1px solid var(--block-border, #e9ecef);">
-                                                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
-                                                    <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
-                                                    <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
-                                                </div>
-                                            </div>
-                                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
-                                                    <span data-translate="syncAll">🔄 Sync All</span>
-                                                </button>
-                                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
-                                                    <span data-translate="autoLabel">🏷️ Auto-label</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Clear All Transactions -->
-                                <div class="bank-section" style="margin-top: 20px; padding-top: 20px; text-align: center;">
-                                    <h4 data-translate="clearData" style="text-align: center;">🗑️ Clear Data</h4>
-                                    <button class="settings-btn danger" onclick="clearAllTransactions()" style="max-width: 400px; width: 100%; padding: 12px; font-size: 1em; margin: 0 auto; display: block;">
-                                        <span data-translate="clearAllTransactions">Clear All Transactions</span>
-                                    </button>
-                                    <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d; text-align: center;" data-translate="clearTransactionsWarning">
-                                        Remove all synced transactions from the database. This cannot be undone.
-                                    </p>
-                                </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button class="modal-button primary" onclick="closeBankAccountsModal()">
-                                    <span data-translate="done">Done</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Add Manual Transaction Modal -->
-                    <div id="addManualTransactionModal" class="modal">
-                        <div class="modal-content" style="max-width: 500px; margin: 10vh auto;">
-                            <div class="modal-header">
-                                <h2>➕ <span data-translate="addManualTransaction">Add Transaction</span></h2>
-                                <button class="modal-close" onclick="closeAddManualTransactionModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Message si pas autorisé -->
-                                <div id="bankSyncNotAllowed" style="display: none; background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
-                                    <h4 style="color: #856404; margin: 0 0 10px 0;">🔒 Bank Synchronization Restricted</h4>
-                                    <p style="color: #856404; margin: 0;">
-                                        <span data-translate="bankSyncRestricted">This feature is currently restricted. Please contact the administrator for access.</span>
-                                    </p>
-                                </div>
-
-                                <form id="manualTransactionForm" onsubmit="saveManualTransaction(event)">
-                                    <!-- Name -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="transactionName">Name</span> <span style="color: #dc3545;">*</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            id="manualTxnName" 
-                                            class="auth-input" 
-                                            required
-                                            style="width: 100%;"
-                                            placeholder="e.g. Rent, Groceries..."
-                                        />
-                                    </div>
-
-                                    <!-- Date -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="date">Date</span> <span style="color: #dc3545;">*</span>
-                                        </label>
-                                        <input 
-                                            type="date" 
-                                            id="manualTxnDate" 
-                                            class="auth-input" 
-                                            required
-                                            style="width: 100%;"
-                                        />
-                                    </div>
-
-                                    <!-- Amount and Currency -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="amount">Amount</span> <span style="color: #dc3545;">*</span>
-                                        </label>
-                                        <div style="display: flex; gap: 10px;">
-                                            <input 
-                                                type="number" 
-                                                id="manualTxnAmount" 
-                                                class="auth-input" 
-                                                required
-                                                step="0.01"
-                                                min="0"
-                                                style="flex: 1;"
-                                                placeholder="0.00"
-                                            />
-                                            <select id="manualTxnCurrency" class="auth-input" style="width: 100px;">
-                                                <option value="₪">₪ ILS</option>
-                                                <option value="€">€ EUR</option>
-                                                <option value="$">$ USD</option>
-                                                <option value="£">£ GBP</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <!-- Memo (optional) -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="memo">Memo</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
-                                        </label>
-                                        <textarea 
-                                            id="manualTxnMemo" 
-                                            class="auth-input" 
-                                            rows="3"
-                                            style="width: 100%; resize: vertical;"
-                                            placeholder="Additional notes..."
-                                        ></textarea>
-                                    </div>
-
-                                    <!-- Bank Name -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="bankName">Bank Name</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
-                                        </label>
-                                        <input 
-                                            type="text" 
-                                            id="manualTxnBankName" 
-                                            class="auth-input" 
-                                            style="width: 100%;"
-                                            placeholder="e.g. Cash, Check, Wire Transfer..."
-                                        />
-                                        <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
-                                            <span data-translate="bankNameHelp">This helps you identify the source of this transaction</span>
-                                        </p>
-                                    </div>
-                                    
-                                    <!-- Category (optional) -->
-                                    <div style="margin-bottom: 15px;">
-                                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                                            <span data-translate="category">Category</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
-                                        </label>
-                                        <select id="manualTxnCategory" class="auth-input" style="width: 100%;">
-                                            <option value="" data-translate="selectCategory">Select category</option>
-                                            <!-- Categories will be populated dynamically -->
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end;">
-                                <button class="modal-button" onclick="closeAddManualTransactionModal()">
-                                    <span data-translate="cancel">Cancel</span>
-                                </button>
-                                <button class="modal-button primary" onclick="document.getElementById('manualTransactionForm').requestSubmit()">
-                                    <span data-translate="save">Save</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Exclude Transaction Modal -->
-                    <div id="excludeModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2>🚫 <span data-translate="excludeTransaction">Exclude Transaction</span></h2>
-                                <button class="modal-close" onclick="closeExcludeModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                <p id="excludeTransactionName" style="font-weight: 600; margin-bottom: 20px; color: #667eea;"></p>
-                                
-                                <button 
-                                    class="modal-button primary" 
-                                    style="width: 100%; margin-bottom: 10px; background: #dc3545; border-color: #dc3545;"
-                                    onclick="confirmExclude(false)"
-                                >
-                                    🚫 <span data-translate="excludeThisOnly">Exclude this transaction only</span>
-                                </button>
-                                
-                                <button 
-                                    class="modal-button primary" 
-                                    style="width: 100%; background: #bd2130; border-color: #bd2130;"
-                                    onclick="confirmExclude(true)"
-                                    id="excludeAllSimilarBtn"
-                                >
-                                    🚫🚫 <span id="excludeAllSimilarText">Exclude all similar transactions</span>
-                                </button>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="modal-button secondary" onclick="closeExcludeModal()">
-                                    <span data-translate="cancel">Cancel</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Excluded Transactions Modal -->
-                    <div id="excludedTransactionsModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h2>🚫 <span data-translate="excludedTransactions">Excluded Transactions</span></h2>
-                                <button class="modal-close" onclick="closeExcludedTransactionsModal()">✕</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Options en haut -->
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #dee2e6;">
-                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9em;">
-                                        <input type="checkbox" id="restoreSimilarCheckbox" style="width: 18px; height: 18px; cursor: pointer;">
-                                        <span data-translate="restoreSimilarTransactions">Restore similar transactions</span>
-                                    </label>
-                                    <button 
-                                        onclick="restoreAllTransactions()"
-                                        style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: 600;"
-                                    >
-                                        ↩️ <span data-translate="restoreAll">Restore All</span>
-                                    </button>
-                                </div>
-                                
-                                <!-- Liste des transactions -->
-                                <div id="excludedTransactionsList"></div>
-                                <div id="noExcludedTransactions" style="display: none; text-align: center; padding: 40px; color: #6c757d;">
-                                    <div style="font-size: 3em; margin-bottom: 10px;">✅</div>
-                                    <div><span data-translate="noExcludedTransactions">No excluded transactions</span></div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="modal-button primary" onclick="closeExcludedTransactionsModal()">
-                                    <span data-translate="done">Done</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- FIN DE L'ONGLET TRANSACTIONS -->
 
@@ -4412,6 +3880,540 @@
             <div class="loading-overlay-spinner"></div>
             <div class="loading-overlay-text" id="loadingOverlayText">Processing...</div>
             <div class="loading-overlay-subtext" id="loadingOverlaySubtext">Please wait</div>
+        </div>
+    </div>
+
+    <!-- Filters Modal -->
+    <div id="filtersModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔍 <span data-translate="filters">Filters</span></h2>
+                <button class="modal-close" onclick="closeFiltersModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Label filter -->
+                <div style="margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 10px;" data-translate="labelStatus">Label Status</h4>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <label class="filter-radio-label">
+                            <input type="radio" name="labelFilter" value="all" onchange="applyFilters()" checked>
+                            <span data-translate="showAll">All</span>
+                        </label>
+                        <label class="filter-radio-label">
+                            <input type="radio" name="labelFilter" value="unlabeled" onchange="applyFilters()">
+                            <span data-translate="showOnlyUnlabeled">Unlabeled only</span>
+                        </label>
+                        <label class="filter-radio-label">
+                            <input type="radio" name="labelFilter" value="labeled" onchange="applyFilters()">
+                            <span data-translate="showOnlyLabeled">Labeled only</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Month filter -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="month">Month</span>
+                    </label>
+                    <select id="monthFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                        <option value="" data-translate="allMonths">All months</option>
+                    </select>
+                </div>
+                
+                <!-- Source filter -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="source">Source</span>
+                    </label>
+                    <select id="sourceFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                        <option value="" data-translate="allSources">All sources</option>
+                        <option value="max">🏦 Max (Leumi)</option>
+                        <option value="isracard">💳 Isracard</option>
+                    </select>
+                </div>
+                
+                <!-- Category filter -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="category">Category</span>
+                    </label>
+                    <select id="categoryFilter" onchange="applyFilters()" class="settings-select" style="width: 100%;">
+                        <option value="" data-translate="allCategories">All categories</option>
+                    </select>
+                </div>
+                
+                <!-- Search -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="search">Search</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="searchFilter" 
+                        data-translate-placeholder="search"
+                        placeholder="Search..." 
+                        oninput="applyFilters()"
+                        class="auth-input"
+                        style="width: 100%;"
+                    />
+                </div>
+                
+                <!-- Sort -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="sortBy">Sort by</span>
+                    </label>
+                    <select id="sortFilter" onchange="changeSortOrder(this.value)" class="settings-select" style="width: 100%;">
+                        <option value="date-desc" data-translate="sortDateNewest">📅 Date (newest)</option>
+                        <option value="date-asc" data-translate="sortDateOldest">📅 Date (oldest)</option>
+                        <option value="amount-desc" data-translate="sortAmountHighest">💰 Amount (highest)</option>
+                        <option value="amount-asc" data-translate="sortAmountLowest">💰 Amount (lowest)</option>
+                        <option value="frequency-desc" data-translate="sortFrequencyMost">🔄 Frequency (most)</option>
+                        <option value="frequency-asc" data-translate="sortFrequencyLeast">🔄 Frequency (least)</option>
+                    </select>
+                </div>
+                
+                <!-- Limit -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                        <span data-translate="showTransactions">Show transactions</span>
+                    </label>
+                    <select id="limitFilter" onchange="changeTransactionLimit(this.value)" class="settings-select" style="width: 100%;">
+                        <option value="2000" data-translate="show2000">Show 2000</option>
+                        <option value="1000" data-translate="show1000">Show 1000</option>
+                        <option value="500" data-translate="show500">Show 500</option>
+                        <option value="50" data-translate="show50">Show 50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: space-between;">
+                <button class="modal-button secondary" onclick="clearFilters()">
+                    <span data-translate="clear">Clear</span>
+                </button>
+                <button class="modal-button primary" onclick="closeFiltersModal()">
+                    <span data-translate="done">Done</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credentials Modal (supports both Max and Isracard) -->
+    <div id="credentialsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="credentialsModalTitle"><span data-translate="bankCredentials">🔐 Bank Credentials</span></h2>
+                <button class="modal-close" onclick="closeCredentialsModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-trans alert-info-trans">
+                    <span data-translate="credentialsSecure">Your credentials will be encrypted and stored securely in Firebase.</span>
+                </div>
+                <form id="credentialsForm" onsubmit="saveCredentials(event)">
+                    <input type="hidden" id="bankType" value="max" />
+                    
+                    <!-- Max fields (visible par défaut) -->
+                    <div id="maxFields">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                                <span data-translate="username">Username</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="auth-input" 
+                                id="maxUsername" 
+                                data-translate-placeholder="yourUsername"
+                                placeholder="Your username"
+                            />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                                <span data-translate="password">Password</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                class="auth-input" 
+                                id="maxPassword" 
+                                data-translate-placeholder="yourPassword"
+                                placeholder="Your password"
+                            />
+                        </div>
+                    </div>
+                    
+                    <!-- Isracard fields (cachés par défaut) -->
+                    <div id="isracardFields" style="display: none;">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                                <span data-translate="idNumber">ID Number</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="auth-input" 
+                                id="isracardId" 
+                                data-translate-placeholder="yourIsraeliId"
+                                placeholder="Your Israeli ID"
+                            />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                                <span data-translate="cardLast6">Last 6 Digits of Card</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                class="auth-input" 
+                                id="isracardCard6" 
+                                placeholder="123456"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                            />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                                <span data-translate="password">Password</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                class="auth-input" 
+                                id="isracardPassword" 
+                                data-translate-placeholder="yourPassword"
+                                placeholder="Your password"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div id="credentialsError"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-button secondary" onclick="closeCredentialsModal()">
+                    <span data-translate="cancel">Cancel</span>
+                </button>
+                <button type="submit" form="credentialsForm" class="modal-button primary" id="saveCredentialsBtn">
+                    <span data-translate="saveCredentials">Save Credentials</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Accounts Modal -->
+    <div id="bankAccountsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🏦 <span data-translate="bankAccountsConfig">Bank Accounts</span></h2>
+                <button class="modal-close" onclick="closeBankAccountsModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                
+                <!-- CSV Import Section -->
+                <div class="bank-section">
+                    <h4>📥 <span data-translate="importCSVExcel">Import CSV / Excel</span></h4>
+                    <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
+                        <span data-translate="importCSVDescription">Import transactions from CSV or Excel files (Revolut, N26, etc.)</span>
+                    </p>
+                    
+                    <!-- Bank name input -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em;">
+                            <span data-translate="bankName">Bank Name</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="csvBankName" 
+                            class="auth-input" 
+                            placeholder="e.g. Revolut, N26, Wise..."
+                            list="bankSuggestions"
+                            style="width: 100%;"
+                        />
+                        <datalist id="bankSuggestions">
+                            <option value="Revolut">
+                            <option value="N26">
+                            <option value="Wise">
+                            <option value="Monzo">
+                            <option value="Starling">
+                            <option value="Bunq">
+                        </datalist>
+                        <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
+                            <span data-translate="bankNameHelp">This helps you identify transactions from different banks</span>
+                        </p>
+                    </div>
+                    
+                    <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv,.xlsx,.xls" multiple onchange="handleCSVUpload(event)" />
+                    <button class="csv-import-btn" onclick="triggerCSVUpload()">
+                        📥 <span data-translate="chooseFile">Choose CSV/Excel File</span>
+                    </button>
+                    
+                    <!-- Liste des CSV importés -->
+                    <div class="csv-list" id="csvList">
+                        <!-- Les CSV importés apparaîtront ici -->
+                    </div>
+                </div>
+
+                <!-- Bank Synchronization (Collapsible) -->
+                <div id="bankSyncSection" class="bank-section" style="border-top: 2px solid #e0e0e0; margin-top: 20px; padding-top: 20px; display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleBankSync()">
+                        <h4>
+                            <span id="bankSyncToggle" style="margin-right: 8px;">▶</span>
+                            <span data-translate="bankSynchronization">🔄 Bank Synchronization</span>
+                        </h4>
+                    </div>
+                    
+                    <div id="bankSyncContent" style="display: none; margin-top: 20px;">
+                        <!-- Max.co.il Credentials -->
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="maxLeumi">💳 Max.co.il (Leumi Card)</span></h5>
+                            <div class="alert-trans alert-info-trans" id="maxCredentialsAlertModal" style="margin-bottom: 12px;">
+                                <span data-translate="configureCredentials">Configure your Max credentials to sync transactions.</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="openCredentialsModal('max')">
+                                <span data-translate="setupMaxCredentials">🔐 Setup Max Credentials</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Isracard Credentials -->
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--block-border, #dee2e6);">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="isracard">💳 Isracard</span></h5>
+                            <div class="alert-trans alert-info-trans" id="isracardCredentialsAlertModal" style="margin-bottom: 12px;">
+                                <span data-translate="configureCredentials">Configure your Isracard credentials to sync transactions.</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="openCredentialsModal('isracard')">
+                                <span data-translate="setupIsracardCredentials">🔐 Setup Isracard Credentials</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Sync Section -->
+                        <div style="background: var(--block-bg, #f8f9fa); padding: 15px; border-radius: 8px; border: 1px solid var(--block-border, #dee2e6);">
+                            <h5 style="margin: 0 0 12px 0; font-size: 1em;"><span data-translate="syncStatus">Sync Status</span></h5>
+                            <div style="margin-bottom: 15px; padding: 10px; background: var(--inner-block-bg, white); border-radius: 6px; border: 1px solid var(--block-border, #e9ecef);">
+                                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9em;">
+                                    <div><strong>Max:</strong> <span id="lastMaxSyncTimeModal" data-translate="never">Never</span> <span id="lastMaxSyncCountModal"></span></div>
+                                    <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
+                                    <span data-translate="syncAll">🔄 Sync All</span>
+                                </button>
+                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
+                                    <span data-translate="autoLabel">🏷️ Auto-label</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clear All Transactions -->
+                <div class="bank-section" style="margin-top: 20px; padding-top: 20px; text-align: center;">
+                    <h4 data-translate="clearData" style="text-align: center;">🗑️ Clear Data</h4>
+                    <button class="settings-btn danger" onclick="clearAllTransactions()" style="max-width: 400px; width: 100%; padding: 12px; font-size: 1em; margin: 0 auto; display: block;">
+                        <span data-translate="clearAllTransactions">Clear All Transactions</span>
+                    </button>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #6c757d; text-align: center;" data-translate="clearTransactionsWarning">
+                        Remove all synced transactions from the database. This cannot be undone.
+                    </p>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button primary" onclick="closeBankAccountsModal()">
+                    <span data-translate="done">Done</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Manual Transaction Modal -->
+    <div id="addManualTransactionModal" class="modal">
+        <div class="modal-content" style="max-width: 500px; margin: 10vh auto;">
+            <div class="modal-header">
+                <h2>➕ <span data-translate="addManualTransaction">Add Transaction</span></h2>
+                <button class="modal-close" onclick="closeAddManualTransactionModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Message si pas autorisé -->
+                <div id="bankSyncNotAllowed" style="display: none; background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                    <h4 style="color: #856404; margin: 0 0 10px 0;">🔒 Bank Synchronization Restricted</h4>
+                    <p style="color: #856404; margin: 0;">
+                        <span data-translate="bankSyncRestricted">This feature is currently restricted. Please contact the administrator for access.</span>
+                    </p>
+                </div>
+
+                <form id="manualTransactionForm" onsubmit="saveManualTransaction(event)">
+                    <!-- Name -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="transactionName">Name</span> <span style="color: #dc3545;">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="manualTxnName" 
+                            class="auth-input" 
+                            required
+                            style="width: 100%;"
+                            placeholder="e.g. Rent, Groceries..."
+                        />
+                    </div>
+
+                    <!-- Date -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="date">Date</span> <span style="color: #dc3545;">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="manualTxnDate" 
+                            class="auth-input" 
+                            required
+                            style="width: 100%;"
+                        />
+                    </div>
+
+                    <!-- Amount and Currency -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="amount">Amount</span> <span style="color: #dc3545;">*</span>
+                        </label>
+                        <div style="display: flex; gap: 10px;">
+                            <input 
+                                type="number" 
+                                id="manualTxnAmount" 
+                                class="auth-input" 
+                                required
+                                step="0.01"
+                                min="0"
+                                style="flex: 1;"
+                                placeholder="0.00"
+                            />
+                            <select id="manualTxnCurrency" class="auth-input" style="width: 100px;">
+                                <option value="₪">₪ ILS</option>
+                                <option value="€">€ EUR</option>
+                                <option value="$">$ USD</option>
+                                <option value="£">£ GBP</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Memo (optional) -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="memo">Memo</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
+                        </label>
+                        <textarea 
+                            id="manualTxnMemo" 
+                            class="auth-input" 
+                            rows="3"
+                            style="width: 100%; resize: vertical;"
+                            placeholder="Additional notes..."
+                        ></textarea>
+                    </div>
+
+                    <!-- Bank Name -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="bankName">Bank Name</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="manualTxnBankName" 
+                            class="auth-input" 
+                            style="width: 100%;"
+                            placeholder="e.g. Cash, Check, Wire Transfer..."
+                        />
+                        <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
+                            <span data-translate="bankNameHelp">This helps you identify the source of this transaction</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Category (optional) -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500;">
+                            <span data-translate="category">Category</span> <span style="font-size: 0.8em; color: #6c757d;" data-translate="optional">(optional)</span>
+                        </label>
+                        <select id="manualTxnCategory" class="auth-input" style="width: 100%;">
+                            <option value="" data-translate="selectCategory">Select category</option>
+                            <!-- Categories will be populated dynamically -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="modal-button" onclick="closeAddManualTransactionModal()">
+                    <span data-translate="cancel">Cancel</span>
+                </button>
+                <button class="modal-button primary" onclick="document.getElementById('manualTransactionForm').requestSubmit()">
+                    <span data-translate="save">Save</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exclude Transaction Modal -->
+    <div id="excludeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚫 <span data-translate="excludeTransaction">Exclude Transaction</span></h2>
+                <button class="modal-close" onclick="closeExcludeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="excludeTransactionName" style="font-weight: 600; margin-bottom: 20px; color: #667eea;"></p>
+                
+                <button 
+                    class="modal-button primary" 
+                    style="width: 100%; margin-bottom: 10px; background: #dc3545; border-color: #dc3545;"
+                    onclick="confirmExclude(false)"
+                >
+                    🚫 <span data-translate="excludeThisOnly">Exclude this transaction only</span>
+                </button>
+                
+                <button 
+                    class="modal-button primary" 
+                    style="width: 100%; background: #bd2130; border-color: #bd2130;"
+                    onclick="confirmExclude(true)"
+                    id="excludeAllSimilarBtn"
+                >
+                    🚫🚫 <span id="excludeAllSimilarText">Exclude all similar transactions</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" onclick="closeExcludeModal()">
+                    <span data-translate="cancel">Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excluded Transactions Modal -->
+    <div id="excludedTransactionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚫 <span data-translate="excludedTransactions">Excluded Transactions</span></h2>
+                <button class="modal-close" onclick="closeExcludedTransactionsModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Options en haut -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #dee2e6;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9em;">
+                        <input type="checkbox" id="restoreSimilarCheckbox" style="width: 18px; height: 18px; cursor: pointer;">
+                        <span data-translate="restoreSimilarTransactions">Restore similar transactions</span>
+                    </label>
+                    <button 
+                        onclick="restoreAllTransactions()"
+                        style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9em; font-weight: 600;"
+                    >
+                        ↩️ <span data-translate="restoreAll">Restore All</span>
+                    </button>
+                </div>
+                
+                <!-- Liste des transactions -->
+                <div id="excludedTransactionsList"></div>
+                <div id="noExcludedTransactions" style="display: none; text-align: center; padding: 40px; color: #6c757d;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">✅</div>
+                    <div><span data-translate="noExcludedTransactions">No excluded transactions</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button primary" onclick="closeExcludedTransactionsModal()">
+                    <span data-translate="done">Done</span>
+                </button>
+            </div>
         </div>
     </div>
 
