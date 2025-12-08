@@ -899,14 +899,6 @@
                         </div>
                     </div>
 
-                    <!-- Scroll to Top Button -->
-                    <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
-                        ↑
-                    </button>
-
-                    <!-- Toast Notifications Container -->
-                    <div class="toast-container" id="toastContainer"></div>
-
                     <!-- Exclude Transaction Modal -->
                     <div id="excludeModal" class="modal">
                         <div class="modal-content">
@@ -3765,20 +3757,43 @@
 
         // === GESTION DU BOUTON "SCROLL TO TOP" ===
         function initScrollToTopButton() {
+            console.log('🚀 initScrollToTopButton appelée');
+            
             const scrollBtn = document.getElementById('scrollToTopBtn');
             const transactionsTab = document.getElementById('transactionsTab');
             
-            if (!scrollBtn || !transactionsTab) return;
+            if (!scrollBtn) {
+                console.log('❌ scrollToTopBtn not found');
+                return;
+            }
             
-            // Détecter le scroll dans l'onglet transactions
-            transactionsTab.addEventListener('scroll', () => {
-                // Afficher le bouton si on a scrollé plus de 300px
+            if (!transactionsTab) {
+                console.log('❌ transactionsTab not found');
+                return;
+            }
+            
+            // Supprimer l'ancien event listener s'il existe (évite les doublons)
+            const oldListener = transactionsTab._scrollListener;
+            if (oldListener) {
+                transactionsTab.removeEventListener('scroll', oldListener);
+            }
+            
+            // Créer le nouvel event listener
+            const scrollListener = () => {
                 if (transactionsTab.scrollTop > 300) {
                     scrollBtn.classList.add('visible');
                 } else {
                     scrollBtn.classList.remove('visible');
                 }
-            });
+            };
+            
+            // Sauvegarder la référence pour pouvoir le retirer plus tard
+            transactionsTab._scrollListener = scrollListener;
+            
+            // Ajouter l'event listener
+            transactionsTab.addEventListener('scroll', scrollListener);
+            
+            console.log('✅ Scroll to top button initialized');
         }
 
         // Appeler cette fonction APRÈS que l'utilisateur soit connecté
@@ -3876,10 +3891,12 @@
                     console.log('📥 Chargement des transactions...');
                     loadTransactions();
                 }
+                // ✅ AJOUTE CETTE LIGNE ICI
+                setTimeout(() => {
+                    initScrollToTopButton();
+                }, 500); // Petit délai pour s'assurer que l'onglet est bien affiché
             }
         }
-
-
 
 
         // ✅ Fermer tous les modals ouverts
@@ -4108,7 +4125,8 @@
 
     </script>
     <script src="js/transactions-manager.js"></script>
-        <!-- Loading Overlay -->
+
+    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-overlay-content">
             <div class="loading-overlay-spinner"></div>
@@ -4116,5 +4134,13 @@
             <div class="loading-overlay-subtext" id="loadingOverlaySubtext">Please wait</div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Back to top">
+        ↑
+    </button>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
 </body>
 </html>
