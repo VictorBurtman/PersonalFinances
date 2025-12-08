@@ -11,11 +11,11 @@ Bonjour ! Je travaille sur **PersonalFinances**, une application de gestion budg
 - Sous l'icône mobile : "Budget"
 - Package ID : `com.victor.personalfinances`
 
-**Type :** Application web + mobile (Android)
+**Type :** Application PWA (iphone) + app mobile Android. 
 
-**Objectif :** Gérer ses finances personnelles avec import automatique des transactions bancaires (banques israéliennes) et catégorisation intelligente.
+**Objectif :** Gérer ses finances personnelles avec import des transactions bancaires et catégorisation intelligente.
 
-**Utilisateurs :** Moi-même + quelques amis/famille (distribution via Google Play Internal Testing)
+**Utilisateurs :** Moi-même + quelques amis/famille (distribution via Google Play Internal Testing et PWA iphone).
 
 ---
 
