@@ -50,34 +50,47 @@ async function updateCredentialsStatus() {
     }
 }
 
+
+// Variable globale pour éviter les chargements multiples
+let isLoadingTransactions = false;
+
 /**
  * Load transactions from Firebase
  */
 async function loadTransactions() {
+    // ✅ Bloquer si déjà en cours
+    if (isLoadingTransactions) {
+        console.log('⏸️ Transactions déjà en cours de chargement');
+        return;
+    }
+    
     if (!window.currentUser || !transactionsFunctions) {
         console.log('Cannot load transactions: user not logged in or functions not initialized');
         return;
     }
     
-    // Appliquer les traductions dès le début
-    if (typeof updateTransactionsLanguage === 'function') {
-        updateTransactionsLanguage();
-    }
-    
-    // Récupérer les éléments DOM
-    const transactionsLoading = document.getElementById('transactionsLoading');
-    const allTransactionsList = document.getElementById('allTransactionsList');
-    const emptyState = document.getElementById('emptyState');
-    const allTransactionsSection = document.getElementById('allTransactionsSection');
-    const filtersSection = document.getElementById('filtersSection');
-    
-    // Afficher le loading
-    if (allTransactionsSection) allTransactionsSection.style.display = 'block';
-    if (transactionsLoading) transactionsLoading.style.display = 'block';
-    if (allTransactionsList) allTransactionsList.innerHTML = '';
-    if (emptyState) emptyState.style.display = 'none';
+    isLoadingTransactions = true;
+    console.log('🔵 [START] loadTransactions');
     
     try {
+        // Appliquer les traductions dès le début
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
+        }
+        
+        // Récupérer les éléments DOM
+        const transactionsLoading = document.getElementById('transactionsLoading');
+        const allTransactionsList = document.getElementById('allTransactionsList');
+        const emptyState = document.getElementById('emptyState');
+        const allTransactionsSection = document.getElementById('allTransactionsSection');
+        const filtersSection = document.getElementById('filtersSection');
+        
+        // Afficher le loading
+        if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+        if (transactionsLoading) transactionsLoading.style.display = 'block';
+        if (allTransactionsList) allTransactionsList.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'none';
+        
         // Charger les états UI sauvegardés
         await loadSectionStates();
         
@@ -230,11 +243,18 @@ async function loadTransactions() {
         if (transactionsLoading) transactionsLoading.style.display = 'none';
         
         // Note : renderTransactions() va gérer l'affichage de emptyState et filtersSection
+        console.log('🟢 [SUCCESS] loadTransactions terminée');
         
     } catch (error) {
-        console.error('Error loading transactions:', error);
+        console.error('🔴 [ERROR] loadTransactions:', error);
         const t = translations[currentLanguage] || translations['en'];
         showToast(t.errorLoadingTransactions + ' ' + error.message, 'error');
+        
+        // Récupérer les éléments DOM
+        const transactionsLoading = document.getElementById('transactionsLoading');
+        const emptyState = document.getElementById('emptyState');
+        const allTransactionsSection = document.getElementById('allTransactionsSection');
+        const filtersSection = document.getElementById('filtersSection');
         
         // Cacher le loading
         if (transactionsLoading) transactionsLoading.style.display = 'none';
@@ -252,8 +272,13 @@ async function loadTransactions() {
         // Cacher les sections
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
         if (filtersSection) filtersSection.style.display = 'none';
+        
+    } finally {
+        // ✅ Toujours débloquer à la fin
+        isLoadingTransactions = false;
     }
 }
+
 
 /**
  * Populate month filter dropdown with available months
