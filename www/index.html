@@ -3674,17 +3674,24 @@
          * Force le défilement de la page au sommet.
          */
         function scrollToTop() {
+            console.log('🚀 scrollToTop appelée');
+            
             const dashboard = document.querySelector('.dashboard');
             
-            if (dashboard) {
-                dashboard.scrollTo({ 
-                    top: 0, 
-                    behavior: 'smooth' 
-                });
-            } else {
-                // Fallback
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (!dashboard) {
+                console.log('❌ Dashboard not found');
+                return;
             }
+            
+            console.log('📍 Dashboard scrollTop avant:', dashboard.scrollTop);
+            
+            // Scroll smooth vers le haut
+            dashboard.scrollTo({ 
+                top: 0, 
+                behavior: 'smooth' 
+            });
+            
+            console.log('✅ Scroll commandé');
         }
 
         // Global variables
