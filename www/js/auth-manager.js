@@ -200,19 +200,29 @@ class AuthManager {
 
 
     /**
-     * Affiche un message d'erreur dans l'interface
+     * Affiche un message dans l'interface (erreur ou succès)
      * @param {string} message - Message à afficher
      */
     showAuthError(message) {
-        // ✅ SEULEMENT afficher dans l'élément authError (pas de toast)
         const errorElement = document.getElementById('authError');
         if (errorElement) {
-            errorElement.textContent = '❌ ' + message;
+            errorElement.textContent = message;
             errorElement.style.display = 'block';
+            
+            // ✅ Détecter si c'est un succès (commence par ✅)
+            if (message.startsWith('✅')) {
+                errorElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            } else {
+                errorElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+            }
+            
+            errorElement.style.color = 'white';
             
             // Masquer après 6 secondes
             setTimeout(() => {
                 errorElement.style.display = 'none';
+                // Remettre le style rouge par défaut
+                errorElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
             }, 6000);
         }
     }
