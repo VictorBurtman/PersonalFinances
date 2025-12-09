@@ -605,13 +605,13 @@
             ============================================ -->
         <div class="app-footer">
             <!-- Budget Tab -->
-            <button class="footer-nav-btn active" id="budgetTabBtn" onclick="switchTab('budget')">
+            <button class="footer-nav-btn active" id="budgetTabBtn" onclick="if(!isTabSwitching) switchTab('budget')">
                 <img src="img/icons/budget_inactive.svg" alt="Budget" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="budgetTab">Budget</span>
             </button>
             
             <!-- Transactions Tab -->
-            <button class="footer-nav-btn" id="transactionsTabBtn" onclick="switchTab('transactions')">
+            <button class="footer-nav-btn" id="transactionsTabBtn" onclick="if(!isTabSwitching) switchTab('transactions')">
                 <img src="img/icons/transactions-inactive.svg" alt="Transactions" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="transactionsTab">Transactions</span>
             </button>

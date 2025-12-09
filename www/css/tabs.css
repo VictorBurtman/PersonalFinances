@@ -1436,7 +1436,7 @@ body.dark-mode .empty-state-trans {
 
 .floating-add-btn {
     position: fixed;
-    bottom: 90px; /* ✅ MÊME position que scroll-to-top */
+    bottom: 110px; /* ✅ MÊME position que scroll-to-top */
     right: 20px; /* ✅ MÊME position */
     width: 56px; /* ✅ MÊME taille */
     height: 56px;
@@ -2102,7 +2102,7 @@ body.dark-mode .settings-select {
 
 .scroll-to-top {
     position: fixed;
-    bottom: 160px; /* ✅ MÊME position que floating-add-btn */
+    bottom: 190px; /* ✅ MÊME position que floating-add-btn */
     right: 20px; /* ✅ MÊME position */
     width: 56px; /* ✅ MÊME taille */
     height: 56px;
@@ -2284,7 +2284,7 @@ body.dark-mode .chartjs-legend span {
     
     /* Floating button */
     .floating-add-btn {
-        bottom: 80px; /* ✅ MÊME position */
+        bottom: 110px; /* ✅ MÊME position */
         right: 15px; /* ✅ MÊME position */
         width: 52px; /* ✅ MÊME taille */
         height: 52px;
@@ -2334,7 +2334,7 @@ body.dark-mode .chartjs-legend span {
     }
     
     .scroll-to-top {
-        bottom: 150px; /* ✅ MÊME position */
+        bottom: 190px; /* ✅ MÊME position */
         right: 15px; /* ✅ MÊME position */
         width: 52px; /* ✅ MÊME taille */
         height: 52px;
