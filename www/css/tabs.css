@@ -282,6 +282,12 @@ body.dark-mode .app-footer {
     font-weight: 500;
     min-height: 50px;
     overflow: hidden;
+
+    /* ✅ AJOUTE CES LIGNES */
+    touch-action: manipulation; /* Désactive le double-tap zoom et accélère le tap */
+    -webkit-tap-highlight-color: transparent; /* Enlève le flash gris sur iOS */
+    user-select: none; /* Empêche la sélection du texte */
+    -webkit-user-select: none;
 }
 
 body.dark-mode .footer-nav-btn {
