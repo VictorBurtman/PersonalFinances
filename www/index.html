@@ -672,24 +672,23 @@
                 </div>
                 
                 <!-- Currency Section -->
-                <div class="settings-section">
-                    <h3 data-translate="currency">Currency</h3>
-                    <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
-                        <option value="ILS">Israeli Shekel (₪)</option>
-                        <option value="USD">US Dollar ($)</option>
-                        <option value="EUR">Euro (€)</option>
-                        <option value="GBP">British Pound (£)</option>
-                        <option value="JPY">Japanese Yen (¥)</option>
-                        <option value="RUB">Russian Ruble (₽)</option>
-                        <option value="CNY">Chinese Yuan (¥)</option>
-                        <option value="EGP">Egyptian Pound (E£)</option>
-                        <option value="LBP">Lebanese Pound (L£)</option>
-                        <option value="SYP">Syrian Pound (S£)</option>
-                        <option value="JOD">Jordanian Dinar (د.ا)</option>
-                        <option value="INR">Indian Rupee (₹)</option>
-                        <option value="THB">Thai Baht (฿)</option>
-                    </select>
-                </div>
+                <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
+                    <option value="ILS">Israeli Shekel (₪)</option>
+                    <option value="USD">US Dollar ($)</option>
+                    <option value="EUR">Euro (€)</option>
+                    <option value="GBP">British Pound (£)</option>
+                    <option value="JPY">Japanese Yen (¥)</option>
+                    <option value="RUB">Russian Ruble (₽)</option>
+                    <option value="CNY">Chinese Yuan (¥)</option>
+                    <option value="EGP">Egyptian Pound (E£)</option>
+                    <option value="SAR">Saudi Riyal (﷼)</option>
+                    <option value="AED">UAE Dirham (د.إ)</option>
+                    <option value="INR">Indian Rupee (₹)</option>
+                    <option value="THB">Thai Baht (฿)</option>
+                    <option value="CHF">Swiss Franc (CHF)</option>
+                    <option value="CAD">Canadian Dollar (CA$)</option>
+                    <option value="AUD">Australian Dollar (A$)</option>
+                </select>
                 
                 <!-- Income Tracking Section -->
                 <div class="settings-section">
@@ -3106,6 +3105,114 @@
             });
         }
 
+        /**
+         * Détecte automatiquement la langue et la devise
+         * - Langue : depuis les paramètres du téléphone/navigateur
+         * - Devise : depuis la géolocalisation (IP)
+         */
+        async function detectUserLocale() {
+            // ========================================
+            // 1. DÉTECTER LA LANGUE (navigateur/téléphone)
+            // ========================================
+            const browserLang = navigator.language || navigator.userLanguage;
+            const langCode = browserLang.split('-')[0].toLowerCase();
+            
+            console.log('🌍 Langue du navigateur détectée:', browserLang, '→', langCode);
+            
+            // Langues supportées par l'app
+            const supportedLanguages = ['en', 'fr', 'he', 'es', 'ru', 'ar'];
+            
+            // Si la langue est supportée, l'utiliser, sinon anglais par défaut
+            const detectedLanguage = supportedLanguages.includes(langCode) ? langCode : 'en';
+            
+            console.log('✅ Langue finale:', detectedLanguage);
+            
+            // ========================================
+            // 2. DÉTECTER LA DEVISE (géolocalisation IP)
+            // ========================================
+            let detectedCurrency = 'USD'; // Défaut
+            
+            try {
+                console.log('🌐 Détection de la devise via géolocalisation IP...');
+                
+                const response = await fetch('https://ipapi.co/json/', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const geoData = await response.json();
+                    const countryCode = geoData.country_code;
+                    
+                    console.log('📍 Pays détecté:', countryCode, geoData.country_name);
+                    
+                    // Mapping pays → devise
+                    const currencyMap = {
+                        // Europe
+                        'FR': 'EUR', 'DE': 'EUR', 'IT': 'EUR', 'ES': 'EUR', 'PT': 'EUR',
+                        'BE': 'EUR', 'NL': 'EUR', 'AT': 'EUR', 'IE': 'EUR', 'GR': 'EUR',
+                        'FI': 'EUR', 'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
+                        'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR',
+                        
+                        // Moyen-Orient
+                        'IL': 'ILS',
+                        'SA': 'SAR',
+                        'AE': 'AED',
+                        'EG': 'EGP',
+                        'LB': 'LBP',
+                        'SY': 'SYP',
+                        'JO': 'JOD',
+                        
+                        // Amériques
+                        'US': 'USD',
+                        'CA': 'CAD',
+                        'MX': 'MXN',
+                        'BR': 'BRL',
+                        'AR': 'ARS',
+                        
+                        // Royaume-Uni
+                        'GB': 'GBP',
+                        
+                        // Asie
+                        'JP': 'JPY',
+                        'CN': 'CNY',
+                        'IN': 'INR',
+                        'TH': 'THB',
+                        'KR': 'KRW',
+                        'SG': 'SGD',
+                        
+                        // Russie
+                        'RU': 'RUB',
+                        
+                        // Suisse
+                        'CH': 'CHF',
+                        
+                        // Australie
+                        'AU': 'AUD',
+                        'NZ': 'NZD',
+                    };
+                    
+                    detectedCurrency = currencyMap[countryCode] || 'USD';
+                    console.log('✅ Devise détectée:', detectedCurrency);
+                    
+                } else {
+                    console.warn('⚠️ Géolocalisation IP échouée, devise par défaut: USD');
+                }
+            } catch (error) {
+                console.warn('⚠️ Erreur géolocalisation IP:', error.message);
+                console.log('ℹ️ Utilisation de la devise par défaut: USD');
+            }
+            
+            return {
+                language: detectedLanguage,
+                currency: detectedCurrency
+            };
+        }
+
+
+
         // Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
@@ -3369,9 +3476,19 @@
         // === GESTION DE L'ÉTAT D'AUTHENTIFICATION FIREBASE ===
         // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
 
+        // ✅ UNIQUE onAuthStateChanged fusionné
         auth.onAuthStateChanged(async (user) => {
             console.log('🔴 onAuthStateChanged triggered');
             console.log('👤 User:', user ? user.email : 'null');
+            
+            // ✅ Initialiser Eruda pour les développeurs
+            if (user) {
+                const devEmails = ['victorburtman@gmail.com'];
+                if (devEmails.includes(user.email)) {
+                    console.log('🛠️ Mode développeur activé pour:', user.email);
+                    eruda.init();
+                }
+            }
             
             const authScreen = document.getElementById('auth-screen');
             const mainApp = document.getElementById('appScreen');
@@ -3382,12 +3499,14 @@
             if (user) {
                 console.log('✅ User is logged in - showing main app');
                 currentUser = user;
-                window.currentUser = user; // ✅ AJOUTER cette ligne
+                window.currentUser = user;
+                
                 console.log('🔄 Hiding auth screen, showing main app...');
                 if (authScreen) {
                     authScreen.style.display = 'none';
                 }
                 
+                // ✅ Vérifier si premier lancement
                 const isFirst = await authManager.checkFirstLaunch(user.uid);
                 console.log('📋 First launch:', isFirst);
                 
@@ -3396,14 +3515,70 @@
                 }
                 
                 console.log('📥 Loading user data...');
-                await loadUserData();
+                
+                // ✅ NOUVEAU : Charger les données avec détection automatique pour nouveaux utilisateurs
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    
+                    // ✅ Vérifier si c'est le premier login (pas de langue/devise)
+                    const isFirstLogin = !data.language || !data.currency;
+                    
+                    if (isFirstLogin) {
+                        console.log('🆕 Premier login détecté, détection automatique...');
+                        
+                        // Détecter langue et devise
+                        const detectedLocale = await detectUserLocale();
+                        console.log('✅ Détecté:', detectedLocale);
+                        
+                        // Sauvegarder dans Firestore
+                        await db.collection('users').doc(user.uid).set({
+                            language: detectedLocale.language,
+                            currency: detectedLocale.currency,
+                            firstLoginDate: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                        
+                        // Appliquer
+                        currentLanguage = detectedLocale.language;
+                        window.currentCurrency = detectedLocale.currency;
+                        
+                        console.log('💾 Langue et devise sauvegardées:', currentLanguage, window.currentCurrency);
+                    } else {
+                        // Utilisateur existant, charger ses préférences
+                        currentLanguage = data.language || 'en';
+                        window.currentCurrency = data.currency || 'USD';
+                        
+                        console.log('👤 Utilisateur existant, préférences chargées:', currentLanguage, window.currentCurrency);
+                    }
+                    
+                    // Mettre à jour les selects
+                    document.getElementById('languageSelect').value = currentLanguage;
+                    document.getElementById('currencySelect').value = window.currentCurrency;
+                    
+                    // Charger dark mode (par défaut activé)
+                    const darkMode = data.darkMode !== undefined ? data.darkMode : true;
+                    if (darkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                    
+                    const darkModeCheckbox = document.getElementById('darkModeCheckbox');
+                    if (darkModeCheckbox) {
+                        darkModeCheckbox.checked = darkMode;
+                    }
+                    
+                    // Charger le reste des données utilisateur
+                    await loadUserData();
+                }
+                
                 console.log('✅ User data loaded');
                 
-                // ✅ FORCE la mise à jour de l'interface avec la bonne langue
+                // ✅ Appliquer la langue et RTL
                 console.log('🌍 Applying language:', currentLanguage);
                 updateUILanguage();
                 
-                // ✅ Appliquer aussi la direction RTL si nécessaire
                 if (currentLanguage === 'ar' || currentLanguage === 'he') {
                     document.documentElement.setAttribute('dir', 'rtl');
                 } else {
@@ -3411,11 +3586,13 @@
                 }
                 
                 console.log('📱 Showing main app...');
-                // ✅ Initialiser le bouton scroll-to-top UNE SEULE FOIS
+                
+                // Initialiser les fonctionnalités
                 setTimeout(() => {
                     initScrollToTopButton();
                     initSwipeNavigation();
                 }, 1000);
+                
                 if (mainApp) {
                     mainApp.style.display = 'block';
                 }
@@ -3436,7 +3613,9 @@
                 }
             }
         });
-                
+
+
+
         // ✅ AJOUTE après auth.onAuthStateChanged ou dans DOMContentLoaded
         document.addEventListener('DOMContentLoaded', () => {
             // Gérer les clics sur les boutons footer avec prévention du double-tap
@@ -4733,6 +4912,6 @@
             }
         }
     });
-</script>
+    </script>
 </body>
 </html>
