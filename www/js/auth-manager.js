@@ -1,6 +1,17 @@
 // auth-manager.js
 // Gère l'authentification, la configuration initiale et la mémorisation des identifiants
 
+
+// ✅ Helper pour accéder aux traductions
+function t(key) {
+    if (typeof window.translations !== 'undefined' && 
+        typeof window.currentLanguage !== 'undefined') {
+        return window.translations[window.currentLanguage]?.[key] || key;
+    }
+    return key;
+}
+
+
 class AuthManager {
     constructor() {
         this.isFirstLaunch = null;
@@ -197,6 +208,30 @@ class AuthManager {
         this.updateAuthScreenTranslations(langCode);
     }
 
+
+    /**
+     * Affiche un message d'erreur dans l'interface
+     * @param {string} message - Message à afficher
+     */
+    showAuthError(message) {
+        // Essayer d'utiliser showToast si disponible (pour cohérence avec l'app)
+        if (typeof showToast === 'function') {
+            showToast('❌ ' + message, 'error');
+        }
+        
+        // Afficher dans l'élément authError existant
+        const errorElement = document.getElementById('authError');
+        if (errorElement) {
+            errorElement.textContent = '❌ ' + message;
+            errorElement.style.display = 'block';
+            
+            // Masquer après 6 secondes
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 6000);
+        }
+    }
+
     /**
      * Met à jour les traductions de l'écran de connexion
      * @param {string} langCode
@@ -336,6 +371,37 @@ class AuthManager {
             return result;
             
         } catch (error) {
+            console.error('❌ Sign in error:', error);
+            
+            // ✅ Traduire l'erreur pour l'utilisateur
+            let errorMessage = t('unknownError');
+            
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = t('userNotFound');
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = t('wrongPassword');
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = t('invalidEmail');
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = t('accountDisabled');
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = t('tooManyRequests');
+                    break;
+                case 'auth/invalid-credential':
+                    errorMessage = t('wrongPassword');
+                    break;
+                default:
+                    errorMessage = t('unknownError');
+            }
+            
+            // Afficher l'erreur à l'utilisateur
+            this.showAuthError(errorMessage);
+            
             throw error;
         }
     }
@@ -363,6 +429,31 @@ class AuthManager {
             return result;
             
         } catch (error) {
+            console.error('❌ Sign up error:', error);
+            
+            // ✅ Traduire l'erreur pour l'utilisateur
+            let errorMessage = t('unknownError');
+            
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = t('emailAlreadyInUse');
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = t('weakPassword');
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = t('invalidEmail');
+                    break;
+                case 'auth/operation-not-allowed':
+                    errorMessage = t('unknownError');
+                    break;
+                default:
+                    errorMessage = t('unknownError');
+            }
+            
+            // Afficher l'erreur à l'utilisateur
+            this.showAuthError(errorMessage);
+            
             throw error;
         }
     }
@@ -448,33 +539,6 @@ class AuthManager {
         return errorMap[errorCode] || trans.errorUnknown;
     }
 
-    /**
-     * Affiche un message d'erreur dans l'interface
-     * @param {string} message - Message à afficher
-     */
-    showAuthError(message) {
-        // Chercher ou créer le conteneur d'erreur
-        let errorDiv = document.querySelector('.auth-error');
-        
-        if (!errorDiv) {
-            errorDiv = document.createElement('div');
-            errorDiv.className = 'auth-error';
-            
-            // Insérer avant les boutons
-            const authButtons = document.querySelector('.auth-buttons');
-            if (authButtons) {
-                authButtons.parentNode.insertBefore(errorDiv, authButtons);
-            }
-        }
-        
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
-        
-        // Masquer après 5 secondes
-        setTimeout(() => {
-            errorDiv.style.display = 'none';
-        }, 5000);
-    }
 
     /**
      * Valide les champs du formulaire
