@@ -432,7 +432,15 @@ class AuthManager {
      * Affiche le dialog de réinitialisation de mot de passe
      */
     showForgotPasswordDialog() {
+
+        console.log('🔍 currentLanguage:', currentLanguage);
+        console.log('🔍 window.currentLanguage:', window.currentLanguage);
+        console.log('🔍 translations:', translations);
+        console.log('🔍 translations[currentLanguage]:', translations[currentLanguage]);
+
         const trans = translations[currentLanguage];
+        console.log('🔍 trans:', trans);
+        console.log('🔍 trans.resetPassword:', trans?.resetPassword);
         const email = document.getElementById('email').value.trim();
         
         // Créer la modal
