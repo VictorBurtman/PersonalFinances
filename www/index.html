@@ -3724,22 +3724,24 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
-        // Variable globale pour éviter les appels multiples
         let isTabSwitching = false;
+        let lastTabSwitchTime = 0; // ✅ AJOUTE cette variable
 
         function switchTab(tabName) {
-            // ✅ Bloquer si un switch est déjà en cours
-            if (isTabSwitching) {
-                console.log('⏸️ Switch already in progress, ignoring:', tabName);
+            const now = Date.now();
+            
+            // ✅ Bloquer si switch en cours OU si dernier switch trop récent (< 300ms)
+            if (isTabSwitching || (now - lastTabSwitchTime < 300)) {
+                console.log('⏸️ Switch bloqué (trop rapide ou en cours)');
                 return;
             }
             
             isTabSwitching = true;
+            lastTabSwitchTime = now; // ✅ Enregistrer le timestamp
             console.log('🔄 switchTab appelé:', tabName);
-            console.trace('📍 Appelé depuis:');
             
             try {
-                // ✅ Activer le nouveau bouton AVANT de retirer les autres (évite le clignotement)
+                // ✅ Activer le nouveau bouton AVANT de retirer les autres
                 const activeBtn = document.getElementById(tabName + 'TabBtn');
                 if (activeBtn) {
                     activeBtn.classList.add('active');
@@ -3755,9 +3757,8 @@
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
                     
-                    // Afficher les boutons Budget (sauf Add Category qui dépend du mode édition)
+                    // Afficher les boutons Budget
                     document.querySelectorAll('.budget-only').forEach(btn => {
-                        // Si c'est le bouton Add Category, vérifier le mode édition
                         if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
                             btn.style.display = isEditMode ? 'inline-block' : 'none';
                         } else {
@@ -3770,7 +3771,7 @@
                         btn.style.display = 'none';
                     });
                     
-                    // Gérer la visibilité du select compareMonth selon le mode
+                    // Gérer compareMonth
                     const compareMonth = document.getElementById('compareMonth');
                     if (compareMonth && window.compareMode) {
                         compareMonth.style.display = 'inline-block';
@@ -3778,7 +3779,7 @@
                         compareMonth.style.display = 'none';
                     }
                     
-                    // Afficher le contenu Budget
+                    // Afficher Budget
                     const budgetTab = document.getElementById('budgetTab');
                     if (budgetTab) {
                         budgetTab.style.display = 'block';
@@ -3788,31 +3789,30 @@
                     const expensesList = document.getElementById('expensesList');
                     if (expensesList) expensesList.style.display = 'block';
                     
-                    // Cacher le contenu Transactions
+                    // Cacher Transactions
                     const transactionsTab = document.getElementById('transactionsTab');
                     if (transactionsTab) {
                         transactionsTab.style.display = 'none';
                         transactionsTab.classList.remove('active');
                     }
                     
-                    // Cacher le bouton +
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) floatingAddBtn.style.display = 'none';
                     
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
                     
-                    // Cacher les boutons Budget
+                    // Cacher Budget
                     document.querySelectorAll('.budget-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
                     
-                    // Afficher les boutons Transactions
+                    // Afficher Transactions
                     document.querySelectorAll('.transactions-only').forEach(btn => {
                         btn.style.display = 'inline-block';
                     });
                     
-                    // Cacher le contenu Budget
+                    // Cacher Budget
                     const budgetTab = document.getElementById('budgetTab');
                     if (budgetTab) {
                         budgetTab.style.display = 'none';
@@ -3822,20 +3822,18 @@
                     const expensesList = document.getElementById('expensesList');
                     if (expensesList) expensesList.style.display = 'none';
                     
-                    // Afficher le contenu Transactions
+                    // Afficher Transactions
                     const transactionsTab = document.getElementById('transactionsTab');
                     if (transactionsTab) {
                         transactionsTab.style.display = 'block';
                         transactionsTab.classList.add('active');
                     }
                     
-                    // ✅ Charger les transactions APRÈS que l'animation soit terminée
+                    // Charger transactions
                     if (typeof loadTransactions === 'function') {
-                        // Attendre que l'onglet soit vraiment stable
                         setTimeout(() => {
                             const tab = document.getElementById('transactionsTab');
                             
-                            // Triple vérification
                             if (tab && 
                                 tab.classList.contains('active') && 
                                 !tab.classList.contains('swipe-preview') &&
@@ -3844,29 +3842,25 @@
                                 console.log('📥 Chargement des transactions...');
                                 loadTransactions()
                                     .then(() => {
-                                        console.log('✅ Transactions chargées avec succès');
+                                        console.log('✅ Transactions chargées');
                                     })
                                     .catch(err => {
-                                        console.error('❌ Erreur chargement transactions:', err);
+                                        console.error('❌ Erreur chargement:', err);
                                     });
-                            } else {
-                                console.log('⏸️ Chargement annulé - onglet pas stable');
                             }
                         }, 400);
                     }
                     
-                    // Afficher le bouton +
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
                 }
             } finally {
-                // ✅ Débloquer après un délai
+                // ✅ Débloquer plus rapidement
                 setTimeout(() => {
                     isTabSwitching = false;
-                }, 800);
+                }, 200); // ← Réduit de 500ms à 200ms
             }
         }
-
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
