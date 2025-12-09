@@ -2102,7 +2102,7 @@ body.dark-mode .settings-select {
 
 .scroll-to-top {
     position: fixed;
-    bottom: 90px; /* ✅ MÊME position que floating-add-btn */
+    bottom: 160px; /* ✅ MÊME position que floating-add-btn */
     right: 20px; /* ✅ MÊME position */
     width: 56px; /* ✅ MÊME taille */
     height: 56px;
@@ -2334,7 +2334,7 @@ body.dark-mode .chartjs-legend span {
     }
     
     .scroll-to-top {
-        bottom: 80px; /* ✅ MÊME position */
+        bottom: 150px; /* ✅ MÊME position */
         right: 15px; /* ✅ MÊME position */
         width: 52px; /* ✅ MÊME taille */
         height: 52px;
