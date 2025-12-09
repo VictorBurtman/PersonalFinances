@@ -514,7 +514,7 @@ class AuthManager {
             // Validation email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(resetEmail)) {
-                this.showAuthError(trans.errorEmailInvalid);
+                this.showAuthError(trans.invalidEmail); // ← CORRIGÉ
                 document.body.removeChild(modal);
                 return;
             }

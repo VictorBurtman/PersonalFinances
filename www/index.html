@@ -28,6 +28,14 @@
     <script src="translations.js"></script>
     <link rel="stylesheet" href="css/auth-screen.css">
     <script src="js/auth-manager.js"></script>
+    <!-- ✅ AJOUTE CES LIGNES ICI -->
+    <script>
+        // Instancier authManager globalement
+        const authManager = new AuthManager();
+        window.authManager = authManager;
+        console.log('✅ authManager initialisé');
+    </script>
+
 
     <script>
     // ✅ APP VERSION - Facile à modifier
@@ -282,7 +290,7 @@
                 <!-- ✅ AJOUTE CE LIEN -->
                 <div style="text-align: right; margin-top: -5px; margin-bottom: 10px;">
                     <a id="forgotPasswordLink" 
-                    onclick="showForgotPasswordDialog()" 
+                    onclick="authManager.showForgotPasswordDialog()" 
                     style="font-size: 13px; color: var(--auth-link); cursor: pointer; text-decoration: none;"
                     data-translate="forgotPassword">
                         Forgot password?
