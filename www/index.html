@@ -1429,15 +1429,15 @@
                         document.documentElement.setAttribute('dir', 'ltr');
                     }
                     
-                    // ✅ CHARGER DARK MODE
-                    const darkMode = data.darkMode || false;
+                    // ✅ CHARGER DARK MODE (par défaut activé pour nouveaux utilisateurs)
+                    const darkMode = data.darkMode !== undefined ? data.darkMode : true; // ← Par défaut true
                     if (darkMode) {
                         document.body.classList.add('dark-mode');
                     } else {
                         document.body.classList.remove('dark-mode');
                     }
-                    
-                    // ✅ AJOUTÉ : Cocher la checkbox
+
+                    // ✅ Cocher la checkbox
                     const darkModeCheckbox = document.getElementById('darkModeCheckbox');
                     if (darkModeCheckbox) {
                         darkModeCheckbox.checked = darkMode;
