@@ -115,6 +115,8 @@ const translations = {
         supportedFormats: "Supported formats: CSV, XLSX, XLS",
         labelStatus: "Label Status",
         source: "Source",
+        updateAvailable: "Update available",
+        installingUpdate: "Installing update...",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -533,6 +535,8 @@ const translations = {
         supportedFormats: "Formats supportés : CSV, XLSX, XLS",
         labelStatus: "État des étiquettes",
         source: "Source",
+        updateAvailable: "Mise à jour disponible",
+        installingUpdate: "Installation en cours...",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -941,6 +945,8 @@ const translations = {
         supportedFormats: "פורמטים נתמכים: CSV, XLSX, XLS",
         labelStatus: "סטטוס תיוג",
         source: "מקור",
+        updateAvailable: "עדכון זמין",
+        installingUpdate: "מתקין עדכון...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1349,6 +1355,8 @@ const translations = {
         supportedFormats: "Formatos compatibles: CSV, XLSX, XLS",
         labelStatus: "Estado de etiquetas",
         source: "Fuente",
+        updateAvailable: "Actualización disponible",
+        installingUpdate: "Instalando actualización...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1757,6 +1765,8 @@ const translations = {
         supportedFormats: "Поддерживаемые форматы: CSV, XLSX, XLS",
         labelStatus: "Статус меток",
         source: "Источник",
+        updateAvailable: "Доступно обновление",
+        installingUpdate: "Установка обновления...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2165,6 +2175,8 @@ const translations = {
         supportedFormats: "التنسيقات المدعومة: CSV، XLSX، XLS",
         labelStatus: "حالة التصنيف",
         source: "المصدر",
+        updateAvailable: "تحديث متاح",
+        installingUpdate: "جارٍ التثبيت...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",

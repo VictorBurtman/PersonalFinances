@@ -125,7 +125,22 @@
                     console.log('🔄 Nouvelle version détectée!');
                     console.log('📦 Mise à jour:', localVersion, '→', serverVersion);
                     
-                    // Afficher un message temporaire
+                    // ✅ Récupérer la langue depuis localStorage
+                    const userLang = localStorage.getItem('language') || 'en';
+                    
+                    // ✅ Mini dictionnaire de traductions pour le message
+                    const updateMessages = {
+                        en: { title: 'Update available', subtitle: 'Installing update...' },
+                        fr: { title: 'Mise à jour disponible', subtitle: 'Installation en cours...' },
+                        he: { title: 'עדכון זמין', subtitle: 'מתקין עדכון...' },
+                        es: { title: 'Actualización disponible', subtitle: 'Instalando actualización...' },
+                        ru: { title: 'Доступно обновление', subtitle: 'Установка обновления...' },
+                        ar: { title: 'تحديث متاح', subtitle: 'جارٍ التثبيت...' }
+                    };
+                    
+                    const msg = updateMessages[userLang] || updateMessages['en'];
+                    
+                    // Afficher un message temporaire (traduit)
                     const updateMsg = document.createElement('div');
                     updateMsg.style.cssText = `
                         position: fixed;
@@ -143,8 +158,8 @@
                         text-align: center;
                     `;
                     updateMsg.innerHTML = `
-                        🔄 Mise à jour disponible<br>
-                        <span style="font-size: 0.9em; opacity: 0.9;">Installation en cours...</span>
+                        🔄 ${msg.title}<br>
+                        <span style="font-size: 0.9em; opacity: 0.9;">${msg.subtitle}</span>
                     `;
                     document.body.appendChild(updateMsg);
                     
@@ -203,7 +218,7 @@
                 }
             }
             
-            // ✅ Fonction pour mettre à jour l'affichage de la version
+            // Fonction pour mettre à jour l'affichage de la version
             function updateVersionDisplay() {
                 const appVersionDisplay = document.getElementById('appVersionDisplay');
                 if (appVersionDisplay && window.APP_VERSION) {
@@ -212,7 +227,7 @@
             }
         })();
         
-        // ✅ Mettre à jour la version quand le DOM est prêt
+        // Mettre à jour la version quand le DOM est prêt
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 const appVersionDisplay = document.getElementById('appVersionDisplay');
@@ -221,8 +236,7 @@
                 }
             });
         }
-    </script>   
-
+    </script>
 
     
     <!-- ========== DÉBUT DE L'ÉCRAN DE CONNEXION ========== -->
