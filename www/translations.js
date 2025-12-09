@@ -299,7 +299,7 @@ const translations = {
         allSources: "All sources",
         allCategories: "All categories",
         search: "Search...",
-        clear: "Clear",
+        clear: "Reset",
         selectCategory: "Select category",
         
         // Month names
@@ -718,7 +718,7 @@ const translations = {
         allSources: "Toutes les sources",
         allCategories: "Toutes les catégories",
         search: "Rechercher...",
-        clear: "Effacer",
+        clear: "Réinitialiser",
         selectCategory: "Sélectionner une catégorie",
         
         // Month names
@@ -1126,7 +1126,7 @@ const translations = {
         allSources: "כל המקורות",
         allCategories: "כל הקטגוריות",
         search: "חיפוש...",
-        clear: "נקה",
+        clear: "אפס",
         selectCategory: "בחר קטגוריה",
         
         // Month names
@@ -1534,7 +1534,7 @@ const translations = {
         allSources: "Todas las fuentes",
         allCategories: "Todas las categorías",
         search: "Buscar...",
-        clear: "Limpiar",
+        clear: "Restablecer",
         selectCategory: "Seleccionar categoría",
         
         // Month names
@@ -1942,7 +1942,7 @@ const translations = {
         allSources: "Все источники",
         allCategories: "Все категории",
         search: "Поиск...",
-        clear: "Очистить",
+        clear: "Сбросить",
         selectCategory: "Выбрать категорию",
         
         // Month names
@@ -2350,7 +2350,7 @@ const translations = {
         allSources: "جميع المصادر",
         allCategories: "جميع الفئات",
         search: "بحث...",
-        clear: "مسح",
+        reset: "إعادة تعيين",
         selectCategory: "اختر فئة",
         
         // Month names

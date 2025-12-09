@@ -568,25 +568,38 @@ function changeSortOrder(sortOrder) {
     applyFilters();
 }
 
+
 /**
- * Clear all filters
+ * Clear all filters except Sort and Limit
  */
 function clearFilters() {
+    console.log('🔄 Réinitialisation des filtres (sauf Sort et Limit)...');
+    
     // Reset label filter to 'all'
     const allRadio = document.querySelector('input[name="labelFilter"][value="all"]');
     if (allRadio) allRadio.checked = true;
     
-    // Reset other filters
+    // Reset month filter
     const monthFilter = document.getElementById('monthFilter');
     if (monthFilter) monthFilter.value = '';
     
+    // ✅ AJOUTE : Reset source filter
+    const sourceFilter = document.getElementById('sourceFilter');
+    if (sourceFilter) sourceFilter.value = '';
+    
+    // Reset category filter
     const categoryFilter = document.getElementById('categoryFilter');
     if (categoryFilter) categoryFilter.value = '';
     
+    // Reset search filter
     const searchFilter = document.getElementById('searchFilter');
     if (searchFilter) searchFilter.value = '';
     
+    // Sort et Limit ne sont PAS touchés (comme voulu)
+    
     applyFilters();
+    
+    console.log('✅ Filtres réinitialisés');
 }
 
 /**
