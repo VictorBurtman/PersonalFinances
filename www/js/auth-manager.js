@@ -208,21 +208,27 @@ class AuthManager {
         if (errorElement) {
             errorElement.textContent = message;
             errorElement.style.display = 'block';
-            
-            // ✅ Détecter si c'est un succès (commence par ✅)
-            if (message.startsWith('✅')) {
-                errorElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-            } else {
-                errorElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
-            }
-            
             errorElement.style.color = 'white';
+            
+            // ✅ Détecter si c'est un succès (contient ✅ OU commence par "Password reset" etc.)
+            const isSuccess = message.includes('✅') || 
+                            message.toLowerCase().includes('sent') ||
+                            message.toLowerCase().includes('envoyé') ||
+                            message.toLowerCase().includes('נשלח');
+            
+            if (isSuccess) {
+                // Vert pour succès
+                errorElement.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                errorElement.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.3)';
+            } else {
+                // Rouge pour erreur
+                errorElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+                errorElement.style.boxShadow = '0 4px 12px rgba(220, 53, 69, 0.3)';
+            }
             
             // Masquer après 6 secondes
             setTimeout(() => {
                 errorElement.style.display = 'none';
-                // Remettre le style rouge par défaut
-                errorElement.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
             }, 6000);
         }
     }
