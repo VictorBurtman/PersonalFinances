@@ -428,19 +428,16 @@ class AuthManager {
         this.applyLanguage(systemLanguage);
     }
     
+
+
     /**
      * Affiche le dialog de réinitialisation de mot de passe
      */
     showForgotPasswordDialog() {
-
-        console.log('🔍 currentLanguage:', currentLanguage);
-        console.log('🔍 window.currentLanguage:', window.currentLanguage);
-        console.log('🔍 translations:', translations);
-        console.log('🔍 translations[currentLanguage]:', translations[currentLanguage]);
-
-        const trans = translations[currentLanguage];
-        console.log('🔍 trans:', trans);
-        console.log('🔍 trans.resetPassword:', trans?.resetPassword);
+        // ✅ Récupérer la langue depuis localStorage (la source de vérité)
+        const lang = localStorage.getItem('language') || 'en';
+        const trans = translations[lang] || translations['en'];
+        
         const email = document.getElementById('email').value.trim();
         
         // Créer la modal
@@ -457,7 +454,7 @@ class AuthManager {
             justify-content: center;
             z-index: 999999;
             padding: 20px;
-            direction: ${currentLanguage === 'ar' || currentLanguage === 'he' ? 'rtl' : 'ltr'};
+            direction: ${lang === 'ar' || lang === 'he' ? 'rtl' : 'ltr'};
         `;
         
         modal.innerHTML = `
@@ -469,12 +466,12 @@ class AuthManager {
                 width: 100%;
                 box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             ">
-                <h3 style="margin: 0 0 15px 0; color: #667eea; font-size: 1.3em;">🔑 ${trans.resetPassword || 'Reset Password'}</h3>
-                <p style="margin: 0 0 20px 0; color: #666; font-size: 0.95em; line-height: 1.5;">${trans.resetPasswordDesc || 'Enter your email'}</p>
+                <h3 style="margin: 0 0 15px 0; color: #667eea; font-size: 1.3em;">🔑 ${trans.resetPassword}</h3>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 0.95em; line-height: 1.5;">${trans.resetPasswordDesc}</p>
                 
                 <input type="email" 
                     id="resetEmail" 
-                    placeholder="${trans.email || 'Email'}"
+                    placeholder="${trans.email}"
                     value="${email}"
                     style="
                         width: 100%;
@@ -497,7 +494,7 @@ class AuthManager {
                         font-size: 1em;
                         cursor: pointer;
                         font-weight: 600;
-                    ">${trans.cancel || 'Cancel'}</button>
+                    ">${trans.cancel}</button>
                     
                     <button id="confirmResetBtn" style="
                         flex: 1;
@@ -509,7 +506,7 @@ class AuthManager {
                         font-size: 1em;
                         cursor: pointer;
                         font-weight: 600;
-                    ">${trans.sendResetEmail || 'Send'}</button>
+                    ">${trans.sendResetEmail}</button>
                 </div>
             </div>
         `;
@@ -518,7 +515,8 @@ class AuthManager {
         
         // Focus sur l'input email
         setTimeout(() => {
-            document.getElementById('resetEmail').focus();
+            const resetEmailInput = document.getElementById('resetEmail');
+            if (resetEmailInput) resetEmailInput.focus();
         }, 100);
         
         // Bouton Annuler
@@ -531,14 +529,14 @@ class AuthManager {
             const resetEmail = document.getElementById('resetEmail').value.trim();
             
             if (!resetEmail) {
-                alert(trans.pleaseEnterEmail || 'Please enter your email');
+                alert(trans.pleaseEnterEmail);
                 return;
             }
             
             // Validation email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(resetEmail)) {
-                this.showAuthError(trans.invalidEmail); // ← CORRIGÉ
+                this.showAuthError('❌ ' + trans.invalidEmail);
                 document.body.removeChild(modal);
                 return;
             }
@@ -549,7 +547,7 @@ class AuthManager {
         
         // Fermer avec Escape
         const handleEscape = (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' && document.body.contains(modal)) {
                 document.body.removeChild(modal);
                 document.removeEventListener('keydown', handleEscape);
             }
@@ -562,13 +560,15 @@ class AuthManager {
      * @param {string} email
      */
     async handlePasswordReset(email) {
-        const trans = translations[currentLanguage];
+        // ✅ Récupérer la langue depuis localStorage
+        const lang = localStorage.getItem('language') || 'en';
+        const trans = translations[lang] || translations['en'];
         
         try {
             await auth.sendPasswordResetEmail(email);
             
-            // Succès
-            this.showAuthError(trans.resetEmailSent || 'Password reset email sent!');
+            // Utiliser la traduction
+            this.showAuthError('✅ ' + trans.resetEmailSent);
             
             console.log('✅ Email de réinitialisation envoyé à:', email);
             
@@ -581,7 +581,9 @@ class AuthManager {
     }
 
     getErrorMessage(errorCode) {
-        const trans = translations[currentLanguage];
+        // ✅ Utiliser localStorage au lieu de currentLanguage
+        const lang = localStorage.getItem('language') || 'en';
+        const trans = translations[lang] || translations['en'];
         
         const errorMap = {
             'auth/invalid-email': trans.invalidEmail,
