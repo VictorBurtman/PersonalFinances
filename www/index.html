@@ -3697,7 +3697,7 @@
         }
 
 
-        function openFiltersModal() {
+        async function openFiltersModal() {
             closeAllModals();
             console.log('🔍 Ouverture modal Filters');
             const modal = document.getElementById('filtersModal');
@@ -3713,18 +3713,62 @@
                     populateSourceFilter();
                 }
                 
+                // ✅ AJOUTE : Restaurer les valeurs depuis Firebase
+                if (window.currentUser && db) {
+                    try {
+                        const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
+                        
+                        if (userDoc.exists && userDoc.data().transactionFilters) {
+                            const savedFilters = userDoc.data().transactionFilters;
+                            console.log('📥 Restauration des filtres dans le modal:', savedFilters);
+                            
+                            // Restaurer label filter
+                            if (savedFilters.labelFilter) {
+                                const radio = document.querySelector(`input[name="labelFilter"][value="${savedFilters.labelFilter}"]`);
+                                if (radio) radio.checked = true;
+                            }
+                            
+                            // ✅ Restaurer month filter
+                            const monthSelect = document.getElementById('monthFilter');
+                            if (monthSelect && savedFilters.monthFilter !== undefined) {
+                                monthSelect.value = savedFilters.monthFilter;
+                            }
+                            
+                            // ✅ Restaurer source filter
+                            const sourceSelect = document.getElementById('sourceFilter');
+                            if (sourceSelect && savedFilters.sourceFilter !== undefined) {
+                                sourceSelect.value = savedFilters.sourceFilter;
+                            }
+                            
+                            // ✅ Restaurer category filter
+                            const categorySelect = document.getElementById('categoryFilter');
+                            if (categorySelect && savedFilters.categoryFilter !== undefined) {
+                                categorySelect.value = savedFilters.categoryFilter;
+                            }
+                            
+                            // ✅ Restaurer search filter
+                            const searchInput = document.getElementById('searchFilter');
+                            if (searchInput && savedFilters.searchFilter !== undefined) {
+                                searchInput.value = savedFilters.searchFilter;
+                            }
+                            
+                            console.log('✅ Filtres restaurés dans le modal');
+                        }
+                    } catch (error) {
+                        console.error('❌ Erreur restauration filtres:', error);
+                    }
+                }
+                
                 document.body.classList.add('modal-open');
                 modal.classList.add('show');
                 
-                // ✅ APPLIQUER LES TRADUCTIONS
+                // Appliquer les traductions
                 setTimeout(() => {
                     console.log('📝 Application des traductions (Filters Modal)...');
                     updateUILanguage();
                 }, 100);
             }
         }
-
-
         function closeFiltersModal() {
             console.log('❌ Fermeture modal Filters');
             const modal = document.getElementById('filtersModal');

@@ -54,6 +54,7 @@ async function updateCredentialsStatus() {
 // Variable globale pour éviter les chargements multiples
 let isLoadingTransactions = false;
 
+
 /**
  * Load transactions from Firebase
  */
@@ -201,39 +202,63 @@ async function loadTransactions() {
         populateCategoryFilter();
         populateSourceFilter();
         
-        // Charger les filtres sauvegardés
+        // ✅ MODIFIÉ : Charger les filtres sauvegardés avec !== undefined
         if (userDoc.exists && userDoc.data().transactionFilters) {
             const savedFilters = userDoc.data().transactionFilters;
+            console.log('📥 Restauration des filtres depuis Firebase:', savedFilters);
             
             // Label filter (radio buttons)
             if (savedFilters.labelFilter) {
                 const radio = document.querySelector(`input[name="labelFilter"][value="${savedFilters.labelFilter}"]`);
-                if (radio) radio.checked = true;
+                if (radio) {
+                    radio.checked = true;
+                    console.log('✅ Label filter restauré:', savedFilters.labelFilter);
+                }
             }
             
-            // Month filter
+            // ✅ Month filter (utilise !== undefined pour permettre les valeurs vides)
             const monthSelect = document.getElementById('monthFilter');
-            if (monthSelect && savedFilters.monthFilter) {
+            if (monthSelect && savedFilters.monthFilter !== undefined) {
                 monthSelect.value = savedFilters.monthFilter;
+                console.log('✅ Month filter restauré:', savedFilters.monthFilter || '(all)');
             }
             
-            // Source filter
+            // ✅ Source filter
             const sourceSelect = document.getElementById('sourceFilter');
-            if (sourceSelect && savedFilters.sourceFilter) {
+            if (sourceSelect && savedFilters.sourceFilter !== undefined) {
                 sourceSelect.value = savedFilters.sourceFilter;
+                console.log('✅ Source filter restauré:', savedFilters.sourceFilter || '(all)');
             }
             
-            // Category filter
+            // ✅ Category filter
             const categorySelect = document.getElementById('categoryFilter');
-            if (categorySelect && savedFilters.categoryFilter) {
+            if (categorySelect && savedFilters.categoryFilter !== undefined) {
                 categorySelect.value = savedFilters.categoryFilter;
+                console.log('✅ Category filter restauré:', savedFilters.categoryFilter || '(all)');
             }
             
-            // Search filter
+            // ✅ Search filter
             const searchInput = document.getElementById('searchFilter');
-            if (searchInput && savedFilters.searchFilter) {
+            if (searchInput && savedFilters.searchFilter !== undefined) {
                 searchInput.value = savedFilters.searchFilter;
+                console.log('✅ Search filter restauré:', savedFilters.searchFilter || '(empty)');
             }
+            
+            // ✅ Sort filter
+            const sortSelect = document.getElementById('sortFilter');
+            if (sortSelect && savedFilters.sortFilter) {
+                sortSelect.value = savedFilters.sortFilter;
+                console.log('✅ Sort filter restauré:', savedFilters.sortFilter);
+            }
+            
+            // ✅ Limit filter
+            const limitSelect = document.getElementById('limitFilter');
+            if (limitSelect && savedFilters.limitFilter) {
+                limitSelect.value = savedFilters.limitFilter;
+                console.log('✅ Limit filter restauré:', savedFilters.limitFilter);
+            }
+            
+            console.log('✅ Tous les filtres restaurés');
         }
         
         // Appliquer les filtres et render
