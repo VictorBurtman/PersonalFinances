@@ -604,19 +604,19 @@
             FOOTER NAVIGATION
             ============================================ -->
         <div class="app-footer">
-            <!-- Budget Tab -->
-            <button class="footer-nav-btn active" id="budgetTabBtn" onclick="if(!isTabSwitching) switchTab('budget')">
+            <!-- Budget Tab (sans onclick) -->
+            <button class="footer-nav-btn active" id="budgetTabBtn">
                 <img src="img/icons/budget_inactive.svg" alt="Budget" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="budgetTab">Budget</span>
             </button>
             
-            <!-- Transactions Tab -->
-            <button class="footer-nav-btn" id="transactionsTabBtn" onclick="if(!isTabSwitching) switchTab('transactions')">
+            <!-- Transactions Tab (sans onclick) -->
+            <button class="footer-nav-btn" id="transactionsTabBtn">
                 <img src="img/icons/transactions-inactive.svg" alt="Transactions" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="transactionsTab">Transactions</span>
             </button>
             
-            <!-- Settings Button -->
+            <!-- Settings Button (garde le onclick) -->
             <button class="footer-nav-btn" id="settingsTabBtn" onclick="openSettings()">
                 <img src="img/icons/settings_inactive.svg" alt="Settings" class="footer-nav-icon-static">
                 <span class="footer-nav-label" data-translate="settings">Settings</span>
@@ -3436,7 +3436,29 @@
                 }
             }
         });
-                                
+                
+        // ✅ AJOUTE après auth.onAuthStateChanged ou dans DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gérer les clics sur les boutons footer avec prévention du double-tap
+            const budgetBtn = document.getElementById('budgetTabBtn');
+            const transactionsBtn = document.getElementById('transactionsTabBtn');
+            
+            if (budgetBtn) {
+                budgetBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!isTabSwitching) switchTab('budget');
+                }, { passive: false });
+            }
+            
+            if (transactionsBtn) {
+                transactionsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!isTabSwitching) switchTab('transactions');
+                }, { passive: false });
+            }
+        });
 
         // === GESTION DU BOUTON "SCROLL TO TOP" ===
         function initScrollToTopButton() {
