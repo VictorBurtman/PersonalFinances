@@ -4262,43 +4262,99 @@
                     return;
                 }
                 
-                // 1. Supprimer toutes les données Firestore de l'utilisateur
                 const userId = user.uid;
+                const userEmail = user.email;
                 
+                console.log('🗑️ Début suppression compte:', userEmail);
+                
+                // ========================================
+                // 1. Supprimer TOUTES les données Firestore
+                // ========================================
                 console.log('🗑️ Suppression des données Firestore...');
-                await db.collection('users').doc(userId).delete();
                 
+                try {
+                    // Supprimer le document principal
+                    await db.collection('users').doc(userId).delete();
+                    console.log('✅ Document users supprimé');
+                    
+                    // Supprimer toutes les sous-collections si elles existent
+                    const subcollections = ['transactions', 'budgets', 'categories', 'settings'];
+                    
+                    for (const subcol of subcollections) {
+                        try {
+                            const snapshot = await db.collection('users').doc(userId).collection(subcol).get();
+                            
+                            if (!snapshot.empty) {
+                                const batch = db.batch();
+                                snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                                await batch.commit();
+                                console.log(`✅ Sous-collection ${subcol} supprimée (${snapshot.docs.length} docs)`);
+                            }
+                        } catch (subError) {
+                            console.warn(`⚠️ Erreur suppression ${subcol}:`, subError);
+                            // Continuer même si une sous-collection échoue
+                        }
+                    }
+                    
+                } catch (firestoreError) {
+                    console.error('❌ Erreur Firestore:', firestoreError);
+                    // Continuer quand même vers la suppression du compte Auth
+                }
+                
+                // ========================================
                 // 2. Supprimer le compte Firebase Auth
+                // ========================================
                 console.log('🗑️ Suppression du compte Firebase Auth...');
-                await user.delete();
                 
-                // 3. Afficher un message de succès
+                try {
+                    await user.delete();
+                    console.log('✅ Compte Auth supprimé');
+                    
+                } catch (authError) {
+                    console.error('❌ Erreur suppression Auth:', authError);
+                    
+                    // Si l'erreur est liée à la réauthentification
+                    if (authError.code === 'auth/requires-recent-login') {
+                        showToast('⚠️ ' + t('recentLoginRequired'), 'error');
+                        
+                        // Déconnecter l'utilisateur et demander de se reconnecter
+                        await firebase.auth().signOut();
+                        
+                        // Nettoyer localStorage
+                        localStorage.clear();
+                        
+                        window.location.reload();
+                        return;
+                    }
+                    
+                    throw authError;
+                }
+                
+                // ========================================
+                // 3. Nettoyer localStorage
+                // ========================================
+                console.log('🗑️ Nettoyage localStorage...');
+                localStorage.clear();
+                
+                // ========================================
+                // 4. Afficher message de succès
+                // ========================================
                 showToast('✅ ' + t('accountDeleted'), 'success');
                 
                 console.log('✅ Compte supprimé avec succès');
                 
-                // 4. Rediriger vers l'écran de connexion
+                // ========================================
+                // 5. Rediriger vers l'écran de connexion
+                // ========================================
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);
                 
             } catch (error) {
                 console.error('❌ Erreur suppression compte:', error);
-                
-                // Si l'erreur est liée à la réauthentification
-                if (error.code === 'auth/requires-recent-login') {
-                    showToast('⚠️ ' + t('recentLoginRequired'), 'error');
-                    
-                    // Déconnecter l'utilisateur et demander de se reconnecter
-                    await firebase.auth().signOut();
-                    window.location.reload();
-                } else {
-                    showToast('❌ ' + t('errorDeletingAccount'), 'error');
-                }
+                showToast('❌ ' + t('errorDeletingAccount'), 'error');
             }
         }
-
-
 
         // Wait for Chart.js to load before initializing
         function initializeApp() {
