@@ -288,12 +288,6 @@ body.dark-mode .footer-nav-btn {
     color: #a0a0a0;
 }
 
-.footer-nav-btn .icon {
-    font-size: 24px;
-    margin-bottom: 4px;
-    line-height: 1;
-}
-
 .footer-nav-btn.active {
     color: #667eea;
 }
@@ -318,6 +312,59 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     height: 20px;
     flex-shrink: 0;
     background: transparent;
+}
+
+
+/* ========================================
+   FOOTER NAVIGATION ICONS (SVG)
+   ======================================== */
+
+/* Icônes dynamiques (Budget, Transactions) */
+.footer-nav-icon {
+    width: 28px;
+    height: 28px;
+    display: block;
+    margin: 0 auto 4px;
+    transition: all 0.2s ease;
+    /* Gris inactif #9ca3af */
+    filter: brightness(0) saturate(100%) invert(62%) sepia(8%) saturate(262%) hue-rotate(182deg) brightness(92%) contrast(86%);
+}
+
+/* Icône active = Violet #667eea */
+.footer-nav-btn.active .footer-nav-icon {
+    filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(216deg) brightness(95%) contrast(91%);
+}
+
+/* Icône statique (Settings) - reste grise */
+.footer-nav-icon-static {
+    width: 28px;
+    height: 28px;
+    display: block;
+    margin: 0 auto 4px;
+    transition: all 0.2s ease;
+    /* Gris permanent #9ca3af */
+    filter: brightness(0) saturate(100%) invert(62%) sepia(8%) saturate(262%) hue-rotate(182deg) brightness(92%) contrast(86%);
+}
+
+/* Labels du footer */
+.footer-nav-label {
+    font-size: 0.75rem;
+    display: block;
+}
+
+/* Animation au tap/click */
+.footer-nav-btn:active .footer-nav-icon,
+.footer-nav-btn:active .footer-nav-icon-static {
+    transform: scale(0.9);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 600px) {
+    .footer-nav-icon,
+    .footer-nav-icon-static {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 /* ============================================

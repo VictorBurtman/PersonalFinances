@@ -600,26 +600,29 @@
 
         </div> <!-- Fin container -->
     
-    <!-- ============================================
-        FOOTER NAVIGATION
-        ============================================ -->
+        <!-- ============================================
+            FOOTER NAVIGATION
+            ============================================ -->
         <div class="app-footer">
+            <!-- Budget Tab -->
             <button class="footer-nav-btn active" id="budgetTabBtn" onclick="switchTab('budget')">
-                <span class="icon">💰</span>
-                <span data-translate="budgetTab">Budget</span>
+                <img src="img/icons/budget_inactive.svg" alt="Budget" class="footer-nav-icon">
+                <span class="footer-nav-label" data-translate="budgetTab">Budget</span>
             </button>
             
+            <!-- Transactions Tab -->
             <button class="footer-nav-btn" id="transactionsTabBtn" onclick="switchTab('transactions')">
-                <span class="icon">💳</span>
-                <span data-translate="transactionsTab">Transactions</span>
+                <img src="img/icons/transactions-inactive.svg" alt="Transactions" class="footer-nav-icon">
+                <span class="footer-nav-label" data-translate="transactionsTab">Transactions</span>
             </button>
             
+            <!-- Settings Button -->
             <button class="footer-nav-btn" id="settingsTabBtn" onclick="openSettings()">
-                <span class="icon">⚙️</span>
-                <span data-translate="settings">Settings</span>
+                <img src="img/icons/settings_inactive.svg" alt="Settings" class="footer-nav-icon-static">
+                <span class="footer-nav-label" data-translate="settings">Settings</span>
             </button>
         </div>
-    </div> <!-- Fin appScreen -->
+        </div> <!-- Fin appScreen -->
 
     <!-- Color Editor Modal -->
     <div id="colorEditorModal" class="modal">
