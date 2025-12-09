@@ -560,18 +560,19 @@ class AuthManager {
         const trans = translations[currentLanguage];
         
         const errorMap = {
-            'auth/invalid-email': trans.errorEmailInvalid,
-            'auth/user-not-found': trans.errorUserNotFound,
-            'auth/wrong-password': trans.errorWrongPassword,
-            'auth/email-already-in-use': trans.errorEmailAlreadyUsed,
-            'auth/weak-password': trans.errorWeakPassword,
-            'auth/too-many-requests': trans.errorTooManyRequests,
-            'auth/network-request-failed': trans.errorNetworkFailed,
-            'auth/user-disabled': trans.errorUserNotFound,
-            'auth/operation-not-allowed': trans.errorUnknown
+            'auth/invalid-email': trans.invalidEmail,
+            'auth/user-not-found': trans.userNotFound,
+            'auth/wrong-password': trans.wrongPassword,
+            'auth/email-already-in-use': trans.emailAlreadyInUse,
+            'auth/weak-password': trans.weakPassword,
+            'auth/too-many-requests': trans.tooManyRequests,
+            'auth/network-request-failed': trans.networkError,
+            'auth/user-disabled': trans.accountDisabled,
+            'auth/operation-not-allowed': trans.unknownError,
+            'auth/invalid-credential': trans.wrongPassword
         };
         
-        return errorMap[errorCode] || trans.errorUnknown;
+        return errorMap[errorCode] || trans.unknownError;
     }
 
 
