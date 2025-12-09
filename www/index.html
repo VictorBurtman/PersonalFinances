@@ -78,6 +78,153 @@
     <link rel="stylesheet" href="css/tabs.css">
 </head>
 <body>
+    <!-- ✅ AUTO-UPDATE SYSTEM - Doit être le premier script -->
+    <script>
+        (async function checkForUpdates() {
+            const CURRENT_VERSION_KEY = 'app_version';
+            const VERSION_CHECK_URL = '/version.json';
+            
+            try {
+                console.log('🔍 Vérification des mises à jour...');
+                
+                // Récupérer la version locale
+                const localVersion = localStorage.getItem(CURRENT_VERSION_KEY);
+                console.log('📱 Version locale:', localVersion || 'Aucune');
+                
+                // Fetch la version serveur (bypass TOUS les caches)
+                const response = await fetch(VERSION_CHECK_URL, {
+                    method: 'GET',
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                
+                if (!response.ok) {
+                    console.log('⚠️ Impossible de vérifier les mises à jour (continuer normalement)');
+                    return;
+                }
+                
+                const versionData = await response.json();
+                const serverVersion = versionData.version;
+                console.log('☁️ Version serveur:', serverVersion);
+                
+                // Première installation (pas de version locale)
+                if (!localVersion) {
+                    console.log('🆕 Première installation, enregistrement de la version');
+                    localStorage.setItem(CURRENT_VERSION_KEY, serverVersion);
+                    window.APP_VERSION = serverVersion;
+                    updateVersionDisplay();
+                    return;
+                }
+                
+                // Comparer les versions
+                if (localVersion !== serverVersion) {
+                    console.log('🔄 Nouvelle version détectée!');
+                    console.log('📦 Mise à jour:', localVersion, '→', serverVersion);
+                    
+                    // Afficher un message temporaire
+                    const updateMsg = document.createElement('div');
+                    updateMsg.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 20px 30px;
+                        border-radius: 12px;
+                        font-size: 1.1em;
+                        font-weight: 600;
+                        z-index: 999999;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                        text-align: center;
+                    `;
+                    updateMsg.innerHTML = `
+                        🔄 Mise à jour disponible<br>
+                        <span style="font-size: 0.9em; opacity: 0.9;">Installation en cours...</span>
+                    `;
+                    document.body.appendChild(updateMsg);
+                    
+                    // Attendre un peu pour que l'utilisateur voit le message
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    try {
+                        // 1. Vider tous les caches
+                        console.log('🗑️ Nettoyage des caches...');
+                        
+                        // Cache API
+                        if ('caches' in window) {
+                            const cacheNames = await caches.keys();
+                            await Promise.all(
+                                cacheNames.map(cacheName => caches.delete(cacheName))
+                            );
+                            console.log('✅ Caches vidés:', cacheNames.length);
+                        }
+                        
+                        // Service Worker
+                        if ('serviceWorker' in navigator) {
+                            const registrations = await navigator.serviceWorker.getRegistrations();
+                            await Promise.all(
+                                registrations.map(registration => registration.unregister())
+                            );
+                            console.log('✅ Service Workers désinscrits:', registrations.length);
+                        }
+                        
+                        // 2. Mettre à jour la version locale
+                        localStorage.setItem(CURRENT_VERSION_KEY, serverVersion);
+                        console.log('✅ Version mise à jour dans localStorage');
+                        
+                        // 3. Recharger l'application
+                        console.log('🔄 Rechargement de l\'application...');
+                        window.location.reload(true);
+                        
+                    } catch (error) {
+                        console.error('❌ Erreur lors du nettoyage des caches:', error);
+                        window.location.reload(true);
+                    }
+                } else {
+                    console.log('✅ Application à jour (v' + serverVersion + ')');
+                    window.APP_VERSION = serverVersion;
+                    updateVersionDisplay();
+                }
+                
+            } catch (error) {
+                console.warn('⚠️ Erreur lors de la vérification des mises à jour:', error);
+                console.log('ℹ️ Continuation normale de l\'application');
+                
+                // Si erreur, utiliser la version locale
+                const localVersion = localStorage.getItem(CURRENT_VERSION_KEY);
+                if (localVersion) {
+                    window.APP_VERSION = localVersion;
+                    updateVersionDisplay();
+                }
+            }
+            
+            // ✅ Fonction pour mettre à jour l'affichage de la version
+            function updateVersionDisplay() {
+                const appVersionDisplay = document.getElementById('appVersionDisplay');
+                if (appVersionDisplay && window.APP_VERSION) {
+                    appVersionDisplay.textContent = 'v' + window.APP_VERSION;
+                }
+            }
+        })();
+        
+        // ✅ Mettre à jour la version quand le DOM est prêt
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const appVersionDisplay = document.getElementById('appVersionDisplay');
+                if (appVersionDisplay && window.APP_VERSION) {
+                    appVersionDisplay.textContent = 'v' + window.APP_VERSION;
+                }
+            });
+        }
+    </script>   
+
+
+    
     <!-- ========== DÉBUT DE L'ÉCRAN DE CONNEXION ========== -->
     <!-- Auth Screen -->
     <div id="auth-screen" style="display: block;">
@@ -1026,7 +1173,7 @@
                 }
             });
             
-            // ✅ AJOUTE CETTE PARTIE POUR TRADUIRE AUTOMATIQUEMENT TOUS LES data-translate
+            // Traduction automatique des data-translate
             console.log('🌍 Traduction automatique des data-translate...');
             document.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
@@ -1053,7 +1200,7 @@
                 }
             });
             
-            // ✅ AJOUTE AUSSI LA TRADUCTION DES PLACEHOLDERS SPÉCIFIQUES
+            // Traduction des placeholders spécifiques
             document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-translate-placeholder');
                 const translation = t(key);
@@ -1062,11 +1209,14 @@
                 }
             });
             
+            // ✅ AJOUTE : Mise à jour de la version de l'app
+            const appVersionDisplay = document.getElementById('appVersionDisplay');
+            if (appVersionDisplay && window.APP_VERSION) {
+                appVersionDisplay.textContent = 'v' + window.APP_VERSION;
+            }
+            
             console.log('✅ Traductions automatiques appliquées');
         }
-
-
-
 
         // Fonction pour mettre à jour l'écran de connexion uniquement
         function updateAuthScreenLanguage() {
