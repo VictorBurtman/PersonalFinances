@@ -3337,12 +3337,11 @@
             let touchStartY = 0;
             let currentX = 0;
             let isSwiping = false;
-            let swipeDetected = false; // Pour savoir si on est en mode swipe
-            let initialScrollTop = 0;
+            let swipeDetected = false;
             
-            const minSwipeDistance = 100; // Distance minimale pour valider le swipe
-            const swipeThreshold = 40; // Distance avant de décider si c'est swipe ou scroll
-            const verticalTolerance = 30; // Tolérance verticale max pour swipe horizontal
+            const minSwipeDistance = 100;
+            const swipeThreshold = 40;
+            const verticalTolerance = 30;
             
             dashboard.addEventListener('touchstart', (e) => {
                 touchStartX = e.touches[0].clientX;
@@ -3350,32 +3349,40 @@
                 isSwiping = false;
                 swipeDetected = false;
                 
-                // ✅ AJOUTE : Vérifier si le touch est sur le canvas du graphique
+                // Vérifier si le touch est sur le canvas du graphique
                 const target = e.target;
                 if (target.tagName === 'CANVAS') {
                     console.log('🎨 Touch sur le graphique, swipe navigation désactivé');
-                    isSwiping = false; // Bloquer le swipe de navigation
-                    return; // Sortir immédiatement pour ne pas capturer le touch
+                    isSwiping = false;
+                    return;
                 }
             }, { passive: false });
             
             dashboard.addEventListener('touchmove', (e) => {
-                // ✅ AJOUTE : Vérifier si le touch est sur le canvas du graphique
+                // Vérifier si le touch est sur le canvas du graphique
                 const target = e.target;
                 if (target.tagName === 'CANVAS') {
-                    // Ne rien faire, laisser Chart.js gérer le swipe
                     return;
                 }
+                
                 const currentTouchX = e.touches[0].clientX;
                 const currentTouchY = e.touches[0].clientY;
                 const diffX = currentTouchX - touchStartX;
                 const diffY = currentTouchY - touchStartY;
                 
+                // ✅ BLOQUER le scroll vertical dès qu'un mouvement horizontal est détecté
+                const isMovingHorizontally = Math.abs(diffX) > Math.abs(diffY);
+                
+                if (isMovingHorizontally && Math.abs(diffX) > 10) {
+                    // Mouvement horizontal détecté, bloquer le scroll vertical immédiatement
+                    e.preventDefault();
+                }
+                
                 // Décision : Swipe horizontal ou Scroll vertical ?
                 if (!swipeDetected && !isSwiping) {
                     const isHorizontal = Math.abs(diffX) > swipeThreshold;
                     const isVertical = Math.abs(diffY) > swipeThreshold;
-                    const isPureHorizontal = Math.abs(diffX) > Math.abs(diffY) * 2; // Ratio 2:1 pour être strict
+                    const isPureHorizontal = Math.abs(diffX) > Math.abs(diffY) * 2;
                     
                     if (isHorizontal && isPureHorizontal && Math.abs(diffY) < verticalTolerance) {
                         // C'est un swipe horizontal !
@@ -3392,7 +3399,7 @@
                 
                 // Si on est en mode swipe, bloquer le scroll et gérer le swipe
                 if (isSwiping) {
-                    e.preventDefault(); // ← BLOQUE LE SCROLL VERTICAL
+                    e.preventDefault(); // Double sécurité
                     
                     currentX = diffX;
                     
@@ -3444,7 +3451,7 @@
                         transactionsTab.style.transform = `translateX(${currentX * resistance}px)`;
                     }
                 }
-            }, { passive: false }); // ← passive: false pour pouvoir preventDefault
+            }, { passive: false });
             
             dashboard.addEventListener('touchend', (e) => {
                 if (isSwiping) {
@@ -3458,16 +3465,14 @@
                         if (budgetActive && currentX < 0) {
                             console.log('→ Passage de Budget à Transactions');
                             animateTabTransition(budgetTab, transactionsTab, 'left');
-                            // ✅ Appeler switchTab APRÈS l'animation (pas pendant)
                             setTimeout(() => {
                                 switchTab('transactions');
-                            }, 350); // 350ms au lieu de 300ms
+                            }, 350);
                         }
                         // Swipe vers la droite depuis Transactions → aller à Budget
                         else if (transactionsActive && currentX > 0) {
                             console.log('→ Passage de Transactions à Budget');
                             animateTabTransition(transactionsTab, budgetTab, 'right');
-                            // ✅ Appeler switchTab APRÈS l'animation
                             setTimeout(() => {
                                 switchTab('budget');
                             }, 350);
@@ -3511,22 +3516,19 @@
                 toTab.style.transform = 'translateX(0)';
                 toTab.style.opacity = '1';
                 
-                // ✅ NETTOYER COMPLÈTEMENT après l'animation
+                // Nettoyer complètement après l'animation
                 setTimeout(() => {
                     // Retirer TOUS les styles inline appliqués pendant le swipe
                     fromTab.style.transition = '';
                     fromTab.style.transform = '';
                     fromTab.style.opacity = '';
-                    fromTab.style.display = ''; // Laisser switchTab() gérer le display
+                    fromTab.style.display = '';
                     
                     toTab.style.transition = '';
                     toTab.style.transform = '';
                     toTab.style.opacity = '';
-                    // Ne PAS toucher au display de toTab, il doit rester visible
-                }, 350); // Un peu après la fin de l'animation (300ms)
+                }, 350);
             }
-
-
 
             // Réinitialiser les positions des onglets
             function resetTabPositions(tab1, tab2) {
@@ -3539,7 +3541,7 @@
                     tab.style.opacity = '';
                     
                     setTimeout(() => {
-                        // ✅ NETTOYER COMPLÈTEMENT tous les styles inline
+                        // Nettoyer complètement tous les styles inline
                         tab.style.transition = '';
                         tab.style.transform = '';
                         tab.style.opacity = '';
@@ -3554,8 +3556,6 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-
-
 
         // Variable globale pour éviter les appels multiples
         let isTabSwitching = false;
