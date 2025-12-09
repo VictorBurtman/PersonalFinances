@@ -2,16 +2,6 @@
 // Gère l'authentification, la configuration initiale et la mémorisation des identifiants
 
 
-// ✅ Helper pour accéder aux traductions
-function t(key) {
-    if (typeof window.translations !== 'undefined' && 
-        typeof window.currentLanguage !== 'undefined') {
-        return window.translations[window.currentLanguage]?.[key] || key;
-    }
-    return key;
-}
-
-
 class AuthManager {
     constructor() {
         this.isFirstLaunch = null;
@@ -214,12 +204,7 @@ class AuthManager {
      * @param {string} message - Message à afficher
      */
     showAuthError(message) {
-        // Essayer d'utiliser showToast si disponible (pour cohérence avec l'app)
-        if (typeof showToast === 'function') {
-            showToast('❌ ' + message, 'error');
-        }
-        
-        // Afficher dans l'élément authError existant
+        // ✅ SEULEMENT afficher dans l'élément authError (pas de toast)
         const errorElement = document.getElementById('authError');
         if (errorElement) {
             errorElement.textContent = '❌ ' + message;
@@ -353,16 +338,10 @@ class AuthManager {
      */
     async signIn(email, password, remember) {
         try {
-            // Configurer la persistence
             await this.setAuthPersistence(remember);
-            
-            // Se connecter
             const result = await auth.signInWithEmailAndPassword(email, password);
-            
-            // Sauvegarder les préférences
             this.saveCredentials(email, remember);
             
-            // Vérifier si c'est la première connexion
             const isFirst = await this.checkFirstLaunch(result.user.uid);
             if (isFirst) {
                 await this.setupInitialConfig(result.user.uid);
@@ -373,33 +352,8 @@ class AuthManager {
         } catch (error) {
             console.error('❌ Sign in error:', error);
             
-            // ✅ Traduire l'erreur pour l'utilisateur
-            let errorMessage = t('unknownError');
-            
-            switch (error.code) {
-                case 'auth/user-not-found':
-                    errorMessage = t('userNotFound');
-                    break;
-                case 'auth/wrong-password':
-                    errorMessage = t('wrongPassword');
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = t('invalidEmail');
-                    break;
-                case 'auth/user-disabled':
-                    errorMessage = t('accountDisabled');
-                    break;
-                case 'auth/too-many-requests':
-                    errorMessage = t('tooManyRequests');
-                    break;
-                case 'auth/invalid-credential':
-                    errorMessage = t('wrongPassword');
-                    break;
-                default:
-                    errorMessage = t('unknownError');
-            }
-            
-            // Afficher l'erreur à l'utilisateur
+            // ✅ Utiliser getErrorMessage() au lieu de t()
+            const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
             
             throw error;
@@ -414,44 +368,17 @@ class AuthManager {
      */
     async signUp(email, password, remember) {
         try {
-            // Configurer la persistence
             await this.setAuthPersistence(remember);
-            
-            // Créer le compte
             const result = await auth.createUserWithEmailAndPassword(email, password);
-            
-            // Sauvegarder les préférences
             this.saveCredentials(email, remember);
-            
-            // Configuration initiale pour le nouvel utilisateur
             await this.setupInitialConfig(result.user.uid);
-            
             return result;
             
         } catch (error) {
             console.error('❌ Sign up error:', error);
             
-            // ✅ Traduire l'erreur pour l'utilisateur
-            let errorMessage = t('unknownError');
-            
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    errorMessage = t('emailAlreadyInUse');
-                    break;
-                case 'auth/weak-password':
-                    errorMessage = t('weakPassword');
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = t('invalidEmail');
-                    break;
-                case 'auth/operation-not-allowed':
-                    errorMessage = t('unknownError');
-                    break;
-                default:
-                    errorMessage = t('unknownError');
-            }
-            
-            // Afficher l'erreur à l'utilisateur
+            // ✅ Utiliser getErrorMessage() au lieu de t()
+            const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
             
             throw error;
@@ -490,36 +417,144 @@ class AuthManager {
      */
     showForgotPasswordDialog() {
         const trans = translations[currentLanguage];
+        const email = document.getElementById('email').value.trim();
         
-        const email = prompt(trans.resetPasswordDesc);
+        // Créer la modal
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+            padding: 20px;
+            direction: ${currentLanguage === 'ar' || currentLanguage === 'he' ? 'rtl' : 'ltr'};
+        `;
         
-        if (!email || !email.trim()) {
-            return; // Annulé ou vide
-        }
+        modal.innerHTML = `
+            <div style="
+                background: white;
+                border-radius: 12px;
+                padding: 30px;
+                max-width: 400px;
+                width: 100%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            ">
+                <h3 style="margin: 0 0 15px 0; color: #667eea; font-size: 1.3em;">🔑 ${trans.resetPassword || 'Reset Password'}</h3>
+                <p style="margin: 0 0 20px 0; color: #666; font-size: 0.95em; line-height: 1.5;">${trans.resetPasswordDesc || 'Enter your email'}</p>
+                
+                <input type="email" 
+                    id="resetEmail" 
+                    placeholder="${trans.email || 'Email'}"
+                    value="${email}"
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        font-size: 1em;
+                        margin-bottom: 20px;
+                        box-sizing: border-box;
+                    ">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button id="cancelResetBtn" style="
+                        flex: 1;
+                        padding: 12px;
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 1em;
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">${trans.cancel || 'Cancel'}</button>
+                    
+                    <button id="confirmResetBtn" style="
+                        flex: 1;
+                        padding: 12px;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 1em;
+                        cursor: pointer;
+                        font-weight: 600;
+                    ">${trans.sendResetEmail || 'Send'}</button>
+                </div>
+            </div>
+        `;
         
-        // Validation email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.showAuthError(trans.errorEmailInvalid);
-            return;
-        }
+        document.body.appendChild(modal);
         
-        this.handlePasswordReset(email.trim());
+        // Focus sur l'input email
+        setTimeout(() => {
+            document.getElementById('resetEmail').focus();
+        }, 100);
+        
+        // Bouton Annuler
+        document.getElementById('cancelResetBtn').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        // Bouton Envoyer
+        document.getElementById('confirmResetBtn').addEventListener('click', () => {
+            const resetEmail = document.getElementById('resetEmail').value.trim();
+            
+            if (!resetEmail) {
+                alert(trans.pleaseEnterEmail || 'Please enter your email');
+                return;
+            }
+            
+            // Validation email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(resetEmail)) {
+                this.showAuthError(trans.errorEmailInvalid);
+                document.body.removeChild(modal);
+                return;
+            }
+            
+            document.body.removeChild(modal);
+            this.handlePasswordReset(resetEmail);
+        });
+        
+        // Fermer avec Escape
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                document.body.removeChild(modal);
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
     }
 
+    /**
+     * Gère l'envoi de l'email de réinitialisation
+     * @param {string} email
+     */
     async handlePasswordReset(email) {
         const trans = translations[currentLanguage];
         
         try {
             await auth.sendPasswordResetEmail(email);
-            alert(trans.resetEmailSent);
+            
+            // Succès
+            this.showAuthError(trans.resetEmailSent || 'Password reset email sent!');
+            
+            console.log('✅ Email de réinitialisation envoyé à:', email);
+            
         } catch (error) {
-            console.error('Password reset error:', error);
+            console.error('❌ Erreur envoi email reset:', error);
+            
             const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
         }
     }
-    // ✅ FIN DE L'AJOUT
 
     getErrorMessage(errorCode) {
         const trans = translations[currentLanguage];
