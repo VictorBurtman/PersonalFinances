@@ -3739,17 +3739,21 @@
             console.trace('📍 Appelé depuis:');
             
             try {
-                // Retirer la classe active de tous les boutons du footer
+                // ✅ Activer le nouveau bouton AVANT de retirer les autres (évite le clignotement)
+                const activeBtn = document.getElementById(tabName + 'TabBtn');
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+                
+                // Retirer la classe active des AUTRES boutons
                 document.querySelectorAll('.footer-nav-btn').forEach(btn => {
-                    btn.classList.remove('active');
+                    if (btn !== activeBtn) {
+                        btn.classList.remove('active');
+                    }
                 });
                 
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
-                    
-                    // Activer l'onglet Budget dans le footer
-                    const budgetBtn = document.getElementById('budgetTabBtn');
-                    if (budgetBtn) budgetBtn.classList.add('active');
                     
                     // Afficher les boutons Budget (sauf Add Category qui dépend du mode édition)
                     document.querySelectorAll('.budget-only').forEach(btn => {
@@ -3790,15 +3794,13 @@
                         transactionsTab.style.display = 'none';
                         transactionsTab.classList.remove('active');
                     }
+                    
+                    // Cacher le bouton +
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) floatingAddBtn.style.display = 'none';
                     
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
-                    
-                    // Activer l'onglet Transactions dans le footer
-                    const transactionsBtn = document.getElementById('transactionsTabBtn');
-                    if (transactionsBtn) transactionsBtn.classList.add('active');
                     
                     // Cacher les boutons Budget
                     document.querySelectorAll('.budget-only').forEach(btn => {
@@ -3850,8 +3852,10 @@
                             } else {
                                 console.log('⏸️ Chargement annulé - onglet pas stable');
                             }
-                        }, 400); // ← Délai après l'animation
+                        }, 400);
                     }
+                    
+                    // Afficher le bouton +
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
                 }

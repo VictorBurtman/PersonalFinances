@@ -1436,24 +1436,24 @@ body.dark-mode .empty-state-trans {
 
 .floating-add-btn {
     position: fixed;
-    bottom: 120px;
-    right: 20px;
-    width: 56px;
+    bottom: 90px; /* ✅ MÊME position que scroll-to-top */
+    right: 20px; /* ✅ MÊME position */
+    width: 56px; /* ✅ MÊME taille */
     height: 56px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 50%;
-    font-size: 28px;
+    font-size: 2em;
     font-weight: 300;
+    line-height: 1;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    display: none; /* ← Caché par défaut, montré uniquement dans Transactions */
+    z-index: 5000;
+    display: none; /* Caché par défaut */
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    z-index: 900;
-    opacity: 0.9;
 }
 
 .floating-add-btn:hover {
@@ -2102,24 +2102,25 @@ body.dark-mode .settings-select {
 
 .scroll-to-top {
     position: fixed;
-    bottom: 200px;
-    right: 20px;
-    width: 56px;
+    bottom: 90px; /* ✅ MÊME position que floating-add-btn */
+    right: 20px; /* ✅ MÊME position */
+    width: 56px; /* ✅ MÊME taille */
     height: 56px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 50%;
     font-size: 1.5em;
+    font-weight: bold;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 200;
+    z-index: 5000;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .scroll-to-top.visible {
@@ -2283,11 +2284,11 @@ body.dark-mode .chartjs-legend span {
     
     /* Floating button */
     .floating-add-btn {
-        bottom: 110px;
-        right: 15px;
-        width: 52px;
+        bottom: 80px; /* ✅ MÊME position */
+        right: 15px; /* ✅ MÊME position */
+        width: 52px; /* ✅ MÊME taille */
         height: 52px;
-        font-size: 24px;
+        font-size: 1.8em;
     }
     
     /* Modals */
@@ -2332,11 +2333,10 @@ body.dark-mode .chartjs-legend span {
         max-height: calc(100dvh - 200px) !important;
     }
     
-    /* Scroll to top */
     .scroll-to-top {
-        bottom: 200px;
-        right: 20px;
-        width: 52px;
+        bottom: 80px; /* ✅ MÊME position */
+        right: 15px; /* ✅ MÊME position */
+        width: 52px; /* ✅ MÊME taille */
         height: 52px;
         font-size: 1.3em;
     }
