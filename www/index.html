@@ -29,25 +29,6 @@
     <link rel="stylesheet" href="css/auth-screen.css">
     <script src="js/auth-manager.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-        // Initialiser Eruda uniquement pour ton compte
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                // ✅ REMPLACE PAR TON EMAIL
-                const devEmails = [
-                    'victorburtman@gmail.com',  // ← Mets ton vrai email ici
-                    // ← Tu peux ajouter d'autres emails
-                ];
-                
-                if (devEmails.includes(user.email)) {
-                    console.log('🛠️ Mode développeur activé pour:', user.email);
-                    eruda.init();
-                }
-            }
-        });
-    </script>
-
     <script>
     // ✅ APP VERSION - Facile à modifier
     const APP_VERSION = '0.0.1';
@@ -4535,5 +4516,24 @@
     </button>
     <!-- Toast Notifications Container -->
     <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>
+    // Initialiser Eruda uniquement pour ton compte
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            // ✅ REMPLACE PAR TON EMAIL
+            const devEmails = [
+                'victorburtman@gmail.com',  // ← Mets ton vrai email ici
+                // ← Tu peux ajouter d'autres emails
+            ];
+            
+            if (devEmails.includes(user.email)) {
+                console.log('🛠️ Mode développeur activé pour:', user.email);
+                eruda.init();
+            }
+        }
+    });
+</script>
 </body>
 </html>
