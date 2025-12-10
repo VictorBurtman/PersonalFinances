@@ -2287,18 +2287,38 @@ body.dark-mode .chartjs-legend span {
     
     /* Edit Mode */
     .edit-mode-controls {
-        /* On garde flex-wrap: nowrap pour que ça reste sur une ligne */
-        flex-wrap: nowrap;
-        
-        /* SUPPRESSION DE overflow-x: auto; <--- C'était le coupable ! */
+        /* 1. INTERDIRE le scroll horizontal (C'est ça qui bloquait l'alignement) */
         overflow: visible !important; 
         
-        gap: 6px;
-        padding: 10px 15px;
+        /* 2. Forcer le display Flex */
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important; /* Le titre poussera le reste */
         
-        /* On s'assure que le header fait bien 100% de la largeur */
+        /* 3. Ajustements d'espacement */
+        gap: 8px;
+        padding: 10px 15px;
         width: 100% !important;
-        box-sizing: border-box; /* Important pour que le padding ne dépasse pas */
+        box-sizing: border-box;
+    }
+
+    /* 4. FORCER le titre à grandir sur mobile */
+    .header-title {
+        flex-grow: 1 !important; /* Prend tout l'espace disponible */
+        width: auto !important;
+        margin-right: 0 !important; /* On laisse flex-grow faire le travail */
+        
+        /* Sécurité pour ne pas casser la ligne */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    /* 5. Sécurité pour les boutons (qu'ils ne s'écrasent pas) */
+    .edit-mode-btn {
+        flex-shrink: 0 !important; /* Interdit de rétrécir les boutons */
     }
     
     .edit-mode-btn {
