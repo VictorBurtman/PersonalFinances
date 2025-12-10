@@ -217,6 +217,36 @@ body.dark-mode .edit-mode-btn.active {
     background: white;
 }
 
+
+/* ============================================
+   STYLE DES BOUTONS ICONES (HEADER)
+   ============================================ */
+
+.edit-mode-btn.icon-btn {
+    padding: 0;           /* On retire le padding large du texte */
+    width: 36px;          /* Largeur fixe */
+    height: 36px;         /* Hauteur fixe pour faire un carré */
+    display: inline-flex; /* Pour centrer l'icône */
+    align-items: center;
+    justify-content: center;
+    min-width: unset;     /* Annule la largeur min des boutons texte */
+}
+
+.edit-mode-btn.icon-btn img {
+    width: 20px;          /* Taille de l'icône */
+    height: 20px;
+    display: block;
+    /* Si tes icônes sont noires et que tu veux qu'elles soient oranges comme le thème : */
+    /* filter: invert(58%) sepia(61%) saturate(2379%) hue-rotate(345deg) brightness(101%) contrast(98%); */
+}
+
+/* Ajustement spécifique pour le mode sombre si nécessaire */
+body.dark-mode .edit-mode-btn.icon-btn img {
+    /* Si tu veux les icônes en blanc sur fond sombre */
+    /* filter: brightness(0) invert(1); */
+}
+
+
 /* ============================================
    FOOTER NAVIGATION (STICKY)
    ============================================ */
