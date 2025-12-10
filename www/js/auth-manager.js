@@ -298,17 +298,50 @@ class AuthManager {
      * @param {string} langCode
      */
     applyLanguage(langCode) {
-        // Appliquer la direction du texte pour les langues RTL
-        if (langCode === 'he' || langCode === 'ar') {
-            document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-            document.documentElement.setAttribute('dir', 'ltr');
+        console.log('🌍 Application de la langue:', langCode);
+        
+        // ✅ SAUVEGARDER dans localStorage IMMÉDIATEMENT
+        localStorage.setItem('language', langCode);
+        console.log('💾 Langue sauvegardée dans localStorage:', langCode);
+        
+        const trans = translations[langCode];
+        
+        if (!trans) {
+            console.error('❌ Traductions non trouvées pour:', langCode);
+            return;
         }
         
-        // Mettre à jour les textes de l'écran de connexion
-        this.updateAuthScreenTranslations(langCode);
+        // Appliquer les traductions sur l'écran d'auth
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            if (trans[key]) {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = trans[key];
+                } else {
+                    element.textContent = trans[key];
+                }
+            }
+        });
+        
+        // Appliquer aussi les placeholders
+        document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-translate-placeholder');
+            if (trans[key]) {
+                element.placeholder = trans[key];
+            }
+        });
+        
+        // Appliquer la direction RTL si nécessaire
+        if (langCode === 'ar' || langCode === 'he') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.getElementById('auth-screen')?.classList.add('rtl');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.getElementById('auth-screen')?.classList.remove('rtl');
+        }
+        
+        console.log('✅ Langue appliquée:', langCode);
     }
-
 
     /**
      * Affiche un message dans l'interface (erreur ou succès)
@@ -344,6 +377,7 @@ class AuthManager {
         }
     }
 
+    
     /**
      * Met à jour les traductions de l'écran de connexion
      * @param {string} langCode
