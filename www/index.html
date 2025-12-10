@@ -4112,7 +4112,27 @@
                     setTimeout(() => activeBtn.classList.remove('tap-feedback'), 300);
                 }
                 
-                scrollToTop();
+                // ✅ Scroll to top INLINE
+                console.log('📜 Scroll inline démarré...');
+                const dashboard = document.querySelector('.dashboard');
+                console.log('📜 Dashboard:', dashboard);
+                
+                if (dashboard) {
+                    console.log('📜 scrollTop avant:', dashboard.scrollTop);
+                    dashboard.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    console.log('📜 scrollTo() commandé');
+                    
+                    // Vérifier après 500ms
+                    setTimeout(() => {
+                        console.log('📜 scrollTop après 500ms:', dashboard.scrollTop);
+                    }, 500);
+                } else {
+                    console.error('❌ Dashboard introuvable');
+                }
+                
                 return; // ✅ SORTIR ICI
             }
             
@@ -4238,7 +4258,6 @@
                 }, 200);
             }
         }
-
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
