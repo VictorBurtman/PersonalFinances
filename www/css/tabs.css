@@ -452,15 +452,6 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     transform: scale(0.9);
 }
 
-/* Responsive - Mobile */
-@media (max-width: 600px) {
-    .footer-nav-icon,
-    .footer-nav-icon-static {
-        width: 24px;
-        height: 24px;
-    }
-}
-
 /* ============================================
    TAB SYSTEM
    ============================================ */
@@ -2231,12 +2222,6 @@ body.dark-mode .settings-select {
     transform: translateY(-2px);
 }
 
-/* ✅ Masquer sur mobile */
-@media (max-width: 600px) {
-    .scroll-to-top {
-        display: none !important;
-    }
-}
 
 /* ============================================
    BUTTONS GÉNÉRAUX
@@ -2261,11 +2246,14 @@ body.dark-mode .chartjs-legend span {
 }
 
 /* ============================================
-   MOBILE RESPONSIVE
+   MOBILE RESPONSIVE (UNIFIÉ)
    ============================================ */
 
 @media (max-width: 600px) {
-    /* Tabs */
+    
+    /* --- 1. GLOBAL & LAYOUT --- */
+    
+    /* Tabs navigation */
     .app-tabs {
         width: 100%;
     }
@@ -2277,65 +2265,67 @@ body.dark-mode .chartjs-legend span {
         padding: 10px 16px;
     }
     
-    /* Footer spacer */
+    /* Footer Spacer (Hauteur ajustée) */
     .footer-spacer {
         height: 55px !important;
     }
-    
-    /* Total */
-    .total-amount {
-        font-size: 2.5em;
+
+    /* Footer Icons (Taille ajustée) */
+    .footer-nav-icon,
+    .footer-nav-icon-static {
+        width: 24px;
+        height: 24px;
     }
-    
-    /* Expenses */
-    .expense-input {
-        width: 100px;
+
+    /* Masquer Scroll to Top sur mobile (conflit avec floating btn) */
+    .scroll-to-top {
+        display: none !important;
     }
+
+    /* --- 2. HEADER & EDIT CONTROLS (Le Fix Important) --- */
     
     .edit-mode-controls {
-        /* 1. ON AUTORISE L'ESPACEMENT (C'est la correction clé) */
+        /* On active l'espacement max entre le Titre et le Groupe de boutons */
         justify-content: space-between !important; 
         
-        /* 2. On empêche le scroll horizontal */
+        /* On empêche le scroll horizontal qui cassait l'alignement */
         overflow: visible !important; 
         
-        /* 3. Forcer le display Flex */
+        /* Flexbox */
         display: flex !important;
         flex-wrap: nowrap !important;
         align-items: center !important;
         
-        /* 4. Ajustements d'espacement */
+        /* Espacement */
         gap: 0 !important; /* Le gap est géré dans le groupe header-right-actions */
         padding: 10px 15px;
         width: 100% !important;
         box-sizing: border-box;
     }
 
-    /* 4. LE TITRE NE DOIT PAS GRANDIR */
+    /* Le Titre ne doit PAS grandir, il reste à gauche */
     .header-title {
-        flex-grow: 0 !important; /* On arrête de le faire grandir */
+        flex-grow: 0 !important;
         width: auto !important;
         margin-right: 0 !important;
         
-        /* Sécurité pour ne pas casser la ligne */
+        /* Sécurité affichage */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         display: block;
-        max-width: 50%; /* Sécurité pour qu'il ne pousse pas les boutons hors de l'écran */
+        max-width: 50%;
     }
 
-    /* 5. Sécurité pour les boutons (qu'ils ne s'écrasent pas) */
+    /* Boutons du header */
     .edit-mode-btn {
-        flex-shrink: 0 !important; /* Interdit de rétrécir les boutons */
-    }
-    
-    .edit-mode-btn {
+        flex-shrink: 0 !important;
         padding: 6px 12px;
         font-size: 0.75em;
         white-space: nowrap;
     }
     
+    /* Selecteur de mois (Compare) */
     #compareMonth {
         font-size: 0.75em;
         padding: 6px 8px;
@@ -2343,8 +2333,19 @@ body.dark-mode .chartjs-legend span {
         min-width: 0;
         width: auto;
     }
+
+    /* --- 3. DASHBOARD & DATA --- */
     
-    /* Toolbar */
+    .total-amount {
+        font-size: 2.5em;
+    }
+    
+    .expense-input {
+        width: 100px;
+    }
+
+    /* --- 4. TRANSACTIONS & FILTERS --- */
+    
     .toolbar-row {
         gap: 6px;
     }
@@ -2360,11 +2361,12 @@ body.dark-mode .chartjs-legend span {
         line-height: 1 !important;
     }
     
+    /* Cache le texte des boutons toolbar sur mobile */
     .toolbar-btn span[data-translate] {
         display: none !important;
     }
     
-    /* Filters */
+    /* Filtres en colonne */
     .filters-row {
         flex-direction: column;
     }
@@ -2375,7 +2377,7 @@ body.dark-mode .chartjs-legend span {
         width: 100%;
     }
     
-    /* Sync */
+    /* Sync Status en colonne */
     .sync-status {
         flex-direction: column;
     }
@@ -2389,13 +2391,12 @@ body.dark-mode .chartjs-legend span {
         width: 100%;
     }
     
-    /* Categories */
     .category-header-trans {
         flex-direction: column;
         align-items: flex-start;
     }
     
-    /* Transactions */
+    /* Liste des transactions */
     .transaction-desc {
         font-size: 0.9em;
     }
@@ -2404,25 +2405,25 @@ body.dark-mode .chartjs-legend span {
         font-size: 1em;
     }
     
-    /* Compare */
+    /* --- 5. COMPOSANTS FLOTTANTS & MODALS --- */
+    
     .compare-toggle span {
         font-size: 0.8em;
     }
     
     #compareBtn {
-        min-width: 100px;
+        min-width: auto; /* Correction : on laisse la taille auto pour l'icône */
     }
     
-    /* Floating button */
     .floating-add-btn {
-        bottom: 110px; /* ✅ MÊME position */
-        right: 15px; /* ✅ MÊME position */
-        width: 52px; /* ✅ MÊME taille */
+        bottom: 110px;
+        right: 15px;
+        width: 52px;
         height: 52px;
         font-size: 1.8em;
     }
     
-    /* Modals */
+    /* Modals plein écran (ou presque) */
     .modal {
         padding: 10px;
         z-index: 99999 !important;
@@ -2434,7 +2435,6 @@ body.dark-mode .chartjs-legend span {
         z-index: 100000 !important;
     }
     
-    /* Bank Accounts Modal */
     #bankAccountsModal .modal-content {
         width: 95% !important;
         max-width: 95% !important;
@@ -2442,37 +2442,22 @@ body.dark-mode .chartjs-legend span {
         max-height: 80dvh !important;
     }
     
-    #bankAccountsModal .modal-header {
-        padding: 12px 15px;
+    #bankAccountsModal .modal-header,
+    #bankAccountsModal .modal-footer,
+    #bankAccountsModal .modal-body {
+        padding: 12px 15px; /* Padding réduit uniformément */
     }
     
     #bankAccountsModal .modal-header h2 {
         font-size: 1.1em;
     }
     
-    #bankAccountsModal .modal-body {
-        padding: 15px;
-    }
-    
-    #bankAccountsModal .modal-footer {
-        padding: 12px 15px;
-    }
-    
-    /* Add Manual Transaction Modal */
     #addManualTransactionModal .modal-content {
         max-height: calc(100vh - 200px) !important;
         max-height: calc(100dvh - 200px) !important;
     }
     
-    .scroll-to-top {
-        bottom: 190px; /* ✅ MÊME position */
-        right: 15px; /* ✅ MÊME position */
-        width: 52px; /* ✅ MÊME taille */
-        height: 52px;
-        font-size: 1.3em;
-    }
-    
-    /* Toast */
+    /* Toasts positionnés plus bas */
     .toast-container {
         top: 50px;
         right: 10px;
@@ -2484,6 +2469,10 @@ body.dark-mode .chartjs-legend span {
         max-width: none;
     }
 }
+
+/* ============================================
+   VERY SMALL SCREENS (Override final)
+   ============================================ */
 
 @media (max-width: 480px) {
     .edit-mode-btn {
