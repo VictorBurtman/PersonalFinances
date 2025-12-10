@@ -464,6 +464,15 @@ class AuthManager {
      * @param {boolean} remember
      */
     async signIn(email, password, remember) {
+        // ✅ DEBUG
+        console.log('🔍 localStorage.getItem("language"):', localStorage.getItem('language'));
+        
+        const lang = localStorage.getItem('language') || 'en';
+        console.log('🔍 lang utilisé:', lang);
+        
+        const trans = translations[lang] || translations['en'];
+        console.log('🔍 trans:', trans);
+        console.log('🔍 trans.userNotFound:', trans.userNotFound);
         try {
             const lang = localStorage.getItem('language') || 'en';
             const trans = translations[lang] || translations['en'];

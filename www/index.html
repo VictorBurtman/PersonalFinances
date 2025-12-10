@@ -929,37 +929,6 @@
             }
         }
 
-        async function handleSignUp() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const remember = document.getElementById('rememberMe').checked;
-            
-            // ✅ Validation STRICTE avant tout
-            const validationError = authManager.validateAuthForm(email, password);
-            if (validationError) {
-                authManager.showAuthError(validationError);
-                return; // STOP ICI - Ne pas appeler Firebase
-            }
-            
-            const signInBtn = document.getElementById('signInBtn');
-            const signUpBtn = document.getElementById('signUpBtn');
-            
-            try {
-                signInBtn.disabled = true;
-                signUpBtn.disabled = true;
-                
-                await authManager.signUp(email, password, remember);
-                
-            } catch (error) {
-                console.error('Sign up error:', error);
-                const errorMessage = authManager.getErrorMessage(error.code);
-                authManager.showAuthError(errorMessage);
-                
-                signInBtn.disabled = false;
-                signUpBtn.disabled = false;
-            }
-        }
-
         // ========== TOGGLE PASSWORD VISIBILITY ==========
         document.addEventListener('DOMContentLoaded', function() {
             const togglePasswordBtn = document.getElementById('togglePassword');
