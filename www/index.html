@@ -3556,14 +3556,7 @@
             });
         }
 
-
-        // Global variables
-        // ... (toutes vos variables globales) ...
-        // let currentLanguage = 'en'; 
         
-        // === GESTION DE L'ÉTAT D'AUTHENTIFICATION FIREBASE ===
-        // Cet écouteur est appelé au chargement de la page et à chaque connexion/déconnexion.
-
         // ✅ UNIQUE onAuthStateChanged fusionné
         auth.onAuthStateChanged(async (user) => {
             console.log('🔴 onAuthStateChanged triggered');
@@ -3674,11 +3667,19 @@
                 }
                 
                 console.log('📱 Showing main app...');
+                console.log('🚀 Initialisation onglet Budget');
                 
-                // Initialiser les fonctionnalités
+                // ✅ AJOUT 1 : Initialiser le header Budget au démarrage
+                if (typeof updateHeaderForTab === 'function') {
+                    updateHeaderForTab('budget');
+                    console.log('✅ Header Budget initialisé');
+                }
+                
+                // ✅ Initialiser les fonctionnalités
                 setTimeout(() => {
                     initScrollToTopButton();
                     initSwipeNavigation();
+                    initPullToRefresh(); // ✅ AJOUT 2 : Pull-to-refresh pour Transactions
                 }, 1000);
                 
                 if (mainApp) {
@@ -3701,8 +3702,6 @@
                 }
             }
         });
-
-
 
         // ✅ AJOUTE après auth.onAuthStateChanged ou dans DOMContentLoaded
         document.addEventListener('DOMContentLoaded', () => {
@@ -4016,6 +4015,149 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
+
+        /**
+         * Pull-to-refresh pour recharger les transactions
+         */
+        function initPullToRefresh() {
+            console.log('🔄 Initialisation pull-to-refresh...');
+            
+            const dashboard = document.querySelector('.dashboard');
+            const transactionsTab = document.getElementById('transactionsTab');
+            
+            if (!dashboard || !transactionsTab) {
+                console.log('❌ Éléments manquants pour pull-to-refresh');
+                return;
+            }
+            
+            let touchStartY = 0;
+            let pulling = false;
+            let pullDistance = 0;
+            
+            const pullThreshold = 80; // Distance minimum pour déclencher le refresh (en pixels)
+            const maxPullDistance = 120; // Distance maximum de pull
+            
+            // Créer l'indicateur de pull-to-refresh
+            const refreshIndicator = document.createElement('div');
+            refreshIndicator.id = 'refreshIndicator';
+            refreshIndicator.style.cssText = `
+                position: absolute;
+                top: -60px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                transition: top 0.3s ease;
+                z-index: 1000;
+            `;
+            refreshIndicator.textContent = '⬇️';
+            transactionsTab.style.position = 'relative';
+            transactionsTab.insertBefore(refreshIndicator, transactionsTab.firstChild);
+            
+            dashboard.addEventListener('touchstart', (e) => {
+                // Seulement si on est dans l'onglet Transactions
+                if (currentActiveTab !== 'transactions') return;
+                
+                // Seulement si on est déjà en haut de la page
+                if (dashboard.scrollTop > 10) return;
+                
+                touchStartY = e.touches[0].clientY;
+                pulling = false;
+                pullDistance = 0;
+            }, { passive: true });
+            
+            dashboard.addEventListener('touchmove', (e) => {
+                // Seulement si on est dans l'onglet Transactions
+                if (currentActiveTab !== 'transactions') return;
+                
+                // Seulement si on est déjà en haut de la page
+                if (dashboard.scrollTop > 10) {
+                    pulling = false;
+                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.textContent = '⬇️';
+                    return;
+                }
+                
+                const currentY = e.touches[0].clientY;
+                const diff = currentY - touchStartY;
+                
+                // Pull vers le bas détecté
+                if (diff > 0) {
+                    pulling = true;
+                    pullDistance = Math.min(diff, maxPullDistance);
+                    
+                    // Calculer le pourcentage de progression
+                    const progress = Math.min(pullDistance / pullThreshold, 1);
+                    
+                    // Afficher l'indicateur
+                    const indicatorTop = -60 + (pullDistance * 0.5); // Move indicator down
+                    refreshIndicator.style.top = `${indicatorTop}px`;
+                    
+                    // Changer l'icône selon la progression
+                    if (pullDistance >= pullThreshold) {
+                        refreshIndicator.textContent = '🔄'; // Ready to refresh
+                        refreshIndicator.style.transform = 'translateX(-50%) rotate(180deg)';
+                    } else {
+                        refreshIndicator.textContent = '⬇️';
+                        refreshIndicator.style.transform = `translateX(-50%) rotate(${progress * 180}deg)`;
+                    }
+                }
+            }, { passive: true });
+            
+            dashboard.addEventListener('touchend', async (e) => {
+                // Seulement si on était en train de pull
+                if (!pulling) return;
+                
+                // Seulement si on est dans l'onglet Transactions
+                if (currentActiveTab !== 'transactions') return;
+                
+                // Si on a dépassé le seuil, recharger
+                if (pullDistance >= pullThreshold) {
+                    console.log('🔄 Pull-to-refresh déclenché!');
+                    
+                    // Animation de chargement
+                    refreshIndicator.textContent = '⏳';
+                    refreshIndicator.style.transform = 'translateX(-50%) rotate(0deg)';
+                    refreshIndicator.style.top = '10px';
+                    
+                    // Recharger les transactions
+                    try {
+                        if (typeof loadTransactions === 'function') {
+                            await loadTransactions();
+                            console.log('✅ Transactions rechargées');
+                            
+                            // Animation de succès
+                            refreshIndicator.textContent = '✅';
+                            setTimeout(() => {
+                                refreshIndicator.style.top = '-60px';
+                                refreshIndicator.textContent = '⬇️';
+                            }, 1000);
+                        }
+                    } catch (error) {
+                        console.error('❌ Erreur lors du refresh:', error);
+                        refreshIndicator.textContent = '❌';
+                        setTimeout(() => {
+                            refreshIndicator.style.top = '-60px';
+                            refreshIndicator.textContent = '⬇️';
+                        }, 1000);
+                    }
+                } else {
+                    // Pas assez tiré, remettre l'indicateur en place
+                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.textContent = '⬇️';
+                    refreshIndicator.style.transform = 'translateX(-50%) rotate(0deg)';
+                }
+                
+                pulling = false;
+                pullDistance = 0;
+            }, { passive: true });
+            
+            console.log('✅ Pull-to-refresh initialisé');
+        }
 
 
         /**
