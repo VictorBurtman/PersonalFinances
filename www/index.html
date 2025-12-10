@@ -2157,13 +2157,43 @@
                 }
 
 
-        function resetExpenses() {
+
+        async function resetExpenses() {
             const t = translations[currentLanguage] || translations['en'];
+            
             if (confirm(t.resetAllConfirm || 'Reset all to 0?')) {
-                expenses = JSON.parse(JSON.stringify(defaultExpenses));
-                hiddenItems = {};
-                saveUserData();
-                updateDisplay();
+                try {
+                    // 1. On parcourt toutes les catégories existantes (y compris les personnalisées)
+                    Object.keys(expenses).forEach(categoryKey => {
+                        // On parcourt chaque item de la catégorie
+                        if (Array.isArray(expenses[categoryKey])) {
+                            expenses[categoryKey].forEach(item => {
+                                // On met juste le montant à 0
+                                item.amount = 0;
+                            });
+                        }
+                    });
+
+                    // 2. Sauvegarde FORCEE dans Firebase
+                    if (currentUser) {
+                        // On utilise .update() pour sauvegarder l'état actuel (avec les 0)
+                        await db.collection('users').doc(currentUser.uid).update({
+                            expenses: expenses,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        console.log('✅ Montants remis à zéro sauvegardés sur Firebase');
+                    }
+
+                    // 3. Mettre à jour l'affichage
+                    updateDisplay();
+                    
+                } catch (error) {
+                    console.error('Erreur lors du reset:', error);
+                    alert('Erreur lors de la sauvegarde : ' + error.message);
+                    
+                    // En cas d'erreur, on recharge pour ne pas laisser l'interface incohérente
+                    loadUserData();
+                }
             }
         }
 
