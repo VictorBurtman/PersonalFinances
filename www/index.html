@@ -1898,12 +1898,12 @@
         }
 
         function updateChart() {
-                    // Mettre à jour l'état visuel des boutons (Bar/Doughnut)
+                    // Mise à jour visuelle des boutons (Bar/Doughnut)
                     if (typeof window.updateChartButtonsState === 'function') {
                         window.updateChartButtonsState();
                     }
                     
-                    // Vérification de sécurité pour Chart.js
+                    // Sécurité : si Chart.js n'est pas chargé
                     if (typeof Chart === 'undefined') {
                         console.warn('Chart.js is not available');
                         return;
@@ -1913,14 +1913,15 @@
 
                     // --- 1. CONFIGURATION DU STYLE (Dark Mode) ---
                     const isDarkMode = document.body.classList.contains('dark-mode');
-                    const textColor = isDarkMode ? '#ffffff' : '#666';
+                    // Couleurs ajustées pour être visibles sur fond sombre ou clair
+                    const textColor = isDarkMode ? '#e0e0e0' : '#666';
                     const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    const placeholderColor = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : '#e9ecef';
                     
                     Chart.defaults.color = textColor;
                     Chart.defaults.borderColor = gridColor;
 
-                    // --- 2. AGRÉGATION DES DONNÉES (Fix Demande #3) ---
-                    // On regroupe les dépenses par nom pour éviter les doublons dans la légende
+                    // --- 2. AGRÉGATION DES DONNÉES ---
                     const aggregatedItems = {};
 
                     Object.keys(expenses).forEach(categoryKey => {
@@ -1932,16 +1933,16 @@
                             if (amount > 0) {
                                 const name = expense.name;
                                 
-                                // Si l'item existe déjà, on cumule le montant
+                                // Cumul des montants pour le même nom d'item
                                 if (aggregatedItems[name]) {
                                     aggregatedItems[name].amount += amount;
                                 } else {
-                                    // Sinon on le crée
-                                    // Gestion de la couleur (Custom ou Hash généré)
+                                    // Gestion de la couleur
                                     let color;
                                     if (customColors[name]) {
                                         color = customColors[name];
                                     } else {
+                                        // Génération de couleur basée sur le nom
                                         const hash = name.split('').reduce((acc, char) => {
                                             return char.charCodeAt(0) + ((acc << 5) - acc);
                                         }, 0);
@@ -1958,7 +1959,7 @@
                         });
                     });
 
-                    // Conversion de l'objet agrégé en tableaux
+                    // Conversion en tableaux
                     const allLabels = Object.keys(aggregatedItems);
                     const allData = allLabels.map(name => aggregatedItems[name].amount);
                     const allBackgroundColors = allLabels.map(name => aggregatedItems[name].color);
@@ -1971,7 +1972,7 @@
                     const sortedData = indices.map(i => allData[i]);
                     const sortedColors = indices.map(i => allBackgroundColors[i]);
 
-                    // --- 4. FILTRAGE (Items cachés via légende) ---
+                    // --- 4. FILTRAGE (Items cachés) ---
                     const displayLabels = [];
                     const displayData = [];
                     const displayColors = [];
@@ -1984,23 +1985,25 @@
                         }
                     });
 
-                    // --- 5. GESTION DE L'ÉTAT VIDE (Fix Demande #1 et #2) ---
+                    // --- 5. GESTION DE L'ÉTAT VIDE ---
                     const t = translations[currentLanguage] || translations['en'];
                     const noExpensesText = t.noExpensesYet || "No expenses yet";
                     
                     let chartData;
                     let isEmpty = false;
 
-                    // Si aucune donnée réelle n'existe (après agrégation)
+                    // Si aucune donnée réelle n'existe
                     if (sortedLabels.length === 0) {
                         isEmpty = true;
                         chartData = {
-                            labels: [], // Vide pour éviter les tooltips
+                            // CORRECTION ICI : Il faut au moins un label vide pour que Chart.js dessine quelque chose
+                            labels: ["max"], 
                             datasets: [{
-                                data: [1], // Donnée fictive pour afficher le cercle
-                                backgroundColor: [isDarkMode ? '#2a2a3e' : '#e9ecef'],
+                                data: [1], // Valeur fictive pour dessiner le placeholder
+                                backgroundColor: [placeholderColor],
                                 borderWidth: 0,
-                                hoverBackgroundColor: [isDarkMode ? '#2a2a3e' : '#e9ecef'] // Pas d'effet au survol
+                                borderRadius: currentChartType === 'bar' ? 8 : 0,
+                                hoverBackgroundColor: [placeholderColor] // Pas d'effet au survol
                             }]
                         };
                     } else {
@@ -2017,25 +2020,24 @@
                         };
                     }
 
-                    // --- 6. CONFIGURATION DU PLUGIN TEXTE CENTRÉ ---
+                    // --- 6. PLUGIN TEXTE CENTRÉ ---
                     const centerTextPlugin = {
                         id: 'centerText',
                         afterDraw: function(chart) {
-                            // On affiche le texte si c'est vide
                             if (isEmpty) {
                                 const ctx = chart.ctx;
                                 const width = chart.width;
                                 const height = chart.height;
                                 
-                                ctx.restore();
-                                ctx.font = "bold 1.1em sans-serif"; // Style du texte
+                                ctx.save();
+                                ctx.font = "bold 1.1em sans-serif";
                                 ctx.textAlign = "center";
                                 ctx.textBaseline = "middle";
-                                ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd"; // Couleur du texte
+                                ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
                                 
-                                // Centrage exact
+                                // On dessine le texte au centre du canvas
                                 ctx.fillText(noExpensesText, width / 2, height / 2);
-                                ctx.save();
+                                ctx.restore();
                             }
                         }
                     };
@@ -2064,7 +2066,6 @@
                                     boxWidth: 15,
                                     boxHeight: 15,
                                     generateLabels: function(chart) {
-                                        // Génération custom des labels pour gérer l'état 'hidden' avec nos données agrégées
                                         return sortedLabels.map((label, i) => ({
                                             text: label,
                                             fillStyle: sortedColors[i],
@@ -2098,13 +2099,12 @@
                         }
                     };
 
-                    // Options spécifiques selon le type (Bar vs Doughnut)
+                    // Options spécifiques
                     let finalOptions;
                     if (currentChartType === 'bar') {
                         finalOptions = {
                             ...commonOptions,
                             scales: isEmpty ? {
-                                // Cacher les axes si vide
                                 x: { display: false },
                                 y: { display: false }
                             } : {
@@ -2120,23 +2120,20 @@
                             }
                         };
                     } else {
-                        // Doughnut
                         finalOptions = commonOptions;
                     }
 
-                    // --- 8. RENDU DU GRAPHIQUE ---
-                    
+                    // --- 8. CRÉATION / MISE À JOUR ---
                     if (chart) {
-                        // Détection de changement d'état (Vide <-> Plein)
-                        const wasEmpty = chart.data.labels.length === 0 && chart.data.datasets[0].data[0] === 1;
+                        // On détruit et recrée si le statut 'isEmpty' change ou si le type change
+                        // pour éviter les bugs d'affichage de Chart.js
+                        const wasEmpty = chart.data.labels.length === 1 && chart.data.labels[0] === "max";
                         const typeChanged = chart.config.type !== currentChartType;
 
-                        // Si le type change OU si on passe de vide à plein (ou inversement), on recrée
                         if (typeChanged || (wasEmpty !== isEmpty)) {
                             chart.destroy();
                             createNewChart();
                         } else {
-                            // Sinon mise à jour fluide
                             chart.data = chartData;
                             chart.options = finalOptions;
                             chart.update();
@@ -2150,16 +2147,14 @@
                             type: currentChartType,
                             data: chartData,
                             options: finalOptions,
-                            plugins: [centerTextPlugin] // Ajout du plugin texte centré
+                            plugins: [centerTextPlugin]
                         });
                     }
                     
-                    // Mise à jour du texte du montant total sous le titre
+                    // Mettre à jour le texte du montant total
                     const visibleTotal = isEmpty ? 0 : displayData.reduce((a, b) => a + b, 0);
                     document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
                 }
-
-
 
 
         function resetExpenses() {
