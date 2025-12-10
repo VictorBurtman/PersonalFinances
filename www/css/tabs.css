@@ -101,52 +101,55 @@ body.dark-mode .dashboard {
    ============================================ */
 
 .edit-mode-controls {
-    /* 1. POSITIONNEMENT FIXE */
+    /* Positionnement */
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
     z-index: 100 !important;
     
-    /* 2. ESPACEMENT (Safe Area pour iPhone) */
+    /* Espacement */
     padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     padding-bottom: 10px !important;
     padding-left: 20px !important;
     padding-right: 20px !important;
     
-    /* 3. STYLE DU FOND */
+    /* Style */
     background-color: white !important;
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
     
-    /* 4. FLEXBOX MAGIQUE (Alignement) */
-    display: flex;
-    align-items: center; /* Centre verticalement */
-    gap: 8px; /* Espace entre les boutons */
+    /* FLEXBOX : C'est ici que la magie opère */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important; /* Pousse le Titre à gauche et le Groupe à droite */
     
-    /* Important : permet aux éléments de dépasser si nécessaire sans casser */
-    transform: translateZ(0);
+    /* Sécurité Mobile */
     overflow: visible !important;
+    box-sizing: border-box !important;
 }
 
-/* LE TITRE (Se met à gauche et pousse les boutons à droite) */
+/* Le Titre (A Gauche) */
 .header-title {
     font-size: 1.3em;
     font-weight: 800;
     color: #333;
+    /* Plus besoin de marges auto complexes */
     
-    /* MODIFICATION ICI : On utilise flex-grow au lieu de margin */
-    flex: 1; /* Prend tout l'espace disponible */
-    min-width: 0; /* Permet au titre de rétrécir si l'écran est minuscule */
-    
-    /* Style du texte (Dégradé) */
+    /* Style */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    display: block; /* Mieux que inline-block pour le flex:1 */
+    display: block;
     white-space: nowrap;
-    overflow: hidden; /* Coupe le texte proprement s'il est trop long */
-    text-overflow: ellipsis; /* Ajoute "..." si ça dépasse */
+}
+
+/* NOUVEAU : Le Groupe de boutons (A Droite) */
+.header-right-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important; /* Espace constant entre tes icônes */
 }
 
 /* 4. EXTENSION VERS LE HAUT (Le "Cache-Misère" du Header) */
