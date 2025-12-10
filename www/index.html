@@ -4033,10 +4033,10 @@
             let pulling = false;
             let pullDistance = 0;
             
-            const pullThreshold = 80; // Distance minimum pour déclencher le refresh
-            const maxPullDistance = 120; // Distance maximum de pull
+            const pullThreshold = 80;
+            const maxPullDistance = 120;
             
-            // Créer l'indicateur de pull-to-refresh avec SVG uniquement
+            // Créer l'indicateur
             const refreshIndicator = document.createElement('div');
             refreshIndicator.id = 'refreshIndicator';
             refreshIndicator.style.cssText = `
@@ -4054,7 +4054,6 @@
                 opacity: 0;
             `;
             
-            // Ajouter uniquement le SVG animé
             refreshIndicator.innerHTML = `
                 <img src="img/anims/Interwind@1x-1.0s-200px-200px.svg" 
                     alt="Loading" 
@@ -4065,10 +4064,7 @@
             transactionsTab.insertBefore(refreshIndicator, transactionsTab.firstChild);
             
             dashboard.addEventListener('touchstart', (e) => {
-                // Seulement si on est dans l'onglet Transactions
                 if (currentActiveTab !== 'transactions') return;
-                
-                // Seulement si on est déjà en haut de la page
                 if (dashboard.scrollTop > 10) return;
                 
                 touchStartY = e.touches[0].clientY;
@@ -4077,10 +4073,8 @@
             }, { passive: true });
             
             dashboard.addEventListener('touchmove', (e) => {
-                // Seulement si on est dans l'onglet Transactions
                 if (currentActiveTab !== 'transactions') return;
                 
-                // Seulement si on est déjà en haut de la page
                 if (dashboard.scrollTop > 10) {
                     pulling = false;
                     refreshIndicator.style.top = '-80px';
@@ -4091,15 +4085,12 @@
                 const currentY = e.touches[0].clientY;
                 const diff = currentY - touchStartY;
                 
-                // Pull vers le bas détecté
                 if (diff > 0) {
                     pulling = true;
                     pullDistance = Math.min(diff, maxPullDistance);
                     
-                    // Calculer le pourcentage de progression
                     const progress = Math.min(pullDistance / pullThreshold, 1);
                     
-                    // Afficher l'indicateur progressivement
                     const indicatorTop = -80 + (pullDistance * 0.5);
                     refreshIndicator.style.top = `${indicatorTop}px`;
                     refreshIndicator.style.opacity = progress;
@@ -4107,21 +4098,17 @@
             }, { passive: true });
             
             dashboard.addEventListener('touchend', async (e) => {
-                // Seulement si on était en train de pull
                 if (!pulling) return;
-                
-                // Seulement si on est dans l'onglet Transactions
                 if (currentActiveTab !== 'transactions') return;
                 
-                // Si on a dépassé le seuil, recharger
+                // ✅ CACHER IMMÉDIATEMENT dès qu'on relâche
+                refreshIndicator.style.top = '-80px';
+                refreshIndicator.style.opacity = '0';
+                
+                // Si on a dépassé le seuil, recharger (mais sans afficher le SVG)
                 if (pullDistance >= pullThreshold) {
                     console.log('🔄 Pull-to-refresh déclenché!');
                     
-                    // Garder le spinner visible pendant le chargement
-                    refreshIndicator.style.top = '0px';
-                    refreshIndicator.style.opacity = '1';
-                    
-                    // Recharger les transactions
                     try {
                         if (typeof loadTransactions === 'function') {
                             await loadTransactions();
@@ -4130,15 +4117,6 @@
                     } catch (error) {
                         console.error('❌ Erreur lors du refresh:', error);
                     }
-                    
-                    // ✅ Cacher le spinner après le chargement
-                    refreshIndicator.style.top = '-80px';
-                    refreshIndicator.style.opacity = '0';
-                    
-                } else {
-                    // Pas assez tiré, cacher immédiatement
-                    refreshIndicator.style.top = '-80px';
-                    refreshIndicator.style.opacity = '0';
                 }
                 
                 pulling = false;
@@ -4147,6 +4125,7 @@
             
             console.log('✅ Pull-to-refresh initialisé');
         }
+
 
         /**
          * Scroll vers le haut de la page (smooth)
