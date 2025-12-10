@@ -3926,6 +3926,18 @@
                     
                     const shouldSwitch = Math.abs(currentX) > minSwipeDistance;
                     
+                    // ✅ SAUVEGARDER la position de scroll ICI (avant l'animation)
+                    const dashboard = document.querySelector('.dashboard');
+                    if (dashboard && shouldSwitch) {
+                        if (budgetActive) {
+                            budgetScrollPosition = dashboard.scrollTop;
+                            console.log('💾 Position Budget sauvegardée (swipe touchend):', budgetScrollPosition);
+                        } else if (transactionsActive) {
+                            transactionsScrollPosition = dashboard.scrollTop;
+                            console.log('💾 Position Transactions sauvegardée (swipe touchend):', transactionsScrollPosition);
+                        }
+                    }
+
                     if (shouldSwitch) {
                         // Swipe vers la gauche depuis Budget → aller à Transactions
                         if (budgetActive && currentX < 0) {
@@ -3984,15 +3996,6 @@
                 toTab.classList.remove('swipe-preview');
                 fromTab.classList.remove('swipe-preview');
                 
-                // ✅ SAUVEGARDER la position actuelle avant de changer
-                const dashboard = document.querySelector('.dashboard');
-                if (dashboard && currentActiveTab === 'budget') {
-                    budgetScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Budget sauvegardée (swipe):', budgetScrollPosition);
-                } else if (dashboard && currentActiveTab === 'transactions') {
-                    transactionsScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Transactions sauvegardée (swipe):', transactionsScrollPosition);
-                }
                 
                 // Animation de sortie
                 fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
@@ -4217,15 +4220,22 @@
                     btn.style.display = 'none';
                 });
                 
-                // ✅ Gérer compareMonth selon l'état de compareMode
+                // ✅ Gérer compareMonth en vérifiant l'état du bouton Compare
+                const compareBtn = document.getElementById('compareBtn');
                 const compareMonth = document.getElementById('compareMonth');
-                if (compareMonth) {
-                    if (window.compareMode) {
+                
+                if (compareBtn && compareMonth) {
+                    // Vérifier si le bouton Compare est actif (classe 'active')
+                    const isCompareActive = compareBtn.classList.contains('active');
+                    
+                    if (isCompareActive) {
                         compareMonth.style.display = 'inline-block';
-                        console.log('✅ compareMonth affiché (compareMode actif)');
+                        window.compareMode = true; // Synchroniser la variable
+                        console.log('✅ compareMonth affiché (bouton Compare actif)');
                     } else {
                         compareMonth.style.display = 'none';
-                        console.log('ℹ️ compareMonth caché (compareMode inactif)');
+                        window.compareMode = false; // Synchroniser la variable
+                        console.log('ℹ️ compareMonth caché (bouton Compare inactif)');
                     }
                 }
                 
@@ -4241,7 +4251,7 @@
                 });
             }
         }
-       
+
 
         let isTabSwitching = false;
         let currentActiveTab = 'budget';
