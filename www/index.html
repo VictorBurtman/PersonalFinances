@@ -403,10 +403,13 @@
                     <div class="expenses-list" id="expensesList">
                         <!-- Income Category -->
                         <div class="category-section income-category" id="category-income" style="display: none;">
-                            <div class="category-title" style="color: #28a745; border-color: #28a745;">
+                            
+                            <div class="category-title" style="color: #28a745; border-color: #28a745; display: flex; align-items: center; gap: 10px;">
+                                <img src="img/icons/income.svg" alt="Income" class="category-icon income-icon">
                                 <span data-translate="income">Income</span>
                                 <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
                             </div>
+
                             <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
                             <div class="category-controls">
                                 <button class="category-btn" onclick="addItemToCategory('income')">➕ Add Item</button>

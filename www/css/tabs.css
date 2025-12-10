@@ -2627,3 +2627,25 @@ body.dark-mode .chartjs-legend span {
     
     transform: scale(1.1);
 }
+
+
+/* ============================================
+   STYLE DES ICONES DE CATÉGORIES
+   ============================================ */
+
+.category-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Colorisation spécifique pour l'icône Income (Vert #28a745) */
+.category-icon.income-icon {
+    /* Ce filtre transforme le noir en vert #28a745 */
+    filter: invert(53%) sepia(63%) saturate(464%) hue-rotate(92deg) brightness(91%) contrast(93%);
+}
+
+/* Ajustement Dark Mode (Vert un peu plus lumineux pour le contraste) */
+body.dark-mode .category-icon.income-icon {
+    filter: invert(66%) sepia(43%) saturate(476%) hue-rotate(84deg) brightness(90%) contrast(85%);
+}

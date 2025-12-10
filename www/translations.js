@@ -201,7 +201,7 @@ const translations = {
         deleteCategory: "🗑️ Delete Category",
         
         // Default categories
-        income: "💰 Income",
+        income: "Income",
         housing: "🏠 Housing",
         tech: "📱 Communications & Tech",
         pet: "🐱 Pet Care",
@@ -640,7 +640,7 @@ const translations = {
         deleteCategory: "🗑️ Supprimer",
         
         // Default categories
-        income: "💰 Revenus",
+        income: "Revenus",
         housing: "🏠 Logement",
         tech: "📱 Communications & Tech",
         pet: "🐱 Animaux",
@@ -1068,7 +1068,7 @@ const translations = {
         deleteCategory: "🗑️ מחק קטגוריה",
         
         // Default categories
-        income: "💰 הכנסות",
+        income: "הכנסות",
         housing: "🏠 דיור",
         tech: "📱 תקשורת וטכנולוגיה",
         pet: "🐱 טיפול בחיות מחמד",
@@ -1496,7 +1496,7 @@ const translations = {
         deleteCategory: "🗑️ Eliminar",
         
         // Default categories
-        income: "💰 Ingresos",
+        income: "Ingresos",
         housing: "🏠 Vivienda",
         tech: "📱 Comunicaciones y Tecnología",
         pet: "🐱 Cuidado de Mascotas",
@@ -1924,7 +1924,7 @@ const translations = {
         deleteCategory: "🗑️ Удалить",
         
         // Default categories
-        income: "💰 Доходы",
+        income: "Доходы",
         housing: "🏠 Жилье",
         tech: "📱 Связь и Технологии",
         pet: "🐱 Уход за Питомцами",
@@ -2352,7 +2352,7 @@ const translations = {
         deleteCategory: "🗑️ حذف الفئة",
         
         // Default categories
-        income: "💰 الدخل",
+        income: "الدخل",
         housing: "🏠 السكن",
         tech: "📱 الاتصالات والتكنولوجيا",
         pet: "🐱 رعاية الحيوانات الأليفة",
