@@ -119,41 +119,50 @@ class AuthManager {
 
     /**
      * Configure les paramètres initiaux pour un nouvel utilisateur
-     * @param {string} userId - ID de l'utilisateur Firebase
+     * @param {string} userId - L'ID de l'utilisateur
      */
     async setupInitialConfig(userId) {
+        if (!userId) {
+            console.error('setupInitialConfig: userId manquant');
+            return;
+        }
+
         try {
             // Détecter langue et devise
             const detectedLang = this.detectSystemLanguage();
-            const detectedCurrency = await this.detectCurrency();
-            
-            console.log(`First launch detected - Setting language: ${detectedLang}, currency: ${detectedCurrency}`);
-            
-            // Sauvegarder dans Firestore
+            const detectedCurr = await this.detectUserCurrency();
+
+            console.log('First launch detected - Setting language:', detectedLang, ', currency:', detectedCurr);
+
+            // ✅ Sauvegarder dans Firestore
             await db.collection('users').doc(userId).set({
                 language: detectedLang,
-                currency: detectedCurrency,
-                darkMode: this.detectSystemDarkMode(),
+                currency: detectedCurr,
+                darkMode: true, // Dark mode par défaut
                 firstLoginDate: firebase.firestore.FieldValue.serverTimestamp(),
-                setupCompleted: true
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
-            
-            // Appliquer immédiatement
-            currentLanguage = detectedLang;
-            currentCurrency = detectedCurrency;
-            
-            // Mettre à jour l'interface
-            this.applyLanguage(detectedLang);
-            this.applyDarkMode(this.detectSystemDarkMode());
-            
-            return { language: detectedLang, currency: detectedCurrency };
-            
+
+            // ✅ Sauvegarder dans localStorage
+            localStorage.setItem('language', detectedLang);
+            localStorage.setItem('currency', detectedCurr);
+
+            // ✅ Mettre à jour les variables globales (si elles existent)
+            if (typeof window.currentLanguage !== 'undefined') {
+                window.currentLanguage = detectedLang;
+            }
+            if (typeof currentLanguage !== 'undefined') {
+                currentLanguage = detectedLang;
+            }
+            if (typeof window.currentCurrency !== 'undefined') {
+                window.currentCurrency = detectedCurr;
+            }
+
+            console.log('✅ Configuration initiale sauvegardée');
+
         } catch (error) {
             console.error('Error setting up initial config:', error);
-            // En cas d'erreur, utiliser les valeurs par défaut
-            currentLanguage = 'en';
-            currentCurrency = 'USD';
-            return { language: 'en', currency: 'USD' };
+            // Ne pas throw l'erreur pour ne pas bloquer la création du compte
         }
     }
 
