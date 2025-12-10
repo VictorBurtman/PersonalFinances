@@ -328,21 +328,20 @@
             <!-- ✅ HEADER STICKY UNIFIÉ -->
             <div class="edit-mode-controls">
                 <!-- Boutons Budget (visibles uniquement sur onglet Budget) -->
-                <button class="edit-mode-btn budget-only" id="editModeBtn" onclick="toggleEditMode()">
-                    <span id="editBtnText" data-translate="editCategories">✏️ Edit</span>
+                <button class="edit-mode-btn budget-only icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit Categories">
+                    <img src="img/icons/pen.svg" alt="Edit">
                 </button>
-                
+
                 <button class="edit-mode-btn budget-only" onclick="addNewCategory()" style="display: none;">
                     <span data-translate="addCategory">➕ Add</span>
                 </button>
-                
-                <button class="edit-mode-btn budget-only" id="compareBtn" onclick="toggleCompareMode()">
-                    <span data-translate="compare">📊 Compare</span>
+
+                <button class="edit-mode-btn budget-only icon-btn" id="compareBtn" onclick="toggleCompareMode()" title="Compare">
+                    <img src="img/icons/chart.svg" alt="Compare">
                 </button>
-                
+
                 <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: none;">
-                    <!-- Options dynamiques -->
-                </select>
+                    </select>
                 
                 <!-- Boutons Transactions (visibles uniquement sur onglet Transactions) -->
                 <button class="edit-mode-btn transactions-only icon-btn" onclick="openFiltersModal()" style="display: none;" title="Filters">
