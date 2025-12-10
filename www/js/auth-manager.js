@@ -465,10 +465,29 @@ class AuthManager {
      */
     async signIn(email, password, remember) {
         try {
+            // ✅ Vérifier si l'email existe AVANT de tenter la connexion
+            const emailExists = await this.checkIfEmailExists(email);
+            
+            if (!emailExists) {
+                console.log('❌ Email inexistant:', email);
+                const lang = localStorage.getItem('language') || 'en';
+                const trans = translations[lang] || translations['en'];
+                this.showAuthError('❌ ' + trans.userNotFound);
+                throw new Error('auth/user-not-found');
+            }
+            
+            console.log('✅ Email existe, tentative de connexion...');
+            
+            // Configurer la persistence
             await this.setAuthPersistence(remember);
+            
+            // Se connecter
             const result = await auth.signInWithEmailAndPassword(email, password);
+            
+            // Sauvegarder les préférences
             this.saveCredentials(email, remember);
             
+            // Vérifier si c'est la première connexion
             const isFirst = await this.checkFirstLaunch(result.user.uid);
             if (isFirst) {
                 await this.setupInitialConfig(result.user.uid);
@@ -479,7 +498,12 @@ class AuthManager {
         } catch (error) {
             console.error('❌ Sign in error:', error);
             
-            // ✅ Utiliser getErrorMessage() au lieu de t()
+            // Si l'erreur vient de notre vérification manuelle
+            if (error.message === 'auth/user-not-found') {
+                return; // Message déjà affiché
+            }
+            
+            // Sinon, utiliser getErrorMessage
             const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
             
@@ -692,7 +716,9 @@ class AuthManager {
     }
 
     getErrorMessage(errorCode) {
-        // ✅ Utiliser localStorage au lieu de currentLanguage
+        // ✅ LOG pour debug
+        console.log('🔍 Error code reçu:', errorCode);
+        
         const lang = localStorage.getItem('language') || 'en';
         const trans = translations[lang] || translations['en'];
         
@@ -706,12 +732,32 @@ class AuthManager {
             'auth/network-request-failed': trans.networkError,
             'auth/user-disabled': trans.accountDisabled,
             'auth/operation-not-allowed': trans.unknownError,
-            'auth/invalid-credential': trans.wrongPassword
+            'auth/invalid-credential': trans.wrongPassword, // ← C'EST CELUI-LÀ !
+            'auth/user-deleted': trans.userNotFound, // ✅ Ajoute celui-ci
         };
         
-        return errorMap[errorCode] || trans.unknownError;
+        const message = errorMap[errorCode] || trans.unknownError;
+        console.log('💬 Message retourné:', message);
+        
+        return message;
     }
 
+    /**
+     * Vérifie si un email existe dans Firebase Auth
+     * @param {string} email
+     * @returns {Promise<boolean>}
+     */
+    async checkIfEmailExists(email) {
+        try {
+            // Tenter de récupérer les méthodes de connexion pour cet email
+            const methods = await firebase.auth().fetchSignInMethodsForEmail(email);
+            console.log('🔍 Méthodes de connexion pour', email, ':', methods);
+            return methods.length > 0;
+        } catch (error) {
+            console.error('❌ Erreur checkIfEmailExists:', error);
+            return false;
+        }
+    }
 
     /**
      * Valide les champs du formulaire
