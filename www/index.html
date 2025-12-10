@@ -3753,21 +3753,13 @@
             let currentX = 0;
             let isSwiping = false;
             let swipeDetected = false;
+            let scrollPositionSaved = false; // ✅ NOUVEAU : Flag pour éviter de sauvegarder plusieurs fois
             
             const minSwipeDistance = 100;
             const swipeThreshold = 40;
             const verticalTolerance = 30;
             
             dashboard.addEventListener('touchstart', (e) => {
-                // ✅ SAUVEGARDER IMMÉDIATEMENT la position actuelle
-                if (currentActiveTab === 'budget') {
-                    budgetScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Budget sauvegardée (touchstart):', budgetScrollPosition);
-                } else if (currentActiveTab === 'transactions') {
-                    transactionsScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Transactions sauvegardée (touchstart):', transactionsScrollPosition);
-                }
-                
                 // ✅ BLOQUER si mode Edit actif
                 if (isEditMode) {
                     console.log('⏸️ Swipe bloqué - Mode Edit actif');
@@ -3778,6 +3770,7 @@
                 touchStartY = e.touches[0].clientY;
                 isSwiping = false;
                 swipeDetected = false;
+                scrollPositionSaved = false; // ✅ Reset du flag
                 
                 // Vérifier si le touch est sur le canvas du graphique
                 const target = e.target;
@@ -3822,6 +3815,18 @@
                         swipeDetected = true;
                         isSwiping = true;
                         console.log('👆 Swipe horizontal détecté');
+                        
+                        // ✅ SAUVEGARDER la position UNE SEULE FOIS quand le swipe est confirmé
+                        if (!scrollPositionSaved) {
+                            if (currentActiveTab === 'budget') {
+                                budgetScrollPosition = dashboard.scrollTop;
+                                console.log('💾 Position Budget sauvegardée (swipe détecté):', budgetScrollPosition);
+                            } else if (currentActiveTab === 'transactions') {
+                                transactionsScrollPosition = dashboard.scrollTop;
+                                console.log('💾 Position Transactions sauvegardée (swipe détecté):', transactionsScrollPosition);
+                            }
+                            scrollPositionSaved = true;
+                        }
                     } else if (isVertical) {
                         swipeDetected = false;
                         isSwiping = false;
@@ -3886,6 +3891,7 @@
                     isSwiping = false;
                     swipeDetected = false;
                     currentX = 0;
+                    scrollPositionSaved = false;
                     return;
                 }
                 
@@ -3924,6 +3930,7 @@
                     isSwiping = false;
                     swipeDetected = false;
                     currentX = 0;
+                    scrollPositionSaved = false;
                 }
             }, { passive: false });
             
@@ -3934,6 +3941,7 @@
                     isSwiping = false;
                     swipeDetected = false;
                     currentX = 0;
+                    scrollPositionSaved = false;
                     return;
                 }
                 
@@ -3942,6 +3950,7 @@
                     isSwiping = false;
                     swipeDetected = false;
                     currentX = 0;
+                    scrollPositionSaved = false;
                 }
             }, { passive: true });
             
@@ -4016,7 +4025,8 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-                
+        
+
         /**
          * Pull-to-refresh pour recharger les transactions
          */
