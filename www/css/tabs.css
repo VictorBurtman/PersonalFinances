@@ -223,38 +223,43 @@ body.dark-mode .edit-mode-btn.active {
    ============================================ */
 
 .edit-mode-btn.icon-btn {
-    /* 1. Force le centrage absolu via Flexbox */
+    /* 1. Centrage Flexbox */
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
 
-    /* 2. Dimensions fixes strictes (carré) */
+    /* 2. Dimensions fixes */
     width: 40px !important;
     height: 40px !important;
 
-    /* 3. RESET TOTAL des espacements qui causent le décalage */
-    padding: 0 !important;       /* Écrase le padding de .edit-mode-btn */
+    /* 3. Reset des espacements */
+    padding: 0 !important;
     margin: 0 !important;
-    line-height: 0 !important;   /* Empêche le texte fantôme de décaler la hauteur */
+    line-height: 0 !important;
 
-    /* 4. Apparence invisible */
-    /*border: none !important;*/
-    border: 1px solid red !important;
+    /* 4. Apparence (Bordure rouge active pour tes tests) */
+    border: 1px solid red !important; 
     background: transparent !important;
     box-shadow: none !important;
 
     /* Animation */
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
+
+/* --- FIX CRITIQUE : Permet au JS de cacher les boutons --- */
+/* Si le JS ajoute style="display: none", on force le masquage malgré le flex !important */
+.edit-mode-btn.icon-btn[style*="display: none"] {
+    display: none !important;
+}
+
 /* Style de l'image SVG */
 .edit-mode-btn.icon-btn img {
-    display: block;        /* Évite le comportement "inline" qui ajoute 4px en bas */
-    width: 24px !important; 
+    display: block;
+    width: 24px !important;
     height: 24px !important;
-    margin: 0 !important;  /* Sécurité supplémentaire */
-    
-    /* Par défaut : noir (ou couleur d'origine du SVG) */
+    margin: 0 !important;
 }
+
 /* Effet "clic" */
 .edit-mode-btn.icon-btn:active {
     transform: scale(0.85);
@@ -263,12 +268,13 @@ body.dark-mode .edit-mode-btn.active {
 
 /* --- GESTION DU DARK MODE --- */
 body.dark-mode .edit-mode-btn.icon-btn img {
-    filter: brightness(0) invert(1); /* Devient blanc */
+    filter: brightness(0) invert(1); /* L'icône devient blanche */
 }
 
 body.dark-mode .edit-mode-btn.icon-btn {
     background: transparent !important;
-    border: none !important;
+    /* J'ai commenté la ligne ci-dessous pour que tu voies ta bordure rouge en Dark Mode aussi */
+    /* border: none !important; */ 
 }
 
 /* ============================================
