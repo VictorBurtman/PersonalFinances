@@ -3558,29 +3558,70 @@
 
 
         /**
-         * Force le défilement de la page au sommet.
+         * Scroll vers le haut de la page (smooth)
          */
         function scrollToTop() {
-            console.log('🚀 scrollToTop appelée');
+            console.log('📜 scrollToTop() appelée');
             
             const dashboard = document.querySelector('.dashboard');
+            console.log('📜 dashboard trouvé:', dashboard);
             
-            if (!dashboard) {
-                console.log('❌ Dashboard not found');
-                return;
+            if (dashboard) {
+                console.log('📜 Position actuelle:', dashboard.scrollTop);
+                dashboard.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                console.log('✅ Scroll to top effectué');
+            } else {
+                console.error('❌ .dashboard introuvable !');
             }
-            
-            console.log('📍 Dashboard scrollTop avant:', dashboard.scrollTop);
-            
-            // Scroll smooth vers le haut
-            dashboard.scrollTo({ 
-                top: 0, 
-                behavior: 'smooth' 
-            });
-            
-            console.log('✅ Scroll commandé');
         }
 
+
+
+        /**
+         * Met à jour le header selon l'onglet actif
+         * @param {string} tabName - 'budget' ou 'transactions'
+         */
+        function updateHeaderForTab(tabName) {
+            console.log('🎨 updateHeaderForTab appelée pour:', tabName);
+            
+            if (tabName === 'budget') {
+                // Afficher les boutons Budget
+                document.querySelectorAll('.budget-only').forEach(btn => {
+                    if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
+                        btn.style.display = isEditMode ? 'inline-block' : 'none';
+                    } else {
+                        btn.style.display = 'inline-block';
+                    }
+                });
+                
+                // Cacher les boutons Transactions
+                document.querySelectorAll('.transactions-only').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+                
+                // Gérer compareMonth
+                const compareMonth = document.getElementById('compareMonth');
+                if (compareMonth && window.compareMode) {
+                    compareMonth.style.display = 'inline-block';
+                } else if (compareMonth) {
+                    compareMonth.style.display = 'none';
+                }
+                
+            } else if (tabName === 'transactions') {
+                // Cacher les boutons Budget
+                document.querySelectorAll('.budget-only').forEach(btn => {
+                    btn.style.display = 'none';
+                });
+                
+                // Afficher les boutons Transactions
+                document.querySelectorAll('.transactions-only').forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+            }
+        }
         // Global variables
         // ... (toutes vos variables globales) ...
         // let currentLanguage = 'en'; 
@@ -3800,6 +3841,7 @@
             console.log('✅ Scroll to top button initialized');
         }
 
+
         // === GESTION DU SWIPE ENTRE ONGLETS AVEC FEEDBACK VISUEL ===
         function initSwipeNavigation() {
             console.log('🚀 initSwipeNavigation appelée');
@@ -3947,6 +3989,7 @@
                             animateTabTransition(budgetTab, transactionsTab, 'left');
                             setTimeout(() => {
                                 switchTab('transactions');
+                                updateHeaderForTab('transactions'); // ✅ AJOUTÉ
                             }, 350);
                         }
                         // Swipe vers la droite depuis Transactions → aller à Budget
@@ -3955,6 +3998,7 @@
                             animateTabTransition(transactionsTab, budgetTab, 'right');
                             setTimeout(() => {
                                 switchTab('budget');
+                                updateHeaderForTab('budget'); // ✅ AJOUTÉ
                             }, 350);
                         }
                         else {
@@ -4037,32 +4081,47 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
+
         let isTabSwitching = false;
         let currentActiveTab = 'budget';
         let lastTabSwitchTime = 0; // ✅ AJOUTE cette variable
 
+        /**
+         * Change d'onglet (Budget <-> Transactions)
+         * @param {string} tabName - 'budget' ou 'transactions'
+         */
         function switchTab(tabName) {
-            const now = Date.now();
+            console.log('🔵 switchTab appelé avec:', tabName);
+            console.log('🔵 currentActiveTab:', currentActiveTab);
+            console.log('🔵 isTabSwitching:', isTabSwitching);
             
-            // ✅ Bloquer si switch en cours OU si dernier switch trop récent (< 300ms)
-            if (isTabSwitching || (now - lastTabSwitchTime < 300)) {
-                console.log('⏸️ Switch bloqué (trop rapide ou en cours)');
+            // Bloquer si un switch est déjà en cours
+            if (isTabSwitching) {
+                console.log('⏸️ Switch déjà en cours, ignoré');
                 return;
             }
-
-            // ✅ NOUVEAU : Si on clique sur l'onglet déjà actif, scroll to top
+            
+            // ✅ Si on clique sur l'onglet déjà actif, scroll to top
             if (tabName === currentActiveTab) {
-                console.log('📜 Scroll to top - même onglet cliqué');
+                console.log('📜 SCROLL TO TOP - même onglet cliqué');
+                
+                // Feedback visuel
+                const activeBtn = document.getElementById(tabName + 'TabBtn');
+                if (activeBtn) {
+                    activeBtn.classList.add('tap-feedback');
+                    setTimeout(() => activeBtn.classList.remove('tap-feedback'), 300);
+                }
+                
                 scrollToTop();
-                return;
+                return; // ✅ SORTIR ICI
             }
             
+            // Bloquer les autres clics pendant le switch
             isTabSwitching = true;
-            lastTabSwitchTime = now; // ✅ Enregistrer le timestamp
-            console.log('🔄 switchTab appelé:', tabName);
+            console.log('🔄 switchTab vers:', tabName);
             
             try {
-                // ✅ Activer le nouveau bouton AVANT de retirer les autres
+                // Activer le nouveau bouton AVANT de retirer les autres
                 const activeBtn = document.getElementById(tabName + 'TabBtn');
                 if (activeBtn) {
                     activeBtn.classList.add('active');
@@ -4075,32 +4134,19 @@
                     }
                 });
                 
+                // Mettre à jour le tracker
+                currentActiveTab = tabName;
+                
+                // ========================================
+                // ONGLET BUDGET
+                // ========================================
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
                     
-                    // Afficher les boutons Budget
-                    document.querySelectorAll('.budget-only').forEach(btn => {
-                        if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
-                            btn.style.display = isEditMode ? 'inline-block' : 'none';
-                        } else {
-                            btn.style.display = 'inline-block';
-                        }
-                    });
+                    // Mettre à jour le header
+                    updateHeaderForTab('budget');
                     
-                    // Cacher les boutons Transactions
-                    document.querySelectorAll('.transactions-only').forEach(btn => {
-                        btn.style.display = 'none';
-                    });
-                    
-                    // Gérer compareMonth
-                    const compareMonth = document.getElementById('compareMonth');
-                    if (compareMonth && window.compareMode) {
-                        compareMonth.style.display = 'inline-block';
-                    } else if (compareMonth) {
-                        compareMonth.style.display = 'none';
-                    }
-                    
-                    // Afficher Budget
+                    // Afficher le contenu Budget
                     const budgetTab = document.getElementById('budgetTab');
                     if (budgetTab) {
                         budgetTab.style.display = 'block';
@@ -4108,9 +4154,11 @@
                     }
                     
                     const expensesList = document.getElementById('expensesList');
-                    if (expensesList) expensesList.style.display = 'block';
+                    if (expensesList) {
+                        expensesList.style.display = 'block';
+                    }
                     
-                    // Cacher Transactions
+                    // Cacher le contenu Transactions
                     const transactionsTab = document.getElementById('transactionsTab');
                     if (transactionsTab) {
                         transactionsTab.style.display = 'none';
@@ -4118,22 +4166,20 @@
                     }
                     
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
-                    if (floatingAddBtn) floatingAddBtn.style.display = 'none';
+                    if (floatingAddBtn) {
+                        floatingAddBtn.style.display = 'none';
+                    }
                     
+                // ========================================
+                // ONGLET TRANSACTIONS
+                // ========================================
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
                     
-                    // Cacher Budget
-                    document.querySelectorAll('.budget-only').forEach(btn => {
-                        btn.style.display = 'none';
-                    });
+                    // Mettre à jour le header
+                    updateHeaderForTab('transactions');
                     
-                    // Afficher Transactions
-                    document.querySelectorAll('.transactions-only').forEach(btn => {
-                        btn.style.display = 'inline-block';
-                    });
-                    
-                    // Cacher Budget
+                    // Cacher le contenu Budget
                     const budgetTab = document.getElementById('budgetTab');
                     if (budgetTab) {
                         budgetTab.style.display = 'none';
@@ -4141,17 +4187,19 @@
                     }
                     
                     const expensesList = document.getElementById('expensesList');
-                    if (expensesList) expensesList.style.display = 'none';
+                    if (expensesList) {
+                        expensesList.style.display = 'none';
+                    }
                     
-                    // Afficher Transactions
+                    // Afficher le contenu Transactions
                     const transactionsTab = document.getElementById('transactionsTab');
                     if (transactionsTab) {
                         transactionsTab.style.display = 'block';
                         transactionsTab.classList.add('active');
                     }
                     
-                    // Charger transactions
-                    if (typeof loadTransactions === 'function') {
+                    // Charger les transactions SEULEMENT si pas déjà chargées
+                    if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
                         setTimeout(() => {
                             const tab = document.getElementById('transactionsTab');
                             
@@ -4164,24 +4212,33 @@
                                 loadTransactions()
                                     .then(() => {
                                         console.log('✅ Transactions chargées');
+                                        window.transactionsLoaded = true; // ✅ Marquer comme chargé
                                     })
                                     .catch(err => {
-                                        console.error('❌ Erreur chargement:', err);
+                                        console.error('❌ Erreur chargement transactions:', err);
                                     });
                             }
                         }, 400);
+                    } else {
+                        console.log('ℹ️ Transactions déjà chargées');
                     }
                     
+                    // Afficher le bouton floating add
                     const floatingAddBtn = document.getElementById('floatingAddBtn');
-                    if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
+                    if (floatingAddBtn) {
+                        floatingAddBtn.style.display = 'flex';
+                    }
                 }
+                
             } finally {
-                // ✅ Débloquer plus rapidement
+                // Débloquer après un court délai
                 setTimeout(() => {
                     isTabSwitching = false;
-                }, 200); // ← Réduit de 500ms à 200ms
+                    console.log('✅ Switch terminé, déblocage');
+                }, 200);
             }
         }
+
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {

@@ -2488,3 +2488,13 @@ body.dark-mode .chartjs-legend span {
         /* ---------------------- */
     }
 }
+
+/* Animation de bounce quand on tap sur l'onglet actif */
+@keyframes tabBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+}
+
+.footer-nav-btn.tap-feedback {
+    animation: tabBounce 0.3s ease;
+}
