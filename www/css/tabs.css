@@ -239,6 +239,7 @@ body.dark-mode .edit-mode-btn.active {
 
     /* 4. Apparence invisible */
     border: none !important;
+    border: 1px solid red !important;
     background: transparent !important;
     box-shadow: none !important;
 
