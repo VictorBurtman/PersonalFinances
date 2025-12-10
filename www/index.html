@@ -4014,8 +4014,7 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-
-
+  
         /**
          * Pull-to-refresh pour recharger les transactions
          */
@@ -4034,10 +4033,10 @@
             let pulling = false;
             let pullDistance = 0;
             
-            const pullThreshold = 80; // Distance minimum pour déclencher le refresh (en pixels)
+            const pullThreshold = 80; // Distance minimum pour déclencher le refresh
             const maxPullDistance = 120; // Distance maximum de pull
             
-            // Créer l'indicateur de pull-to-refresh
+            // Créer l'indicateur de pull-to-refresh avec SVG uniquement
             const refreshIndicator = document.createElement('div');
             refreshIndicator.id = 'refreshIndicator';
             refreshIndicator.style.cssText = `
@@ -4050,11 +4049,18 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 24px;
-                transition: top 0.3s ease;
+                transition: top 0.3s ease, opacity 0.3s ease;
                 z-index: 1000;
+                opacity: 0;
             `;
-            refreshIndicator.textContent = '⬇️';
+            
+            // Ajouter uniquement le SVG animé
+            refreshIndicator.innerHTML = `
+                <img src="img/anims/Interwind@1x-1.0s-200px-200px.svg" 
+                    alt="Loading" 
+                    style="width: 100%; height: 100%;">
+            `;
+            
             transactionsTab.style.position = 'relative';
             transactionsTab.insertBefore(refreshIndicator, transactionsTab.firstChild);
             
@@ -4078,7 +4084,7 @@
                 if (dashboard.scrollTop > 10) {
                     pulling = false;
                     refreshIndicator.style.top = '-60px';
-                    refreshIndicator.textContent = '⬇️';
+                    refreshIndicator.style.opacity = '0';
                     return;
                 }
                 
@@ -4093,18 +4099,10 @@
                     // Calculer le pourcentage de progression
                     const progress = Math.min(pullDistance / pullThreshold, 1);
                     
-                    // Afficher l'indicateur
-                    const indicatorTop = -60 + (pullDistance * 0.5); // Move indicator down
+                    // Afficher l'indicateur progressivement
+                    const indicatorTop = -60 + (pullDistance * 0.5);
                     refreshIndicator.style.top = `${indicatorTop}px`;
-                    
-                    // Changer l'icône selon la progression
-                    if (pullDistance >= pullThreshold) {
-                        refreshIndicator.textContent = '🔄'; // Ready to refresh
-                        refreshIndicator.style.transform = 'translateX(-50%) rotate(180deg)';
-                    } else {
-                        refreshIndicator.textContent = '⬇️';
-                        refreshIndicator.style.transform = `translateX(-50%) rotate(${progress * 180}deg)`;
-                    }
+                    refreshIndicator.style.opacity = progress;
                 }
             }, { passive: true });
             
@@ -4119,37 +4117,28 @@
                 if (pullDistance >= pullThreshold) {
                     console.log('🔄 Pull-to-refresh déclenché!');
                     
-                    // Animation de chargement
-                    refreshIndicator.textContent = '⏳';
-                    refreshIndicator.style.transform = 'translateX(-50%) rotate(0deg)';
+                    // Garder le spinner visible pendant le chargement
                     refreshIndicator.style.top = '10px';
+                    refreshIndicator.style.opacity = '1';
                     
                     // Recharger les transactions
                     try {
                         if (typeof loadTransactions === 'function') {
                             await loadTransactions();
                             console.log('✅ Transactions rechargées');
-                            
-                            // Animation de succès
-                            refreshIndicator.textContent = '✅';
-                            setTimeout(() => {
-                                refreshIndicator.style.top = '-60px';
-                                refreshIndicator.textContent = '⬇️';
-                            }, 1000);
                         }
                     } catch (error) {
                         console.error('❌ Erreur lors du refresh:', error);
-                        refreshIndicator.textContent = '❌';
-                        setTimeout(() => {
-                            refreshIndicator.style.top = '-60px';
-                            refreshIndicator.textContent = '⬇️';
-                        }, 1000);
                     }
-                } else {
-                    // Pas assez tiré, remettre l'indicateur en place
+                    
+                    // ✅ Cacher le spinner après le chargement
                     refreshIndicator.style.top = '-60px';
-                    refreshIndicator.textContent = '⬇️';
-                    refreshIndicator.style.transform = 'translateX(-50%) rotate(0deg)';
+                    refreshIndicator.style.opacity = '0';
+                    
+                } else {
+                    // Pas assez tiré, cacher immédiatement
+                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.style.opacity = '0';
                 }
                 
                 pulling = false;
@@ -4158,7 +4147,6 @@
             
             console.log('✅ Pull-to-refresh initialisé');
         }
-
 
         /**
          * Scroll vers le haut de la page (smooth)
