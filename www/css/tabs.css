@@ -219,54 +219,33 @@ body.dark-mode .edit-mode-btn.active {
 
 
 /* ============================================
-   STYLE DES ICONES DU HEADER (TRANSACTIONS)
+   STYLE DES BOUTONS ICONES (HEADER)
    ============================================ */
 
 .edit-mode-btn.icon-btn {
-    /* 1. Mise en forme du conteneur */
-    padding: 0;
-    width: 40px;          /* Zone de clic confortable */
-    height: 40px;
-    display: inline-flex;
+    padding: 0;           /* On retire le padding large du texte */
+    width: 36px;          /* Largeur fixe */
+    height: 36px;         /* Hauteur fixe pour faire un carré */
+    display: inline-flex; /* Pour centrer l'icône */
     align-items: center;
     justify-content: center;
-    min-width: unset;
-    
-    /* 2. Suppression totale des bordures et fonds */
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    
-    /* Petit effet de transition */
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    min-width: unset;     /* Annule la largeur min des boutons texte */
 }
 
-/* Style de l'image SVG */
 .edit-mode-btn.icon-btn img {
-    width: 24px;  /* Taille de l'icône */
-    height: 24px;
+    width: 20px;          /* Taille de l'icône */
+    height: 20px;
     display: block;
-    /* Par défaut (Light Mode), on garde l'icône telle quelle (noire) */
+    /* Si tes icônes sont noires et que tu veux qu'elles soient oranges comme le thème : */
+    /* filter: invert(58%) sepia(61%) saturate(2379%) hue-rotate(345deg) brightness(101%) contrast(98%); */
 }
 
-/* Effet "clic" pour donner un retour visuel sans bordure */
-.edit-mode-btn.icon-btn:active {
-    transform: scale(0.85);
-    opacity: 0.7;
-}
-
-/* --- GESTION DU DARK MODE --- */
-
-/* 1. On passe l'icône en BLANC pur */
+/* Ajustement spécifique pour le mode sombre si nécessaire */
 body.dark-mode .edit-mode-btn.icon-btn img {
-    filter: brightness(0) invert(1);
+    /* Si tu veux les icônes en blanc sur fond sombre */
+    /* filter: brightness(0) invert(1); */
 }
 
-/* 2. On s'assure que le fond reste transparent même en dark mode */
-body.dark-mode .edit-mode-btn.icon-btn {
-    background: transparent !important;
-    border: none !important;
-}
 
 /* ============================================
    FOOTER NAVIGATION (STICKY)
