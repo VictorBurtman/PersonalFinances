@@ -119,37 +119,41 @@ body.dark-mode .dashboard {
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
     
-    /* FLEXBOX : C'est ici que la magie opère */
+    /* FLEXBOX : Espace tout au maximum entre les 2 enfants directs */
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important; /* Pousse le Titre à gauche et le Groupe à droite */
+    justify-content: space-between !important; 
     
-    /* Sécurité Mobile */
+    /* Reset pour mobile */
     overflow: visible !important;
     box-sizing: border-box !important;
 }
 
-/* Le Titre (A Gauche) */
+/* 1. Le Titre (Reste à gauche) */
 .header-title {
     font-size: 1.3em;
     font-weight: 800;
     color: #333;
-    /* Plus besoin de marges auto complexes */
     
-    /* Style */
+    /* On retire flex-grow car space-between fait le travail */
+    flex-grow: 0; 
+    
+    /* Style du texte (Dégradé) + Correction VS Code */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
+    background-clip: text;          /* Standard */
+    -webkit-background-clip: text;  /* Safari/Chrome */
     -webkit-text-fill-color: transparent;
+    
     display: block;
     white-space: nowrap;
 }
 
-/* NOUVEAU : Le Groupe de boutons (A Droite) */
+/* 2. Le Groupe de boutons (Va à Droite) */
 .header-right-actions {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    gap: 8px !important; /* Espace constant entre tes icônes */
+    gap: 8px !important; /* Colle les boutons entre eux avec un petit espace */
 }
 
 /* 4. EXTENSION VERS LE HAUT (Le "Cache-Misère" du Header) */
@@ -172,7 +176,7 @@ body.dark-mode .dashboard {
     pointer-events: none;
 }
 
-/* Gestion du Dark Mode */
+/* Dark Mode */
 body.dark-mode .edit-mode-controls {
     background-color: #2a2a3e !important; 
     border-bottom: 1px solid #3a3a4e !important;
