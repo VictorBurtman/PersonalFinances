@@ -3775,7 +3775,6 @@
             console.log('✅ Scroll to top button initialized');
         }
 
-
         // === GESTION DU SWIPE ENTRE ONGLETS AVEC FEEDBACK VISUEL ===
         function initSwipeNavigation() {
             console.log('🚀 initSwipeNavigation appelée');
@@ -3800,6 +3799,12 @@
             const verticalTolerance = 30;
             
             dashboard.addEventListener('touchstart', (e) => {
+                // ✅ BLOQUER si mode Edit actif
+                if (isEditMode) {
+                    console.log('⏸️ Swipe bloqué - Mode Edit actif');
+                    return;
+                }
+                
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
                 isSwiping = false;
@@ -3815,6 +3820,11 @@
             }, { passive: false });
             
             dashboard.addEventListener('touchmove', (e) => {
+                // ✅ BLOQUER si mode Edit actif
+                if (isEditMode) {
+                    return;
+                }
+                
                 // Vérifier si le touch est sur le canvas du graphique
                 const target = e.target;
                 if (target.tagName === 'CANVAS') {
@@ -3830,7 +3840,6 @@
                 const isMovingHorizontally = Math.abs(diffX) > Math.abs(diffY);
                 
                 if (isMovingHorizontally && Math.abs(diffX) > 10) {
-                    // Mouvement horizontal détecté, bloquer le scroll vertical immédiatement
                     e.preventDefault();
                 }
                 
@@ -3841,12 +3850,10 @@
                     const isPureHorizontal = Math.abs(diffX) > Math.abs(diffY) * 2;
                     
                     if (isHorizontal && isPureHorizontal && Math.abs(diffY) < verticalTolerance) {
-                        // C'est un swipe horizontal !
                         swipeDetected = true;
                         isSwiping = true;
                         console.log('👆 Swipe horizontal détecté');
                     } else if (isVertical) {
-                        // C'est un scroll vertical, on bloque le swipe
                         swipeDetected = false;
                         isSwiping = false;
                         return;
@@ -3855,7 +3862,7 @@
                 
                 // Si on est en mode swipe, bloquer le scroll et gérer le swipe
                 if (isSwiping) {
-                    e.preventDefault(); // Double sécurité
+                    e.preventDefault();
                     
                     currentX = diffX;
                     
@@ -3867,21 +3874,18 @@
                     if (budgetActive && currentX < 0) {
                         const progress = Math.min(Math.abs(currentX) / window.innerWidth, 1);
                         
-                        // Effet de résistance si on tire trop
                         const resistance = currentX < -window.innerWidth * 0.7 ? 0.3 : 1;
                         const adjustedX = currentX * resistance;
                         
                         budgetTab.style.transform = `translateX(${adjustedX}px)`;
                         budgetTab.style.opacity = 1 - (progress * 0.3);
                         
-                        // Faire apparaître Transactions depuis la droite
                         transactionsTab.style.display = 'block';
                         transactionsTab.style.transform = `translateX(${window.innerWidth + adjustedX}px)`;
                         transactionsTab.style.opacity = progress;
                     }
-                    // Budget actif : bloquer le swipe vers la droite (pas d'onglet à gauche)
+                    // Budget actif : bloquer le swipe vers la droite
                     else if (budgetActive && currentX > 0) {
-                        // Effet de résistance
                         const resistance = 0.2;
                         budgetTab.style.transform = `translateX(${currentX * resistance}px)`;
                     }
@@ -3895,14 +3899,12 @@
                         transactionsTab.style.transform = `translateX(${adjustedX}px)`;
                         transactionsTab.style.opacity = 1 - (progress * 0.3);
                         
-                        // Faire apparaître Budget depuis la gauche
                         budgetTab.style.display = 'block';
                         budgetTab.style.transform = `translateX(${-window.innerWidth + adjustedX}px)`;
                         budgetTab.style.opacity = progress;
                     }
-                    // Transactions actif : bloquer le swipe vers la gauche (pas d'onglet à droite)
+                    // Transactions actif : bloquer le swipe vers la gauche
                     else if (transactionsActive && currentX < 0) {
-                        // Effet de résistance
                         const resistance = 0.2;
                         transactionsTab.style.transform = `translateX(${currentX * resistance}px)`;
                     }
@@ -3910,6 +3912,14 @@
             }, { passive: false });
             
             dashboard.addEventListener('touchend', (e) => {
+                // ✅ BLOQUER si mode Edit actif
+                if (isEditMode) {
+                    isSwiping = false;
+                    swipeDetected = false;
+                    currentX = 0;
+                    return;
+                }
+                
                 if (isSwiping) {
                     const budgetActive = budgetTab.classList.contains('active');
                     const transactionsActive = transactionsTab.classList.contains('active');
@@ -3923,7 +3933,7 @@
                             animateTabTransition(budgetTab, transactionsTab, 'left');
                             setTimeout(() => {
                                 switchTab('transactions');
-                                updateHeaderForTab('transactions'); // ✅ AJOUTÉ
+                                updateHeaderForTab('transactions');
                             }, 350);
                         }
                         // Swipe vers la droite depuis Transactions → aller à Budget
@@ -3932,7 +3942,7 @@
                             animateTabTransition(transactionsTab, budgetTab, 'right');
                             setTimeout(() => {
                                 switchTab('budget');
-                                updateHeaderForTab('budget'); // ✅ AJOUTÉ
+                                updateHeaderForTab('budget');
                             }, 350);
                         }
                         else {
@@ -3950,6 +3960,14 @@
             
             // Annuler le swipe si on quitte l'écran
             dashboard.addEventListener('touchcancel', () => {
+                // ✅ BLOQUER si mode Edit actif
+                if (isEditMode) {
+                    isSwiping = false;
+                    swipeDetected = false;
+                    currentX = 0;
+                    return;
+                }
+                
                 if (isSwiping) {
                     resetTabPositions(budgetTab, transactionsTab);
                     isSwiping = false;
@@ -3962,7 +3980,6 @@
             function animateTabTransition(fromTab, toTab, direction) {
                 const distance = direction === 'left' ? -window.innerWidth : window.innerWidth;
                 
-                // Retirer la classe preview immédiatement
                 toTab.classList.remove('swipe-preview');
                 fromTab.classList.remove('swipe-preview');
                 
@@ -3974,9 +3991,7 @@
                 toTab.style.transform = 'translateX(0)';
                 toTab.style.opacity = '1';
                 
-                // Nettoyer complètement après l'animation
                 setTimeout(() => {
-                    // Retirer TOUS les styles inline appliqués pendant le swipe
                     fromTab.style.transition = '';
                     fromTab.style.transform = '';
                     fromTab.style.opacity = '';
@@ -3991,7 +4006,6 @@
             // Réinitialiser les positions des onglets
             function resetTabPositions(tab1, tab2) {
                 [tab1, tab2].forEach(tab => {
-                    // Retirer la classe preview
                     tab.classList.remove('swipe-preview');
                     
                     tab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
@@ -3999,12 +4013,10 @@
                     tab.style.opacity = '';
                     
                     setTimeout(() => {
-                        // Nettoyer complètement tous les styles inline
                         tab.style.transition = '';
                         tab.style.transform = '';
                         tab.style.opacity = '';
                         
-                        // Cacher seulement si pas actif
                         if (!tab.classList.contains('active')) {
                             tab.style.display = 'none';
                         }
@@ -4014,7 +4026,8 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-  
+
+        
         /**
          * Pull-to-refresh pour recharger les transactions
          */
