@@ -2396,8 +2396,8 @@
             compareMode = !compareMode;
             
             if (compareMode) {
-                compareBtn.style.background = '#667eea';
-                compareBtn.style.color = 'white';
+                // On ajoute la classe active pour le style CSS
+                if (compareBtn) compareBtn.classList.add('active');
                 
                 if (monthSelect) {
                     monthSelect.style.display = 'inline-block';
@@ -2409,9 +2409,8 @@
                 }, 50);
                 
             } else {
-                compareBtn.style.background = 'white';
-                compareBtn.style.color = '#667eea';
-                compareBtn.style.borderColor = '#dee2e6';
+                // On retire la classe active
+                if (compareBtn) compareBtn.classList.remove('active');
                 
                 if (monthSelect) monthSelect.style.display = 'none';
                 
@@ -2427,6 +2426,8 @@
                 });
             }, 100);
         }
+
+
         /**
          * Populate month dropdown with last 12 months
          */

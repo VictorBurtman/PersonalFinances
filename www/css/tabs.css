@@ -2576,3 +2576,25 @@ body.dark-mode .chartjs-legend span {
 .footer-nav-btn.tap-feedback {
     animation: tabBounce 0.3s ease;
 }
+
+
+/* ============================================
+   COULEURS DES ICONES ACTIVES (HEADER)
+   ============================================ */
+
+/* 1. Bouton ÉDITION activé -> Orange (#fd7e14) */
+#editModeBtn.active img {
+    /* Filtre calculé pour obtenir du orange depuis du noir */
+    filter: invert(55%) sepia(66%) saturate(3394%) hue-rotate(346deg) brightness(101%) contrast(98%) !important;
+    
+    /* Petit effet de "saut" quand activé */
+    transform: scale(1.1);
+}
+
+/* 2. Bouton COMPARER activé -> Violet/Bleu (#667eea) */
+#compareBtn.active img {
+    /* Filtre calculé pour obtenir du violet depuis du noir */
+    filter: invert(46%) sepia(34%) saturate(1352%) hue-rotate(204deg) brightness(97%) contrast(92%) !important;
+    
+    transform: scale(1.1);
+}
