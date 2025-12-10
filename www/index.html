@@ -333,8 +333,8 @@
                     <img src="img/icons/pen.svg" alt="Edit">
                 </button>
 
-                <button class="edit-mode-btn budget-only" onclick="addNewCategory()" style="display: none;">
-                    <span data-translate="addCategory">➕ Add</span>
+                <button class="edit-mode-btn budget-only icon-btn" onclick="addNewCategory()" title="Add Category">
+                    <img src="img/icons/add.svg" alt="Add">
                 </button>
 
                 <button class="edit-mode-btn budget-only icon-btn" id="compareBtn" onclick="toggleCompareMode()" title="Compare">
@@ -2294,87 +2294,40 @@
 
 
         function toggleEditMode() {
-            console.log('🔧 toggleEditMode() appelée !');
-            console.log('isEditMode avant:', isEditMode);
-            
             isEditMode = !isEditMode;
             
-            console.log('isEditMode après:', isEditMode);
-            
             const editBtn = document.getElementById('editModeBtn');
-            const editBtnText = document.getElementById('editBtnText');
             const categoryControls = document.querySelectorAll('.category-controls');
             const renameButtons = document.querySelectorAll('.rename-btn');
-            
-            console.log('Nombre de .item-move-btns trouvés:', document.querySelectorAll('.item-move-btns').length);
-            
-            // Récupérer les traductions
-            const t = translations[currentLanguage] || translations['en'];
-            
-            // Gérer le bouton Add Category dans le header
-            const addCategoryBtn = document.querySelector('.edit-mode-controls button[onclick*="addNewCategory"]');
+            const itemMoveBtns = document.querySelectorAll('.item-move-btns');
+            const itemRenameBtns = document.querySelectorAll('.item-rename-btn');
             
             if (isEditMode) {
-                console.log('✅ MODE ÉDITION ACTIVÉ');
-                
                 // Mode Edit activé
                 if (editBtn) editBtn.classList.add('active');
-                if (editBtnText) editBtnText.textContent = t.doneEditing || 'Done Editing';
                 
-                // Afficher le bouton Add Category
-                if (addCategoryBtn) addCategoryBtn.style.display = 'inline-block';
-                
-                // Afficher les contrôles de catégories
+                // Afficher les contrôles
                 categoryControls.forEach(c => c.classList.add('show'));
-                
-                // Afficher les boutons de renommage de catégories
                 renameButtons.forEach(btn => {
                     if (!btn.classList.contains('rename-btn-income')) {
                         btn.style.display = 'inline-block';
                     }
                 });
-                
-                // ✅ Afficher les boutons de déplacement des ITEMS
-                const itemMoveBtns = document.querySelectorAll('.item-move-btns');
-                console.log('Affichage de', itemMoveBtns.length, 'boutons item-move-btns');
-                itemMoveBtns.forEach(btns => {
-                    btns.classList.add('show');
-                });
-                
-                // ✅ Afficher les boutons de renommage des ITEMS
-                const itemRenameBtns = document.querySelectorAll('.item-rename-btn');
-                console.log('Affichage de', itemRenameBtns.length, 'boutons item-rename-btn');
-                itemRenameBtns.forEach(btn => {
-                    btn.classList.add('show');
-                });
+                itemMoveBtns.forEach(btns => btns.classList.add('show'));
+                itemRenameBtns.forEach(btn => btn.classList.add('show'));
                 
             } else {
-                console.log('❌ MODE ÉDITION DÉSACTIVÉ');
-                
                 // Mode Edit désactivé
                 if (editBtn) editBtn.classList.remove('active');
-                if (editBtnText) editBtnText.textContent = t.editCategories || 'Edit Categories';
                 
-                // Cacher le bouton Add Category
-                if (addCategoryBtn) addCategoryBtn.style.display = 'none';
-                
-                // Cacher les contrôles de catégories
+                // Cacher les contrôles
                 categoryControls.forEach(c => c.classList.remove('show'));
-                
-                // Cacher les boutons de renommage de catégories
                 renameButtons.forEach(btn => btn.style.display = 'none');
-                
-                // ✅ Cacher les boutons de déplacement des ITEMS
-                document.querySelectorAll('.item-move-btns').forEach(btns => {
-                    btns.classList.remove('show');
-                });
-                
-                // ✅ Cacher les boutons de renommage des ITEMS
-                document.querySelectorAll('.item-rename-btn').forEach(btn => {
-                    btn.classList.remove('show');
-                });
+                itemMoveBtns.forEach(btns => btns.classList.remove('show'));
+                itemRenameBtns.forEach(btn => btn.classList.remove('show'));
             }
-            // ✅ AJOUTÉ : Regénérer le HTML avec les bons boutons
+            
+            // On regénère l'affichage pour mettre à jour les boutons supprimer/déplacer dans la liste
             updateDisplay();
         }
 
@@ -4359,7 +4312,9 @@
                     console.log('📊 Activation onglet Budget');
                     
                     // Mettre à jour le header
-                    updateHeaderForTab('budget');
+                    if (typeof updateHeaderForTab === 'function') {
+                        updateHeaderForTab('budget');
+                    }
                     
                     const budgetTab = document.getElementById('budgetTab');
                     const transactionsTab = document.getElementById('transactionsTab');
@@ -4408,7 +4363,9 @@
                     console.log('💳 Activation onglet Transactions');
                     
                     // Mettre à jour le header
-                    updateHeaderForTab('transactions');
+                    if (typeof updateHeaderForTab === 'function') {
+                        updateHeaderForTab('transactions');
+                    }
                     
                     const budgetTab = document.getElementById('budgetTab');
                     const transactionsTab = document.getElementById('transactionsTab');
@@ -4433,6 +4390,7 @@
                     }
                     
                     // Charger les transactions SEULEMENT si pas déjà chargées
+                    // Note: window.transactionsLoaded est utilisé comme flag global
                     if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
                         setTimeout(() => {
                             const tab = document.getElementById('transactionsTab');
@@ -4485,6 +4443,7 @@
                 }, 200);
             }
         }
+
 
 
         // ✅ Fermer tous les modals ouverts
