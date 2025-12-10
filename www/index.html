@@ -1898,261 +1898,270 @@
         }
 
         function updateChart() {
-            // Mettre à jour l'état des boutons
-            if (typeof window.updateChartButtonsState === 'function') {
-                window.updateChartButtonsState();
-            }
-            // Check if Chart.js is available
-            if (typeof Chart === 'undefined') {
-                console.warn('Chart.js is not available');
-                return;
-            }
-        
-            const ctx = document.getElementById('myChart').getContext('2d');
+                    // Mettre à jour l'état visuel des boutons (Bar/Doughnut)
+                    if (typeof window.updateChartButtonsState === 'function') {
+                        window.updateChartButtonsState();
+                    }
+                    
+                    // Vérification de sécurité pour Chart.js
+                    if (typeof Chart === 'undefined') {
+                        console.warn('Chart.js is not available');
+                        return;
+                    }
 
-        
-            // === CORRECTION DARK MODE ===
-            // On déclare les variables de couleur UNE SEULE FOIS ici
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const textColor = isDarkMode ? '#ffffff' : '#666';
-            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-            
-            // On applique les défauts globaux pour que la légende change immédiatement
-            Chart.defaults.color = textColor;
-            Chart.defaults.borderColor = gridColor;
-            // ===========================
-            
-            // Prepare data for chart - EXCLUDE income category
-            const allLabels = [];
-            const allData = [];
-            const allBackgroundColors = [];
-            
-            Object.keys(expenses).forEach(categoryKey => {
-                // Skip income category in charts
-                if (categoryKey === 'income') return;
-                
-                expenses[categoryKey].forEach(expense => {
-                    if (expense.amount > 0) {
-                        allLabels.push(expense.name);
-                        allData.push(expense.amount);
-                        
-                        // Use custom color if available
-                        if (customColors[expense.name]) {
-                            allBackgroundColors.push(customColors[expense.name]);
-                        } else {
-                            // Generate consistent color based on item name (hash)
-                            const hash = expense.name.split('').reduce((acc, char) => {
-                                return char.charCodeAt(0) + ((acc << 5) - acc);
-                            }, 0);
-                            const colorIdx = Math.abs(hash) % colors.length;
-                            allBackgroundColors.push(colors[colorIdx]);
-                        }
-                    }
-                });
-            });
-        
-            // Sort data in descending order for both chart types
-            const indices = allData.map((_, i) => i);
-            indices.sort((a, b) => allData[b] - allData[a]);
-            
-            const sortedLabels = indices.map(i => allLabels[i]);
-            const sortedData = indices.map(i => allData[i]);
-            const sortedColors = indices.map(i => allBackgroundColors[i]);
-        
-            // Filter out hidden items for display
-            const displayLabels = [];
-            const displayData = [];
-            const displayColors = [];
-            
-            sortedLabels.forEach((label, i) => {
-                if (!hiddenItems[label]) {
-                    displayLabels.push(label);
-                    displayData.push(sortedData[i]);
-                    displayColors.push(sortedColors[i]);
-                }
-            });
-        
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: currentChartType === 'doughnut' ? {
-                    duration: 400,
-                    easing: 'easeOutQuart',
-                    animateRotate: false, 
-                    animateScale: true
-                } : {
-                    duration: 750,
-                    easing: 'easeInOutQuart'
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            padding: 10,
-                            font: {
-                                size: 11
-                            },
-                            color: textColor,
-                            // Pas besoin de définir color ici car Chart.defaults.color s'en occupe
-                            boxWidth: 15,
-                            boxHeight: 15,
-                            generateLabels: function(chart) {
-                                return sortedLabels.map((label, i) => {
-                                    return {
-                                        text: label,
-                                        fillStyle: sortedColors[i],
-                                        strokeStyle: sortedColors[i],
-                                        lineWidth: 0,
-                                        hidden: hiddenItems[label] || false,
-                                        index: i,
-                                        datasetIndex: 0,
-                                        fontColor: textColor
+                    const ctx = document.getElementById('myChart').getContext('2d');
+
+                    // --- 1. CONFIGURATION DU STYLE (Dark Mode) ---
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    const textColor = isDarkMode ? '#ffffff' : '#666';
+                    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+                    
+                    Chart.defaults.color = textColor;
+                    Chart.defaults.borderColor = gridColor;
+
+                    // --- 2. AGRÉGATION DES DONNÉES (Fix Demande #3) ---
+                    // On regroupe les dépenses par nom pour éviter les doublons dans la légende
+                    const aggregatedItems = {};
+
+                    Object.keys(expenses).forEach(categoryKey => {
+                        // On ignore la catégorie revenus
+                        if (categoryKey === 'income') return;
+
+                        expenses[categoryKey].forEach(expense => {
+                            const amount = parseFloat(expense.amount) || 0;
+                            if (amount > 0) {
+                                const name = expense.name;
+                                
+                                // Si l'item existe déjà, on cumule le montant
+                                if (aggregatedItems[name]) {
+                                    aggregatedItems[name].amount += amount;
+                                } else {
+                                    // Sinon on le crée
+                                    // Gestion de la couleur (Custom ou Hash généré)
+                                    let color;
+                                    if (customColors[name]) {
+                                        color = customColors[name];
+                                    } else {
+                                        const hash = name.split('').reduce((acc, char) => {
+                                            return char.charCodeAt(0) + ((acc << 5) - acc);
+                                        }, 0);
+                                        const colorIdx = Math.abs(hash) % colors.length;
+                                        color = colors[colorIdx];
+                                    }
+
+                                    aggregatedItems[name] = {
+                                        amount: amount,
+                                        color: color
                                     };
-                                });
-                            }
-                        },
-                        onClick: function(e, legendItem, legend) {
-                            const label = sortedLabels[legendItem.index];
-                            hiddenItems[label] = !hiddenItems[label];
-                            updateChart();
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
-                                const total = displayData.reduce((a, b) => a + b, 0);
-                                const percentage = ((value / total) * 100).toFixed(1);
-                                return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            };
-        
-            // SI le graphique existe déjà, on met juste à jour les données
-            if (chart && chart.config.type === currentChartType) {
-                // Mise à jour des données existantes
-                chart.data.labels = displayLabels;
-                chart.data.datasets[0].data = displayData;
-                chart.data.datasets[0].backgroundColor = displayColors;
-                
-                // Mise à jour des options si nécessaire
-                chart.options = currentChartType === 'bar' ? {
-                    ...commonOptions,
-                    scales: {
-                        x: {
-                            display: false
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: gridColor
-                            },
-                            ticks: {
-                                color: textColor, // Utilise la variable définie en haut
-                                callback: function(value) {
-                                    return currency + value;
                                 }
                             }
-                        }
-                    }
-                } : commonOptions;
-                
-                // Force la mise à jour des couleurs globales
-                chart.options.color = textColor;
-                if (chart.options.plugins.legend) {
-                     chart.options.plugins.legend.labels.color = textColor;
-                }
-        
-                // Rafraîchir le graphique avec animation
-                chart.update(); 
-                
-            } else {
-                // Le graphique n'existe pas OU le type a changé : on le recrée
-                if (chart) {
-                    chart.destroy();
-                }
-                
-                if (allLabels.length === 0) {
-                    // Show placeholder when no data
-                    chart = new Chart(ctx, {
-                        type: currentChartType,
-                        data: {
-                            labels: ['No expenses yet'],
-                            datasets: [{
-                                data: [1],
-                                backgroundColor: ['#e9ecef'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    display: false
-                                }
-                            }
+                        });
+                    });
+
+                    // Conversion de l'objet agrégé en tableaux
+                    const allLabels = Object.keys(aggregatedItems);
+                    const allData = allLabels.map(name => aggregatedItems[name].amount);
+                    const allBackgroundColors = allLabels.map(name => aggregatedItems[name].color);
+
+                    // --- 3. TRI DES DONNÉES (Décroissant) ---
+                    const indices = allData.map((_, i) => i);
+                    indices.sort((a, b) => allData[b] - allData[a]);
+                    
+                    const sortedLabels = indices.map(i => allLabels[i]);
+                    const sortedData = indices.map(i => allData[i]);
+                    const sortedColors = indices.map(i => allBackgroundColors[i]);
+
+                    // --- 4. FILTRAGE (Items cachés via légende) ---
+                    const displayLabels = [];
+                    const displayData = [];
+                    const displayColors = [];
+                    
+                    sortedLabels.forEach((label, i) => {
+                        if (!hiddenItems[label]) {
+                            displayLabels.push(label);
+                            displayData.push(sortedData[i]);
+                            displayColors.push(sortedColors[i]);
                         }
                     });
-                } else if (currentChartType === 'doughnut') {
-                    chart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
+
+                    // --- 5. GESTION DE L'ÉTAT VIDE (Fix Demande #1 et #2) ---
+                    const t = translations[currentLanguage] || translations['en'];
+                    const noExpensesText = t.noExpensesYet || "No expenses yet";
+                    
+                    let chartData;
+                    let isEmpty = false;
+
+                    // Si aucune donnée réelle n'existe (après agrégation)
+                    if (sortedLabels.length === 0) {
+                        isEmpty = true;
+                        chartData = {
+                            labels: [], // Vide pour éviter les tooltips
+                            datasets: [{
+                                data: [1], // Donnée fictive pour afficher le cercle
+                                backgroundColor: [isDarkMode ? '#2a2a3e' : '#e9ecef'],
+                                borderWidth: 0,
+                                hoverBackgroundColor: [isDarkMode ? '#2a2a3e' : '#e9ecef'] // Pas d'effet au survol
+                            }]
+                        };
+                    } else {
+                        // Données normales
+                        chartData = {
                             labels: displayLabels,
                             datasets: [{
                                 data: displayData,
                                 backgroundColor: displayColors,
                                 borderWidth: 0,
+                                borderRadius: currentChartType === 'bar' ? 8 : 0,
                                 borderColor: isDarkMode ? '#2a2a3e' : '#fff'
                             }]
+                        };
+                    }
+
+                    // --- 6. CONFIGURATION DU PLUGIN TEXTE CENTRÉ ---
+                    const centerTextPlugin = {
+                        id: 'centerText',
+                        afterDraw: function(chart) {
+                            // On affiche le texte si c'est vide
+                            if (isEmpty) {
+                                const ctx = chart.ctx;
+                                const width = chart.width;
+                                const height = chart.height;
+                                
+                                ctx.restore();
+                                ctx.font = "bold 1.1em sans-serif"; // Style du texte
+                                ctx.textAlign = "center";
+                                ctx.textBaseline = "middle";
+                                ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd"; // Couleur du texte
+                                
+                                // Centrage exact
+                                ctx.fillText(noExpensesText, width / 2, height / 2);
+                                ctx.save();
+                            }
+                        }
+                    };
+
+                    // --- 7. OPTIONS DU GRAPHIQUE ---
+                    const commonOptions = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: currentChartType === 'doughnut' ? {
+                            duration: 400,
+                            easing: 'easeOutQuart',
+                            animateRotate: false, 
+                            animateScale: true
+                        } : {
+                            duration: 750,
+                            easing: 'easeInOutQuart'
                         },
-                        options: commonOptions
-                    });
-                } else {
-                    chart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: displayLabels,
-                            datasets: [{
-                                data: displayData,
-                                backgroundColor: displayColors,
-                                borderWidth: 0,
-                                borderRadius: 8
-                            }]
-                        },
-                        options: {
-                            ...commonOptions,
-                            scales: {
-                                x: {
-                                    display: false
+                        plugins: {
+                            legend: {
+                                display: !isEmpty, // Cacher légende si vide
+                                position: 'bottom',
+                                labels: {
+                                    padding: 10,
+                                    font: { size: 11 },
+                                    color: textColor,
+                                    boxWidth: 15,
+                                    boxHeight: 15,
+                                    generateLabels: function(chart) {
+                                        // Génération custom des labels pour gérer l'état 'hidden' avec nos données agrégées
+                                        return sortedLabels.map((label, i) => ({
+                                            text: label,
+                                            fillStyle: sortedColors[i],
+                                            strokeStyle: sortedColors[i],
+                                            lineWidth: 0,
+                                            hidden: hiddenItems[label] || false,
+                                            index: i,
+                                            datasetIndex: 0,
+                                            fontColor: textColor
+                                        }));
+                                    }
                                 },
-                                y: {
-                                    beginAtZero: true,
-                                    grid: {
-                                        color: gridColor
-                                    },
-                                    ticks: {
-                                        color: textColor,
-                                        callback: function(value) {
-                                            return currency + value;
-                                        }
+                                onClick: function(e, legendItem, legend) {
+                                    const label = sortedLabels[legendItem.index];
+                                    hiddenItems[label] = !hiddenItems[label];
+                                    updateChart();
+                                }
+                            },
+                            tooltip: {
+                                enabled: !isEmpty, // Désactiver tooltip si vide
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
+                                        const total = displayData.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
                                     }
                                 }
                             }
                         }
-                    });
+                    };
+
+                    // Options spécifiques selon le type (Bar vs Doughnut)
+                    let finalOptions;
+                    if (currentChartType === 'bar') {
+                        finalOptions = {
+                            ...commonOptions,
+                            scales: isEmpty ? {
+                                // Cacher les axes si vide
+                                x: { display: false },
+                                y: { display: false }
+                            } : {
+                                x: { display: false },
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: gridColor },
+                                    ticks: {
+                                        color: textColor,
+                                        callback: function(value) { return currency + value; }
+                                    }
+                                }
+                            }
+                        };
+                    } else {
+                        // Doughnut
+                        finalOptions = commonOptions;
+                    }
+
+                    // --- 8. RENDU DU GRAPHIQUE ---
+                    
+                    if (chart) {
+                        // Détection de changement d'état (Vide <-> Plein)
+                        const wasEmpty = chart.data.labels.length === 0 && chart.data.datasets[0].data[0] === 1;
+                        const typeChanged = chart.config.type !== currentChartType;
+
+                        // Si le type change OU si on passe de vide à plein (ou inversement), on recrée
+                        if (typeChanged || (wasEmpty !== isEmpty)) {
+                            chart.destroy();
+                            createNewChart();
+                        } else {
+                            // Sinon mise à jour fluide
+                            chart.data = chartData;
+                            chart.options = finalOptions;
+                            chart.update();
+                        }
+                    } else {
+                        createNewChart();
+                    }
+
+                    function createNewChart() {
+                        chart = new Chart(ctx, {
+                            type: currentChartType,
+                            data: chartData,
+                            options: finalOptions,
+                            plugins: [centerTextPlugin] // Ajout du plugin texte centré
+                        });
+                    }
+                    
+                    // Mise à jour du texte du montant total sous le titre
+                    const visibleTotal = isEmpty ? 0 : displayData.reduce((a, b) => a + b, 0);
+                    document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
                 }
-            }
-            
-            // Update total to reflect visible items
-            const visibleTotal = displayData.reduce((a, b) => a + b, 0);
-            document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
-        }
-    
+
+
+
+
         function resetExpenses() {
             const t = translations[currentLanguage] || translations['en'];
             if (confirm(t.resetAllConfirm || 'Reset all to 0?')) {
