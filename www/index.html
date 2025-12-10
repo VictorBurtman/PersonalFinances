@@ -612,19 +612,19 @@
             FOOTER NAVIGATION
             ============================================ -->
         <div class="app-footer">
-            <!-- Budget Tab (sans onclick) -->
-            <button class="footer-nav-btn active" id="budgetTabBtn">
+            <!-- Budget Tab -->
+            <button class="footer-nav-btn active" id="budgetTabBtn" onclick="switchTab('budget')">
                 <img src="img/icons/budget_inactive.svg" alt="Budget" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="budgetTab">Budget</span>
             </button>
             
-            <!-- Transactions Tab (sans onclick) -->
-            <button class="footer-nav-btn" id="transactionsTabBtn">
+            <!-- Transactions Tab -->
+            <button class="footer-nav-btn" id="transactionsTabBtn" onclick="switchTab('transactions')">
                 <img src="img/icons/transactions-inactive.svg" alt="Transactions" class="footer-nav-icon">
                 <span class="footer-nav-label" data-translate="transactionsTab">Transactions</span>
             </button>
             
-            <!-- Settings Button (garde le onclick) -->
+            <!-- Settings Button -->
             <button class="footer-nav-btn" id="settingsTabBtn" onclick="openSettings()">
                 <img src="img/icons/settings_inactive.svg" alt="Settings" class="footer-nav-icon-static">
                 <span class="footer-nav-label" data-translate="settings">Settings</span>
