@@ -4016,9 +4016,7 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
-        let isTabSwitching = false;
-        let currentActiveTab = 'budget';
-        let lastTabSwitchTime = 0; // ✅ AJOUTE cette variable
+
 
         /**
          * Scroll vers le haut de la page (smooth)
@@ -4086,6 +4084,14 @@
         }
        
 
+        let isTabSwitching = false;
+        let currentActiveTab = 'budget';
+        let lastTabSwitchTime = 0;
+
+        // ✅ Variables pour mémoriser la position de scroll
+        let budgetScrollPosition = 0;
+        let transactionsScrollPosition = 0;
+
         /**
          * Change d'onglet (Budget <-> Transactions)
          * @param {string} tabName - 'budget' ou 'transactions'
@@ -4112,7 +4118,7 @@
                     setTimeout(() => activeBtn.classList.remove('tap-feedback'), 300);
                 }
                 
-                // ✅ Scroll to top INLINE
+                // Scroll to top INLINE
                 console.log('📜 Scroll inline démarré...');
                 const dashboard = document.querySelector('.dashboard');
                 console.log('📜 Dashboard:', dashboard);
@@ -4124,6 +4130,13 @@
                         behavior: 'smooth'
                     });
                     console.log('📜 scrollTo() commandé');
+                    
+                    // ✅ RÉINITIALISER la position mémorisée à 0
+                    if (tabName === 'budget') {
+                        budgetScrollPosition = 0;
+                    } else if (tabName === 'transactions') {
+                        transactionsScrollPosition = 0;
+                    }
                     
                     // Vérifier après 500ms
                     setTimeout(() => {
@@ -4139,6 +4152,18 @@
             // Bloquer les autres clics pendant le switch
             isTabSwitching = true;
             console.log('🔄 switchTab vers:', tabName);
+            
+            // ✅ SAUVEGARDER la position de scroll de l'onglet actuel
+            const dashboard = document.querySelector('.dashboard');
+            if (dashboard) {
+                if (currentActiveTab === 'budget') {
+                    budgetScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Budget sauvegardée:', budgetScrollPosition);
+                } else if (currentActiveTab === 'transactions') {
+                    transactionsScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Transactions sauvegardée:', transactionsScrollPosition);
+                }
+            }
             
             try {
                 // Activer le nouveau bouton AVANT de retirer les autres
@@ -4190,6 +4215,15 @@
                         floatingAddBtn.style.display = 'none';
                     }
                     
+                    // ✅ RESTAURER la position de scroll de Budget
+                    setTimeout(() => {
+                        const dashboard = document.querySelector('.dashboard');
+                        if (dashboard) {
+                            dashboard.scrollTop = budgetScrollPosition;
+                            console.log('📜 Position Budget restaurée:', budgetScrollPosition);
+                        }
+                    }, 50);
+                    
                 // ========================================
                 // ONGLET TRANSACTIONS
                 // ========================================
@@ -4232,7 +4266,7 @@
                                 loadTransactions()
                                     .then(() => {
                                         console.log('✅ Transactions chargées');
-                                        window.transactionsLoaded = true; // ✅ Marquer comme chargé
+                                        window.transactionsLoaded = true;
                                     })
                                     .catch(err => {
                                         console.error('❌ Erreur chargement transactions:', err);
@@ -4248,6 +4282,15 @@
                     if (floatingAddBtn) {
                         floatingAddBtn.style.display = 'flex';
                     }
+                    
+                    // ✅ RESTAURER la position de scroll de Transactions
+                    setTimeout(() => {
+                        const dashboard = document.querySelector('.dashboard');
+                        if (dashboard) {
+                            dashboard.scrollTop = transactionsScrollPosition;
+                            console.log('📜 Position Transactions restaurée:', transactionsScrollPosition);
+                        }
+                    }, 50);
                 }
                 
             } finally {
@@ -4258,6 +4301,7 @@
                 }, 200);
             }
         }
+
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
