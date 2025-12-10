@@ -328,31 +328,30 @@
             <!-- ✅ HEADER STICKY UNIFIÉ -->
             <div class="edit-mode-controls">
                 <div class="header-title">Wise Budget</div>
-                <!-- Boutons Budget (visibles uniquement sur onglet Budget) -->
+
                 <button class="edit-mode-btn budget-only icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit Categories">
                     <img src="img/icons/pen.svg" alt="Edit">
                 </button>
-
+                
                 <button class="edit-mode-btn budget-only icon-btn" onclick="addNewCategory()" title="Add Category">
                     <img src="img/icons/add.svg" alt="Add">
                 </button>
-
+                
                 <button class="edit-mode-btn budget-only icon-btn" id="compareBtn" onclick="toggleCompareMode()" title="Compare">
                     <img src="img/icons/chart.svg" alt="Compare">
                 </button>
-
+                
                 <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: none;">
                     </select>
                 
-                <!-- Boutons Transactions (visibles uniquement sur onglet Transactions) -->
                 <button class="edit-mode-btn transactions-only icon-btn" onclick="openFiltersModal()" style="display: none;" title="Filters">
                     <img src="img/icons/loupe.svg" alt="Filters">
                 </button>
-
+                
                 <button class="edit-mode-btn transactions-only icon-btn" onclick="openBankAccountsModal()" style="display: none;" title="Import / Banks">
                     <img src="img/icons/import.svg" alt="Import">
                 </button>
-
+                
                 <button class="edit-mode-btn transactions-only icon-btn" onclick="openExcludedTransactionsModal()" style="display: none;" title="Excluded">
                     <img src="img/icons/exclude.svg" alt="Excluded">
                 </button>
