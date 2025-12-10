@@ -2143,6 +2143,13 @@ body.dark-mode .settings-select {
     transform: translateY(-2px);
 }
 
+/* ✅ Masquer sur mobile */
+@media (max-width: 600px) {
+    .scroll-to-top {
+        display: none !important;
+    }
+}
+
 /* ============================================
    BUTTONS GÉNÉRAUX
    ============================================ */

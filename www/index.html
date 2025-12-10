@@ -4004,6 +4004,7 @@
         }
 
         let isTabSwitching = false;
+        let currentActiveTab = 'budget';
         let lastTabSwitchTime = 0; // ✅ AJOUTE cette variable
 
         function switchTab(tabName) {
@@ -4012,6 +4013,13 @@
             // ✅ Bloquer si switch en cours OU si dernier switch trop récent (< 300ms)
             if (isTabSwitching || (now - lastTabSwitchTime < 300)) {
                 console.log('⏸️ Switch bloqué (trop rapide ou en cours)');
+                return;
+            }
+
+            // ✅ NOUVEAU : Si on clique sur l'onglet déjà actif, scroll to top
+            if (tabName === currentActiveTab) {
+                console.log('📜 Scroll to top - même onglet cliqué');
+                scrollToTop();
                 return;
             }
             
