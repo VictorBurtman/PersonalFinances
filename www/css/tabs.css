@@ -106,10 +106,9 @@ body.dark-mode .dashboard {
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    z-index: 100 !important; /* Supérieur au footer (1000) */
+    z-index: 100 !important;
     
     /* 2. ESPACEMENT & SAFE AREA */
-    /* On ajoute la zone de sécurité au padding du haut */
     padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     padding-bottom: 10px !important;
     padding-left: 15px !important;
@@ -120,13 +119,13 @@ body.dark-mode .dashboard {
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
     
-    /* Flexbox conservé */
+    /* 4. FLEXBOX & ALIGNEMENT À DROITE */
     display: flex;
     gap: 10px;
+    justify-content: flex-end; /* <--- C'est cette ligne qui pousse tout à droite */
     
-    /* Sécurité */
     transform: translateZ(0);
-    overflow: visible !important; /* Pour laisser dépasser l'extension */
+    overflow: visible !important;
 }
 
 /* 4. EXTENSION VERS LE HAUT (Le "Cache-Misère" du Header) */
@@ -219,7 +218,7 @@ body.dark-mode .edit-mode-btn.active {
 
 
 /* ============================================
-   STYLE DES ICONES DU HEADER (TRANSACTIONS)
+   STYLE DES ICONES DU HEADER (FINAL)
    ============================================ */
 
 .edit-mode-btn.icon-btn {
@@ -237,8 +236,8 @@ body.dark-mode .edit-mode-btn.active {
     margin: 0 !important;
     line-height: 0 !important;
 
-    /* 4. Apparence (Bordure rouge active pour tes tests) */
-    border: 1px solid red !important; 
+    /* 4. Apparence (Invisible sauf l'icône) */
+    border: none !important;      /* Plus de bordure rouge */
     background: transparent !important;
     box-shadow: none !important;
 
@@ -246,8 +245,7 @@ body.dark-mode .edit-mode-btn.active {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* --- FIX CRITIQUE : Permet au JS de cacher les boutons --- */
-/* Si le JS ajoute style="display: none", on force le masquage malgré le flex !important */
+/* FIX : Permet au JS de cacher les boutons correctement */
 .edit-mode-btn.icon-btn[style*="display: none"] {
     display: none !important;
 }
@@ -255,8 +253,8 @@ body.dark-mode .edit-mode-btn.active {
 /* Style de l'image SVG */
 .edit-mode-btn.icon-btn img {
     display: block;
-    width: 24px !important;
-    height: 24px !important;
+    width: 20px !important;
+    height: 20px !important;
     margin: 0 !important;
 }
 
@@ -273,8 +271,7 @@ body.dark-mode .edit-mode-btn.icon-btn img {
 
 body.dark-mode .edit-mode-btn.icon-btn {
     background: transparent !important;
-    /* J'ai commenté la ligne ci-dessous pour que tu voies ta bordure rouge en Dark Mode aussi */
-    /* border: none !important; */ 
+    border: none !important;
 }
 
 /* ============================================
