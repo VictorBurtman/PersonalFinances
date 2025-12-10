@@ -133,6 +133,8 @@ const translations = {
         recentLoginRequired: "For security, please log in again before deleting your account",
         accountDisabled: "This account has been disabled. Please contact support.",
         tooManyRequests: "Too many failed attempts. Please try again later.",
+        pleaseEnterEmailAndPassword: "Please enter email and password",
+        loading: "Loading...",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -569,6 +571,8 @@ const translations = {
         recentLoginRequired: "Pour des raisons de sécurité, veuillez vous reconnecter avant de supprimer votre compte",
         accountDisabled: "Ce compte a été désactivé. Veuillez contacter le support.",
         tooManyRequests: "Trop de tentatives échouées. Veuillez réessayer plus tard.",
+        pleaseEnterEmailAndPassword: "Veuillez entrer votre email et mot de passe",
+        loading: "Chargement...",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -995,6 +999,8 @@ const translations = {
         recentLoginRequired: "מטעמי אבטחה, אנא התחבר שוב לפני מחיקת החשבון שלך",
         accountDisabled: "חשבון זה הושבת. אנא צור קשר עם התמיכה.",
         tooManyRequests: "יותר מדי ניסיונות כושלים. נסה שוב מאוחר יותר.",
+        pleaseEnterEmailAndPassword: "אנא הזן דוא\"ל וסיסמה",
+        loading: "טוען...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1421,6 +1427,8 @@ const translations = {
         recentLoginRequired: "Por seguridad, inicia sesión nuevamente antes de eliminar tu cuenta",
         accountDisabled: "Esta cuenta ha sido deshabilitada. Contacta con soporte.",
         tooManyRequests: "Demasiados intentos fallidos. Inténtalo más tarde.",
+        pleaseEnterEmailAndPassword: "Por favor ingresa correo y contraseña",
+        loading: "Cargando...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1847,6 +1855,8 @@ const translations = {
         recentLoginRequired: "В целях безопасности войдите снова перед удалением аккаунта",
         accountDisabled: "Этот аккаунт отключен. Свяжитесь с поддержкой.",
         tooManyRequests: "Слишком много неудачных попыток. Попробуйте позже.",
+        pleaseEnterEmailAndPassword: "Пожалуйста, введите email и пароль",
+        loading: "Загрузка...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2273,6 +2283,8 @@ const translations = {
         recentLoginRequired: "لأسباب أمنية، يرجى تسجيل الدخول مرة أخرى قبل حذف حسابك",
         accountDisabled: "تم تعطيل هذا الحساب. يرجى الاتصال بالدعم.",
         tooManyRequests: "عدد كبير جداً من المحاولات الفاشلة. حاول مرة أخرى لاحقاً.",
+        pleaseEnterEmailAndPassword: "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
+        loading: "جار التحميل...",
 
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",

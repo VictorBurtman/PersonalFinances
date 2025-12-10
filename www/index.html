@@ -900,29 +900,32 @@
             const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('rememberMe').checked;
             
-            // ✅ Validation STRICTE avant tout
-            const validationError = authManager.validateAuthForm(email, password);
-            if (validationError) {
-                authManager.showAuthError(validationError);
-                return; // STOP ICI - Ne pas appeler Firebase
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
             }
             
+            // ✅ Désactiver les boutons et montrer le loading
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
+            const originalSignInText = signInBtn.innerHTML;
+            const originalSignUpText = signUpBtn.innerHTML;
+            
+            signInBtn.disabled = true;
+            signUpBtn.disabled = true;
+            signInBtn.innerHTML = '⏳ Loading...';
+            
             try {
-                signInBtn.disabled = true;
-                signUpBtn.disabled = true;
-                
                 await authManager.signIn(email, password, remember);
-                
+                // Si on arrive ici, c'est un succès (pas besoin de réactiver les boutons, la page va changer)
             } catch (error) {
                 console.error('Sign in error:', error);
-                const errorMessage = authManager.getErrorMessage(error.code);
-                authManager.showAuthError(errorMessage);
                 
+                // ✅ RÉACTIVER LES BOUTONS en cas d'erreur
                 signInBtn.disabled = false;
                 signUpBtn.disabled = false;
+                signInBtn.innerHTML = originalSignInText;
             }
         }
 

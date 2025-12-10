@@ -465,29 +465,24 @@ class AuthManager {
      */
     async signIn(email, password, remember) {
         try {
-            // ✅ Vérifier si l'email existe AVANT de tenter la connexion
+            const lang = localStorage.getItem('language') || 'en';
+            const trans = translations[lang] || translations['en'];
+            
             const emailExists = await this.checkIfEmailExists(email);
             
             if (!emailExists) {
                 console.log('❌ Email inexistant:', email);
-                const lang = localStorage.getItem('language') || 'en';
-                const trans = translations[lang] || translations['en'];
                 this.showAuthError('❌ ' + trans.userNotFound);
-                throw new Error('auth/user-not-found');
+                // ✅ NE PAS THROW, juste return false
+                return false;
             }
             
             console.log('✅ Email existe, tentative de connexion...');
             
-            // Configurer la persistence
             await this.setAuthPersistence(remember);
-            
-            // Se connecter
             const result = await auth.signInWithEmailAndPassword(email, password);
-            
-            // Sauvegarder les préférences
             this.saveCredentials(email, remember);
             
-            // Vérifier si c'est la première connexion
             const isFirst = await this.checkFirstLaunch(result.user.uid);
             if (isFirst) {
                 await this.setupInitialConfig(result.user.uid);
@@ -498,18 +493,14 @@ class AuthManager {
         } catch (error) {
             console.error('❌ Sign in error:', error);
             
-            // Si l'erreur vient de notre vérification manuelle
-            if (error.message === 'auth/user-not-found') {
-                return; // Message déjà affiché
-            }
-            
-            // Sinon, utiliser getErrorMessage
             const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
             
-            throw error;
+            // ✅ NE PAS RE-THROW
+            return false;
         }
     }
+
 
     /**
      * Gère l'inscription avec configuration initiale
