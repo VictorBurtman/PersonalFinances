@@ -3980,18 +3980,51 @@
             function animateTabTransition(fromTab, toTab, direction) {
                 const distance = direction === 'left' ? -window.innerWidth : window.innerWidth;
                 
+                // Retirer la classe preview immédiatement
                 toTab.classList.remove('swipe-preview');
                 fromTab.classList.remove('swipe-preview');
                 
+                // ✅ SAUVEGARDER la position actuelle avant de changer
+                const dashboard = document.querySelector('.dashboard');
+                if (dashboard && currentActiveTab === 'budget') {
+                    budgetScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Budget sauvegardée (swipe):', budgetScrollPosition);
+                } else if (dashboard && currentActiveTab === 'transactions') {
+                    transactionsScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Transactions sauvegardée (swipe):', transactionsScrollPosition);
+                }
+                
+                // Animation de sortie
                 fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
                 fromTab.style.transform = `translateX(${distance}px)`;
                 fromTab.style.opacity = '0';
                 
-                toTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                // ✅ MASQUER le nouvel onglet temporairement
+                toTab.style.opacity = '0';
+                toTab.style.transition = 'transform 0.3s ease-out';
                 toTab.style.transform = 'translateX(0)';
-                toTab.style.opacity = '1';
                 
+                // ✅ RESTAURER le scroll AVANT de rendre visible
                 setTimeout(() => {
+                    if (dashboard) {
+                        // Déterminer quel onglet on affiche
+                        if (toTab.id === 'budgetTab') {
+                            dashboard.scrollTop = budgetScrollPosition;
+                            console.log('📜 Position Budget restaurée (swipe):', budgetScrollPosition);
+                        } else if (toTab.id === 'transactionsTab') {
+                            dashboard.scrollTop = transactionsScrollPosition;
+                            console.log('📜 Position Transactions restaurée (swipe):', transactionsScrollPosition);
+                        }
+                    }
+                    
+                    // ✅ FADE-IN après restauration
+                    toTab.style.transition = 'opacity 0.15s ease';
+                    toTab.style.opacity = '1';
+                }, 100); // Petit délai pour laisser l'animation de sortie commencer
+                
+                // Nettoyer complètement après l'animation
+                setTimeout(() => {
+                    // Retirer TOUS les styles inline appliqués pendant le swipe
                     fromTab.style.transition = '';
                     fromTab.style.transform = '';
                     fromTab.style.opacity = '';
@@ -4000,7 +4033,7 @@
                     toTab.style.transition = '';
                     toTab.style.transform = '';
                     toTab.style.opacity = '';
-                }, 350);
+                }, 450); // Un peu plus long pour laisser le fade-in se terminer
             }
 
             // Réinitialiser les positions des onglets
@@ -4184,12 +4217,16 @@
                     btn.style.display = 'none';
                 });
                 
-                // Gérer compareMonth
+                // ✅ Gérer compareMonth selon l'état de compareMode
                 const compareMonth = document.getElementById('compareMonth');
-                if (compareMonth && window.compareMode) {
-                    compareMonth.style.display = 'inline-block';
-                } else if (compareMonth) {
-                    compareMonth.style.display = 'none';
+                if (compareMonth) {
+                    if (window.compareMode) {
+                        compareMonth.style.display = 'inline-block';
+                        console.log('✅ compareMonth affiché (compareMode actif)');
+                    } else {
+                        compareMonth.style.display = 'none';
+                        console.log('ℹ️ compareMonth caché (compareMode inactif)');
+                    }
                 }
                 
             } else if (tabName === 'transactions') {
