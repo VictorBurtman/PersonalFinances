@@ -238,7 +238,7 @@ body.dark-mode .edit-mode-btn.active {
     line-height: 0 !important;   /* Empêche le texte fantôme de décaler la hauteur */
 
     /* 4. Apparence invisible */
-    border: none !important;
+    /*border: none !important;*/
     border: 1px solid red !important;
     background: transparent !important;
     box-shadow: none !important;
