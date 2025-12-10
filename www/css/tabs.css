@@ -2292,35 +2292,37 @@ body.dark-mode .chartjs-legend span {
         width: 100px;
     }
     
-    /* Edit Mode */
     .edit-mode-controls {
-        /* 1. INTERDIRE le scroll horizontal (C'est ça qui bloquait l'alignement) */
+        /* 1. ON AUTORISE L'ESPACEMENT (C'est la correction clé) */
+        justify-content: space-between !important; 
+        
+        /* 2. On empêche le scroll horizontal */
         overflow: visible !important; 
         
-        /* 2. Forcer le display Flex */
+        /* 3. Forcer le display Flex */
         display: flex !important;
         flex-wrap: nowrap !important;
         align-items: center !important;
-        justify-content: flex-start !important; /* Le titre poussera le reste */
         
-        /* 3. Ajustements d'espacement */
-        gap: 8px;
+        /* 4. Ajustements d'espacement */
+        gap: 0 !important; /* Le gap est géré dans le groupe header-right-actions */
         padding: 10px 15px;
         width: 100% !important;
         box-sizing: border-box;
     }
 
-    /* 4. FORCER le titre à grandir sur mobile */
+    /* 4. LE TITRE NE DOIT PAS GRANDIR */
     .header-title {
-        flex-grow: 1 !important; /* Prend tout l'espace disponible */
+        flex-grow: 0 !important; /* On arrête de le faire grandir */
         width: auto !important;
-        margin-right: 0 !important; /* On laisse flex-grow faire le travail */
+        margin-right: 0 !important;
         
         /* Sécurité pour ne pas casser la ligne */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         display: block;
+        max-width: 50%; /* Sécurité pour qu'il ne pousse pas les boutons hors de l'écran */
     }
 
     /* 5. Sécurité pour les boutons (qu'ils ne s'écrasent pas) */
