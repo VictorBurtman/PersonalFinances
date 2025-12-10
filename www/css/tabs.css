@@ -135,15 +135,18 @@ body.dark-mode .dashboard {
     font-weight: 800;
     color: #333;
     
-    /* C'EST CETTE LIGNE QUI FAIT TOUT L'ALIGNEMENT : */
-    margin-right: auto; /* Prend tout l'espace disponible à droite */
+    /* MODIFICATION ICI : On utilise flex-grow au lieu de margin */
+    flex: 1; /* Prend tout l'espace disponible */
+    min-width: 0; /* Permet au titre de rétrécir si l'écran est minuscule */
     
     /* Style du texte (Dégradé) */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    display: inline-block;
-    white-space: nowrap; /* Empêche le titre de passer à la ligne */
+    display: block; /* Mieux que inline-block pour le flex:1 */
+    white-space: nowrap;
+    overflow: hidden; /* Coupe le texte proprement s'il est trop long */
+    text-overflow: ellipsis; /* Ajoute "..." si ça dépasse */
 }
 
 /* 4. EXTENSION VERS LE HAUT (Le "Cache-Misère" du Header) */
@@ -2284,10 +2287,18 @@ body.dark-mode .chartjs-legend span {
     
     /* Edit Mode */
     .edit-mode-controls {
+        /* On garde flex-wrap: nowrap pour que ça reste sur une ligne */
         flex-wrap: nowrap;
-        overflow-x: auto;
+        
+        /* SUPPRESSION DE overflow-x: auto; <--- C'était le coupable ! */
+        overflow: visible !important; 
+        
         gap: 6px;
         padding: 10px 15px;
+        
+        /* On s'assure que le header fait bien 100% de la largeur */
+        width: 100% !important;
+        box-sizing: border-box; /* Important pour que le padding ne dépasse pas */
     }
     
     .edit-mode-btn {
