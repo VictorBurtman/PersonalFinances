@@ -39,6 +39,88 @@ class AuthManager {
         return langMap[langCode] || 'en'; // Par défaut: anglais
     }
 
+
+    /**
+     * Détecte la devise selon la géolocalisation IP
+     * @returns {Promise<string>} Code devise (USD, EUR, ILS, etc.)
+     */
+    async detectUserCurrency() {
+        let detectedCurrency = 'USD'; // Défaut
+        
+        try {
+            console.log('🌐 Détection de la devise via géolocalisation IP...');
+            
+            // Appeler l'API de géolocalisation
+            const response = await fetch('https://ipapi.co/json/', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                const geoData = await response.json();
+                const countryCode = geoData.country_code; // Ex: "FR", "IL", "US"
+                
+                console.log('📍 Pays détecté:', countryCode, geoData.country_name);
+                
+                // Mapping pays → devise
+                const currencyMap = {
+                    // Europe
+                    'FR': 'EUR', 'DE': 'EUR', 'IT': 'EUR', 'ES': 'EUR', 'PT': 'EUR',
+                    'BE': 'EUR', 'NL': 'EUR', 'AT': 'EUR', 'IE': 'EUR', 'GR': 'EUR',
+                    'FI': 'EUR', 'LU': 'EUR', 'SI': 'EUR', 'SK': 'EUR', 'EE': 'EUR',
+                    'LV': 'EUR', 'LT': 'EUR', 'CY': 'EUR', 'MT': 'EUR',
+                    
+                    // Moyen-Orient
+                    'IL': 'ILS',
+                    'SA': 'SAR',
+                    'AE': 'AED',
+                    'EG': 'EGP',
+                    
+                    // Amériques
+                    'US': 'USD',
+                    'CA': 'CAD',
+                    'MX': 'MXN',
+                    'BR': 'BRL',
+                    
+                    // Royaume-Uni
+                    'GB': 'GBP',
+                    
+                    // Asie
+                    'JP': 'JPY',
+                    'CN': 'CNY',
+                    'IN': 'INR',
+                    'TH': 'THB',
+                    'KR': 'KRW',
+                    'SG': 'SGD',
+                    
+                    // Russie
+                    'RU': 'RUB',
+                    
+                    // Suisse
+                    'CH': 'CHF',
+                    
+                    // Australie
+                    'AU': 'AUD',
+                    'NZ': 'NZD',
+                };
+                
+                detectedCurrency = currencyMap[countryCode] || 'USD';
+                console.log('✅ Devise détectée:', detectedCurrency);
+                
+            } else {
+                console.warn('⚠️ Géolocalisation IP échouée, devise par défaut: USD');
+            }
+        } catch (error) {
+            console.warn('⚠️ Erreur géolocalisation IP:', error.message);
+            console.log('ℹ️ Utilisation de la devise par défaut: USD');
+        }
+        
+        return detectedCurrency;
+    }
+
+
     /**
      * Détecte la devise basée sur la géolocalisation ou le fuseau horaire
      * @returns {Promise<string>} Code de devise
@@ -123,18 +205,21 @@ class AuthManager {
      */
     async setupInitialConfig(userId) {
         if (!userId) {
-            console.error('setupInitialConfig: userId manquant');
+            console.error('❌ setupInitialConfig: userId manquant');
             return;
         }
 
         try {
+            console.log('🆕 Configuration initiale pour nouvel utilisateur...');
+            console.log('🌍 navigator.language:', navigator.language);
+            console.log('🌍 navigator.userLanguage:', navigator.userLanguage);
             // Détecter langue et devise
             const detectedLang = this.detectSystemLanguage();
             const detectedCurr = await this.detectUserCurrency();
 
-            console.log('First launch detected - Setting language:', detectedLang, ', currency:', detectedCurr);
+            console.log('✅ Détecté: langue =', detectedLang, ', devise =', detectedCurr);
 
-            // ✅ Sauvegarder dans Firestore
+            // Sauvegarder dans Firestore
             await db.collection('users').doc(userId).set({
                 language: detectedLang,
                 currency: detectedCurr,
@@ -143,11 +228,11 @@ class AuthManager {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            // ✅ Sauvegarder dans localStorage
+            // Sauvegarder dans localStorage
             localStorage.setItem('language', detectedLang);
             localStorage.setItem('currency', detectedCurr);
 
-            // ✅ Mettre à jour les variables globales (si elles existent)
+            // Mettre à jour les variables globales si elles existent
             if (typeof window.currentLanguage !== 'undefined') {
                 window.currentLanguage = detectedLang;
             }
@@ -161,8 +246,25 @@ class AuthManager {
             console.log('✅ Configuration initiale sauvegardée');
 
         } catch (error) {
-            console.error('Error setting up initial config:', error);
-            // Ne pas throw l'erreur pour ne pas bloquer la création du compte
+            console.error('❌ Error setting up initial config:', error);
+            
+            // Fallback: sauvegarder au moins des valeurs par défaut
+            try {
+                await db.collection('users').doc(userId).set({
+                    language: 'en',
+                    currency: 'USD',
+                    darkMode: true,
+                    firstLoginDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                
+                localStorage.setItem('language', 'en');
+                localStorage.setItem('currency', 'USD');
+                
+                console.log('⚠️ Fallback: configuration par défaut appliquée');
+            } catch (fallbackError) {
+                console.error('❌ Erreur fallback:', fallbackError);
+            }
         }
     }
 
@@ -644,12 +746,7 @@ class AuthManager {
 
 }
 
-// Créer une instance globale
-const authManager = new AuthManager();
-
-// Export pour utilisation dans d'autres modules
+// Export pour utilisation dans d'autres modules (si besoin)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AuthManager;
 }
-
-
