@@ -4041,7 +4041,7 @@
             refreshIndicator.id = 'refreshIndicator';
             refreshIndicator.style.cssText = `
                 position: absolute;
-                top: -60px;
+                top: -80px;
                 left: 50%;
                 transform: translateX(-50%);
                 width: 40px;
@@ -4083,7 +4083,7 @@
                 // Seulement si on est déjà en haut de la page
                 if (dashboard.scrollTop > 10) {
                     pulling = false;
-                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
                     return;
                 }
@@ -4100,7 +4100,7 @@
                     const progress = Math.min(pullDistance / pullThreshold, 1);
                     
                     // Afficher l'indicateur progressivement
-                    const indicatorTop = -60 + (pullDistance * 0.5);
+                    const indicatorTop = -80 + (pullDistance * 0.5);
                     refreshIndicator.style.top = `${indicatorTop}px`;
                     refreshIndicator.style.opacity = progress;
                 }
@@ -4118,7 +4118,7 @@
                     console.log('🔄 Pull-to-refresh déclenché!');
                     
                     // Garder le spinner visible pendant le chargement
-                    refreshIndicator.style.top = '10px';
+                    refreshIndicator.style.top = '0px';
                     refreshIndicator.style.opacity = '1';
                     
                     // Recharger les transactions
@@ -4132,12 +4132,12 @@
                     }
                     
                     // ✅ Cacher le spinner après le chargement
-                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
                     
                 } else {
                     // Pas assez tiré, cacher immédiatement
-                    refreshIndicator.style.top = '-60px';
+                    refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
                 }
                 
