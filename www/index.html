@@ -3759,6 +3759,15 @@
             const verticalTolerance = 30;
             
             dashboard.addEventListener('touchstart', (e) => {
+                // ✅ SAUVEGARDER IMMÉDIATEMENT la position actuelle
+                if (currentActiveTab === 'budget') {
+                    budgetScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Budget sauvegardée (touchstart):', budgetScrollPosition);
+                } else if (currentActiveTab === 'transactions') {
+                    transactionsScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Transactions sauvegardée (touchstart):', transactionsScrollPosition);
+                }
+                
                 // ✅ BLOQUER si mode Edit actif
                 if (isEditMode) {
                     console.log('⏸️ Swipe bloqué - Mode Edit actif');
@@ -3885,18 +3894,6 @@
                     const transactionsActive = transactionsTab.classList.contains('active');
                     
                     const shouldSwitch = Math.abs(currentX) > minSwipeDistance;
-                    
-                    // ✅ SAUVEGARDER la position de scroll ICI (avant l'animation)
-                    const dashboard = document.querySelector('.dashboard');
-                    if (dashboard && shouldSwitch) {
-                        if (budgetActive) {
-                            budgetScrollPosition = dashboard.scrollTop;
-                            console.log('💾 Position Budget sauvegardée (swipe touchend):', budgetScrollPosition);
-                        } else if (transactionsActive) {
-                            transactionsScrollPosition = dashboard.scrollTop;
-                            console.log('💾 Position Transactions sauvegardée (swipe touchend):', transactionsScrollPosition);
-                        }
-                    }
 
                     if (shouldSwitch) {
                         // Swipe vers la gauche depuis Budget → aller à Transactions
@@ -3956,7 +3953,6 @@
                 toTab.classList.remove('swipe-preview');
                 fromTab.classList.remove('swipe-preview');
                 
-                
                 // Animation de sortie
                 fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
                 fromTab.style.transform = `translateX(${distance}px)`;
@@ -3969,21 +3965,19 @@
                 
                 // ✅ RESTAURER le scroll AVANT de rendre visible
                 setTimeout(() => {
-                    if (dashboard) {
-                        // Déterminer quel onglet on affiche
-                        if (toTab.id === 'budgetTab') {
-                            dashboard.scrollTop = budgetScrollPosition;
-                            console.log('📜 Position Budget restaurée (swipe):', budgetScrollPosition);
-                        } else if (toTab.id === 'transactionsTab') {
-                            dashboard.scrollTop = transactionsScrollPosition;
-                            console.log('📜 Position Transactions restaurée (swipe):', transactionsScrollPosition);
-                        }
+                    // Déterminer quel onglet on affiche
+                    if (toTab.id === 'budgetTab') {
+                        dashboard.scrollTop = budgetScrollPosition;
+                        console.log('📜 Position Budget restaurée (swipe):', budgetScrollPosition);
+                    } else if (toTab.id === 'transactionsTab') {
+                        dashboard.scrollTop = transactionsScrollPosition;
+                        console.log('📜 Position Transactions restaurée (swipe):', transactionsScrollPosition);
                     }
                     
                     // ✅ FADE-IN après restauration
                     toTab.style.transition = 'opacity 0.15s ease';
                     toTab.style.opacity = '1';
-                }, 100); // Petit délai pour laisser l'animation de sortie commencer
+                }, 100);
                 
                 // Nettoyer complètement après l'animation
                 setTimeout(() => {
@@ -3996,7 +3990,7 @@
                     toTab.style.transition = '';
                     toTab.style.transform = '';
                     toTab.style.opacity = '';
-                }, 450); // Un peu plus long pour laisser le fade-in se terminer
+                }, 450);
             }
 
             // Réinitialiser les positions des onglets
@@ -4022,8 +4016,7 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-
-        
+                
         /**
          * Pull-to-refresh pour recharger les transactions
          */
