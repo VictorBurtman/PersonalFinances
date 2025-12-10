@@ -4300,38 +4300,45 @@
                     // Mettre à jour le header
                     updateHeaderForTab('budget');
                     
-                    // Afficher le contenu Budget
                     const budgetTab = document.getElementById('budgetTab');
+                    const transactionsTab = document.getElementById('transactionsTab');
+                    const expensesList = document.getElementById('expensesList');
+                    const floatingAddBtn = document.getElementById('floatingAddBtn');
+                    
+                    // ✅ MASQUER temporairement avec opacity
                     if (budgetTab) {
+                        budgetTab.style.opacity = '0';
                         budgetTab.style.display = 'block';
                         budgetTab.classList.add('active');
                     }
                     
-                    const expensesList = document.getElementById('expensesList');
                     if (expensesList) {
                         expensesList.style.display = 'block';
                     }
                     
                     // Cacher le contenu Transactions
-                    const transactionsTab = document.getElementById('transactionsTab');
                     if (transactionsTab) {
                         transactionsTab.style.display = 'none';
                         transactionsTab.classList.remove('active');
                     }
                     
-                    const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) {
                         floatingAddBtn.style.display = 'none';
                     }
                     
-                    // ✅ RESTAURER la position de scroll de Budget
-                    setTimeout(() => {
-                        const dashboard = document.querySelector('.dashboard');
-                        if (dashboard) {
-                            dashboard.scrollTop = budgetScrollPosition;
-                            console.log('📜 Position Budget restaurée:', budgetScrollPosition);
+                    // ✅ RESTAURER la position IMMÉDIATEMENT (sans setTimeout)
+                    if (dashboard) {
+                        dashboard.scrollTop = budgetScrollPosition; // Instant, pas de smooth
+                        console.log('📜 Position Budget restaurée:', budgetScrollPosition);
+                    }
+                    
+                    // ✅ RÉAFFICHER avec fade-in après 1 frame
+                    requestAnimationFrame(() => {
+                        if (budgetTab) {
+                            budgetTab.style.transition = 'opacity 0.15s ease';
+                            budgetTab.style.opacity = '1';
                         }
-                    }, 50);
+                    });
                     
                 // ========================================
                 // ONGLET TRANSACTIONS
@@ -4342,21 +4349,24 @@
                     // Mettre à jour le header
                     updateHeaderForTab('transactions');
                     
-                    // Cacher le contenu Budget
                     const budgetTab = document.getElementById('budgetTab');
+                    const transactionsTab = document.getElementById('transactionsTab');
+                    const expensesList = document.getElementById('expensesList');
+                    const floatingAddBtn = document.getElementById('floatingAddBtn');
+                    
+                    // Cacher le contenu Budget
                     if (budgetTab) {
                         budgetTab.style.display = 'none';
                         budgetTab.classList.remove('active');
                     }
                     
-                    const expensesList = document.getElementById('expensesList');
                     if (expensesList) {
                         expensesList.style.display = 'none';
                     }
                     
-                    // Afficher le contenu Transactions
-                    const transactionsTab = document.getElementById('transactionsTab');
+                    // ✅ MASQUER temporairement avec opacity
                     if (transactionsTab) {
+                        transactionsTab.style.opacity = '0';
                         transactionsTab.style.display = 'block';
                         transactionsTab.classList.add('active');
                     }
@@ -4387,19 +4397,23 @@
                     }
                     
                     // Afficher le bouton floating add
-                    const floatingAddBtn = document.getElementById('floatingAddBtn');
                     if (floatingAddBtn) {
                         floatingAddBtn.style.display = 'flex';
                     }
                     
-                    // ✅ RESTAURER la position de scroll de Transactions
-                    setTimeout(() => {
-                        const dashboard = document.querySelector('.dashboard');
-                        if (dashboard) {
-                            dashboard.scrollTop = transactionsScrollPosition;
-                            console.log('📜 Position Transactions restaurée:', transactionsScrollPosition);
+                    // ✅ RESTAURER la position IMMÉDIATEMENT (sans setTimeout)
+                    if (dashboard) {
+                        dashboard.scrollTop = transactionsScrollPosition; // Instant, pas de smooth
+                        console.log('📜 Position Transactions restaurée:', transactionsScrollPosition);
+                    }
+                    
+                    // ✅ RÉAFFICHER avec fade-in après 1 frame
+                    requestAnimationFrame(() => {
+                        if (transactionsTab) {
+                            transactionsTab.style.transition = 'opacity 0.15s ease';
+                            transactionsTab.style.opacity = '1';
                         }
-                    }, 50);
+                    });
                 }
                 
             } finally {
