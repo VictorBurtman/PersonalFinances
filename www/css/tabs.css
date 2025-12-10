@@ -111,7 +111,7 @@ body.dark-mode .dashboard {
     /* 2. ESPACEMENT & SAFE AREA */
     padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     padding-bottom: 10px !important;
-    padding-left: 15px !important;
+    padding-left: 20px !important; /* Un peu plus d'espace à gauche pour le titre */
     padding-right: 15px !important;
     
     /* 3. STYLE */
@@ -119,13 +119,31 @@ body.dark-mode .dashboard {
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
     
-    /* 4. FLEXBOX & ALIGNEMENT À DROITE */
+    /* 4. FLEXBOX */
     display: flex;
     gap: 10px;
-    justify-content: flex-end; /* <--- C'est cette ligne qui pousse tout à droite */
+    align-items: center; /* Centre verticalement le titre et les boutons */
+    
+    /* ON RETIRE : justify-content: flex-end; */
     
     transform: translateZ(0);
     overflow: visible !important;
+}
+
+/* --- NOUVEAU STYLE POUR LE TITRE --- */
+.header-title {
+    font-size: 1.25em; /* Taille du texte */
+    font-weight: 800;  /* Bien gras */
+    color: #333;
+    
+    /* C'est la clé : pousse tout le reste (les boutons) vers la droite */
+    margin-right: auto; 
+    
+    /* Optionnel : un joli dégradé comme ton thème */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 /* 4. EXTENSION VERS LE HAUT (Le "Cache-Misère" du Header) */
@@ -148,15 +166,18 @@ body.dark-mode .dashboard {
     pointer-events: none;
 }
 
-/* 5. GESTION DARK MODE */
+/* Gestion du Dark Mode */
 body.dark-mode .edit-mode-controls {
-    /* Couleur du header en mode sombre (basé sur ton CSS actuel) */
     background-color: #2a2a3e !important; 
     border-bottom: 1px solid #3a3a4e !important;
 }
 
-body.dark-mode .edit-mode-controls::before {
-    background: #2a2a3e;
+/* En dark mode, on peut garder le dégradé ou mettre du blanc */
+body.dark-mode .header-title {
+    /* Si tu veux du blanc simple en dark mode, décommente ci-dessous */
+    /* background: none; 
+       -webkit-text-fill-color: #e0e0e0; 
+       color: #e0e0e0; */
 }
 
 
