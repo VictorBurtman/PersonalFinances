@@ -951,7 +951,6 @@
             }
         }
 
-
         async function handleSignUp() {
             console.log('📝 handleSignUp appelée');
             
@@ -966,7 +965,6 @@
                 return;
             }
             
-            // Récupérer les boutons
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
@@ -977,10 +975,8 @@
             
             console.log('🔄 Désactivation des boutons...');
             
-            // Sauvegarder le texte original
             const originalSignUpText = signUpBtn.innerHTML;
             
-            // Désactiver et afficher loading
             signInBtn.disabled = true;
             signUpBtn.disabled = true;
             
@@ -988,26 +984,31 @@
             const loadingText = translations[lang]?.loading || 'Loading...';
             signUpBtn.innerHTML = '⏳ ' + loadingText;
             
-            console.log('📝 Tentative d\'inscription...');
-            const result = await authManager.signUp(email, password, remember);
-            
-            console.log('🔍 Résultat signUp:', result);
-            
-            // ✅ Si result est false ou undefined, c'est une erreur
-            if (!result) {
-                console.log('❌ Inscription échouée, réactivation des boutons');
+            // ✅ AJOUTER TRY/CATCH pour attraper les erreurs
+            try {
+                console.log('📝 Tentative d\'inscription...');
+                const result = await authManager.signUp(email, password, remember);
                 
-                // Réactiver les boutons
+                console.log('🔍 Résultat signUp:', result);
+                
+                if (!result) {
+                    console.log('❌ Inscription échouée, réactivation des boutons');
+                    
+                    signInBtn.disabled = false;
+                    signUpBtn.disabled = false;
+                    signUpBtn.innerHTML = originalSignUpText;
+                } else {
+                    console.log('✅ Inscription réussie, l\'app va se recharger');
+                }
+            } catch (error) {
+                // ✅ Attraper les erreurs non gérées
+                console.error('❌ Erreur handleSignUp:', error);
+                
                 signInBtn.disabled = false;
                 signUpBtn.disabled = false;
                 signUpBtn.innerHTML = originalSignUpText;
-            } else {
-                console.log('✅ Inscription réussie, l\'app va se recharger');
-                // Inscription réussie, l'app va se recharger
             }
         }
-
-
 
         // ========== TOGGLE PASSWORD VISIBILITY ==========
         document.addEventListener('DOMContentLoaded', function() {

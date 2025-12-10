@@ -377,7 +377,7 @@ class AuthManager {
         }
     }
 
-    
+
     /**
      * Met à jour les traductions de l'écran de connexion
      * @param {string} langCode
@@ -498,34 +498,26 @@ class AuthManager {
      * @param {boolean} remember
      */
     async signIn(email, password, remember) {
-        // ✅ DEBUG
-        console.log('🔍 localStorage.getItem("language"):', localStorage.getItem('language'));
-        
         const lang = localStorage.getItem('language') || 'en';
-        console.log('🔍 lang utilisé:', lang);
-        
         const trans = translations[lang] || translations['en'];
-        console.log('🔍 trans:', trans);
-        console.log('🔍 trans.userNotFound:', trans.userNotFound);
+        
         try {
-            const lang = localStorage.getItem('language') || 'en';
-            const trans = translations[lang] || translations['en'];
+            console.log('✅ Tentative de connexion...');
             
-            const emailExists = await this.checkIfEmailExists(email);
+            // ❌ SUPPRIMER CETTE VÉRIFICATION (ne fonctionne plus)
+            // const emailExists = await this.checkIfEmailExists(email);
+            // if (!emailExists) { ... }
             
-            if (!emailExists) {
-                console.log('❌ Email inexistant:', email);
-                this.showAuthError('❌ ' + trans.userNotFound);
-                // ✅ NE PAS THROW, juste return false
-                return false;
-            }
-            
-            console.log('✅ Email existe, tentative de connexion...');
-            
+            // Configurer la persistence
             await this.setAuthPersistence(remember);
+            
+            // Se connecter directement
             const result = await auth.signInWithEmailAndPassword(email, password);
+            
+            // Sauvegarder les préférences
             this.saveCredentials(email, remember);
             
+            // Vérifier si c'est la première connexion
             const isFirst = await this.checkFirstLaunch(result.user.uid);
             if (isFirst) {
                 await this.setupInitialConfig(result.user.uid);
@@ -536,14 +528,13 @@ class AuthManager {
         } catch (error) {
             console.error('❌ Sign in error:', error);
             
+            // Gérer les erreurs Firebase
             const errorMessage = this.getErrorMessage(error.code);
             this.showAuthError(errorMessage);
             
-            // ✅ NE PAS RE-THROW
             return false;
         }
     }
-
 
     /**
      * Gère l'inscription avec configuration initiale
@@ -750,7 +741,6 @@ class AuthManager {
     }
 
     getErrorMessage(errorCode) {
-        // ✅ LOG pour debug
         console.log('🔍 Error code reçu:', errorCode);
         
         const lang = localStorage.getItem('language') || 'en';
@@ -766,31 +756,14 @@ class AuthManager {
             'auth/network-request-failed': trans.networkError,
             'auth/user-disabled': trans.accountDisabled,
             'auth/operation-not-allowed': trans.unknownError,
-            'auth/invalid-credential': trans.wrongPassword, // ← C'EST CELUI-LÀ !
-            'auth/user-deleted': trans.userNotFound, // ✅ Ajoute celui-ci
+            'auth/invalid-credential': trans.invalidCredentials, // ← Important !
+            'auth/user-deleted': trans.userNotFound,
         };
         
         const message = errorMap[errorCode] || trans.unknownError;
         console.log('💬 Message retourné:', message);
         
         return message;
-    }
-
-    /**
-     * Vérifie si un email existe dans Firebase Auth
-     * @param {string} email
-     * @returns {Promise<boolean>}
-     */
-    async checkIfEmailExists(email) {
-        try {
-            // Tenter de récupérer les méthodes de connexion pour cet email
-            const methods = await firebase.auth().fetchSignInMethodsForEmail(email);
-            console.log('🔍 Méthodes de connexion pour', email, ':', methods);
-            return methods.length > 0;
-        } catch (error) {
-            console.error('❌ Erreur checkIfEmailExists:', error);
-            return false;
-        }
     }
 
     /**
