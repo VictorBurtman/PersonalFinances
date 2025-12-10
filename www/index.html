@@ -895,39 +895,119 @@
             console.error('⚠️ authManager not loaded! Check if auth-manager.js is included before this script');
         }
 
+
         async function handleSignIn() {
+            console.log('🔐 handleSignIn appelée');
+            
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('rememberMe').checked;
             
             if (!email || !password) {
-                alert('Please enter email and password');
+                const lang = localStorage.getItem('language') || 'en';
+                const trans = translations[lang] || translations['en'];
+                alert(trans.pleaseEnterEmailAndPassword || 'Please enter email and password');
                 return;
             }
             
-            // ✅ Désactiver les boutons et montrer le loading
+            // Récupérer les boutons
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
             
-            const originalSignInText = signInBtn.innerHTML;
-            const originalSignUpText = signUpBtn.innerHTML;
+            if (!signInBtn || !signUpBtn) {
+                console.error('❌ Boutons introuvables');
+                return;
+            }
             
+            console.log('🔄 Désactivation des boutons...');
+            
+            // Sauvegarder le texte original
+            const originalSignInText = signInBtn.innerHTML;
+            
+            // Désactiver et afficher loading
             signInBtn.disabled = true;
             signUpBtn.disabled = true;
-            signInBtn.innerHTML = '⏳ Loading...';
             
-            try {
-                await authManager.signIn(email, password, remember);
-                // Si on arrive ici, c'est un succès (pas besoin de réactiver les boutons, la page va changer)
-            } catch (error) {
-                console.error('Sign in error:', error);
+            const lang = localStorage.getItem('language') || 'en';
+            const loadingText = translations[lang]?.loading || 'Loading...';
+            signInBtn.innerHTML = '⏳ ' + loadingText;
+            
+            console.log('🔐 Tentative de connexion...');
+            const result = await authManager.signIn(email, password, remember);
+            
+            console.log('🔍 Résultat signIn:', result);
+            
+            // ✅ Si result est false ou undefined, c'est une erreur
+            if (!result) {
+                console.log('❌ Connexion échouée, réactivation des boutons');
                 
-                // ✅ RÉACTIVER LES BOUTONS en cas d'erreur
+                // Réactiver les boutons
                 signInBtn.disabled = false;
                 signUpBtn.disabled = false;
                 signInBtn.innerHTML = originalSignInText;
+            } else {
+                console.log('✅ Connexion réussie, l\'app va se recharger');
+                // Connexion réussie, l'app va se recharger via onAuthStateChanged
             }
         }
+
+
+        async function handleSignUp() {
+            console.log('📝 handleSignUp appelée');
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const remember = document.getElementById('rememberMe').checked;
+            
+            if (!email || !password) {
+                const lang = localStorage.getItem('language') || 'en';
+                const trans = translations[lang] || translations['en'];
+                alert(trans.pleaseEnterEmailAndPassword || 'Please enter email and password');
+                return;
+            }
+            
+            // Récupérer les boutons
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpBtn = document.getElementById('signUpBtn');
+            
+            if (!signInBtn || !signUpBtn) {
+                console.error('❌ Boutons introuvables');
+                return;
+            }
+            
+            console.log('🔄 Désactivation des boutons...');
+            
+            // Sauvegarder le texte original
+            const originalSignUpText = signUpBtn.innerHTML;
+            
+            // Désactiver et afficher loading
+            signInBtn.disabled = true;
+            signUpBtn.disabled = true;
+            
+            const lang = localStorage.getItem('language') || 'en';
+            const loadingText = translations[lang]?.loading || 'Loading...';
+            signUpBtn.innerHTML = '⏳ ' + loadingText;
+            
+            console.log('📝 Tentative d\'inscription...');
+            const result = await authManager.signUp(email, password, remember);
+            
+            console.log('🔍 Résultat signUp:', result);
+            
+            // ✅ Si result est false ou undefined, c'est une erreur
+            if (!result) {
+                console.log('❌ Inscription échouée, réactivation des boutons');
+                
+                // Réactiver les boutons
+                signInBtn.disabled = false;
+                signUpBtn.disabled = false;
+                signUpBtn.innerHTML = originalSignUpText;
+            } else {
+                console.log('✅ Inscription réussie, l\'app va se recharger');
+                // Inscription réussie, l'app va se recharger
+            }
+        }
+
+
 
         // ========== TOGGLE PASSWORD VISIBILITY ==========
         document.addEventListener('DOMContentLoaded', function() {
