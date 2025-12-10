@@ -680,23 +680,29 @@
                 </div>
                 
                 <!-- Currency Section -->
-                <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
-                    <option value="ILS">Israeli Shekel (₪)</option>
-                    <option value="USD">US Dollar ($)</option>
-                    <option value="EUR">Euro (€)</option>
-                    <option value="GBP">British Pound (£)</option>
-                    <option value="JPY">Japanese Yen (¥)</option>
-                    <option value="RUB">Russian Ruble (₽)</option>
-                    <option value="CNY">Chinese Yuan (¥)</option>
-                    <option value="EGP">Egyptian Pound (E£)</option>
-                    <option value="SAR">Saudi Riyal (﷼)</option>
-                    <option value="AED">UAE Dirham (د.إ)</option>
-                    <option value="INR">Indian Rupee (₹)</option>
-                    <option value="THB">Thai Baht (฿)</option>
-                    <option value="CHF">Swiss Franc (CHF)</option>
-                    <option value="CAD">Canadian Dollar (CA$)</option>
-                    <option value="AUD">Australian Dollar (A$)</option>
-                </select>
+                <div class="settings-section">
+                    <h3 data-translate="currency">Devise</h3>
+                    <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
+                        <option value="ILS">Israeli Shekel (₪)</option>
+                        <option value="USD">US Dollar ($)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="GBP">British Pound (£)</option>
+                        <option value="JPY">Japanese Yen (¥)</option>
+                        <option value="RUB">Russian Ruble (₽)</option>
+                        <option value="CNY">Chinese Yuan (¥)</option>
+                        <option value="EGP">Egyptian Pound (E£)</option>
+                        <option value="SAR">Saudi Riyal (﷼)</option>
+                        <option value="AED">UAE Dirham (د.إ)</option>
+                        <option value="INR">Indian Rupee (₹)</option>
+                        <option value="THB">Thai Baht (฿)</option>
+                        <option value="CHF">Swiss Franc (CHF)</option>
+                        <option value="CAD">Canadian Dollar (CA$)</option>
+                        <option value="AUD">Australian Dollar (A$)</option>
+                        <option value="MXN">Mexican Peso (MX$)</option>
+                        <option value="BRL">Brazilian Real (R$)</option>
+                        <option value="NZD">New Zealand Dollar (NZ$)</option>
+                    </select>
+                </div>
                 
                 <!-- Income Tracking Section -->
                 <div class="settings-section">
@@ -745,7 +751,7 @@
                         This action is irreversible. All your data will be permanently deleted.
                     </p>
                     <button class="modal-button" style="background: #dc3545; width: 100%;" onclick="confirmDeleteAccount()">
-                        <span data-translate="deleteAccount">Delete Account</span>
+                        <span data-translate="deleteAccount" style="color: white !important;">Delete Account</span>
                     </button>
                 </div>
 
