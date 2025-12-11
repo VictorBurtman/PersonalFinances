@@ -4064,6 +4064,41 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
+        /**
+         * Vider la console
+         */
+        function clearConsole() {
+            console.clear();
+            console.log('🧹 Console vidée');
+        }
+
+        /**
+         * Copier tous les logs de la console dans le clipboard
+         */
+        function copyAllLogs() {
+            // Récupérer tous les logs de la console Eruda
+            const logs = [];
+            
+            // Parcourir tous les éléments de log dans Eruda
+            document.querySelectorAll('.eruda-console .eruda-log-item').forEach(log => {
+                const logText = log.innerText || log.textContent;
+                logs.push(logText);
+            });
+            
+            // Joindre tous les logs en un seul texte
+            const allLogs = logs.join('\n');
+            
+            // Copier dans le clipboard
+            navigator.clipboard.writeText(allLogs)
+                .then(() => {
+                    console.log('✅ Tous les logs copiés dans le clipboard !');
+                    alert('✅ Logs copiés !');
+                })
+                .catch(err => {
+                    console.error('❌ Erreur lors de la copie:', err);
+                    alert('❌ Erreur lors de la copie');
+                });
+        }
 
         /**
          * Pull-to-refresh pour recharger les transactions
