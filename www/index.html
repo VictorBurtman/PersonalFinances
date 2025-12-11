@@ -4073,19 +4073,65 @@
         }
 
         /**
-         * Copier tous les logs de la console - VERSION MOBILE
+         * Copier tous les logs - VERSION AMÉLIORÉE
          */
         function copyAllLogs() {
             const logs = [];
             
-            document.querySelectorAll('.eruda-console .eruda-log-item').forEach(log => {
-                const logText = log.innerText || log.textContent;
-                logs.push(logText);
-            });
+            // ✅ Essayer plusieurs sélecteurs possibles pour Eruda
+            const possibleSelectors = [
+                '.eruda-console .eruda-log-item',
+                '.eruda-console .eruda-log',
+                '.eruda-dev-tools .eruda-console .log-item',
+                '.eruda-dev-tools .eruda-console-logs .log-item',
+                '.eruda-console-logs-container .log-item',
+                '.eruda-console-logs > div',
+                '#eruda .eruda-console .log-item',
+                '.eruda-console [class*="log"]'
+            ];
+            
+            let elementsFound = false;
+            
+            for (const selector of possibleSelectors) {
+                const elements = document.querySelectorAll(selector);
+                if (elements.length > 0) {
+                    console.log('✅ Sélecteur trouvé:', selector, '→', elements.length, 'éléments');
+                    elements.forEach(log => {
+                        const logText = log.innerText || log.textContent;
+                        if (logText && logText.trim()) {
+                            logs.push(logText.trim());
+                        }
+                    });
+                    elementsFound = true;
+                    break;
+                }
+            }
+            
+            if (!elementsFound) {
+                console.error('❌ Aucun log trouvé avec les sélecteurs connus');
+                
+                // Debug : afficher la structure d'Eruda
+                const erudaConsole = document.querySelector('.eruda-console');
+                if (erudaConsole) {
+                    console.log('🔍 Structure Eruda trouvée:');
+                    console.log(erudaConsole);
+                    console.log('🔍 HTML:', erudaConsole.innerHTML.substring(0, 500));
+                }
+                
+                alert('❌ Impossible de trouver les logs. Utilise showAllLogs() pour debug.');
+                return;
+            }
+            
+            if (logs.length === 0) {
+                alert('⚠️ Aucun log à copier');
+                return;
+            }
             
             const allLogs = logs.join('\n\n');
             
-            // ✅ MÉTHODE 1 : Créer un élément textarea temporaire
+            console.log('📋 Logs récupérés:', logs.length, 'lignes');
+            console.log('📋 Taille totale:', allLogs.length, 'caractères');
+            
             const textarea = document.createElement('textarea');
             textarea.value = allLogs;
             textarea.style.cssText = `
@@ -4101,20 +4147,20 @@
                 font-size: 12px;
                 font-family: monospace;
                 border: 3px solid red;
+                overflow: auto;
             `;
             
             document.body.appendChild(textarea);
+            textarea.focus();
             textarea.select();
             
-            // Essayer de copier
             try {
                 document.execCommand('copy');
-                alert('✅ Logs copiés ! Ferme cette fenêtre.');
+                alert('✅ ' + logs.length + ' logs copiés !');
             } catch (err) {
-                alert('⚠️ Copie automatique échouée. Sélectionne tout le texte manuellement et copie.');
+                alert('⚠️ Sélectionne tout (appui long) et copie manuellement.');
             }
             
-            // Ajouter un bouton pour fermer
             const closeBtn = document.createElement('button');
             closeBtn.textContent = '❌ Fermer';
             closeBtn.style.cssText = `
@@ -4128,6 +4174,7 @@
                 font-size: 18px;
                 border: none;
                 border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             `;
             closeBtn.onclick = () => {
                 document.body.removeChild(textarea);
@@ -4137,28 +4184,41 @@
             document.body.appendChild(closeBtn);
         }
 
-        // ✅ Version simplifiée : Juste afficher dans la console
+        /**
+         * Afficher les logs dans la console - VERSION DEBUG
+         */
         function showAllLogs() {
-            const logs = [];
+            console.log('🔍 Recherche des logs Eruda...');
             
-            document.querySelectorAll('.eruda-console .eruda-log-item').forEach(log => {
-                const logText = log.innerText || log.textContent;
-                logs.push(logText);
+            // Tester tous les sélecteurs
+            const selectors = [
+                '.eruda-console .eruda-log-item',
+                '.eruda-console .eruda-log',
+                '.eruda-console [class*="log"]',
+                '.eruda-dev-tools .eruda-console div'
+            ];
+            
+            selectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                console.log(`Sélecteur "${selector}": ${elements.length} éléments`);
+                if (elements.length > 0) {
+                    console.log('Premier élément:', elements[0]);
+                }
             });
             
-            const allLogs = logs.join('\n\n');
-            
-            console.log('📋 ========== TOUS LES LOGS ==========');
-            console.log(allLogs);
-            console.log('📋 =====================================');
-            
-            alert('✅ Logs affichés dans la console. Tu peux les lire et les copier manuellement.');
+            // Afficher la structure d'Eruda
+            const erudaConsole = document.querySelector('.eruda-console');
+            if (erudaConsole) {
+                console.log('📋 Structure Eruda Console:');
+                console.log(erudaConsole);
+            } else {
+                console.log('❌ .eruda-console introuvable');
+            }
         }
 
-        // Rendre accessible globalement
+        window.clearConsole = clearConsole;
         window.copyAllLogs = copyAllLogs;
         window.showAllLogs = showAllLogs;
-        window.clearConsole = clearConsole;
 
         /**
          * Pull-to-refresh pour recharger les transactions
