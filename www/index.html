@@ -2974,8 +2974,17 @@
             
             // Add to the expenses list
             document.getElementById('expensesList').appendChild(categorySection);
-            // ✅ Traduire les nouveaux éléments
-            updateTranslations();
+
+            // ✅ Traduire manuellement les nouveaux boutons
+            const t = (key) => translations[currentLanguage]?.[key] || key;
+            categorySection.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                const translation = t(key);
+                if (translation) {
+                    el.textContent = translation;
+                }
+            });
+
             // Save to Firebase FIRST before calling updateDisplay
             saveUserData().then(() => {
                 updateDisplay();
