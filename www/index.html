@@ -3916,6 +3916,13 @@
                     document.body.style.overflow = '';
                 }
                 
+                // ✅ Message adapté selon ce qui a changé
+                if (newKey !== categoryKey && result.data.updatedCount > 0) {
+                    alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
+                } else {
+                    alert(t.categoryUpdated || 'Category updated successfully!');
+                }
+                
             } catch (error) {
                 const overlay = document.getElementById('loadingOverlay');
                 if (overlay) {
@@ -3927,7 +3934,6 @@
                 alert('Error renaming category: ' + error.message);
             }
         }
-
 
 
         async function renameItem(category, index) {
