@@ -1783,14 +1783,12 @@
             const dragHandle = isEditMode ? 
                 `<span class="drag-handle" title="Drag to reorder">☰</span>` : '';
             
-            const renameBtn = isEditMode ? 
-                `<button class="item-rename-btn show" onclick="renameItem('${category}', ${index})" title="Rename">✏️</button>` : '';
-            
             return `
                 <div class="expense-item" ${isEditMode ? 'draggable="true" data-category="' + category + '" data-index="' + index + '"' : ''}>
                     ${dragHandle}
-                    <span class="expense-name">${expense.name}</span>
-                    <span class="item-rename-btn ${isEditMode ? 'show' : ''}" onclick="renameItem('${category}', ${index})" title="Rename">✏️</span>
+                    <span class="expense-name ${isEditMode ? 'editable' : ''}" 
+                        ${isEditMode ? 'onclick="makeNameEditable(this, \'' + category + '\', ' + index + ')"' : ''}
+                        title="${isEditMode ? 'Click to edit' : ''}">${expense.name}</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input 
                             type="number" 
@@ -1806,7 +1804,6 @@
                 </div>
             `;
         }
-
 
         function updateExpense(category, index, value) {
             expenses[category][index].amount = parseFloat(value) || 0;
@@ -2163,8 +2160,6 @@
                     const visibleTotal = isEmpty ? 0 : displayData.reduce((a, b) => a + b, 0);
                     document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
                 }
-
-
 
         async function resetExpenses() {
             const t = translations[currentLanguage] || translations['en'];
@@ -2590,6 +2585,58 @@
             saveExpenses();
             updateDisplay();
         }
+
+
+        // ============================================
+        // ÉDITION INLINE DU NOM
+        // ============================================
+
+        function makeNameEditable(element, category, index) {
+            // Empêcher le drag pendant l'édition
+            const item = element.closest('.expense-item');
+            if (item) {
+                item.setAttribute('draggable', 'false');
+            }
+            
+            const currentName = element.textContent;
+            
+            // Créer un input
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentName;
+            input.className = 'expense-name-input';
+            
+            // Remplacer le span par l'input
+            element.replaceWith(input);
+            input.focus();
+            input.select();
+            
+            // Sauvegarder sur Enter ou perte de focus
+            const saveEdit = () => {
+                const newName = input.value.trim();
+                
+                if (newName && newName !== currentName) {
+                    // Mettre à jour le nom
+                    expenses[category][index].name = newName;
+                    saveExpenses();
+                }
+                
+                // Restaurer l'affichage
+                updateDisplay();
+            };
+            
+            input.addEventListener('blur', saveEdit);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                } else if (e.key === 'Escape') {
+                    updateDisplay(); // Annuler sans sauvegarder
+                }
+            });
+        }
+
+
+
 
 
         // ============================================
