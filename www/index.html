@@ -1787,7 +1787,7 @@
                 `<button class="item-rename-btn show" onclick="renameItem('${category}', ${index})" title="Rename">✏️</button>` : '';
             
             return `
-                <div class="expense-item">
+                <div class="expense-item" ${isEditMode ? 'draggable="true" data-category="${category}" data-index="${index}"' : ''}>
                     ${dragHandle}
                     <span class="expense-name">${expense.name}</span>
                     <span class="item-rename-btn ${isEditMode ? 'show' : ''}" onclick="renameItem('${category}', ${index})" title="Rename">✏️</span>
@@ -1897,6 +1897,10 @@
                 updateChart();
             } catch (error) {
                 console.error('Error updating display:', error);
+            }
+            // ✅ Initialiser le drag and drop en mode edit
+            if (isEditMode) {
+                initDragAndDrop();
             }
         }
 
@@ -2333,6 +2337,111 @@
             // On regénère l'affichage pour mettre à jour les boutons supprimer/déplacer dans la liste
             updateDisplay();
         }
+
+
+
+        // ============================================
+        // DRAG AND DROP - Réorganisation des items
+        // ============================================
+
+        let draggedItem = null;
+        let draggedCategory = null;
+        let draggedIndex = null;
+
+        // Initialiser les événements de drag (appelé après updateDisplay)
+        function initDragAndDrop() {
+            const items = document.querySelectorAll('.expense-item[draggable="true"]');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            draggedCategory = this.dataset.category;
+            draggedIndex = parseInt(this.dataset.index);
+            
+            this.style.opacity = '0.4';
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            if (this !== draggedItem && this.dataset.category === draggedCategory) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            this.classList.remove('drag-over');
+            
+            const targetCategory = this.dataset.category;
+            const targetIndex = parseInt(this.dataset.index);
+            
+            // Ne rien faire si on drop sur soi-même
+            if (draggedCategory === targetCategory && draggedIndex === targetIndex) {
+                return false;
+            }
+            
+            // Ne permettre le drag que dans la même catégorie
+            if (draggedCategory !== targetCategory) {
+                return false;
+            }
+            
+            // Réorganiser les items dans le tableau
+            const categoryItems = expenses[draggedCategory];
+            const draggedItemData = categoryItems[draggedIndex];
+            
+            // Retirer l'item de sa position d'origine
+            categoryItems.splice(draggedIndex, 1);
+            
+            // Ajuster l'index cible si nécessaire
+            const newIndex = draggedIndex < targetIndex ? targetIndex - 1 : targetIndex;
+            
+            // Insérer à la nouvelle position
+            categoryItems.splice(newIndex, 0, draggedItemData);
+            
+            // Sauvegarder et rafraîchir
+            saveExpenses();
+            updateDisplay();
+            
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+            
+            // Retirer les classes de tous les items
+            document.querySelectorAll('.expense-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+            
+            draggedItem = null;
+            draggedCategory = null;
+            draggedIndex = null;
+        }
+
 
 
         // ============================================

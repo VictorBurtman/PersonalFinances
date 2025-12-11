@@ -2681,3 +2681,18 @@ body.dark-mode .drag-handle {
 body.dark-mode .drag-handle:hover {
     color: #667eea;
 }
+
+/* Style pendant le drag */
+.expense-item[draggable="true"] {
+    cursor: move;
+}
+
+.expense-item.drag-over {
+    border: 2px dashed #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .expense-item.drag-over {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.15);
+}
