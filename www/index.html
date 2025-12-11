@@ -2975,12 +2975,23 @@
             // Add to the expenses list
             document.getElementById('expensesList').appendChild(categorySection);
 
-            // ✅ Traduire manuellement les nouveaux boutons
+            // ✅ Traduire manuellement les nouveaux boutons en gardant les icônes
+            const t = (key) => translations[currentLanguage]?.[key] || key;
             categorySection.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
                 const translation = t(key);
                 if (translation) {
-                    el.textContent = translation;
+                    // Si l'élément a une image (icône SVG), garder l'image et remplacer seulement le texte
+                    const img = el.querySelector('img');
+                    if (img) {
+                        // Garder l'image et ajouter le texte après
+                        el.innerHTML = '';
+                        el.appendChild(img);
+                        el.appendChild(document.createTextNode(translation));
+                    } else {
+                        // Sinon, remplacer tout le texte
+                        el.textContent = translation;
+                    }
                 }
             });
 
