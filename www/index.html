@@ -2955,13 +2955,13 @@
                 <div class="category-stats" id="${statsId}"></div>
                 <div class="category-controls ${isEditMode ? 'show' : ''}">
                     <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">
-                        <span data-translate="moveUp">↑ ${t.moveUp || 'Move Up'}</span>
+                        <span data-translate="moveUp">${t.moveUp || 'Move Up'}</span>
                     </button>
                     <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">
-                        <span data-translate="moveDown">↓ ${t.moveDown || 'Move Down'}</span>
+                        <span data-translate="moveDown">${t.moveDown || 'Move Down'}</span>
                     </button>
                     <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">
-                        <span data-translate="addItem">➕ ${t.addItem || 'Add Item'}</span>
+                        <span data-translate="addItem">${t.addItem || 'Add Item'}</span>
                     </button>
                     <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">
                         <img src="img/icons/trash.svg" alt="Delete" class="category-delete-icon">
@@ -2982,6 +2982,7 @@
                 alert(t.errorCreatingCategory || 'Error creating category. Please try again.');
             });
         }
+        
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
