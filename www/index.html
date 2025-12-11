@@ -4611,14 +4611,8 @@
                 
                 // Afficher les boutons Budget
                 document.querySelectorAll('.budget-only').forEach(btn => {
-                    // ✅ Cas spécial : bouton "Add Category" (visible uniquement en mode Edit)
-                    if (btn.id === 'addCategoryBtn') {
-                        const editModeActive = typeof isEditMode !== 'undefined' && isEditMode;
-                        btn.style.display = editModeActive ? 'inline-flex' : 'none';
-                        console.log('🔧 addCategoryBtn:', editModeActive ? 'visible (mode Edit)' : 'hidden (mode Normal)');
-                    } 
                     // ✅ Cas spécial : sélecteur de mois Compare
-                    else if (btn.id === 'compareMonth') {
+                    if (btn.id === 'compareMonth') {
                         const compareBtn = document.getElementById('compareBtn');
                         const isCompareActive = compareBtn && compareBtn.classList.contains('active');
                         
@@ -4627,7 +4621,7 @@
                         
                         console.log(isCompareActive ? '✅ compareMonth affiché' : 'ℹ️ compareMonth caché');
                     } 
-                    // ✅ Tous les autres boutons Budget (Edit, Compare, etc.)
+                    // ✅ Tous les autres boutons Budget (Edit, Add Category, Compare, etc.)
                     else {
                         btn.style.display = 'inline-flex';
                     }
