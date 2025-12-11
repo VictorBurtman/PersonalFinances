@@ -140,6 +140,8 @@ const translations = {
         orChooseBelow: 'or choose below',
         useCustomEmoji: 'Use',
         pleaseEnterEmoji: 'Please enter an emoji',
+        categoryUpdated: 'Category updated successfully!',
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -586,6 +588,7 @@ const translations = {
         orChooseBelow: 'ou choisissez ci-dessous',
         useCustomEmoji: 'Utiliser',
         pleaseEnterEmoji: 'Veuillez entrer un emoji',
+        categoryUpdated: 'Catégorie mise à jour avec succès !',
 
 
         // Alerts & notifications
@@ -1023,6 +1026,7 @@ const translations = {
         orChooseBelow: 'או בחר למטה',
         useCustomEmoji: 'השתמש',
         pleaseEnterEmoji: 'אנא הזן אימוג\'י',
+        categoryUpdated: 'הקטגוריה עודכנה בהצלחה!',
 
 
         // Toasts & notifications
@@ -1460,6 +1464,8 @@ const translations = {
         orChooseBelow: 'o elige abajo',
         useCustomEmoji: 'Usar',
         pleaseEnterEmoji: 'Por favor ingresa un emoji',
+        categoryUpdated: '¡Categoría actualizada con éxito!',
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1896,6 +1902,8 @@ const translations = {
         orChooseBelow: 'или выберите ниже',
         useCustomEmoji: 'Использовать',
         pleaseEnterEmoji: 'Пожалуйста, введите эмодзи',
+        categoryUpdated: 'Категория успешно обновлена!',
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2332,6 +2340,7 @@ const translations = {
         orChooseBelow: 'أو اختر أدناه',
         useCustomEmoji: 'استخدم',
         pleaseEnterEmoji: 'الرجاء إدخال إيموجي',
+        categoryUpdated: 'تم تحديث الفئة بنجاح!',
 
 
         // Toasts & notifications

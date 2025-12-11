@@ -3566,7 +3566,7 @@
             });
         }
 
-        
+
         function closeEmojiPicker() {
             const modal = document.getElementById('emojiPickerModal');
             modal.style.display = 'none';
@@ -3770,8 +3770,6 @@
             };
         }
 
-
-
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3827,14 +3825,19 @@
                     document.body.style.overflow = 'hidden';
                 }
                 
-                // Appeler Cloud Function pour transactions
-                const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
-                const result = await renameCategoryFunc({
-                    oldName: categoryKey,
-                    newName: newKey
-                });
+                // Appeler Cloud Function pour transactions SEULEMENT si le nom a changé
+                let result = { data: { updatedCount: 0, message: 'Emoji updated' } };
                 
-                console.log(`Renamed category: ${result.data.message}`);
+                if (newKey !== categoryKey) {
+                    const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
+                    result = await renameCategoryFunc({
+                        oldName: categoryKey,
+                        newName: newKey
+                    });
+                    console.log(`Renamed category: ${result.data.message}`);
+                } else {
+                    console.log('Only emoji changed, skipping Cloud Function');
+                }
                 
                 // ✅ LOGIQUE SIMPLE : Tout faire localement
                 if (newKey !== categoryKey) {
@@ -3903,7 +3906,12 @@
                     document.body.style.overflow = '';
                 }
                 
-                alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
+                // ✅ Message adapté selon ce qui a changé
+                if (newKey !== categoryKey && result.data.updatedCount > 0) {
+                    alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
+                } else {
+                    alert(t.categoryUpdated || 'Category updated successfully!');
+                }
                 
             } catch (error) {
                 const overlay = document.getElementById('loadingOverlay');
@@ -3916,8 +3924,6 @@
                 alert('Error renaming category: ' + error.message);
             }
         }
-
-
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
