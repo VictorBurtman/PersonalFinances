@@ -2585,7 +2585,7 @@ body.dark-mode .chartjs-legend span {
         -webkit-overflow-scrolling: touch !important;
         
         /* Marge du bas (pour le footer) : inchangé */
-        padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
         
         /* --- CORRECTION ICI --- */
         /* On enlève "env(safe-area-inset-top)" car le container le fait déjà. */
