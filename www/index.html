@@ -4432,6 +4432,8 @@
             
             // ✅ Si on clique sur l'onglet déjà actif, scroll to top
             if (tabName === currentActiveTab) {
+                console.log('📜 SCROLL TO TOP - même onglet cliqué');
+                
                 // Feedback visuel
                 const activeBtn = document.getElementById(tabName + 'TabBtn');
                 if (activeBtn) {
@@ -4459,8 +4461,10 @@
             if (dashboard) {
                 if (currentActiveTab === 'budget') {
                     budgetScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Budget sauvegardée dans switchTab:', budgetScrollPosition);
                 } else if (currentActiveTab === 'transactions') {
                     transactionsScrollPosition = dashboard.scrollTop;
+                    console.log('💾 Position Transactions sauvegardée dans switchTab:', transactionsScrollPosition);
                 }
             }
             
@@ -4480,19 +4484,15 @@
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
                     
-                    // 1. GESTION DES BOUTONS DU HEADER (C'est ici que ça manquait !)
-                    // Cacher les boutons transactions
+                    // 1. GESTION DES BOUTONS DU HEADER
                     document.querySelectorAll('.transactions-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
                     
-                    // Afficher les boutons budget
                     document.querySelectorAll('.budget-only').forEach(btn => {
-                        // Cas spécial pour le menu déroulant "Compare"
                         if (btn.id === 'compareMonth') {
                             btn.style.display = window.compareMode ? 'inline-block' : 'none';
                         } else {
-                            // Pour les boutons icônes (Edit, Add, Compare)
                             btn.style.display = 'inline-flex';
                         }
                     });
@@ -4516,8 +4516,11 @@
                     }
                     if (floatingAddBtn) floatingAddBtn.style.display = 'none';
                     
-                    // Restaurer le scroll
-                    if (dashboard) dashboard.scrollTop = budgetScrollPosition;
+                    // ✅ Restaurer le scroll immédiatement
+                    if (dashboard) {
+                        dashboard.scrollTop = budgetScrollPosition;
+                        console.log('📜 Position Budget restaurée dans switchTab:', budgetScrollPosition);
+                    }
                     
                     // Fade in
                     requestAnimationFrame(() => {
@@ -4534,12 +4537,10 @@
                     console.log('💳 Activation onglet Transactions');
                     
                     // 1. GESTION DES BOUTONS DU HEADER
-                    // Cacher les boutons budget
                     document.querySelectorAll('.budget-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
                     
-                    // Afficher les boutons transactions
                     document.querySelectorAll('.transactions-only').forEach(btn => {
                         btn.style.display = 'inline-flex';
                     });
@@ -4562,29 +4563,44 @@
                         transactionsTab.classList.add('active');
                     }
                     
-                    // Chargement lazy des transactions
+                    // ✅ FONCTION pour restaurer le scroll et faire le fade-in
+                    const restoreScrollAndFadeIn = () => {
+                        if (dashboard) {
+                            dashboard.scrollTop = transactionsScrollPosition;
+                            console.log('📜 Position Transactions restaurée dans switchTab:', transactionsScrollPosition);
+                        }
+                        
+                        // Fade in
+                        requestAnimationFrame(() => {
+                            if (transactionsTab) {
+                                transactionsTab.style.transition = 'opacity 0.15s ease';
+                                transactionsTab.style.opacity = '1';
+                            }
+                        });
+                    };
+                    
+                    // ✅ Chargement lazy des transactions (uniquement au premier accès)
                     if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
+                        console.log('🔄 Chargement initial des transactions...');
                         setTimeout(() => {
                             if (transactionsTab && transactionsTab.style.display === 'block') {
                                 loadTransactions().then(() => {
                                     window.transactionsLoaded = true;
+                                    console.log('✅ Transactions chargées');
+                                    
+                                    // ✅ Restaurer le scroll APRÈS le chargement
+                                    setTimeout(restoreScrollAndFadeIn, 100);
                                 });
                             }
                         }, 400);
+                    } else {
+                        console.log('ℹ️ Transactions déjà chargées, restauration immédiate du scroll');
+                        
+                        // ✅ Restaurer le scroll immédiatement si pas de chargement
+                        restoreScrollAndFadeIn();
                     }
                     
                     if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
-                    
-                    // Restaurer le scroll
-                    if (dashboard) dashboard.scrollTop = transactionsScrollPosition;
-                    
-                    // Fade in
-                    requestAnimationFrame(() => {
-                        if (transactionsTab) {
-                            transactionsTab.style.transition = 'opacity 0.15s ease';
-                            transactionsTab.style.opacity = '1';
-                        }
-                    });
                 }
                 
             } finally {
@@ -4594,7 +4610,7 @@
                 }, 200);
             }
         }
-
+                
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
             document.querySelectorAll('.modal.show').forEach(modal => {
