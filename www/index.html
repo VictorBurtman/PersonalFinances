@@ -4074,7 +4074,7 @@
                             animateTabTransition(budgetTab, transactionsTab, 'left');
                             setTimeout(() => {
                                 switchTab('transactions');
-                                updateHeaderForTab('transactions');
+                                // ✅ PAS d'appel à updateHeaderForTab (géré par switchTab)
                             }, 350);
                         }
                         // Swipe vers la droite depuis Transactions → aller à Budget
@@ -4083,7 +4083,7 @@
                             animateTabTransition(transactionsTab, budgetTab, 'right');
                             setTimeout(() => {
                                 switchTab('budget');
-                                updateHeaderForTab('budget');
+                                // ✅ PAS d'appel à updateHeaderForTab (géré par switchTab)
                             }, 350);
                         }
                         else {
@@ -4193,7 +4193,6 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-
 
         /**
          * Copier les logs depuis le Shadow DOM d'Eruda
