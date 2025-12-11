@@ -4706,14 +4706,22 @@
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
                     
-                    // 1. GESTION DES BOUTONS DU HEADER (basique, sera affiné par updateHeaderForTab)
+                    // 1. GESTION DES BOUTONS DU HEADER
                     document.querySelectorAll('.transactions-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
                     
+                    // ✅ Cacher compareMonth par défaut pour éviter le flash
+                    const compareMonth = document.getElementById('compareMonth');
+                    if (compareMonth) {
+                        compareMonth.style.display = 'none';
+                    }
+                    
                     document.querySelectorAll('.budget-only').forEach(btn => {
-                        // Afficher tous les boutons budget par défaut
-                        btn.style.display = 'inline-flex';
+                        // Afficher tous les boutons budget par défaut (sauf compareMonth déjà géré)
+                        if (btn.id !== 'compareMonth') {
+                            btn.style.display = 'inline-flex';
+                        }
                     });
                     
                     // 2. Gestion du contenu
@@ -4760,7 +4768,7 @@
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
                     
-                    // 1. GESTION DES BOUTONS DU HEADER (basique, sera affiné par updateHeaderForTab)
+                    // 1. GESTION DES BOUTONS DU HEADER
                     document.querySelectorAll('.budget-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
