@@ -3770,6 +3770,7 @@
             };
         }
 
+
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3836,7 +3837,7 @@
                     });
                     console.log(`Renamed category: ${result.data.message}`);
                 } else {
-                    console.log('Only emoji changed, skipping Cloud Function');
+                    console.log('Only emoji/name changed, skipping Cloud Function');
                 }
                 
                 // ✅ LOGIQUE SIMPLE : Tout faire localement
@@ -3864,53 +3865,45 @@
                     // Supprimer l'ancienne
                     delete expenses[categoryKey];
                     delete categoryMetadata[categoryKey];
-                } else {
-                    // Juste mettre à jour le displayName/emoji
-                    if (!categoryMetadata[categoryKey]) categoryMetadata[categoryKey] = {};
-                    categoryMetadata[categoryKey].displayName = newName;
-                    categoryMetadata[categoryKey].emoji = newEmoji;
-                }
-                
-                // ✅ D'abord supprimer l'ancienne catégorie explicitement
-                if (newKey !== categoryKey) {
+                    
+                    // ✅ Supprimer l'ancienne catégorie explicitement de Firestore
                     await db.collection('users').doc(currentUser.uid).update({
                         [`expenses.${categoryKey}`]: firebase.firestore.FieldValue.delete(),
                         [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
                     });
+                } else {
+                    // ✅ Juste mettre à jour le displayName/emoji (même si le nom n'a pas changé)
+                    if (!categoryMetadata[categoryKey]) categoryMetadata[categoryKey] = {};
+                    categoryMetadata[categoryKey].displayName = newName;
+                    categoryMetadata[categoryKey].emoji = newEmoji;
+                    
+                    console.log('Updated metadata:', categoryMetadata[categoryKey]);
                 }
                 
-                // ✅ Utiliser saveUserData() qui préserve TOUT (y compris credentials)
+                // ✅ Sauvegarder dans Firebase
                 await saveUserData();
                 
-                // ✅ Forcer la recréation du HTML
+                // ✅ Forcer la recréation du HTML si changement de clé
                 if (newKey !== categoryKey) {
-                    // Supprimer l'ancien HTML
                     const oldSection = document.getElementById(`category-${categoryKey}`);
                     if (oldSection) {
                         oldSection.remove();
                     }
+                    
+                    // Forcer un reload complet depuis Firebase pour recréer le HTML
+                    if (!document.getElementById(`category-${newKey}`)) {
+                        await loadUserData();
+                    }
                 }
                 
-                // Actualiser l'affichage
+                // ✅ Actualiser l'affichage (cela devrait maintenant utiliser les métadonnées à jour)
                 updateDisplay();
                 setTimeout(() => restoreEditMode(), 50);
-                // ✅ S'assurer que la nouvelle catégorie a son HTML
-                if (newKey !== categoryKey && !document.getElementById(`category-${newKey}`)) {
-                    // Forcer un reload complet depuis Firebase pour recréer le HTML
-                    await loadUserData();
-                }
                 
                 // Cacher l'overlay
                 if (overlay) {
                     overlay.classList.remove('active');
                     document.body.style.overflow = '';
-                }
-                
-                // ✅ Message adapté selon ce qui a changé
-                if (newKey !== categoryKey && result.data.updatedCount > 0) {
-                    alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
-                } else {
-                    alert(t.categoryUpdated || 'Category updated successfully!');
                 }
                 
             } catch (error) {
@@ -3924,6 +3917,8 @@
                 alert('Error renaming category: ' + error.message);
             }
         }
+
+
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
