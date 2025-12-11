@@ -2397,8 +2397,10 @@
             
             e.dataTransfer.dropEffect = 'move';
             
-            const targetItem = e.target.closest('.expense-item');
-            if (!targetItem || targetItem === draggedItem) return;
+            if (!draggedItem) return;
+            
+            const targetItem = this;
+            if (targetItem === draggedItem) return;
             
             const targetCategory = targetItem.dataset.category;
             if (targetCategory !== draggedCategory) return;
@@ -2413,21 +2415,45 @@
             if (e.stopPropagation) {
                 e.stopPropagation();
             }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
             
-            removeInsertionBar();
-            
-            const targetItem = e.target.closest('.expense-item');
-            if (!targetItem || !draggedItem) return false;
+            const targetItem = this;
+            if (!targetItem || !draggedItem) {
+                removeInsertionBar();
+                return false;
+            }
             
             const targetCategory = targetItem.dataset.category;
             const targetIndex = parseInt(targetItem.dataset.index);
+            const insertPosition = targetItem.dataset.insertPosition || 'after';
             
-            if (draggedCategory !== targetCategory) return false;
-            if (draggedIndex === targetIndex) return false;
+            if (draggedCategory !== targetCategory) {
+                removeInsertionBar();
+                return false;
+            }
+            
+            if (draggedIndex === targetIndex) {
+                removeInsertionBar();
+                return false;
+            }
+            
+            // Calculer le nouvel index selon la position d'insertion
+            let newIndex = targetIndex;
+            if (insertPosition === 'after') {
+                newIndex = targetIndex + 1;
+            }
+            
+            // Ajuster si on déplace vers le bas
+            if (draggedIndex < newIndex) {
+                newIndex--;
+            }
             
             // Réorganiser
-            reorderItems(draggedCategory, draggedIndex, targetIndex);
+            reorderItems(draggedCategory, draggedIndex, newIndex);
             
+            removeInsertionBar();
             return false;
         }
 
@@ -2491,9 +2517,21 @@
             if (targetItem && targetItem !== touchCurrentItem) {
                 const targetCategory = targetItem.dataset.category;
                 const targetIndex = parseInt(targetItem.dataset.index);
+                const insertPosition = targetItem.dataset.insertPosition || 'after';
                 
                 if (draggedCategory === targetCategory && draggedIndex !== targetIndex) {
-                    reorderItems(draggedCategory, draggedIndex, targetIndex);
+                    // Calculer le nouvel index
+                    let newIndex = targetIndex;
+                    if (insertPosition === 'after') {
+                        newIndex = targetIndex + 1;
+                    }
+                    
+                    // Ajuster si on déplace vers le bas
+                    if (draggedIndex < newIndex) {
+                        newIndex--;
+                    }
+                    
+                    reorderItems(draggedCategory, draggedIndex, newIndex);
                 }
             }
             
@@ -2517,6 +2555,9 @@
             const mouseY = event.clientY;
             const itemMiddle = rect.top + (rect.height / 2);
             
+            // Stocker l'info sur où insérer
+            targetItem.dataset.insertPosition = mouseY < itemMiddle ? 'before' : 'after';
+            
             // Insérer avant ou après selon la position de la souris
             if (mouseY < itemMiddle) {
                 targetItem.classList.add('insert-before');
@@ -2533,16 +2574,19 @@
 
         function reorderItems(category, fromIndex, toIndex) {
             const categoryItems = expenses[category];
+            
+            // Sécurité : vérifier les index
+            if (fromIndex < 0 || fromIndex >= categoryItems.length) return;
+            if (toIndex < 0 || toIndex > categoryItems.length) return;
+            if (fromIndex === toIndex) return;
+            
             const draggedItemData = categoryItems[fromIndex];
             
             // Retirer l'item de sa position d'origine
             categoryItems.splice(fromIndex, 1);
             
-            // Ajuster l'index cible si nécessaire
-            const newIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
-            
             // Insérer à la nouvelle position
-            categoryItems.splice(newIndex, 0, draggedItemData);
+            categoryItems.splice(toIndex, 0, draggedItemData);
             
             // Sauvegarder et rafraîchir
             saveExpenses();
