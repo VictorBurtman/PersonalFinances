@@ -1922,6 +1922,16 @@
                     // Show the section
                     section.style.display = 'block';
                     
+                    // ✅ Mettre à jour le titre avec l'emoji et le nom depuis les métadonnées
+                    const titleElement = section.querySelector('.category-title');
+                    if (titleElement && categoryMetadata[categoryKey]) {
+                        const meta = categoryMetadata[categoryKey];
+                        const renameBtn = titleElement.querySelector('.rename-btn');
+                        const renameBtnHTML = renameBtn ? renameBtn.outerHTML : '';
+                        
+                        titleElement.innerHTML = `${meta.emoji} ${meta.displayName} ${renameBtnHTML}`;
+                    }
+
                     // Update stats
                     const stats = getCategoryStats(categoryKey);
                     const statsElement = document.getElementById(`${categoryKey}Stats`);
