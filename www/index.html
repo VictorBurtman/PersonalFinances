@@ -1521,7 +1521,7 @@
                     }
                     
                     // ✅ CHARGER DARK MODE (par défaut activé pour nouveaux utilisateurs)
-                    const darkMode = data.darkMode !== undefined ? data.darkMode : true; // ← Par défaut true
+                    const darkMode = data.darkMode !== undefined ? data.darkMode : true;
                     if (darkMode) {
                         document.body.classList.add('dark-mode');
                     } else {
@@ -1574,6 +1574,7 @@
                     
                     // Recreate HTML for custom categories that don't exist in the default list
                     const expensesList = document.getElementById('expensesList');
+                    const t = translations[currentLanguage] || translations['en'];
                     
                     Object.keys(expenses).forEach(categoryKey => {
                         // Skip default categories - they already have HTML
@@ -1604,10 +1605,19 @@
                             </div>
                             <div class="category-stats" id="${statsId}"></div>
                             <div class="category-controls">
-                                <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">↑ Move Up</button>
-                                <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">↓ Move Down</button>
-                                <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">➕ Add Item</button>
-                                <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">🗑️ Delete Category</button>
+                                <button class="category-btn" onclick="moveCategoryUp('${categoryKey}')">
+                                    <span data-translate="moveUp">${t.moveUp || 'Move Up'}</span>
+                                </button>
+                                <button class="category-btn" onclick="moveCategoryDown('${categoryKey}')">
+                                    <span data-translate="moveDown">${t.moveDown || 'Move Down'}</span>
+                                </button>
+                                <button class="category-btn" onclick="addItemToCategory('${categoryKey}')">
+                                    <span data-translate="addItem">${t.addItem || 'Add Item'}</span>
+                                </button>
+                                <button class="category-btn danger" onclick="deleteCategory('${categoryKey}')">
+                                    <img src="img/icons/trash.svg" alt="Delete" class="category-delete-icon">
+                                    <span data-translate="deleteCategory">${t.deleteCategory || 'Delete Category'}</span>
+                                </button>
                             </div>
                             <div id="${expensesId}"></div>
                         `;
@@ -1646,7 +1656,6 @@
                 console.error('Error loading user data:', error);
             }
         }
-
 
         // AJOUTE ICI : Language change handler
         document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
