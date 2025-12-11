@@ -3088,7 +3088,6 @@
             }
         }
 
-        
         async function addItemToCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             const itemName = prompt(t.enterNewItemName || 'Enter new item name:');
@@ -3613,7 +3612,6 @@
             const newName = prompt(promptMessage, currentDisplayName);
             
             if (!newName || newName.trim() === '') return;
-            if (newName.trim() === currentDisplayName) return;
             
             // Demander l'emoji
             const currentEmoji = categoryMetadata[categoryKey]?.emoji || '📋';
@@ -3623,6 +3621,11 @@
                 return;
             }
             
+            // ✅ Ajoute cette vérification
+            if (newName.trim() === currentDisplayName && newEmoji.trim() === currentEmoji) {
+                // Rien n'a changé, on sort
+                return;
+            }
             const newKey = newName.toLowerCase().replace(/\s+/g, '-');   
             
             // Empêcher de renommer "income"
