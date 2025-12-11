@@ -679,7 +679,8 @@
                         class="emoji-custom-input" 
                         placeholder="Or type/paste any emoji here..."
                         data-translate-placeholder="customEmojiPlaceholder"
-                        maxlength="10"
+                        maxlength="4"
+                        oninput="this.value = Array.from(this.value)[0] || ''"
                     />
                     <button class="emoji-use-custom-btn" onclick="useCustomEmoji()">
                         <span data-translate="useCustomEmoji">Use</span>
@@ -3546,13 +3547,18 @@
 
         function useCustomEmoji() {
             const input = document.getElementById('customEmojiInput');
-            const emoji = input.value.trim();
+            let emoji = input.value.trim();
             
             if (!emoji) {
                 const t = translations[currentLanguage] || translations['en'];
-                alert(t.pleaseEnterEmoji || 'Please enter an emoji');
+                showToast(t.pleaseEnterEmoji || 'Please enter an emoji', 'error');
                 return;
             }
+            
+            // ✅ Prendre seulement le premier caractère/emoji
+            // Les emojis complexes peuvent prendre 2+ caractères UTF-16
+            const emojiArray = Array.from(emoji);
+            emoji = emojiArray[0];
             
             selectEmoji(emoji);
         }
