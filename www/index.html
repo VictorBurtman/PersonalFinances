@@ -2341,52 +2341,72 @@
 
 
         // ============================================
-        // DRAG AND DROP - Réorganisation des items
+        // DRAG AND DROP - Réorganisation des items (Mobile + Desktop)
         // ============================================
 
         let draggedItem = null;
         let draggedCategory = null;
         let draggedIndex = null;
+        let placeholder = null;
 
         // Initialiser les événements de drag (appelé après updateDisplay)
         function initDragAndDrop() {
             const items = document.querySelectorAll('.expense-item[draggable="true"]');
             
             items.forEach(item => {
+                // Desktop events
                 item.addEventListener('dragstart', handleDragStart);
                 item.addEventListener('dragover', handleDragOver);
                 item.addEventListener('drop', handleDrop);
                 item.addEventListener('dragend', handleDragEnd);
-                item.addEventListener('dragenter', handleDragEnter);
-                item.addEventListener('dragleave', handleDragLeave);
+                
+                // Mobile/Touch events
+                const handle = item.querySelector('.drag-handle');
+                if (handle) {
+                    handle.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    handle.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    handle.addEventListener('touchend', handleTouchEnd, { passive: false });
+                }
             });
         }
 
+        // ============================================
+        // DESKTOP DRAG HANDLERS
+        // ============================================
+
         function handleDragStart(e) {
+            // Ne permettre le drag que si on clique sur la poignée
+            if (!e.target.classList.contains('drag-handle')) {
+                e.preventDefault();
+                return;
+            }
+            
             draggedItem = this;
             draggedCategory = this.dataset.category;
             draggedIndex = parseInt(this.dataset.index);
             
-            this.style.opacity = '0.4';
+            this.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
         }
 
         function handleDragOver(e) {
             if (e.preventDefault) {
                 e.preventDefault();
             }
+            
             e.dataTransfer.dropEffect = 'move';
+            
+            const targetItem = e.target.closest('.expense-item');
+            if (!targetItem || targetItem === draggedItem) return;
+            
+            const targetCategory = targetItem.dataset.category;
+            if (targetCategory !== draggedCategory) return;
+            
+            // Créer/déplacer la barre d'insertion
+            showInsertionBar(targetItem, e);
+            
             return false;
-        }
-
-        function handleDragEnter(e) {
-            if (this !== draggedItem && this.dataset.category === draggedCategory) {
-                this.classList.add('drag-over');
-            }
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
         }
 
         function handleDrop(e) {
@@ -2394,30 +2414,132 @@
                 e.stopPropagation();
             }
             
-            this.classList.remove('drag-over');
+            removeInsertionBar();
             
-            const targetCategory = this.dataset.category;
-            const targetIndex = parseInt(this.dataset.index);
+            const targetItem = e.target.closest('.expense-item');
+            if (!targetItem || !draggedItem) return false;
             
-            // Ne rien faire si on drop sur soi-même
-            if (draggedCategory === targetCategory && draggedIndex === targetIndex) {
-                return false;
+            const targetCategory = targetItem.dataset.category;
+            const targetIndex = parseInt(targetItem.dataset.index);
+            
+            if (draggedCategory !== targetCategory) return false;
+            if (draggedIndex === targetIndex) return false;
+            
+            // Réorganiser
+            reorderItems(draggedCategory, draggedIndex, targetIndex);
+            
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            removeInsertionBar();
+            
+            draggedItem = null;
+            draggedCategory = null;
+            draggedIndex = null;
+        }
+
+        // ============================================
+        // MOBILE/TOUCH HANDLERS
+        // ============================================
+
+        let touchStartY = 0;
+        let touchCurrentItem = null;
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            
+            const item = e.target.closest('.expense-item');
+            if (!item) return;
+            
+            touchCurrentItem = item;
+            draggedItem = item;
+            draggedCategory = item.dataset.category;
+            draggedIndex = parseInt(item.dataset.index);
+            touchStartY = e.touches[0].clientY;
+            
+            item.classList.add('dragging');
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            
+            if (!touchCurrentItem) return;
+            
+            const touch = e.touches[0];
+            const currentY = touch.clientY;
+            
+            // Trouver l'item sous le doigt
+            const elementAtPoint = document.elementFromPoint(touch.clientX, currentY);
+            const targetItem = elementAtPoint?.closest('.expense-item');
+            
+            if (targetItem && targetItem !== touchCurrentItem && targetItem.dataset.category === draggedCategory) {
+                showInsertionBar(targetItem, { clientY: currentY });
+            }
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            
+            if (!touchCurrentItem) return;
+            
+            const touch = e.changedTouches[0];
+            const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetItem = elementAtPoint?.closest('.expense-item');
+            
+            if (targetItem && targetItem !== touchCurrentItem) {
+                const targetCategory = targetItem.dataset.category;
+                const targetIndex = parseInt(targetItem.dataset.index);
+                
+                if (draggedCategory === targetCategory && draggedIndex !== targetIndex) {
+                    reorderItems(draggedCategory, draggedIndex, targetIndex);
+                }
             }
             
-            // Ne permettre le drag que dans la même catégorie
-            if (draggedCategory !== targetCategory) {
-                return false;
-            }
+            touchCurrentItem.classList.remove('dragging');
+            removeInsertionBar();
             
-            // Réorganiser les items dans le tableau
-            const categoryItems = expenses[draggedCategory];
-            const draggedItemData = categoryItems[draggedIndex];
+            touchCurrentItem = null;
+            draggedItem = null;
+            draggedCategory = null;
+            draggedIndex = null;
+        }
+
+        // ============================================
+        // HELPERS
+        // ============================================
+
+        function showInsertionBar(targetItem, event) {
+            removeInsertionBar();
+            
+            const rect = targetItem.getBoundingClientRect();
+            const mouseY = event.clientY;
+            const itemMiddle = rect.top + (rect.height / 2);
+            
+            // Insérer avant ou après selon la position de la souris
+            if (mouseY < itemMiddle) {
+                targetItem.classList.add('insert-before');
+            } else {
+                targetItem.classList.add('insert-after');
+            }
+        }
+
+        function removeInsertionBar() {
+            document.querySelectorAll('.expense-item').forEach(item => {
+                item.classList.remove('insert-before', 'insert-after');
+            });
+        }
+
+        function reorderItems(category, fromIndex, toIndex) {
+            const categoryItems = expenses[category];
+            const draggedItemData = categoryItems[fromIndex];
             
             // Retirer l'item de sa position d'origine
-            categoryItems.splice(draggedIndex, 1);
+            categoryItems.splice(fromIndex, 1);
             
             // Ajuster l'index cible si nécessaire
-            const newIndex = draggedIndex < targetIndex ? targetIndex - 1 : targetIndex;
+            const newIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
             
             // Insérer à la nouvelle position
             categoryItems.splice(newIndex, 0, draggedItemData);
@@ -2425,23 +2547,7 @@
             // Sauvegarder et rafraîchir
             saveExpenses();
             updateDisplay();
-            
-            return false;
         }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-            
-            // Retirer les classes de tous les items
-            document.querySelectorAll('.expense-item').forEach(item => {
-                item.classList.remove('drag-over');
-            });
-            
-            draggedItem = null;
-            draggedCategory = null;
-            draggedIndex = null;
-        }
-
 
 
         // ============================================

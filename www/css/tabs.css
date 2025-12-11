@@ -2663,6 +2663,7 @@ body.dark-mode .chartjs-legend span {
     font-size: 1.2em;
     user-select: none;
     transition: all 0.2s ease;
+    touch-action: none;
 }
 
 .drag-handle:hover {
@@ -2682,24 +2683,52 @@ body.dark-mode .drag-handle:hover {
     color: #667eea;
 }
 
-/* Style pendant le drag */
+/* ============================================
+   DRAG AND DROP STYLES
+   ============================================ */
+
+/* Item en cours de drag */
+.expense-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* Barre d'insertion AVANT l'item */
+.expense-item.insert-before {
+    position: relative;
+}
+
+.expense-item.insert-before::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #667eea;
+    border-radius: 2px;
+    z-index: 1000;
+}
+
+/* Barre d'insertion APRÈS l'item */
+.expense-item.insert-after {
+    position: relative;
+}
+
+.expense-item.insert-after::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #667eea;
+    border-radius: 2px;
+    z-index: 1000;
+}
+
+/* Désactiver la sélection en mode edit */
 .expense-item[draggable="true"] {
-    cursor: move;
-}
-
-.expense-item.drag-over {
-    border: 2px dashed #667eea;
-    background: rgba(102, 126, 234, 0.1);
-}
-
-body.dark-mode .expense-item.drag-over {
-    border-color: #667eea;
-    background: rgba(102, 126, 234, 0.15);
-}
-
-/* Désactiver la sélection en mode edit pour permettre le drag */
-.expense-item[draggable="true"] {
-    cursor: move;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -2713,9 +2742,11 @@ body.dark-mode .expense-item.drag-over {
     -ms-user-select: none;
 }
 
-/* Permettre la sélection uniquement dans l'input */
+/* Permettre la sélection dans l'input */
 .expense-item[draggable="true"] .expense-input {
     user-select: auto;
     -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
     cursor: text;
 }
