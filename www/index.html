@@ -1787,7 +1787,7 @@
                 `<button class="item-rename-btn show" onclick="renameItem('${category}', ${index})" title="Rename">✏️</button>` : '';
             
             return `
-                <div class="expense-item" ${isEditMode ? 'draggable="true" data-category="${category}" data-index="${index}"' : ''}>
+                <div class="expense-item" ${isEditMode ? 'draggable="true" data-category="' + category + '" data-index="' + index + '"' : ''}>
                     ${dragHandle}
                     <span class="expense-name">${expense.name}</span>
                     <span class="item-rename-btn ${isEditMode ? 'show' : ''}" onclick="renameItem('${category}', ${index})" title="Rename">✏️</span>
@@ -1806,6 +1806,7 @@
                 </div>
             `;
         }
+
 
         function updateExpense(category, index, value) {
             expenses[category][index].amount = parseFloat(value) || 0;
@@ -2375,12 +2376,6 @@
         // ============================================
 
         function handleDragStart(e) {
-            // Ne permettre le drag que si on clique sur la poignée
-            if (!e.target.classList.contains('drag-handle')) {
-                e.preventDefault();
-                return;
-            }
-            
             draggedItem = this;
             draggedCategory = this.dataset.category;
             draggedIndex = parseInt(this.dataset.index);
@@ -2412,6 +2407,8 @@
         }
 
         function handleDrop(e) {
+            console.log('DROP!', 'from:', draggedIndex, 'to:', this.dataset.index);
+
             if (e.stopPropagation) {
                 e.stopPropagation();
             }
@@ -2573,6 +2570,7 @@
         }
 
         function reorderItems(category, fromIndex, toIndex) {
+            console.log('REORDER:', category, 'from:', fromIndex, 'to:', toIndex);
             const categoryItems = expenses[category];
             
             // Sécurité : vérifier les index
