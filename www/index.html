@@ -3753,13 +3753,15 @@
             let currentX = 0;
             let isSwiping = false;
             let swipeDetected = false;
-            let scrollPositionSaved = false; // ✅ NOUVEAU : Flag pour éviter de sauvegarder plusieurs fois
+            let scrollPositionSaved = false;
             
             const minSwipeDistance = 100;
             const swipeThreshold = 40;
             const verticalTolerance = 30;
             
             dashboard.addEventListener('touchstart', (e) => {
+                console.log('🟦 TOUCHSTART déclenché');
+                
                 // ✅ BLOQUER si mode Edit actif
                 if (isEditMode) {
                     console.log('⏸️ Swipe bloqué - Mode Edit actif');
@@ -3770,7 +3772,11 @@
                 touchStartY = e.touches[0].clientY;
                 isSwiping = false;
                 swipeDetected = false;
-                scrollPositionSaved = false; // ✅ Reset du flag
+                scrollPositionSaved = false;
+                
+                console.log('📍 Touch start position:', touchStartX, touchStartY);
+                console.log('📍 currentActiveTab:', currentActiveTab);
+                console.log('📍 dashboard.scrollTop:', dashboard.scrollTop);
                 
                 // Vérifier si le touch est sur le canvas du graphique
                 const target = e.target;
@@ -3815,17 +3821,36 @@
                         swipeDetected = true;
                         isSwiping = true;
                         console.log('👆 Swipe horizontal détecté');
+                        console.log('   diffX:', diffX);
+                        console.log('   diffY:', diffY);
                         
-                        // ✅ SAUVEGARDER la position UNE SEULE FOIS quand le swipe est confirmé
+                        // ✅ SAUVEGARDER UNE SEULE FOIS
                         if (!scrollPositionSaved) {
+                            const currentScrollPos = dashboard.scrollTop;
+                            
+                            console.log('🔵 AVANT SAUVEGARDE:');
+                            console.log('   currentActiveTab:', currentActiveTab);
+                            console.log('   dashboard.scrollTop:', currentScrollPos);
+                            console.log('   budgetScrollPosition (avant):', budgetScrollPosition);
+                            console.log('   transactionsScrollPosition (avant):', transactionsScrollPosition);
+                            
                             if (currentActiveTab === 'budget') {
-                                budgetScrollPosition = dashboard.scrollTop;
-                                console.log('💾 Position Budget sauvegardée (swipe détecté):', budgetScrollPosition);
+                                budgetScrollPosition = currentScrollPos;
+                                console.log('💾 Position Budget sauvegardée:', budgetScrollPosition);
                             } else if (currentActiveTab === 'transactions') {
-                                transactionsScrollPosition = dashboard.scrollTop;
-                                console.log('💾 Position Transactions sauvegardée (swipe détecté):', transactionsScrollPosition);
+                                transactionsScrollPosition = currentScrollPos;
+                                console.log('💾 Position Transactions sauvegardée:', transactionsScrollPosition);
+                            } else {
+                                console.error('❌ currentActiveTab invalide:', currentActiveTab);
                             }
+                            
+                            console.log('🔵 APRÈS SAUVEGARDE:');
+                            console.log('   budgetScrollPosition (après):', budgetScrollPosition);
+                            console.log('   transactionsScrollPosition (après):', transactionsScrollPosition);
+                            
                             scrollPositionSaved = true;
+                        } else {
+                            console.log('⚠️ Sauvegarde déjà effectuée, skip');
                         }
                     } else if (isVertical) {
                         swipeDetected = false;
@@ -3886,8 +3911,13 @@
             }, { passive: false });
             
             dashboard.addEventListener('touchend', (e) => {
+                console.log('🟥 TOUCHEND déclenché');
+                console.log('   isSwiping:', isSwiping);
+                console.log('   currentX:', currentX);
+                
                 // ✅ BLOQUER si mode Edit actif
                 if (isEditMode) {
+                    console.log('⏸️ Mode Edit, reset variables');
                     isSwiping = false;
                     swipeDetected = false;
                     currentX = 0;
@@ -3896,10 +3926,16 @@
                 }
                 
                 if (isSwiping) {
+                    console.log('🟢 isSwiping = true, traitement du swipe');
+                    
                     const budgetActive = budgetTab.classList.contains('active');
                     const transactionsActive = transactionsTab.classList.contains('active');
                     
+                    console.log('   budgetActive:', budgetActive);
+                    console.log('   transactionsActive:', transactionsActive);
+                    
                     const shouldSwitch = Math.abs(currentX) > minSwipeDistance;
+                    console.log('   shouldSwitch:', shouldSwitch, '(currentX:', currentX, ')');
 
                     if (shouldSwitch) {
                         // Swipe vers la gauche depuis Budget → aller à Transactions
@@ -3931,6 +3967,8 @@
                     swipeDetected = false;
                     currentX = 0;
                     scrollPositionSaved = false;
+                } else {
+                    console.log('🔴 isSwiping = false, aucun traitement');
                 }
             }, { passive: false });
             
@@ -3958,39 +3996,40 @@
             function animateTabTransition(fromTab, toTab, direction) {
                 const distance = direction === 'left' ? -window.innerWidth : window.innerWidth;
                 
-                // Retirer la classe preview immédiatement
                 toTab.classList.remove('swipe-preview');
                 fromTab.classList.remove('swipe-preview');
                 
-                // Animation de sortie
                 fromTab.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
                 fromTab.style.transform = `translateX(${distance}px)`;
                 fromTab.style.opacity = '0';
                 
-                // ✅ MASQUER le nouvel onglet temporairement
                 toTab.style.opacity = '0';
                 toTab.style.transition = 'transform 0.3s ease-out';
                 toTab.style.transform = 'translateX(0)';
                 
-                // ✅ RESTAURER le scroll AVANT de rendre visible
                 setTimeout(() => {
-                    // Déterminer quel onglet on affiche
+                    console.log('📜 RESTAURATION dans animateTabTransition');
+                    console.log('   toTab.id:', toTab.id);
+                    
                     if (toTab.id === 'budgetTab') {
+                        console.log('📜 Restauration Budget:');
+                        console.log('   budgetScrollPosition:', budgetScrollPosition);
+                        console.log('   dashboard.scrollTop avant:', dashboard.scrollTop);
                         dashboard.scrollTop = budgetScrollPosition;
-                        console.log('📜 Position Budget restaurée (swipe):', budgetScrollPosition);
+                        console.log('   dashboard.scrollTop après:', dashboard.scrollTop);
                     } else if (toTab.id === 'transactionsTab') {
+                        console.log('📜 Restauration Transactions:');
+                        console.log('   transactionsScrollPosition:', transactionsScrollPosition);
+                        console.log('   dashboard.scrollTop avant:', dashboard.scrollTop);
                         dashboard.scrollTop = transactionsScrollPosition;
-                        console.log('📜 Position Transactions restaurée (swipe):', transactionsScrollPosition);
+                        console.log('   dashboard.scrollTop après:', dashboard.scrollTop);
                     }
                     
-                    // ✅ FADE-IN après restauration
                     toTab.style.transition = 'opacity 0.15s ease';
                     toTab.style.opacity = '1';
                 }, 100);
                 
-                // Nettoyer complètement après l'animation
                 setTimeout(() => {
-                    // Retirer TOUS les styles inline appliqués pendant le swipe
                     fromTab.style.transition = '';
                     fromTab.style.transform = '';
                     fromTab.style.opacity = '';
@@ -4002,7 +4041,6 @@
                 }, 450);
             }
 
-            // Réinitialiser les positions des onglets
             function resetTabPositions(tab1, tab2) {
                 [tab1, tab2].forEach(tab => {
                     tab.classList.remove('swipe-preview');
@@ -4025,7 +4063,7 @@
             
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
-        
+
 
         /**
          * Pull-to-refresh pour recharger les transactions
