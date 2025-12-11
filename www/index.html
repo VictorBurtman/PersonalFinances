@@ -4645,8 +4645,7 @@
             }
         }
 
-
-
+        
         let isTabSwitching = false;
         let currentActiveTab = null;
         let lastTabSwitchTime = 0;
@@ -4713,17 +4712,14 @@
                 if (tabName === 'budget') {
                     console.log('📊 Activation onglet Budget');
                     
-                    // 1. GESTION DES BOUTONS DU HEADER
+                    // 1. GESTION DES BOUTONS DU HEADER (basique, sera affiné par updateHeaderForTab)
                     document.querySelectorAll('.transactions-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
                     
                     document.querySelectorAll('.budget-only').forEach(btn => {
-                        if (btn.id === 'compareMonth') {
-                            btn.style.display = window.compareMode ? 'inline-block' : 'none';
-                        } else {
-                            btn.style.display = 'inline-flex';
-                        }
+                        // Afficher tous les boutons budget par défaut
+                        btn.style.display = 'inline-flex';
                     });
                     
                     // 2. Gestion du contenu
@@ -4759,13 +4755,18 @@
                         }
                     });
                     
+                    // ✅ Synchroniser les boutons du header en fonction de l'état réel
+                    setTimeout(() => {
+                        updateHeaderForTab('budget');
+                    }, 50);
+                    
                 // ========================================
                 // ONGLET TRANSACTIONS
                 // ========================================
                 } else if (tabName === 'transactions') {
                     console.log('💳 Activation onglet Transactions');
                     
-                    // 1. GESTION DES BOUTONS DU HEADER
+                    // 1. GESTION DES BOUTONS DU HEADER (basique, sera affiné par updateHeaderForTab)
                     document.querySelectorAll('.budget-only').forEach(btn => {
                         btn.style.display = 'none';
                     });
@@ -4830,6 +4831,11 @@
                     }
                     
                     if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
+                    
+                    // ✅ Synchroniser les boutons du header
+                    setTimeout(() => {
+                        updateHeaderForTab('transactions');
+                    }, 50);
                 }
                 
             } finally {
@@ -4839,7 +4845,6 @@
                 }, 200);
             }
         }
-
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
