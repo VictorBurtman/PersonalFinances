@@ -3054,11 +3054,12 @@
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
+
         async function deleteCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
             
             if (categoryKey === 'income') {
-                alert(t.cannotDeleteIncome || 'Cannot delete Income category.');
+                showToast(t.cannotDeleteIncome || 'Cannot delete Income category.', 'error');
                 return;
             }
             
@@ -3124,7 +3125,7 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                setTimeout(() => restoreEditMode(), 50); // ✅ Délai plus long
+                setTimeout(() => restoreEditMode(), 50);
 
                 // Cacher l'overlay
                 if (overlay) {
@@ -3132,7 +3133,8 @@
                     document.body.style.overflow = '';
                 }
                 
-                alert(t.categoryDeletedSuccess.replace('{count}', result.data.unlabeledCount));
+                // ✅ Toast avec le nombre de transactions unlabeled
+                showToast(t.categoryDeletedSuccess.replace('{count}', result.data.unlabeledCount), 'success');
                 
             } catch (error) {
                 // Cacher l'overlay en cas d'erreur
@@ -3143,9 +3145,10 @@
                 }
                 
                 console.error('Error deleting category:', error);
-                alert(t.errorDeletingCategory + ' ' + error.message);
+                showToast(t.errorDeletingCategory + ' ' + error.message, 'error');
             }
         }
+
 
         async function addItemToCategory(categoryKey) {
             const t = translations[currentLanguage] || translations['en'];
@@ -3489,6 +3492,21 @@
                 
                 const modal = document.getElementById('emojiPickerModal');
                 modal.style.display = 'flex';
+                
+                // ✅ Pré-remplir l'input avec l'emoji actuel
+                const input = document.getElementById('customEmojiInput');
+                if (input) {
+                    input.value = currentEmoji; // ✅ Remplir avec l'emoji actuel
+                    setTimeout(() => input.focus(), 100);
+                }
+                
+                // ✅ Gérer la touche Enter dans l'input
+                const handleEnter = (e) => {
+                    if (e.key === 'Enter') {
+                        useCustomEmoji();
+                    }
+                };
+                input.addEventListener('keydown', handleEnter);
                 
                 // Afficher la première catégorie par défaut
                 renderEmojiCategory('smileys');
