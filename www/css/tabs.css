@@ -2539,10 +2539,10 @@ body.dark-mode .chartjs-legend span {
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        bottom: -35px !important;
+        bottom: calc(-35px - env(safe-area-inset-bottom)) !important; /* ✅ Descend sous la safe area */
         padding-bottom: 0px !important;   /* ✅ Réduit de 15px à 5px */
         padding-top: 0px !important;  
-        height: 100px !important;
+        height: calc(100px + env(safe-area-inset-bottom)) !important; /* ✅ Compense pour la safe area */
         background-color: white !important;
         border-radius: 20px 20px 0 0 !important;
         border-top: 1px solid #e0e0e0;
