@@ -198,7 +198,7 @@ const translations = {
         moveUp: "↑ Move Up",
         moveDown: "↓ Move Down",
         addItem: "➕ Add Item",
-        deleteCategory: "🗑️ Delete Category",
+        deleteCategory: " Delete Category",
         
         // Default categories
         income: "Income",
@@ -637,7 +637,7 @@ const translations = {
         moveUp: "↑ Monter",
         moveDown: "↓ Descendre",
         addItem: "➕ Ajouter",
-        deleteCategory: "🗑️ Supprimer",
+        deleteCategory: " Supprimer",
         
         // Default categories
         income: "Revenus",
@@ -1065,7 +1065,7 @@ const translations = {
         moveUp: "↑ הזז למעלה",
         moveDown: "↓ הזז למטה",
         addItem: "➕ הוסף פריט",
-        deleteCategory: "🗑️ מחק קטגוריה",
+        deleteCategory: " מחק קטגוריה",
         
         // Default categories
         income: "הכנסות",
@@ -1493,7 +1493,7 @@ const translations = {
         moveUp: "↑ Subir",
         moveDown: "↓ Bajar",
         addItem: "➕ Añadir",
-        deleteCategory: "🗑️ Eliminar",
+        deleteCategory: " Eliminar",
         
         // Default categories
         income: "Ingresos",
@@ -1921,7 +1921,7 @@ const translations = {
         moveUp: "↑ Вверх",
         moveDown: "↓ Вниз",
         addItem: "➕ Добавить",
-        deleteCategory: "🗑️ Удалить",
+        deleteCategory: " Удалить",
         
         // Default categories
         income: "Доходы",
@@ -2349,7 +2349,7 @@ const translations = {
         moveUp: "↑ تحريك لأعلى",
         moveDown: "↓ تحريك لأسفل",
         addItem: "➕ إضافة عنصر",
-        deleteCategory: "🗑️ حذف الفئة",
+        deleteCategory: " حذف الفئة",
         
         // Default categories
         income: "الدخل",
