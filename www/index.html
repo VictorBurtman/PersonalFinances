@@ -4154,6 +4154,63 @@
             }
         }
 
+
+        async function copyAllErudaLogsForce() {
+            const erudaRoot = document.querySelector('#eruda');
+            
+            if (!erudaRoot || !erudaRoot.shadowRoot) {
+                alert('❌ Shadow DOM non accessible');
+                return;
+            }
+            
+            console.log('🔄 Tentative de récupération de TOUS les logs...');
+            
+            // Essayer d'accéder à l'API interne via window
+            if (window.eruda) {
+                console.log('✅ window.eruda trouvé');
+                
+                // Tester plusieurs méthodes d'accès
+                const methods = [
+                    () => window.eruda._devTools?.get('console')?._logs,
+                    () => window.eruda.get?.('console')?._logs,
+                    () => window.eruda.Console?._logs,
+                    () => window.eruda._plugins?.console?._logs
+                ];
+                
+                for (const method of methods) {
+                    try {
+                        const logs = method();
+                        if (logs && logs.length > 0) {
+                            console.log('✅ Logs trouvés via API:', logs.length);
+                            
+                            const allLogs = logs.map(log => {
+                                if (typeof log === 'string') return log;
+                                if (log.text) return log.text;
+                                if (log.message) return log.message;
+                                if (log.content) return log.content;
+                                return JSON.stringify(log);
+                            }).join('\n\n');
+                            
+                            // Copier
+                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                await navigator.clipboard.writeText(allLogs);
+                                alert('✅ ' + logs.length + ' logs copiés !');
+                            } else {
+                                showLogsInTextarea(allLogs);
+                            }
+                            return;
+                        }
+                    } catch (e) {
+                        // Continue
+                    }
+                }
+            }
+            
+            alert('❌ Impossible d\'accéder aux logs. Utilise des screenshots.');
+        }
+
+        window.copyAllErudaLogsForce = copyAllErudaLogsForce;
+
         /**
          * Afficher dans un textarea (fallback)
          */
