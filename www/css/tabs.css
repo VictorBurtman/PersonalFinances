@@ -2556,8 +2556,9 @@ body.dark-mode .chartjs-legend span {
         margin-top: 0px !important; /* ✅ Descend les boutons vers le bas du footer */
     }
 
+    
     /* 5. Le bouche-trou du footer (Intouché sauf couleur) */
-    .app-footer::after {
+  /*  .app-footer::after {
         content: '' !important;
         position: fixed !important;
         bottom: 0 !important;
@@ -2566,8 +2567,9 @@ body.dark-mode .chartjs-legend span {
         height: 0px !important;
         z-index: -1 !important;
         background-color: white !important; /* Couleur Jour corrigée */
-        pointer-events: none;
-    }
+  /*      pointer-events: none;
+ /*   }
+    
     
     /* 6. Dark mode */
     body.dark-mode .app-footer {
