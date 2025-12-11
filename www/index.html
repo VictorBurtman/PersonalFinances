@@ -4653,6 +4653,7 @@
         }
 
 
+
         let isTabSwitching = false;
         let currentActiveTab = null;
         let lastTabSwitchTime = 0;
@@ -4700,17 +4701,8 @@
             // Verrouillage
             isTabSwitching = true;
             
-            // ✅ SAUVEGARDER la position de scroll de l'onglet actuel
+            // ✅ PAS DE SAUVEGARDE ICI (déjà faite dans initSwipeNavigation)
             const dashboard = document.querySelector('.dashboard');
-            if (dashboard) {
-                if (currentActiveTab === 'budget') {
-                    budgetScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Budget sauvegardée dans switchTab:', budgetScrollPosition);
-                } else if (currentActiveTab === 'transactions') {
-                    transactionsScrollPosition = dashboard.scrollTop;
-                    console.log('💾 Position Transactions sauvegardée dans switchTab:', transactionsScrollPosition);
-                }
-            }
             
             try {
                 // Gestion des classes actives sur le footer
@@ -4854,7 +4846,8 @@
                 }, 200);
             }
         }
-                
+
+
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
             document.querySelectorAll('.modal.show').forEach(modal => {
