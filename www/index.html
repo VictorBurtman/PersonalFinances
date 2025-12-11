@@ -2976,7 +2976,6 @@
             document.getElementById('expensesList').appendChild(categorySection);
 
             // ✅ Traduire manuellement les nouveaux boutons en gardant les icônes
-            const t = (key) => translations[currentLanguage]?.[key] || key;
             categorySection.querySelectorAll('[data-translate]').forEach(el => {
                 const key = el.getAttribute('data-translate');
                 const translation = t(key);
