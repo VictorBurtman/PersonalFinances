@@ -4066,44 +4066,92 @@
 
 
         /**
-         * Copier tous les logs Eruda via l'API interne
+         * Copier tous les logs Eruda en scrapant le DOM
          */
         function copyErudaLogs() {
             try {
-                // ✅ Méthode 1 : Via l'API Eruda (la meilleure)
-                if (typeof eruda !== 'undefined' && eruda.get) {
-                    const consolePlugin = eruda.get('console');
-                    if (consolePlugin && consolePlugin._logs) {
-                        const logs = consolePlugin._logs.map(log => {
-                            // Extraire le texte de chaque log
-                            if (typeof log === 'string') return log;
-                            if (log.text) return log.text;
-                            if (log.content) return log.content;
-                            return JSON.stringify(log);
-                        }).join('\n');
+                const logs = [];
+                
+                // ✅ Liste de tous les sélecteurs possibles pour Eruda
+                const selectors = [
+                    '.eruda-log',
+                    '.eruda-console .eruda-log-item',
+                    '.eruda-console-logs .eruda-log',
+                    '.eruda-console-logs-container .eruda-log',
+                    '[class*="eruda"][class*="log"]',
+                    '.eruda-dev-tools .eruda-console-logs > div',
+                    '#eruda .eruda-console .eruda-logs > div'
+                ];
+                
+                let elementsFound = 0;
+                
+                // Essayer chaque sélecteur
+                for (const selector of selectors) {
+                    const elements = document.querySelectorAll(selector);
+                    if (elements.length > 0) {
+                        console.log('✅ Sélecteur trouvé:', selector, '→', elements.length, 'éléments');
                         
-                        console.log('📋 Nombre de logs trouvés:', consolePlugin._logs.length);
+                        elements.forEach(log => {
+                            const text = log.innerText || log.textContent;
+                            if (text && text.trim()) {
+                                logs.push(text.trim());
+                            }
+                        });
                         
-                        // Tenter la copie
-                        navigator.clipboard.writeText(logs)
-                            .then(() => {
-                                console.log('✅ Logs copiés via clipboard API !');
-                                alert('✅ ' + consolePlugin._logs.length + ' logs copiés !');
-                            })
-                            .catch(err => {
-                                console.error('❌ Clipboard API échouée:', err);
-                                
-                                // Fallback : Afficher dans un textarea
-                                showLogsInTextarea(logs);
-                            });
-                        
-                        return;
+                        elementsFound = elements.length;
+                        break; // Arrêter dès qu'on trouve un sélecteur qui fonctionne
                     }
                 }
                 
-                // ❌ Eruda API non disponible
-                console.error('❌ API Eruda non accessible');
-                alert('❌ API Eruda non trouvée');
+                if (elementsFound === 0) {
+                    console.error('❌ Aucun log trouvé avec les sélecteurs connus');
+                    
+                    // Debug : Afficher la structure d'Eruda
+                    console.log('🔍 Recherche de la console Eruda...');
+                    
+                    const possibleContainers = [
+                        document.querySelector('#eruda'),
+                        document.querySelector('.eruda-dev-tools'),
+                        document.querySelector('[class*="eruda"]')
+                    ];
+                    
+                    possibleContainers.forEach((container, i) => {
+                        if (container) {
+                            console.log(`Container ${i}:`, container);
+                            console.log('Classes:', container.className);
+                            console.log('Premier enfant:', container.firstElementChild);
+                        }
+                    });
+                    
+                    alert('❌ Impossible de trouver les logs. Ouvre la console pour voir les détails.');
+                    return;
+                }
+                
+                if (logs.length === 0) {
+                    alert('⚠️ Aucun log à copier (console vide)');
+                    return;
+                }
+                
+                const allLogs = logs.join('\n\n');
+                
+                console.log('📋 Logs récupérés:', logs.length, 'entrées');
+                console.log('📋 Taille totale:', allLogs.length, 'caractères');
+                
+                // Tenter la copie via clipboard
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(allLogs)
+                        .then(() => {
+                            console.log('✅ Logs copiés via clipboard API !');
+                            alert('✅ ' + logs.length + ' logs copiés !');
+                        })
+                        .catch(err => {
+                            console.error('❌ Clipboard API échouée:', err);
+                            showLogsInTextarea(allLogs);
+                        });
+                } else {
+                    // Fallback : Afficher dans textarea
+                    showLogsInTextarea(allLogs);
+                }
                 
             } catch (error) {
                 console.error('❌ Erreur lors de la copie:', error);
@@ -4112,7 +4160,7 @@
         }
 
         /**
-         * Afficher les logs dans un textarea (fallback si clipboard échoue)
+         * Afficher les logs dans un textarea
          */
         function showLogsInTextarea(logs) {
             const textarea = document.createElement('textarea');
@@ -4139,9 +4187,9 @@
             
             try {
                 document.execCommand('copy');
-                alert('✅ Logs affichés ! Appui long pour copier.');
+                alert('✅ Logs affichés ! Sélectionne tout (appui long) et copie.');
             } catch (err) {
-                alert('⚠️ Sélectionne tout (appui long) et copie.');
+                alert('⚠️ Fais un appui long sur le texte pour copier.');
             }
             
             const closeBtn = document.createElement('button');
@@ -4168,6 +4216,55 @@
         }
 
         /**
+         * Debug : Inspecter la structure d'Eruda
+         */
+        function inspectEruda() {
+            console.log('🔍 Inspection de la structure Eruda...');
+            
+            // Chercher le conteneur principal
+            const containers = [
+                { name: '#eruda', el: document.querySelector('#eruda') },
+                { name: '.eruda-dev-tools', el: document.querySelector('.eruda-dev-tools') },
+                { name: '.eruda-container', el: document.querySelector('.eruda-container') },
+                { name: '[class*="eruda"]', el: document.querySelector('[class*="eruda"]') }
+            ];
+            
+            containers.forEach(({ name, el }) => {
+                if (el) {
+                    console.log(`✅ Trouvé: ${name}`);
+                    console.log('   Classes:', el.className);
+                    console.log('   ID:', el.id);
+                    console.log('   Enfants:', el.children.length);
+                    
+                    // Chercher les logs dedans
+                    const logs = el.querySelectorAll('[class*="log"]');
+                    console.log('   Logs trouvés:', logs.length);
+                    if (logs.length > 0) {
+                        console.log('   Premier log:', logs[0]);
+                        console.log('   Classes du log:', logs[0].className);
+                    }
+                } else {
+                    console.log(`❌ Non trouvé: ${name}`);
+                }
+            });
+            
+            // Lister toutes les classes commençant par "eruda"
+            const allElements = document.querySelectorAll('[class*="eruda"]');
+            console.log('📋 Total éléments avec "eruda":', allElements.length);
+            
+            const uniqueClasses = new Set();
+            allElements.forEach(el => {
+                el.classList.forEach(cls => {
+                    if (cls.includes('eruda')) {
+                        uniqueClasses.add(cls);
+                    }
+                });
+            });
+            
+            console.log('📋 Classes uniques trouvées:', Array.from(uniqueClasses));
+        }
+
+        /**
          * Vider la console
          */
         function clearConsole() {
@@ -4177,6 +4274,7 @@
 
         // Rendre accessible globalement
         window.copyErudaLogs = copyErudaLogs;
+        window.inspectEruda = inspectEruda;
         window.clearConsole = clearConsole;
 
         /**
