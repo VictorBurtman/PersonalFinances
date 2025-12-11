@@ -792,6 +792,31 @@ body.dark-mode .expense-input {
     background: #fee;
 }
 
+.delete-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.expense-delete-btn:hover .delete-icon {
+    opacity: 1;
+}
+
+/* Couleur rouge au survol */
+.expense-delete-btn:hover .delete-icon {
+    filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(3527%) hue-rotate(347deg) brightness(92%) contrast(92%);
+}
+
+body.dark-mode .delete-icon {
+    filter: brightness(0) invert(1);
+}
+
+body.dark-mode .expense-delete-btn:hover .delete-icon {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(3091%) hue-rotate(341deg) brightness(100%) contrast(91%);
+}
+
 .currency {
     margin-left: 8px;
     color: #667eea;

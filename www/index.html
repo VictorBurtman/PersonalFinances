@@ -1777,7 +1777,9 @@
 
         function renderExpenseItem(expense, category, index) {
             const deleteBtn = isEditMode ? 
-                `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
+                `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">
+                    <img src="img/icons/trash.svg" alt="Delete" class="delete-icon">
+                </button>` : '';
             
             // ✅ Poignée de drag (visible uniquement en mode edit)
             const dragHandle = isEditMode ? 
@@ -1804,6 +1806,7 @@
                 </div>
             `;
         }
+
 
         function updateExpense(category, index, value) {
             expenses[category][index].amount = parseFloat(value) || 0;
