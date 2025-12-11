@@ -3807,19 +3807,19 @@
             
             // Empêcher de renommer "income"
             if (categoryKey === 'income') {
-                alert(t.cannotRenameIncome || 'Cannot rename Income.');
+                showToast(t.cannotRenameIncome || 'Cannot rename Income.', 'error');
                 return;
             }
             
             // Empêcher de renommer en "income" uniquement
             if (newKey === 'income' && categoryKey !== 'income') {
-                alert(t.cannotUseSystemName || 'Cannot use system name.');
+                showToast(t.cannotUseSystemName || 'Cannot use system name.', 'error');
                 return;
             }
             
             // Vérifier les doublons
             if (newKey !== categoryKey && expenses[newKey]) {
-                alert(t.categoryExistsAlert || 'Category already exists!');
+                showToast(t.categoryExistsAlert || 'Category already exists!', 'error');
                 return;
             }
             
@@ -3837,7 +3837,7 @@
                 }
                 
                 // Appeler Cloud Function pour transactions SEULEMENT si le nom a changé
-                let result = { data: { updatedCount: 0, message: 'Emoji updated' } };
+                let result = null;
                 
                 if (newKey !== categoryKey) {
                     const renameCategoryFunc = firebase.functions().httpsCallable('renameCategory');
@@ -3847,7 +3847,7 @@
                     });
                     console.log(`Renamed category: ${result.data.message}`);
                 } else {
-                    console.log('Only emoji/name changed, skipping Cloud Function');
+                    console.log('Only emoji changed, skipping Cloud Function');
                 }
                 
                 // ✅ LOGIQUE SIMPLE : Tout faire localement
@@ -3882,7 +3882,7 @@
                         [`categoryMetadata.${categoryKey}`]: firebase.firestore.FieldValue.delete()
                     });
                 } else {
-                    // ✅ Juste mettre à jour le displayName/emoji (même si le nom n'a pas changé)
+                    // ✅ Juste mettre à jour le displayName/emoji
                     if (!categoryMetadata[categoryKey]) categoryMetadata[categoryKey] = {};
                     categoryMetadata[categoryKey].displayName = newName;
                     categoryMetadata[categoryKey].emoji = newEmoji;
@@ -3906,7 +3906,7 @@
                     }
                 }
                 
-                // ✅ Actualiser l'affichage (cela devrait maintenant utiliser les métadonnées à jour)
+                // ✅ Actualiser l'affichage
                 updateDisplay();
                 setTimeout(() => restoreEditMode(), 50);
                 
@@ -3916,11 +3916,15 @@
                     document.body.style.overflow = '';
                 }
                 
-                // ✅ Message adapté selon ce qui a changé
-                if (newKey !== categoryKey && result.data.updatedCount > 0) {
-                    alert(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount));
+                // ✅ Toast adapté : seulement si des transactions ont été mises à jour
+                if (result && result.data.updatedCount > 0) {
+                    showToast(t.categoryRenamedSuccess.replace('{count}', result.data.updatedCount), 'success');
+                } else if (newKey === categoryKey) {
+                    // Juste l'emoji a changé
+                    showToast(t.categoryUpdated || 'Category updated successfully!', 'success');
                 } else {
-                    alert(t.categoryUpdated || 'Category updated successfully!');
+                    // Renommage mais pas de transactions
+                    showToast(t.categoryRenamedSuccess.replace('{count}', 0), 'success');
                 }
                 
             } catch (error) {
@@ -3931,10 +3935,9 @@
                 }
                 
                 console.error('Error renaming category:', error);
-                alert('Error renaming category: ' + error.message);
+                showToast('Error renaming category: ' + error.message, 'error');
             }
         }
-
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
