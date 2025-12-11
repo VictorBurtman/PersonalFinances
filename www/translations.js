@@ -153,6 +153,9 @@ const translations = {
         syncFailed: "Sync failed:",
         autoLabelCompleted: "Auto-labeling completed! {count} transaction(s) labeled.",
         autoLabelFailed: "Auto-labeling failed:",
+        deletingCategory: 'Deleting category...',
+        updatingTransactions: 'Updating transactions...',
+        renamingCategory: 'Renaming category...',
 
         // Prompts & confirms
         enterCategoryName: "Enter category name:",
@@ -591,6 +594,9 @@ const translations = {
         syncFailed: "Échec de la synchronisation :",
         autoLabelCompleted: "Étiquetage automatique terminé ! {count} transaction(s) étiquetée(s).",
         autoLabelFailed: "Échec de l'étiquetage automatique :",
+        deletingCategory: 'Suppression de la catégorie...',
+        updatingTransactions: 'Mise à jour des transactions...',
+        renamingCategory: 'Renommage de la catégorie...',
 
         // Prompts & confirms
         enterCategoryName: "Entrez le nom de la catégorie :",
@@ -1020,6 +1026,9 @@ const translations = {
         autoLabelCompleted: "תיוג אוטומטי הושלם! {count} עסקאות תויגו.",
         autoLabelFailed: "התיוג נכשל:",
         errorLoadingTransactions: "שגיאה בטעינה:",
+        deletingCategory: 'מוחק קטגוריה...',
+        updatingTransactions: 'מעדכן עסקאות...',
+        renamingCategory: 'משנה שם קטגוריה...',
 
         // Prompts & confirms
         enterCategoryName: "הזן שם קטגוריה:",
@@ -1448,6 +1457,9 @@ const translations = {
         autoLabelCompleted: "¡Etiquetado completado! {count} transacción/es etiquetada/s.",
         autoLabelFailed: "Etiquetado fallido:",
         errorLoadingTransactions: "Error al cargar:",
+        deletingCategory: 'Eliminando categoría...',
+        updatingTransactions: 'Actualizando transacciones...',
+        renamingCategory: 'Renombrando categoría...',
 
         // Prompts & confirms
         enterCategoryName: "Ingrese el nombre de la categoría:",
@@ -1876,6 +1888,9 @@ const translations = {
         autoLabelCompleted: "Авто-метки готовы! {count} транзакци(й/я) помечено.",
         autoLabelFailed: "Авто-метки не удались:",
         errorLoadingTransactions: "Ошибка загрузки:",
+        deletingCategory: 'Удаление категории...',
+        updatingTransactions: 'Обновление транзакций...',
+        renamingCategory: 'Переименование категории...',
         
         // Prompts & confirms
         enterCategoryName: "Введите название категории:",
@@ -2304,6 +2319,9 @@ const translations = {
         autoLabelCompleted: "اكتمل الوسم التلقائي! {count} معاملة موسومة.",
         autoLabelFailed: "فشل الوسم التلقائي:",
         errorLoadingTransactions: "خطأ في التحميل:",
+        deletingCategory: 'جاري حذف الفئة...',
+        updatingTransactions: 'جاري تحديث المعاملات...',
+        renamingCategory: 'جاري إعادة تسمية الفئة...',
 
         // Prompts & confirms
         enterCategoryName: "أدخل اسم الفئة:",
