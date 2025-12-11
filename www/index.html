@@ -4064,59 +4064,76 @@
             console.log('✅ Swipe navigation with strict horizontal detection initialized');
         }
 
-
         /**
-         * Copier tous les logs Eruda via l'API interne
+         * Vider la console
          */
-        function copyErudaLogs() {
-            try {
-                // ✅ Méthode 1 : Via l'API Eruda (la meilleure)
-                if (typeof eruda !== 'undefined' && eruda.get) {
-                    const consolePlugin = eruda.get('console');
-                    if (consolePlugin && consolePlugin._logs) {
-                        const logs = consolePlugin._logs.map(log => {
-                            // Extraire le texte de chaque log
-                            if (typeof log === 'string') return log;
-                            if (log.text) return log.text;
-                            if (log.content) return log.content;
-                            return JSON.stringify(log);
-                        }).join('\n');
-                        
-                        console.log('📋 Nombre de logs trouvés:', consolePlugin._logs.length);
-                        
-                        // Tenter la copie
-                        navigator.clipboard.writeText(logs)
-                            .then(() => {
-                                console.log('✅ Logs copiés via clipboard API !');
-                                alert('✅ ' + consolePlugin._logs.length + ' logs copiés !');
-                            })
-                            .catch(err => {
-                                console.error('❌ Clipboard API échouée:', err);
-                                
-                                // Fallback : Afficher dans un textarea
-                                showLogsInTextarea(logs);
-                            });
-                        
-                        return;
-                    }
-                }
-                
-                // ❌ Eruda API non disponible
-                console.error('❌ API Eruda non accessible');
-                alert('❌ API Eruda non trouvée');
-                
-            } catch (error) {
-                console.error('❌ Erreur lors de la copie:', error);
-                alert('❌ Erreur: ' + error.message);
-            }
+        function clearConsole() {
+            console.clear();
+            console.log('🧹 Console vidée');
         }
 
         /**
-         * Afficher les logs dans un textarea (fallback si clipboard échoue)
+         * Copier tous les logs - VERSION AMÉLIORÉE
          */
-        function showLogsInTextarea(logs) {
+        function copyAllLogs() {
+            const logs = [];
+            
+            // ✅ Essayer plusieurs sélecteurs possibles pour Eruda
+            const possibleSelectors = [
+                '.eruda-console .eruda-log-item',
+                '.eruda-console .eruda-log',
+                '.eruda-dev-tools .eruda-console .log-item',
+                '.eruda-dev-tools .eruda-console-logs .log-item',
+                '.eruda-console-logs-container .log-item',
+                '.eruda-console-logs > div',
+                '#eruda .eruda-console .log-item',
+                '.eruda-console [class*="log"]'
+            ];
+            
+            let elementsFound = false;
+            
+            for (const selector of possibleSelectors) {
+                const elements = document.querySelectorAll(selector);
+                if (elements.length > 0) {
+                    console.log('✅ Sélecteur trouvé:', selector, '→', elements.length, 'éléments');
+                    elements.forEach(log => {
+                        const logText = log.innerText || log.textContent;
+                        if (logText && logText.trim()) {
+                            logs.push(logText.trim());
+                        }
+                    });
+                    elementsFound = true;
+                    break;
+                }
+            }
+            
+            if (!elementsFound) {
+                console.error('❌ Aucun log trouvé avec les sélecteurs connus');
+                
+                // Debug : afficher la structure d'Eruda
+                const erudaConsole = document.querySelector('.eruda-console');
+                if (erudaConsole) {
+                    console.log('🔍 Structure Eruda trouvée:');
+                    console.log(erudaConsole);
+                    console.log('🔍 HTML:', erudaConsole.innerHTML.substring(0, 500));
+                }
+                
+                alert('❌ Impossible de trouver les logs. Utilise showAllLogs() pour debug.');
+                return;
+            }
+            
+            if (logs.length === 0) {
+                alert('⚠️ Aucun log à copier');
+                return;
+            }
+            
+            const allLogs = logs.join('\n\n');
+            
+            console.log('📋 Logs récupérés:', logs.length, 'lignes');
+            console.log('📋 Taille totale:', allLogs.length, 'caractères');
+            
             const textarea = document.createElement('textarea');
-            textarea.value = logs;
+            textarea.value = allLogs;
             textarea.style.cssText = `
                 position: fixed;
                 top: 0;
@@ -4139,9 +4156,9 @@
             
             try {
                 document.execCommand('copy');
-                alert('✅ Logs affichés ! Appui long pour copier.');
+                alert('✅ ' + logs.length + ' logs copiés !');
             } catch (err) {
-                alert('⚠️ Sélectionne tout (appui long) et copie.');
+                alert('⚠️ Sélectionne tout (appui long) et copie manuellement.');
             }
             
             const closeBtn = document.createElement('button');
@@ -4166,21 +4183,6 @@
             
             document.body.appendChild(closeBtn);
         }
-
-        /**
-         * Vider la console
-         */
-        function clearConsole() {
-            console.clear();
-            console.log('🧹 Console vidée');
-        }
-
-        // Rendre accessible globalement
-        window.copyErudaLogs = copyErudaLogs;
-        window.clearConsole = clearConsole;
-
-
-
 
         /**
          * Afficher les logs dans la console - VERSION DEBUG
