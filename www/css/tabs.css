@@ -3030,3 +3030,20 @@ body.dark-mode .emoji-divider::before,
 body.dark-mode .emoji-divider::after {
     background: #3a3a4e;
 }
+
+/* Fix pour mobile */
+@media (max-width: 480px) {
+    .emoji-custom-input-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .emoji-use-custom-btn {
+        width: 100%;
+    }
+    
+    .emoji-picker-content {
+        max-width: 95%;
+        margin: 0 10px;
+    }
+}

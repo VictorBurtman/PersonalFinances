@@ -3568,7 +3568,7 @@
                 // Vider et focus sur l'input
                 const input = document.getElementById('customEmojiInput');
                 if (input) {
-                    input.value = '';
+                    input.value = currentEmoji; // ✅ Pré-remplir avec l'emoji actuel
                     setTimeout(() => input.focus(), 100);
                 }
                 
