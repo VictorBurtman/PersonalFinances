@@ -3523,7 +3523,7 @@
         auth.onAuthStateChanged(async (user) => {
             console.log('🔴 onAuthStateChanged triggered');
             console.log('👤 User:', user ? user.email : 'null');
-            
+
             // ✅ Initialiser Eruda pour les développeurs
             if (user) {
                 const devEmails = ['victorburtman@gmail.com'];
@@ -3531,102 +3531,84 @@
                     console.log('🛠️ Mode développeur activé pour:', user.email);
                     
                     // Initialiser Eruda
-                    eruda.init();
-                    
-                    // ✅ Attendre un peu que Eruda soit complètement chargé
-                    setTimeout(() => {
-                        if (typeof eruda !== 'undefined' && eruda.snippets) {
-                            
-                            // SNIPPET 1 : Vider la console
-                            eruda.snippets.add('clearConsole', function() {
-                                console.clear();
-                                console.log('🧹 Console vidée');
-                            }, '🧹 Vider la console');
-                            
-                            // SNIPPET 2 : Copier tous les logs
-                            eruda.snippets.add('copyLogs', function() {
-                                const erudaRoot = document.querySelector('#eruda');
+                    if (typeof eruda !== 'undefined') {
+                        eruda.init();
+                        
+                        // ✅ Attendre qu'Eruda soit complètement chargé
+                        setTimeout(() => {
+                            if (eruda.snippets) {
                                 
-                                if (!erudaRoot || !erudaRoot.shadowRoot) {
-                                    alert('❌ Shadow DOM non accessible');
-                                    return;
-                                }
+                                // SNIPPET 1 : Vider la console
+                                eruda.snippets.add('clearConsole', function() {
+                                    console.clear();
+                                    console.log('🧹 Console vidée');
+                                }, '🧹 Vider la console');
                                 
-                                const logElements = erudaRoot.shadowRoot.querySelectorAll('.luna-console-log-item');
-                                
-                                if (logElements.length === 0) {
-                                    alert('⚠️ Aucun log trouvé');
-                                    return;
-                                }
-                                
-                                const logs = [];
-                                logElements.forEach(el => {
-                                    const text = el.innerText || el.textContent;
-                                    if (text && text.trim()) {
-                                        logs.push(text.trim());
-                                    }
-                                });
-                                
-                                const allLogs = logs.join('\n\n');
-                                
-                                const textarea = document.createElement('textarea');
-                                textarea.value = allLogs;
-                                textarea.style.cssText = `
-                                    position: fixed; top: 0; left: 0; width: 100%; height: 80vh;
-                                    z-index: 999999; background: white; color: black; padding: 20px;
-                                    font-size: 11px; font-family: monospace; border: 3px solid red;
-                                    overflow: auto;
-                                `;
-                                
-                                document.body.appendChild(textarea);
-                                textarea.focus();
-                                textarea.select();
-                                
-                                try {
-                                    document.execCommand('copy');
-                                } catch (e) {}
-                                
-                                const closeBtn = document.createElement('button');
-                                closeBtn.textContent = '❌ Fermer';
-                                closeBtn.style.cssText = `
-                                    position: fixed; bottom: 20px; right: 20px; z-index: 9999999;
-                                    background: red; color: white; padding: 15px 30px; font-size: 18px;
-                                    border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                                `;
-                                closeBtn.onclick = () => {
-                                    document.body.removeChild(textarea);
-                                    document.body.removeChild(closeBtn);
-                                };
-                                
-                                document.body.appendChild(closeBtn);
-                                
-                                alert('📋 ' + logs.length + ' logs affichés ! Appui long pour copier.');
-                                
-                            }, '📋 Copier tous les logs');
-                            
-                            // SNIPPET 3 : Inspecter Eruda
-                            eruda.snippets.add('inspectEruda', function() {
-                                console.log('🔍 Inspection Eruda...');
-                                
-                                const erudaRoot = document.querySelector('#eruda');
-                                if (erudaRoot && erudaRoot.shadowRoot) {
-                                    const logElements = erudaRoot.shadowRoot.querySelectorAll('.luna-console-log-item');
-                                    console.log('✅ Logs trouvés:', logElements.length);
+                                // SNIPPET 2 : Copier tous les logs
+                                eruda.snippets.add('copyLogs', function() {
+                                    const erudaRoot = document.querySelector('#eruda');
                                     
-                                    if (logElements.length > 0) {
-                                        console.log('Premier log:', logElements[0]);
+                                    if (!erudaRoot || !erudaRoot.shadowRoot) {
+                                        alert('❌ Shadow DOM non accessible');
+                                        return;
                                     }
-                                } else {
-                                    console.log('❌ Shadow DOM non accessible');
-                                }
-                            }, '🔍 Inspecter Eruda');
-                            
-                            console.log('✅ Snippets Eruda ajoutés !');
-                        }
-                    }, 1000); // Attendre 1 seconde que Eruda soit prêt
+                                    
+                                    const logElements = erudaRoot.shadowRoot.querySelectorAll('.luna-console-log-item');
+                                    
+                                    if (logElements.length === 0) {
+                                        alert('⚠️ Aucun log trouvé');
+                                        return;
+                                    }
+                                    
+                                    const logs = [];
+                                    logElements.forEach(el => {
+                                        const text = el.innerText || el.textContent;
+                                        if (text && text.trim()) {
+                                            logs.push(text.trim());
+                                        }
+                                    });
+                                    
+                                    const allLogs = logs.join('\n\n');
+                                    
+                                    const textarea = document.createElement('textarea');
+                                    textarea.value = allLogs;
+                                    textarea.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:80vh;z-index:999999;background:white;color:black;padding:20px;font-size:11px;font-family:monospace;border:3px solid red;overflow:auto;';
+                                    
+                                    document.body.appendChild(textarea);
+                                    textarea.focus();
+                                    textarea.select();
+                                    
+                                    try {
+                                        document.execCommand('copy');
+                                    } catch (e) {}
+                                    
+                                    const closeBtn = document.createElement('button');
+                                    closeBtn.textContent = '❌ Fermer';
+                                    closeBtn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999999;background:red;color:white;padding:15px 30px;font-size:18px;border:none;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+                                    closeBtn.onclick = () => {
+                                        document.body.removeChild(textarea);
+                                        document.body.removeChild(closeBtn);
+                                    };
+                                    
+                                    document.body.appendChild(closeBtn);
+                                    
+                                    alert('📋 ' + logs.length + ' logs affichés ! Appui long pour copier.');
+                                    
+                                }, '📋 Copier tous les logs');
+                                
+                                console.log('✅ Snippets Eruda ajoutés !');
+                                
+                            } else {
+                                console.error('❌ eruda.snippets non disponible');
+                            }
+                        }, 1500); // Attendre 1.5 secondes qu'Eruda soit prêt
+                        
+                    } else {
+                        console.error('❌ Eruda non chargé');
+                    }
                 }
             }
-            
+
             const authScreen = document.getElementById('auth-screen');
             const mainApp = document.getElementById('appScreen');
             
