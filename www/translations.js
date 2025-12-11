@@ -136,6 +136,10 @@ const translations = {
         pleaseEnterEmailAndPassword: "Please enter email and password",
         loading: "Loading...",
         selectEmoji: 'Select Emoji',
+        customEmojiPlaceholder: 'Or type/paste any emoji here...',
+        orChooseBelow: 'or choose below',
+        useCustomEmoji: 'Use',
+        pleaseEnterEmoji: 'Please enter an emoji',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -578,6 +582,10 @@ const translations = {
         pleaseEnterEmailAndPassword: "Veuillez entrer votre email et mot de passe",
         loading: "Chargement...",
         selectEmoji: 'Sélectionner un emoji',
+        customEmojiPlaceholder: 'Ou tapez/collez un emoji ici...',
+        orChooseBelow: 'ou choisissez ci-dessous',
+        useCustomEmoji: 'Utiliser',
+        pleaseEnterEmoji: 'Veuillez entrer un emoji',
 
 
         // Alerts & notifications
@@ -1011,6 +1019,10 @@ const translations = {
         pleaseEnterEmailAndPassword: "אנא הזן דוא\"ל וסיסמה",
         loading: "טוען...",
         selectEmoji: 'בחר אימוג\'י', 
+        customEmojiPlaceholder: 'או הקלד/הדבק אימוג\'י כאן...',
+        orChooseBelow: 'או בחר למטה',
+        useCustomEmoji: 'השתמש',
+        pleaseEnterEmoji: 'אנא הזן אימוג\'י',
 
 
         // Toasts & notifications
@@ -1444,6 +1456,10 @@ const translations = {
         pleaseEnterEmailAndPassword: "Por favor ingresa correo y contraseña",
         loading: "Cargando...",
         selectEmoji: 'Seleccionar Emoji',
+        customEmojiPlaceholder: 'O escribe/pega cualquier emoji aquí...',
+        orChooseBelow: 'o elige abajo',
+        useCustomEmoji: 'Usar',
+        pleaseEnterEmoji: 'Por favor ingresa un emoji',
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1876,6 +1892,10 @@ const translations = {
         pleaseEnterEmailAndPassword: "Пожалуйста, введите email и пароль",
         loading: "Загрузка...",
         selectEmoji: 'Выбрать эмодзи',
+        customEmojiPlaceholder: 'Или введите/вставьте эмодзи здесь...',
+        orChooseBelow: 'или выберите ниже',
+        useCustomEmoji: 'Использовать',
+        pleaseEnterEmoji: 'Пожалуйста, введите эмодзи',
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2307,7 +2327,11 @@ const translations = {
         tooManyRequests: "عدد كبير جداً من المحاولات الفاشلة. حاول مرة أخرى لاحقاً.",
         pleaseEnterEmailAndPassword: "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
         loading: "جار التحميل...",
-        selectEmoji: 'اختر إيموجي', // AR
+        selectEmoji: 'اختر إيموجي',
+        customEmojiPlaceholder: 'أو اكتب/الصق أي إيموجي هنا...',
+        orChooseBelow: 'أو اختر أدناه',
+        useCustomEmoji: 'استخدم',
+        pleaseEnterEmoji: 'الرجاء إدخال إيموجي',
 
 
         // Toasts & notifications

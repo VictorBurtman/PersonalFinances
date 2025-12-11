@@ -671,6 +671,25 @@
                 <button class="close-modal" onclick="closeEmojiPicker()">×</button>
             </div>
             <div class="modal-body emoji-picker-body">
+                <!-- ✅ Champ de texte pour entrer un emoji personnalisé -->
+                <div class="emoji-custom-input-container">
+                    <input 
+                        type="text" 
+                        id="customEmojiInput" 
+                        class="emoji-custom-input" 
+                        placeholder="Or type/paste any emoji here..."
+                        data-translate-placeholder="customEmojiPlaceholder"
+                        maxlength="10"
+                    />
+                    <button class="emoji-use-custom-btn" onclick="useCustomEmoji()">
+                        <span data-translate="useCustomEmoji">Use</span>
+                    </button>
+                </div>
+                
+                <div class="emoji-divider">
+                    <span data-translate="orChooseBelow">or choose below</span>
+                </div>
+                
                 <div class="emoji-categories">
                     <button class="emoji-category-btn active" data-category="smileys">😊</button>
                     <button class="emoji-category-btn" data-category="animals">🐶</button>
@@ -3496,6 +3515,58 @@
             closeEmojiPicker();
         }
 
+
+        function useCustomEmoji() {
+            const input = document.getElementById('customEmojiInput');
+            const emoji = input.value.trim();
+            
+            if (!emoji) {
+                const t = translations[currentLanguage] || translations['en'];
+                alert(t.pleaseEnterEmoji || 'Please enter an emoji');
+                return;
+            }
+            
+            selectEmoji(emoji);
+        }
+
+        // ✅ Ajoute aussi le support de la touche Enter
+        function showEmojiPicker(currentEmoji = '📋') {
+            return new Promise((resolve) => {
+                emojiPickerResolve = resolve;
+                
+                const modal = document.getElementById('emojiPickerModal');
+                modal.style.display = 'flex';
+                
+                // Vider et focus sur l'input
+                const input = document.getElementById('customEmojiInput');
+                if (input) {
+                    input.value = '';
+                    setTimeout(() => input.focus(), 100);
+                }
+                
+                // ✅ Gérer la touche Enter dans l'input
+                const handleEnter = (e) => {
+                    if (e.key === 'Enter') {
+                        useCustomEmoji();
+                    }
+                };
+                input.addEventListener('keydown', handleEnter);
+                
+                // Afficher la première catégorie par défaut
+                renderEmojiCategory('smileys');
+                
+                // Gérer les clics sur les catégories
+                document.querySelectorAll('.emoji-category-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.emoji-category-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        renderEmojiCategory(this.dataset.category);
+                    });
+                });
+            });
+        }
+
+        
         function closeEmojiPicker() {
             const modal = document.getElementById('emojiPickerModal');
             modal.style.display = 'none';
