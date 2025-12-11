@@ -3527,7 +3527,101 @@
                 const devEmails = ['victorburtman@gmail.com'];
                 if (devEmails.includes(user.email)) {
                     console.log('🛠️ Mode développeur activé pour:', user.email);
+                    
+                    // Initialiser Eruda
                     eruda.init();
+                    
+                    // ✅ Attendre un peu que Eruda soit complètement chargé
+                    setTimeout(() => {
+                        if (typeof eruda !== 'undefined' && eruda.snippets) {
+                            
+                            // SNIPPET 1 : Vider la console
+                            eruda.snippets.add('clearConsole', function() {
+                                console.clear();
+                                console.log('🧹 Console vidée');
+                            }, '🧹 Vider la console');
+                            
+                            // SNIPPET 2 : Copier tous les logs
+                            eruda.snippets.add('copyLogs', function() {
+                                const erudaRoot = document.querySelector('#eruda');
+                                
+                                if (!erudaRoot || !erudaRoot.shadowRoot) {
+                                    alert('❌ Shadow DOM non accessible');
+                                    return;
+                                }
+                                
+                                const logElements = erudaRoot.shadowRoot.querySelectorAll('.luna-console-log-item');
+                                
+                                if (logElements.length === 0) {
+                                    alert('⚠️ Aucun log trouvé');
+                                    return;
+                                }
+                                
+                                const logs = [];
+                                logElements.forEach(el => {
+                                    const text = el.innerText || el.textContent;
+                                    if (text && text.trim()) {
+                                        logs.push(text.trim());
+                                    }
+                                });
+                                
+                                const allLogs = logs.join('\n\n');
+                                
+                                const textarea = document.createElement('textarea');
+                                textarea.value = allLogs;
+                                textarea.style.cssText = `
+                                    position: fixed; top: 0; left: 0; width: 100%; height: 80vh;
+                                    z-index: 999999; background: white; color: black; padding: 20px;
+                                    font-size: 11px; font-family: monospace; border: 3px solid red;
+                                    overflow: auto;
+                                `;
+                                
+                                document.body.appendChild(textarea);
+                                textarea.focus();
+                                textarea.select();
+                                
+                                try {
+                                    document.execCommand('copy');
+                                } catch (e) {}
+                                
+                                const closeBtn = document.createElement('button');
+                                closeBtn.textContent = '❌ Fermer';
+                                closeBtn.style.cssText = `
+                                    position: fixed; bottom: 20px; right: 20px; z-index: 9999999;
+                                    background: red; color: white; padding: 15px 30px; font-size: 18px;
+                                    border: none; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                                `;
+                                closeBtn.onclick = () => {
+                                    document.body.removeChild(textarea);
+                                    document.body.removeChild(closeBtn);
+                                };
+                                
+                                document.body.appendChild(closeBtn);
+                                
+                                alert('📋 ' + logs.length + ' logs affichés ! Appui long pour copier.');
+                                
+                            }, '📋 Copier tous les logs');
+                            
+                            // SNIPPET 3 : Inspecter Eruda
+                            eruda.snippets.add('inspectEruda', function() {
+                                console.log('🔍 Inspection Eruda...');
+                                
+                                const erudaRoot = document.querySelector('#eruda');
+                                if (erudaRoot && erudaRoot.shadowRoot) {
+                                    const logElements = erudaRoot.shadowRoot.querySelectorAll('.luna-console-log-item');
+                                    console.log('✅ Logs trouvés:', logElements.length);
+                                    
+                                    if (logElements.length > 0) {
+                                        console.log('Premier log:', logElements[0]);
+                                    }
+                                } else {
+                                    console.log('❌ Shadow DOM non accessible');
+                                }
+                            }, '🔍 Inspecter Eruda');
+                            
+                            console.log('✅ Snippets Eruda ajoutés !');
+                        }
+                    }, 1000); // Attendre 1 seconde que Eruda soit prêt
                 }
             }
             
@@ -5761,23 +5855,5 @@
     <!-- Toast Notifications Container -->
     <div class="toast-container" id="toastContainer"></div>
     
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-    // Initialiser Eruda uniquement pour ton compte
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            // ✅ REMPLACE PAR TON EMAIL
-            const devEmails = [
-                'victorburtman@gmail.com',  // ← Mets ton vrai email ici
-                // ← Tu peux ajouter d'autres emails
-            ];
-            
-            if (devEmails.includes(user.email)) {
-                console.log('🛠️ Mode développeur activé pour:', user.email);
-                eruda.init();
-            }
-        }
-    });
-    </script>
 </body>
 </html>
