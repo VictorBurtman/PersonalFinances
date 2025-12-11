@@ -2974,7 +2974,8 @@
             
             // Add to the expenses list
             document.getElementById('expensesList').appendChild(categorySection);
-            
+            // ✅ Traduire les nouveaux éléments
+            updateTranslations();
             // Save to Firebase FIRST before calling updateDisplay
             saveUserData().then(() => {
                 updateDisplay();
