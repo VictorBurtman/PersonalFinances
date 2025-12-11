@@ -58,6 +58,7 @@ PersonalFinances/
 │   │   ├── tabs-manager.js       ← Gestion des onglets (Dashboard, Transactions, Categories, Settings)
 │   │   ├── transactions-manager.js  ← Gestion transactions + scraping bancaire
 │   │   └── auth-manager.js     ← Gestion écran de connexion
+├───├──img/icons/               ← Icônes SVG
 │   └── translations.js           ← Traductions i18n (6 langues)
 │
 ├── firebase/
@@ -124,6 +125,13 @@ PersonalFinances/
 - Gestion du compte utilisateur
 - Export de données
 
+### Navigation
+- 2 onglets : Budget ↔ Transactions
+- Swipe horizontal (bloqué en mode Edit)
+- Scroll position memory
+- Scroll to top sur tap onglet actif
+- Header dynamique selon onglet
+
 ---
 
 ## 🔐 Sécurité
@@ -188,6 +196,13 @@ PersonalFinances/
 - **Web** : `firebase deploy --only hosting`
 - **Mobile** : Build AAB → Upload Google Play Console (Internal Testing)
 - **Backend** : `firebase deploy --only functions`
+
+### Eruda Console (mobile)
+- Activé uniquement pour devs (`victorburtman@gmail.com`)
+- Onglet "Actions" personnalisé :
+  - 📋 Copier tous les logs
+  - 🧹 Vider console
+- API : `eruda.add()` pour créer onglet custom
 
 ---
 
@@ -321,17 +336,17 @@ PersonalFinances/
 - ✅ Header unifié + Footer navigation (pas de sticky bar séparée)
 - ✅ Système de versions avec `version.json` pour auto-update PWA
 
-**Problèmes récents résolus :**
-- Footer iOS PWA (safe-area, couleur, positionnement)
-- Boutons d'édition des items de budget (nécessite `updateDisplay()` dans `toggleEditMode()`)
-- Checkbox dark mode pas cochée au chargement
-- Modal Bank Accounts trop grand sur mobile
-- Empty state transactions non visible (déplacé hors de `#allTransactionsSection`)
 
 **Conventions de code :**
 - Fonctions principales : `updateDisplay()`, `toggleEditMode()`, `renderExpenseItem()`
 - Dark mode : classe `.dark-mode` sur `<body>`
 - Traductions : objet `translations[currentLanguage]`
 - Mode édition : variable globale `isEditMode`
+
+**Ne jamais :**
+- Écraser `expenses` object (reset doit préserver structure)
+- Mettre `currentActiveTab = 'budget'` au global (doit être `null`)
+- Oublier `updateDisplay()` après modif data
+- Utiliser `overflow-x: auto` sur header mobile
 
 **Merci de m'aider sur ce projet ! 🚀**
