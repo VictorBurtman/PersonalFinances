@@ -2553,7 +2553,7 @@ body.dark-mode .chartjs-legend span {
     /* Ajuste l'espacement des boutons pour iOS */
     .footer-nav-btn {
         padding: 10px 8px !important; /* ✅ Plus d'espace vertical pour voir les bords arrondis */
-        margin-top: 5px !important; /* ✅ Descend les boutons vers le bas du footer */
+        margin-top: 0px !important; /* ✅ Descend les boutons vers le bas du footer */
     }
 
     /* 5. Le bouche-trou du footer (Intouché sauf couleur) */
