@@ -2539,7 +2539,7 @@ body.dark-mode .chartjs-legend span {
         left: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
-        bottom: 0 !important;
+        bottom: -20px !important;
         padding-bottom: 0px !important;   /* ✅ Réduit de 15px à 5px */
         padding-top: 0px !important;  
         height: 90px !important;
