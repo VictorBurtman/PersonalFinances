@@ -4614,8 +4614,25 @@
                 document.querySelectorAll('.budget-only').forEach(btn => {
                     // ✅ Cas spécial : bouton "Add Category" (visible uniquement en mode Edit)
                     if (btn.onclick && btn.onclick.toString().includes('addNewCategory')) {
-                        btn.style.display = isEditMode ? 'inline-flex' : 'none';
+                        // Vérifier que isEditMode est défini, sinon considérer false
+                        const editModeActive = typeof isEditMode !== 'undefined' && isEditMode;
+                        btn.style.display = editModeActive ? 'inline-flex' : 'none';
                     } 
+                    // ✅ Cas spécial : sélecteur de mois Compare
+                    else if (btn.id === 'compareMonth') {
+                        const compareBtn = document.getElementById('compareBtn');
+                        const isCompareActive = compareBtn && compareBtn.classList.contains('active');
+                        
+                        btn.style.display = isCompareActive ? 'inline-block' : 'none';
+                        window.compareMode = isCompareActive; // Synchroniser
+                        
+                        console.log(isCompareActive ? '✅ compareMonth affiché' : 'ℹ️ compareMonth caché');
+                    } 
+                    // ✅ Tous les autres boutons Budget (Edit, Compare, Add Transactions)
+                    else {
+                        btn.style.display = 'inline-flex';
+                    }
+                });
                     // ✅ Cas spécial : sélecteur de mois Compare
                     else if (btn.id === 'compareMonth') {
                         const compareBtn = document.getElementById('compareBtn');
@@ -4645,7 +4662,7 @@
             }
         }
 
-        
+
         let isTabSwitching = false;
         let currentActiveTab = null;
         let lastTabSwitchTime = 0;
