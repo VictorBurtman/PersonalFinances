@@ -2645,3 +2645,39 @@ body.dark-mode .chartjs-legend span {
     height: 24px;
     display: block;
 }
+
+
+/* ============================================
+   DRAG HANDLE (Poignée de drag)
+   ============================================ */
+
+.drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    cursor: grab;
+    color: #adb5bd;
+    font-size: 1.2em;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.drag-handle:hover {
+    color: #667eea;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    color: #667eea;
+}
+
+body.dark-mode .drag-handle {
+    color: #6c757d;
+}
+
+body.dark-mode .drag-handle:hover {
+    color: #667eea;
+}

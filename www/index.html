@@ -1779,22 +1779,17 @@
             const deleteBtn = isEditMode ? 
                 `<button class="expense-delete-btn" onclick="deleteExpenseItem('${category}', ${index})" title="Delete item">🗑️</button>` : '';
             
-            const moveUpBtn = isEditMode ? 
-                `<button class="item-move-btn" onclick="moveItemUp('${category}', ${index})" title="Move up">↑</button>` : '';
-            
-            const moveDownBtn = isEditMode ? 
-                `<button class="item-move-btn" onclick="moveItemDown('${category}', ${index})" title="Move down">↓</button>` : '';
+            // ✅ Poignée de drag (visible uniquement en mode edit)
+            const dragHandle = isEditMode ? 
+                `<span class="drag-handle" title="Drag to reorder">☰</span>` : '';
             
             const renameBtn = isEditMode ? 
                 `<button class="item-rename-btn show" onclick="renameItem('${category}', ${index})" title="Rename">✏️</button>` : '';
             
             return `
                 <div class="expense-item">
+                    ${dragHandle}
                     <span class="expense-name">${expense.name}</span>
-                    <span class="item-move-btns ${isEditMode ? 'show' : ''}">
-                        ${moveUpBtn}
-                        ${moveDownBtn}
-                    </span>
                     <span class="item-rename-btn ${isEditMode ? 'show' : ''}" onclick="renameItem('${category}', ${index})" title="Rename">✏️</span>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input 
