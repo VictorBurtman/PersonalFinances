@@ -135,6 +135,7 @@ const translations = {
         tooManyRequests: "Too many failed attempts. Please try again later.",
         pleaseEnterEmailAndPassword: "Please enter email and password",
         loading: "Loading...",
+        selectEmoji: 'Select Emoji',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -576,6 +577,8 @@ const translations = {
         tooManyRequests: "Trop de tentatives échouées. Veuillez réessayer plus tard.",
         pleaseEnterEmailAndPassword: "Veuillez entrer votre email et mot de passe",
         loading: "Chargement...",
+        selectEmoji: 'Sélectionner un emoji',
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -1007,6 +1010,8 @@ const translations = {
         tooManyRequests: "יותר מדי ניסיונות כושלים. נסה שוב מאוחר יותר.",
         pleaseEnterEmailAndPassword: "אנא הזן דוא\"ל וסיסמה",
         loading: "טוען...",
+        selectEmoji: 'בחר אימוג\'י', 
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1438,6 +1443,7 @@ const translations = {
         tooManyRequests: "Demasiados intentos fallidos. Inténtalo más tarde.",
         pleaseEnterEmailAndPassword: "Por favor ingresa correo y contraseña",
         loading: "Cargando...",
+        selectEmoji: 'Seleccionar Emoji',
 
         // Toasts & notifications
         categoryRenamedSuccess: "¡Categoría renombrada! {count} transacción/es actualizada/s.",
@@ -1869,6 +1875,7 @@ const translations = {
         tooManyRequests: "Слишком много неудачных попыток. Попробуйте позже.",
         pleaseEnterEmailAndPassword: "Пожалуйста, введите email и пароль",
         loading: "Загрузка...",
+        selectEmoji: 'Выбрать эмодзи',
 
         // Toasts & notifications
         categoryRenamedSuccess: "Категория переименована! {count} транзакци(й/я) обновлено.",
@@ -2300,6 +2307,8 @@ const translations = {
         tooManyRequests: "عدد كبير جداً من المحاولات الفاشلة. حاول مرة أخرى لاحقاً.",
         pleaseEnterEmailAndPassword: "الرجاء إدخال البريد الإلكتروني وكلمة المرور",
         loading: "جار التحميل...",
+        selectEmoji: 'اختر إيموجي', // AR
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "تم إعادة تسمية الفئة! {count} معاملة محدثة.",

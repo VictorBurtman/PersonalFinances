@@ -662,7 +662,31 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Emoji Picker Modal -->
+    <div id="emojiPickerModal" class="modal" style="display: none;">
+        <div class="modal-content emoji-picker-content">
+            <div class="modal-header">
+                <h2 data-translate="selectEmoji">Select Emoji</h2>
+                <button class="close-modal" onclick="closeEmojiPicker()">×</button>
+            </div>
+            <div class="modal-body emoji-picker-body">
+                <div class="emoji-categories">
+                    <button class="emoji-category-btn active" data-category="smileys">😊</button>
+                    <button class="emoji-category-btn" data-category="animals">🐶</button>
+                    <button class="emoji-category-btn" data-category="food">🍔</button>
+                    <button class="emoji-category-btn" data-category="activities">⚽</button>
+                    <button class="emoji-category-btn" data-category="travel">✈️</button>
+                    <button class="emoji-category-btn" data-category="objects">💡</button>
+                    <button class="emoji-category-btn" data-category="symbols">❤️</button>
+                </div>
+                <div class="emoji-grid" id="emojiGrid">
+                    <!-- Les emojis seront insérés ici par JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
@@ -2922,7 +2946,10 @@
             }
         }
 
-        function addNewCategory() {
+
+
+
+        async function addNewCategory() {
             const t = translations[currentLanguage] || translations['en'];
             
             const categoryName = prompt(t.enterCategoryName || 'Enter category name:');
@@ -2935,7 +2962,9 @@
                 return;
             }
             
-            const emoji = prompt(t.enterEmoji || 'Enter emoji (e.g., 🎮):') || '📋';
+            const emoji = await showEmojiPicker('📋');
+            if (!emoji) return; // L'utilisateur a annulé
+            
             const itemName = prompt(t.enterFirstItem || 'Enter first item name:') || 'Item';
             
             // Create the new category with the first item
@@ -2991,7 +3020,8 @@
                 alert(t.errorCreatingCategory || 'Error creating category. Please try again.');
             });
         }
-        
+
+
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
@@ -3407,6 +3437,74 @@
         }
 
 
+
+        // ============================================
+        // EMOJI PICKER
+        // ============================================
+
+        const emojiCategories = {
+            smileys: ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥸', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕'],
+            animals: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🦗', '🕷️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐁', '🐀', '🐿️', '🦔'],
+            food: ['🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🌽', '🥕', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🥪', '🥙', '🧆', '🌮', '🌯', '🥗', '🥘', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '☕', '🍵', '🧃', '🥤', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾', '🧊'],
+            activities: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🤼', '🤸', '🤺', '⛹️', '🤾', '🏌️', '🏇', '🧘', '🏊', '🤽', '🚣', '🧗', '🚵', '🚴', '🏆', '🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️', '🎗️', '🎫', '🎟️', '🎪', '🤹', '🎭', '🩰', '🎨', '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🪕', '🎻', '🎲', '♟️', '🎯', '🎳', '🎮', '🎰', '🧩'],
+            travel: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🚚', '🚛', '🚜', '🦯', '🦽', '🦼', '🛴', '🚲', '🛵', '🏍️', '🛺', '🚨', '🚔', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚉', '✈️', '🛫', '🛬', '🛩️', '💺', '🛰️', '🚀', '🛸', '🚁', '🛶', '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '⚓', '⛽', '🚧', '🚦', '🚥', '🚏', '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🕍', '🛕', '🕋'],
+            objects: ['⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '🕹️', '🗜️', '💾', '💿', '📀', '📼', '📷', '📸', '📹', '🎥', '📽️', '🎞️', '📞', '☎️', '📟', '📠', '📺', '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⌛', '⏳', '📡', '🔋', '🔌', '💡', '🔦', '🕯️', '🪔', '🧯', '🛢️', '💸', '💵', '💴', '💶', '💷', '💰', '💳', '💎', '⚖️', '🧰', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🔩', '⚙️', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🪓', '🔪', '🗡️', '⚔️', '🛡️', '🚬', '⚰️', '⚱️', '🏺', '🔮', '📿', '🧿', '💈', '⚗️', '🔭', '🔬', '🕳️', '💊', '💉', '🩸', '🩹', '🩺', '🌡️', '🧬', '🦠', '🧫', '🧪', '🌐', '🗺️', '🧭', '🗿'],
+            symbols: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗', '❕', '❓', '❔', '‼️', '⁉️', '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '🈯', '💹', '❇️', '✳️', '❎', '🌐', '💠', 'Ⓜ️', '🌀', '💤', '🏧', '🚾', '♿', '🅿️', '🈳', '🈂️', '🛂', '🛃', '🛄', '🛅', '🚹', '🚺', '🚼', '🚻', '🚮', '🎦', '📶', '🈁', '🔣', 'ℹ️', '🔤', '🔡', '🔠', '🆖', '🆗', '🆙', '🆒', '🆕', '🆓', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+        };
+
+        let emojiPickerResolve = null;
+
+        function showEmojiPicker(currentEmoji = '📋') {
+            return new Promise((resolve) => {
+                emojiPickerResolve = resolve;
+                
+                const modal = document.getElementById('emojiPickerModal');
+                modal.style.display = 'flex';
+                
+                // Afficher la première catégorie par défaut
+                renderEmojiCategory('smileys');
+                
+                // Gérer les clics sur les catégories
+                document.querySelectorAll('.emoji-category-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.emoji-category-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        renderEmojiCategory(this.dataset.category);
+                    });
+                });
+            });
+        }
+
+        function renderEmojiCategory(category) {
+            const grid = document.getElementById('emojiGrid');
+            grid.innerHTML = '';
+            
+            emojiCategories[category].forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.className = 'emoji-item';
+                btn.textContent = emoji;
+                btn.onclick = () => selectEmoji(emoji);
+                grid.appendChild(btn);
+            });
+        }
+
+        function selectEmoji(emoji) {
+            if (emojiPickerResolve) {
+                emojiPickerResolve(emoji);
+                emojiPickerResolve = null;
+            }
+            closeEmojiPicker();
+        }
+
+        function closeEmojiPicker() {
+            const modal = document.getElementById('emojiPickerModal');
+            modal.style.display = 'none';
+            if (emojiPickerResolve) {
+                emojiPickerResolve(null); // L'utilisateur a annulé
+                emojiPickerResolve = null;
+            }
+        }
+
         function updatePercentageMode(mode) {
             percentageMode = mode;
             saveUserData();
@@ -3603,7 +3701,6 @@
 
 
 
-        // Rename Functions
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -3613,19 +3710,19 @@
             
             if (!newName || newName.trim() === '') return;
             
-            // Demander l'emoji
+            // Demander l'emoji avec le nouveau picker
             const currentEmoji = categoryMetadata[categoryKey]?.emoji || '📋';
-            const newEmoji = prompt(t.enterEmoji || 'Enter emoji for this category:', currentEmoji);
-            if (!newEmoji || newEmoji.trim() === '') {
-                alert(t.emojiRequired || 'Emoji is required');
+            const newEmoji = await showEmojiPicker(currentEmoji);
+            if (!newEmoji) {
+                // L'utilisateur a annulé
                 return;
             }
             
-            // ✅ Ajoute cette vérification
-            if (newName.trim() === currentDisplayName && newEmoji.trim() === currentEmoji) {
-                // Rien n'a changé, on sort
-                return;
+            // ✅ Vérifier si quelque chose a changé
+            if (newName.trim() === currentDisplayName && newEmoji === currentEmoji) {
+                return; // Rien n'a changé
             }
+            
             const newKey = newName.toLowerCase().replace(/\s+/g, '-');   
             
             // Empêcher de renommer "income"
@@ -3722,7 +3819,7 @@
                 
                 // Actualiser l'affichage
                 updateDisplay();
-                setTimeout(() => restoreEditMode(), 50); // ✅ Délai plus long
+                setTimeout(() => restoreEditMode(), 50);
                 // ✅ S'assurer que la nouvelle catégorie a son HTML
                 if (newKey !== categoryKey && !document.getElementById(`category-${newKey}`)) {
                     // Forcer un reload complet depuis Firebase pour recréer le HTML
@@ -3749,7 +3846,8 @@
             }
         }
 
-        
+
+
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
             const newName = prompt(t.enterNewName || 'Enter new name:', expenses[category][index].name);

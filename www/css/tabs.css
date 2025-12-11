@@ -2834,3 +2834,119 @@ body.dark-mode .expense-name-input {
     color: #e0e0e0;
     border-color: #667eea;
 }
+
+/* ============================================
+   EMOJI PICKER MODAL
+   ============================================ */
+
+.emoji-picker-content {
+    max-width: 400px;
+    max-height: 500px;
+}
+
+.emoji-picker-body {
+    padding: 15px;
+    max-height: 400px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.emoji-categories {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.emoji-category-btn {
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    font-size: 1.5em;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji-category-btn:hover {
+    background: #e9ecef;
+    transform: scale(1.1);
+}
+
+.emoji-category-btn.active {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .emoji-category-btn {
+    background: #2a2a3e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .emoji-category-btn:hover {
+    background: #3a3a4e;
+}
+
+body.dark-mode .emoji-category-btn.active {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+body.dark-mode .emoji-grid {
+    background: #1f1f2e;
+}
+
+.emoji-item {
+    font-size: 1.8em;
+    background: white;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    user-select: none;
+}
+
+.emoji-item:hover {
+    transform: scale(1.2);
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .emoji-item {
+    background: #2a2a3e;
+}
+
+body.dark-mode .emoji-item:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .emoji-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+    
+    .emoji-item {
+        font-size: 1.5em;
+    }
+}
