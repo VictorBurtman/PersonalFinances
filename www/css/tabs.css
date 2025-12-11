@@ -369,7 +369,7 @@ body.dark-mode .app-footer {
     font-size: 12px;
     font-weight: 500;
     min-height: 50px;
-    overflow: hidden;
+    overflow: visible;
 
     /* ✅ AJOUTE CES LIGNES */
     touch-action: manipulation; /* Désactive le double-tap zoom et accélère le tap */
