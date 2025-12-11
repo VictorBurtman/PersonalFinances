@@ -2696,3 +2696,26 @@ body.dark-mode .expense-item.drag-over {
     border-color: #667eea;
     background: rgba(102, 126, 234, 0.15);
 }
+
+/* Désactiver la sélection en mode edit pour permettre le drag */
+.expense-item[draggable="true"] {
+    cursor: move;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.expense-item[draggable="true"] * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Permettre la sélection uniquement dans l'input */
+.expense-item[draggable="true"] .expense-input {
+    user-select: auto;
+    -webkit-user-select: auto;
+    cursor: text;
+}
