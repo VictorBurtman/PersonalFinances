@@ -689,6 +689,14 @@ body.dark-mode .color-btn-mini:hover {
     gap: 10px;
 }
 
+/* ✅ Ajoute ici */
+/* Conteneurs individuels des items par catégorie */
+[id$="Expenses"] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .category-section {
     margin-bottom: 15px;
 }
@@ -731,17 +739,10 @@ body.dark-mode .color-btn-mini:hover {
 
 }
 
-.expense-item:hover {
-    background: #e9ecef;
-}
 
 body.dark-mode .expense-item {
     background: #1f1f2e;
     color: #e0e0e0;
-}
-
-body.dark-mode .expense-item:hover {
-    background: #2a2a3e;
 }
 
 .expense-name {
