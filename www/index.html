@@ -5103,9 +5103,11 @@
             let touchStartY = 0;
             let pulling = false;
             let pullDistance = 0;
+            let scrollAtStart = 0; // ✅ Nouveau : mémoriser la position de scroll au début
             
-            const pullThreshold = 80;
-            const maxPullDistance = 120;
+            const pullThreshold = 120; // ✅ Augmenté de 80 à 120
+            const maxPullDistance = 150; // ✅ Augmenté de 120 à 150
+            const minPullStart = 20; // ✅ Nouveau : mouvement minimum avant de commencer
             
             // Créer l'indicateur
             const refreshIndicator = document.createElement('div');
@@ -5136,9 +5138,12 @@
             
             dashboard.addEventListener('touchstart', (e) => {
                 if (currentActiveTab !== 'transactions') return;
-                if (dashboard.scrollTop > 10) return;
+                
+                // ✅ Plus strict : doit être exactement à 0 (ou très proche)
+                if (dashboard.scrollTop > 5) return;
                 
                 touchStartY = e.touches[0].clientY;
+                scrollAtStart = dashboard.scrollTop; // ✅ Mémoriser la position
                 pulling = false;
                 pullDistance = 0;
             }, { passive: true });
@@ -5146,7 +5151,16 @@
             dashboard.addEventListener('touchmove', (e) => {
                 if (currentActiveTab !== 'transactions') return;
                 
-                if (dashboard.scrollTop > 10) {
+                // ✅ Si on commence à scroller vers le bas, annuler
+                if (dashboard.scrollTop > scrollAtStart + 5) {
+                    pulling = false;
+                    refreshIndicator.style.top = '-80px';
+                    refreshIndicator.style.opacity = '0';
+                    return;
+                }
+                
+                // ✅ Doit être complètement en haut
+                if (dashboard.scrollTop > 5) {
                     pulling = false;
                     refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
@@ -5156,9 +5170,10 @@
                 const currentY = e.touches[0].clientY;
                 const diff = currentY - touchStartY;
                 
-                if (diff > 0) {
+                // ✅ Nécessite un mouvement minimum avant de commencer
+                if (diff > minPullStart) {
                     pulling = true;
-                    pullDistance = Math.min(diff, maxPullDistance);
+                    pullDistance = Math.min(diff - minPullStart, maxPullDistance); // ✅ Soustraire le mouvement initial
                     
                     const progress = Math.min(pullDistance / pullThreshold, 1);
                     
@@ -5196,7 +5211,6 @@
             
             console.log('✅ Pull-to-refresh initialisé');
         }
-
 
         /**
          * Scroll vers le haut de la page (smooth)
