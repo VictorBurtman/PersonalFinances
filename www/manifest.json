@@ -1,6 +1,6 @@
 {
   "name": "Personal Finances",
-  "short_name": "Finances",
+  "short_name": "Wise Budget",
   "description": "Track your monthly expenses and budget",
   "start_url": "/",
   "scope": "/",
