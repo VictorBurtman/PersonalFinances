@@ -1991,264 +1991,257 @@
             }
         }
 
+
         function updateChart() {
-                    // Mise à jour visuelle des boutons (Bar/Doughnut)
-                    if (typeof window.updateChartButtonsState === 'function') {
-                        window.updateChartButtonsState();
-                    }
-                    
-                    // Sécurité : si Chart.js n'est pas chargé
-                    if (typeof Chart === 'undefined') {
-                        console.warn('Chart.js is not available');
-                        return;
-                    }
+            // Mise à jour visuelle des boutons (Bar/Doughnut)
+            if (typeof window.updateChartButtonsState === 'function') {
+                window.updateChartButtonsState();
+            }
+            
+            // Sécurité : si Chart.js n'est pas chargé
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is not available');
+                return;
+            }
 
-                    const ctx = document.getElementById('myChart').getContext('2d');
+            const ctx = document.getElementById('myChart').getContext('2d');
 
-                    // --- 1. CONFIGURATION DU STYLE (Dark Mode) ---
-                    const isDarkMode = document.body.classList.contains('dark-mode');
-                    // Couleurs ajustées pour être visibles sur fond sombre ou clair
-                    const textColor = isDarkMode ? '#e0e0e0' : '#666';
-                    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-                    const placeholderColor = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : '#e9ecef';
-                    
-                    Chart.defaults.color = textColor;
-                    Chart.defaults.borderColor = gridColor;
+            // --- 1. CONFIGURATION DU STYLE (Dark Mode) ---
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? '#e0e0e0' : '#666';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const placeholderColor = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : '#e9ecef';
+            
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
 
-                    // --- 2. AGRÉGATION DES DONNÉES ---
-                    const aggregatedItems = {};
+            // --- 2. AGRÉGATION DES DONNÉES ---
+            const aggregatedItems = {};
 
-                    Object.keys(expenses).forEach(categoryKey => {
-                        // On ignore la catégorie revenus
-                        if (categoryKey === 'income') return;
+            Object.keys(expenses).forEach(categoryKey => {
+                // On ignore la catégorie revenus
+                if (categoryKey === 'income') return;
 
-                        expenses[categoryKey].forEach(expense => {
-                            const amount = parseFloat(expense.amount) || 0;
-                            if (amount > 0) {
-                                const name = expense.name;
-                                
-                                // Cumul des montants pour le même nom d'item
-                                if (aggregatedItems[name]) {
-                                    aggregatedItems[name].amount += amount;
-                                } else {
-                                    // Gestion de la couleur
-                                    let color;
-                                    if (customColors[name]) {
-                                        color = customColors[name];
-                                    } else {
-                                        // Génération de couleur basée sur le nom
-                                        const hash = name.split('').reduce((acc, char) => {
-                                            return char.charCodeAt(0) + ((acc << 5) - acc);
-                                        }, 0);
-                                        const colorIdx = Math.abs(hash) % colors.length;
-                                        color = colors[colorIdx];
-                                    }
-
-                                    aggregatedItems[name] = {
-                                        amount: amount,
-                                        color: color
-                                    };
-                                }
-                            }
-                        });
-                    });
-
-                    // Conversion en tableaux
-                    const allLabels = Object.keys(aggregatedItems);
-                    const allData = allLabels.map(name => aggregatedItems[name].amount);
-                    const allBackgroundColors = allLabels.map(name => aggregatedItems[name].color);
-
-                    // --- 3. TRI DES DONNÉES (Décroissant) ---
-                    const indices = allData.map((_, i) => i);
-                    indices.sort((a, b) => allData[b] - allData[a]);
-                    
-                    const sortedLabels = indices.map(i => allLabels[i]);
-                    const sortedData = indices.map(i => allData[i]);
-                    const sortedColors = indices.map(i => allBackgroundColors[i]);
-
-                    // --- 4. FILTRAGE (Items cachés) ---
-                    const displayLabels = [];
-                    const displayData = [];
-                    const displayColors = [];
-                    
-                    sortedLabels.forEach((label, i) => {
-                        if (!hiddenItems[label]) {
-                            displayLabels.push(label);
-                            displayData.push(sortedData[i]);
-                            displayColors.push(sortedColors[i]);
-                        }
-                    });
-
-                    // --- 5. GESTION DE L'ÉTAT VIDE ---
-                    const t = translations[currentLanguage] || translations['en'];
-                    const noExpensesText = t.noExpensesYet || "No expenses yet";
-                    
-                    let chartData;
-                    let isEmpty = false;
-
-                    // Si aucune donnée réelle n'existe
-                    if (sortedLabels.length === 0) {
-                        isEmpty = true;
-                        chartData = {
-                            // CORRECTION ICI : Il faut au moins un label vide pour que Chart.js dessine quelque chose
-                            labels: ["max"], 
-                            datasets: [{
-                                data: [1], // Valeur fictive pour dessiner le placeholder
-                                backgroundColor: [placeholderColor],
-                                borderWidth: 0,
-                                borderRadius: currentChartType === 'bar' ? 8 : 0,
-                                hoverBackgroundColor: [placeholderColor] // Pas d'effet au survol
-                            }]
-                        };
-                    } else {
-                        // Données normales
-                        chartData = {
-                            labels: displayLabels,
-                            datasets: [{
-                                data: displayData,
-                                backgroundColor: displayColors,
-                                borderWidth: 0,
-                                borderRadius: currentChartType === 'bar' ? 8 : 0,
-                                borderColor: isDarkMode ? '#2a2a3e' : '#fff'
-                            }]
-                        };
-                    }
-
-                    // --- 6. PLUGIN TEXTE CENTRÉ ---
-                    const centerTextPlugin = {
-                        id: 'centerText',
-                        afterDraw: function(chart) {
-                            if (isEmpty) {
-                                const ctx = chart.ctx;
-                                const width = chart.width;
-                                const height = chart.height;
-                                
-                                ctx.save();
-                                ctx.font = "bold 1.1em sans-serif";
-                                ctx.textAlign = "center";
-                                ctx.textBaseline = "middle";
-                                ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
-                                
-                                // On dessine le texte au centre du canvas
-                                ctx.fillText(noExpensesText, width / 2, height / 2);
-                                ctx.restore();
-                            }
-                        }
-                    };
-
-                    // --- 7. OPTIONS DU GRAPHIQUE ---
-                    const commonOptions = {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: currentChartType === 'doughnut' ? {
-                            duration: 400,
-                            easing: 'easeOutQuart',
-                            animateRotate: false, 
-                            animateScale: true
-                        } : {
-                            duration: 750,
-                            easing: 'easeInOutQuart'
-                        },
-                        plugins: {
-                            legend: {
-                                display: !isEmpty, // Cacher légende si vide
-                                position: 'bottom',
-                                labels: {
-                                    padding: 10,
-                                    font: { size: 11 },
-                                    color: textColor,
-                                    boxWidth: 15,
-                                    boxHeight: 15,
-                                    generateLabels: function(chart) {
-                                        return sortedLabels.map((label, i) => ({
-                                            text: label,
-                                            fillStyle: sortedColors[i],
-                                            strokeStyle: sortedColors[i],
-                                            lineWidth: 0,
-                                            hidden: hiddenItems[label] || false,
-                                            index: i,
-                                            datasetIndex: 0,
-                                            fontColor: textColor
-                                        }));
-                                    }
-                                },
-                                onClick: function(e, legendItem, legend) {
-                                    const label = sortedLabels[legendItem.index];
-                                    hiddenItems[label] = !hiddenItems[label];
-                                    updateChart();
-                                }
-                            },
-                            tooltip: {
-                                enabled: !isEmpty, // Désactiver tooltip si vide
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
-                                        const total = displayData.reduce((a, b) => a + b, 0);
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
-                                    }
-                                }
-                            }
-                        }
-                    };
-
-                    // Options spécifiques
-                    let finalOptions;
-                    if (currentChartType === 'bar') {
-                        finalOptions = {
-                            ...commonOptions,
-                            scales: isEmpty ? {
-                                x: { display: false },
-                                y: { display: false }
-                            } : {
-                                x: { display: false },
-                                y: {
-                                    beginAtZero: true,
-                                    grid: { color: gridColor },
-                                    ticks: {
-                                        color: textColor,
-                                        callback: function(value) { return currency + value; }
-                                    }
-                                }
-                            }
-                        };
-                    } else {
-                        finalOptions = commonOptions;
-                    }
-
-                    // --- 8. CRÉATION / MISE À JOUR ---
-                    if (chart) {
-                        // On détruit et recrée si le statut 'isEmpty' change ou si le type change
-                        // pour éviter les bugs d'affichage de Chart.js
-                        const wasEmpty = chart.data.labels.length === 1 && chart.data.labels[0] === "max";
-                        const typeChanged = chart.config.type !== currentChartType;
-
-                        if (typeChanged || (wasEmpty !== isEmpty)) {
-                            chart.destroy();
-                            createNewChart();
+                expenses[categoryKey].forEach(expense => {
+                    const amount = parseFloat(expense.amount) || 0;
+                    if (amount > 0) {
+                        const name = expense.name;
+                        
+                        // Cumul des montants pour le même nom d'item
+                        if (aggregatedItems[name]) {
+                            aggregatedItems[name].amount += amount;
                         } else {
-                            chart.data = chartData;
-                            chart.options = finalOptions;
-                            chart.update('active');
-                        }
-                    } else {
-                        createNewChart();
-                    }
+                            // Gestion de la couleur
+                            let color;
+                            if (customColors[name]) {
+                                color = customColors[name];
+                            } else {
+                                // Génération de couleur basée sur le nom
+                                const hash = name.split('').reduce((acc, char) => {
+                                    return char.charCodeAt(0) + ((acc << 5) - acc);
+                                }, 0);
+                                const colorIdx = Math.abs(hash) % colors.length;
+                                color = colors[colorIdx];
+                            }
 
-                    function createNewChart() {
-                        chart = new Chart(ctx, {
-                            type: currentChartType,
-                            data: chartData,
-                            options: finalOptions,
-                            plugins: [centerTextPlugin]
-                        });
+                            aggregatedItems[name] = {
+                                amount: amount,
+                                color: color
+                            };
+                        }
                     }
-                    
-                    // Mettre à jour le texte du montant total
-                    const visibleTotal = isEmpty ? 0 : displayData.reduce((a, b) => a + b, 0);
-                    document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
+                });
+            });
+
+            // Conversion en tableaux
+            const allLabels = Object.keys(aggregatedItems);
+            const allData = allLabels.map(name => aggregatedItems[name].amount);
+            const allBackgroundColors = allLabels.map(name => aggregatedItems[name].color);
+
+            // --- 3. TRI DES DONNÉES (Décroissant) ---
+            const indices = allData.map((_, i) => i);
+            indices.sort((a, b) => allData[b] - allData[a]);
+            
+            const sortedLabels = indices.map(i => allLabels[i]);
+            const sortedData = indices.map(i => allData[i]);
+            const sortedColors = indices.map(i => allBackgroundColors[i]);
+
+            // --- 4. GESTION DE L'ÉTAT VIDE ---
+            const t = translations[currentLanguage] || translations['en'];
+            const noExpensesText = t.noExpensesYet || "No expenses yet";
+            
+            let chartData;
+            let isEmpty = false;
+
+            // Si aucune donnée réelle n'existe
+            if (sortedLabels.length === 0) {
+                isEmpty = true;
+                chartData = {
+                    labels: ["max"], 
+                    datasets: [{
+                        data: [1],
+                        backgroundColor: [placeholderColor],
+                        borderWidth: 0,
+                        borderRadius: currentChartType === 'bar' ? 8 : 0,
+                        hoverBackgroundColor: [placeholderColor]
+                    }]
+                };
+            } else {
+                // ✅ Données normales - TOUTES les données avec animation
+                chartData = {
+                    labels: sortedLabels, // ✅ Tous les labels (pas filtrés)
+                    datasets: [{
+                        data: sortedData.map((value, i) => {
+                            // ✅ Si caché, la valeur devient 0 (animé)
+                            return hiddenItems[sortedLabels[i]] ? 0 : value;
+                        }),
+                        backgroundColor: sortedColors,
+                        borderWidth: 0,
+                        borderRadius: currentChartType === 'bar' ? 8 : 0,
+                        borderColor: isDarkMode ? '#2a2a3e' : '#fff'
+                    }]
+                };
+            }
+
+            // --- 5. PLUGIN TEXTE CENTRÉ ---
+            const centerTextPlugin = {
+                id: 'centerText',
+                afterDraw: function(chart) {
+                    if (isEmpty) {
+                        const ctx = chart.ctx;
+                        const width = chart.width;
+                        const height = chart.height;
+                        
+                        ctx.save();
+                        ctx.font = "bold 1.1em sans-serif";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
+                        ctx.fillText(noExpensesText, width / 2, height / 2);
+                        ctx.restore();
+                    }
                 }
+            };
+
+            // --- 6. OPTIONS DU GRAPHIQUE ---
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 600,
+                    easing: 'easeInOutQuart'
+                },
+                plugins: {
+                    legend: {
+                        display: !isEmpty,
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: { size: 11 },
+                            color: textColor,
+                            boxWidth: 15,
+                            boxHeight: 15,
+                            generateLabels: function(chart) {
+                                return sortedLabels.map((label, i) => ({
+                                    text: label,
+                                    fillStyle: sortedColors[i],
+                                    strokeStyle: sortedColors[i],
+                                    lineWidth: 0,
+                                    hidden: hiddenItems[label] || false,
+                                    index: i,
+                                    datasetIndex: 0,
+                                    fontColor: textColor
+                                }));
+                            }
+                        },
+                        onClick: function(e, legendItem, legend) {
+                            const label = sortedLabels[legendItem.index];
+                            hiddenItems[label] = !hiddenItems[label];
+                            updateChart();
+                        }
+                    },
+                    tooltip: {
+                        enabled: !isEmpty,
+                        filter: function(tooltipItem) {
+                            // ✅ Ne pas afficher le tooltip si la valeur est 0 (item caché)
+                            return tooltipItem.parsed.y !== 0 && tooltipItem.parsed !== 0;
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
+                                
+                                // ✅ Calculer le total des items visibles uniquement
+                                const visibleTotal = sortedData.reduce((sum, val, i) => {
+                                    return hiddenItems[sortedLabels[i]] ? sum : sum + val;
+                                }, 0);
+                                
+                                const percentage = ((value / visibleTotal) * 100).toFixed(1);
+                                return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Options spécifiques
+            let finalOptions;
+            if (currentChartType === 'bar') {
+                finalOptions = {
+                    ...commonOptions,
+                    scales: isEmpty ? {
+                        x: { display: false },
+                        y: { display: false }
+                    } : {
+                        x: { display: false },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) { return currency + value; }
+                            }
+                        }
+                    }
+                };
+            } else {
+                finalOptions = commonOptions;
+            }
+
+            // --- 7. CRÉATION / MISE À JOUR ---
+            if (chart) {
+                const wasEmpty = chart.data.labels.length === 1 && chart.data.labels[0] === "max";
+                const typeChanged = chart.config.type !== currentChartType;
+
+                if (typeChanged || (wasEmpty !== isEmpty)) {
+                    chart.destroy();
+                    createNewChart();
+                } else {
+                    // ✅ Mise à jour douce avec animation
+                    chart.data = chartData;
+                    chart.options = finalOptions;
+                    chart.update('active');
+                }
+            } else {
+                createNewChart();
+            }
+
+            function createNewChart() {
+                chart = new Chart(ctx, {
+                    type: currentChartType,
+                    data: chartData,
+                    options: finalOptions,
+                    plugins: [centerTextPlugin]
+                });
+            }
+            
+            // ✅ Calculer le total des items visibles uniquement
+            const visibleTotal = isEmpty ? 0 : sortedData.reduce((sum, value, i) => {
+                return hiddenItems[sortedLabels[i]] ? sum : sum + value;
+            }, 0);
+            
+            document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
+        }
 
         async function resetExpenses() {
             const t = translations[currentLanguage] || translations['en'];
