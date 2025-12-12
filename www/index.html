@@ -5085,7 +5085,6 @@
         window.inspectErudaDeep = inspectErudaDeep;
         window.clearConsole = clearConsole;
 
-
         /**
          * Pull-to-refresh pour recharger les transactions
          */
@@ -5101,13 +5100,16 @@
             }
             
             let touchStartY = 0;
+            let touchStartTime = 0; // ✅ Nouveau : moment où le pull commence
             let pulling = false;
             let pullDistance = 0;
-            let scrollAtStart = 0; // ✅ Nouveau : mémoriser la position de scroll au début
+            let scrollAtStart = 0;
+            let thresholdReachedTime = 0; // ✅ Nouveau : moment où le seuil est atteint
             
-            const pullThreshold = 120; // ✅ Augmenté de 80 à 120
-            const maxPullDistance = 150; // ✅ Augmenté de 120 à 150
-            const minPullStart = 20; // ✅ Nouveau : mouvement minimum avant de commencer
+            const pullThreshold = 150; // ✅ Augmenté encore plus : 150px
+            const maxPullDistance = 180; // ✅ Augmenté à 180px
+            const minPullStart = 30; // ✅ Augmenté de 20 à 30px
+            const minHoldTime = 300; // ✅ Nouveau : doit tenir 300ms au-dessus du seuil
             
             // Créer l'indicateur
             const refreshIndicator = document.createElement('div');
@@ -5143,9 +5145,11 @@
                 if (dashboard.scrollTop > 5) return;
                 
                 touchStartY = e.touches[0].clientY;
-                scrollAtStart = dashboard.scrollTop; // ✅ Mémoriser la position
+                touchStartTime = Date.now(); // ✅ Enregistrer le moment
+                scrollAtStart = dashboard.scrollTop;
                 pulling = false;
                 pullDistance = 0;
+                thresholdReachedTime = 0;
             }, { passive: true });
             
             dashboard.addEventListener('touchmove', (e) => {
@@ -5156,6 +5160,7 @@
                     pulling = false;
                     refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
+                    thresholdReachedTime = 0;
                     return;
                 }
                 
@@ -5164,6 +5169,7 @@
                     pulling = false;
                     refreshIndicator.style.top = '-80px';
                     refreshIndicator.style.opacity = '0';
+                    thresholdReachedTime = 0;
                     return;
                 }
                 
@@ -5173,13 +5179,30 @@
                 // ✅ Nécessite un mouvement minimum avant de commencer
                 if (diff > minPullStart) {
                     pulling = true;
-                    pullDistance = Math.min(diff - minPullStart, maxPullDistance); // ✅ Soustraire le mouvement initial
+                    pullDistance = Math.min(diff - minPullStart, maxPullDistance);
+                    
+                    // ✅ Enregistrer quand le seuil est atteint pour la première fois
+                    if (pullDistance >= pullThreshold && thresholdReachedTime === 0) {
+                        thresholdReachedTime = Date.now();
+                    }
+                    
+                    // ✅ Réinitialiser si on redescend sous le seuil
+                    if (pullDistance < pullThreshold) {
+                        thresholdReachedTime = 0;
+                    }
                     
                     const progress = Math.min(pullDistance / pullThreshold, 1);
                     
                     const indicatorTop = -80 + (pullDistance * 0.5);
                     refreshIndicator.style.top = `${indicatorTop}px`;
                     refreshIndicator.style.opacity = progress;
+                    
+                    // ✅ Changer la couleur de l'indicateur quand le seuil est atteint ET tenu assez longtemps
+                    if (thresholdReachedTime > 0 && (Date.now() - thresholdReachedTime) >= minHoldTime) {
+                        refreshIndicator.style.filter = 'brightness(1.2)'; // Indicateur visuel
+                    } else {
+                        refreshIndicator.style.filter = 'none';
+                    }
                 }
             }, { passive: true });
             
@@ -5190,10 +5213,13 @@
                 // ✅ CACHER IMMÉDIATEMENT dès qu'on relâche
                 refreshIndicator.style.top = '-80px';
                 refreshIndicator.style.opacity = '0';
+                refreshIndicator.style.filter = 'none';
                 
-                // Si on a dépassé le seuil, recharger (mais sans afficher le SVG)
-                if (pullDistance >= pullThreshold) {
-                    console.log('🔄 Pull-to-refresh déclenché!');
+                // ✅ Vérifier que le seuil est atteint ET tenu assez longtemps
+                const heldTime = thresholdReachedTime > 0 ? (Date.now() - thresholdReachedTime) : 0;
+                
+                if (pullDistance >= pullThreshold && heldTime >= minHoldTime) {
+                    console.log(`🔄 Pull-to-refresh déclenché! (tenu ${heldTime}ms)`);
                     
                     try {
                         if (typeof loadTransactions === 'function') {
@@ -5203,14 +5229,19 @@
                     } catch (error) {
                         console.error('❌ Erreur lors du refresh:', error);
                     }
+                } else if (pullDistance >= pullThreshold) {
+                    console.log(`⏱️ Pull-to-refresh annulé (pas tenu assez longtemps: ${heldTime}ms < ${minHoldTime}ms)`);
                 }
                 
                 pulling = false;
                 pullDistance = 0;
+                thresholdReachedTime = 0;
             }, { passive: true });
             
             console.log('✅ Pull-to-refresh initialisé');
         }
+
+
 
         /**
          * Scroll vers le haut de la page (smooth)
