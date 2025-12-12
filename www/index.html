@@ -650,15 +650,32 @@
     <div id="colorEditorModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🎨 Customize Colors</h2>
+                <h2 data-translate="customizeColors">🎨 Customize Colors</h2>
                 <button class="modal-close" onclick="closeColorEditor()">✕</button>
             </div>
-            <div class="modal-body" id="colorEditorBody">
-                <!-- Color items will be generated here -->
+            <div class="modal-body">
+                <!-- ✅ Options de randomisation -->
+                <div class="color-options">
+                    <label class="color-option-label">
+                        <input type="checkbox" id="colorByCategoryCheckbox">
+                        <span data-translate="colorByCategory">Group by categories</span>
+                    </label>
+                    <button class="modal-button secondary" onclick="randomizeColors()">
+                        <span data-translate="randomizeColors">🎲 Randomize Colors</span>
+                    </button>
+                </div>
+                
+                <div id="colorEditorBody">
+                    <!-- Color items will be generated here -->
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-button secondary" onclick="resetColors()">Reset to Default</button>
-                <button class="modal-button primary" onclick="closeColorEditor()">Done</button>
+                <button class="modal-button secondary" onclick="resetColors()">
+                    <span data-translate="resetColors">Reset to Default</span>
+                </button>
+                <button class="modal-button primary" onclick="closeColorEditor()">
+                    <span data-translate="done">Done</span>
+                </button>
             </div>
         </div>
     </div>
@@ -2279,9 +2296,10 @@
             // Build list of all expenses with their current colors - EXCLUDE income
             body.innerHTML = '';
             
-            Object.keys(expenses).forEach(categoryKey => {
-                // Skip income category
-                if (categoryKey === 'income') return;
+            // ✅ Utiliser categoryOrder pour afficher dans le bon ordre
+            categoryOrder.forEach(categoryKey => {
+                // Skip income category et catégories qui n'existent pas
+                if (categoryKey === 'income' || !expenses[categoryKey]) return;
                 
                 expenses[categoryKey].forEach(expense => {
                     // Use the same hash-based color calculation as the chart
@@ -2299,6 +2317,7 @@
                     
                     const colorItem = document.createElement('div');
                     colorItem.className = 'color-item';
+                    colorItem.setAttribute('data-category', categoryKey); // ✅ Ajouter catégorie pour randomize
                     colorItem.innerHTML = `
                         <span class="color-item-name">${expense.name}</span>
                         <div class="color-picker-wrapper">
@@ -2318,6 +2337,77 @@
             
             modal.classList.add('show');
         }
+
+        function randomizeColors() {
+            const byCategory = document.getElementById('colorByCategoryCheckbox').checked;
+            const colorItems = document.querySelectorAll('.color-item');
+            
+            if (byCategory) {
+                // Grouper par catégorie et assigner des tons similaires
+                const categoryColors = {};
+                
+                colorItems.forEach(item => {
+                    const category = item.getAttribute('data-category');
+                    const itemName = item.querySelector('.color-item-name').textContent;
+                    const colorInput = item.querySelector('input[type="color"]');
+                    
+                    // Si c'est la première fois qu'on voit cette catégorie, générer une couleur de base
+                    if (!categoryColors[category]) {
+                        categoryColors[category] = generateRandomHue();
+                    }
+                    
+                    // Générer une variation de la couleur de base de la catégorie
+                    const color = generateColorVariation(categoryColors[category]);
+                    colorInput.value = color;
+                    customColors[itemName] = color;
+                });
+            } else {
+                // Couleurs complètement aléatoires
+                colorItems.forEach(item => {
+                    const itemName = item.querySelector('.color-item-name').textContent;
+                    const colorInput = item.querySelector('input[type="color"]');
+                    const color = generateRandomColor();
+                    colorInput.value = color;
+                    customColors[itemName] = color;
+                });
+            }
+            
+            saveUserData();
+            updateChart();
+        }
+
+        // Générer une teinte aléatoire (hue)
+        function generateRandomHue() {
+            return Math.floor(Math.random() * 360);
+        }
+
+        // Générer une couleur complètement aléatoire
+        function generateRandomColor() {
+            return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+        }
+
+        // Générer une variation d'une teinte donnée
+        function generateColorVariation(baseHue) {
+            // Variation de ±30 degrés autour de la teinte de base
+            const hue = (baseHue + (Math.random() * 60 - 30) + 360) % 360;
+            const saturation = 60 + Math.random() * 30; // 60-90%
+            const lightness = 45 + Math.random() * 20;  // 45-65%
+            
+            return hslToHex(hue, saturation, lightness);
+        }
+
+        // Convertir HSL en HEX
+        function hslToHex(h, s, l) {
+            l /= 100;
+            const a = s * Math.min(l, 1 - l) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
 
         function closeColorEditor() {
             const modal = document.getElementById('colorEditorModal');

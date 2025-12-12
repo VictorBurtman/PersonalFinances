@@ -141,6 +141,11 @@ const translations = {
         useCustomEmoji: 'Use',
         pleaseEnterEmoji: 'Please enter an emoji',
         categoryUpdated: 'Category updated successfully!',
+        colorByCategory: 'Group by categories',
+        randomizeColors: '🎲 Randomize Colors',
+        resetColors: 'Reset to Default',
+        done: 'Done',
+        customizeColors: '🎨 Customize Colors',
 
 
         // Alerts & notifications
@@ -589,6 +594,11 @@ const translations = {
         useCustomEmoji: 'Utiliser',
         pleaseEnterEmoji: 'Veuillez entrer un emoji',
         categoryUpdated: 'Catégorie mise à jour avec succès !',
+        colorByCategory: 'Grouper par catégories',
+        randomizeColors: '🎲 Couleurs aléatoires',
+        resetColors: 'Réinitialiser',
+        done: 'Terminé',
+        customizeColors: '🎨 Personnaliser les couleurs', 
 
 
         // Alerts & notifications
@@ -1027,7 +1037,11 @@ const translations = {
         useCustomEmoji: 'השתמש',
         pleaseEnterEmoji: 'אנא הזן אימוג\'י',
         categoryUpdated: 'הקטגוריה עודכנה בהצלחה!',
-
+        colorByCategory: 'קבץ לפי קטגוריות',
+        randomizeColors: '🎲 צבעים אקראיים',
+        resetColors: 'איפוס',
+        done: 'סיום',
+        customizeColors: '🎨 התאמת צבעים', 
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1465,6 +1479,11 @@ const translations = {
         useCustomEmoji: 'Usar',
         pleaseEnterEmoji: 'Por favor ingresa un emoji',
         categoryUpdated: '¡Categoría actualizada con éxito!',
+        colorByCategory: 'Agrupar por categorías',
+        randomizeColors: '🎲 Colores aleatorios',
+        resetColors: 'Restablecer',
+        done: 'Listo',
+        customizeColors: '🎨 Personalizar colores',
 
 
         // Toasts & notifications
@@ -1903,6 +1922,11 @@ const translations = {
         useCustomEmoji: 'Использовать',
         pleaseEnterEmoji: 'Пожалуйста, введите эмодзи',
         categoryUpdated: 'Категория успешно обновлена!',
+        colorByCategory: 'Группировать по категориям',
+        randomizeColors: '🎲 Случайные цвета',
+        resetColors: 'Сбросить',
+        done: 'Готово',
+        customizeColors: '🎨 Настройка цветов',
 
 
         // Toasts & notifications
@@ -2341,6 +2365,11 @@ const translations = {
         useCustomEmoji: 'استخدم',
         pleaseEnterEmoji: 'الرجاء إدخال إيموجي',
         categoryUpdated: 'تم تحديث الفئة بنجاح!',
+        colorByCategory: 'تجميع حسب الفئات',
+        randomizeColors: '🎲 ألوان عشوائية',
+        resetColors: 'إعادة تعيين',
+        done: 'تم',
+        customizeColors: '🎨 تخصيص الألوان',
 
 
         // Toasts & notifications
