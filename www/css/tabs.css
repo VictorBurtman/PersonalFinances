@@ -727,11 +727,12 @@ body.dark-mode .color-btn-mini:hover {
     background: #f8f9fa;
     border-radius: 10px;
     transition: all 0.3s ease;
+    cursor: default; /* ✅ Change le curseur pour ne pas donner l'impression que c'est cliquable */
+
 }
 
 .expense-item:hover {
     background: #e9ecef;
-    transform: translateX(5px);
 }
 
 body.dark-mode .expense-item {
@@ -2509,6 +2510,33 @@ body.dark-mode .chartjs-legend span {
     .toast {
         min-width: auto;
         max-width: none;
+    }
+
+    /* ✅ Réduire la hauteur des items */
+    .expense-item {
+        padding: 10px 12px !important;
+        min-height: auto;
+    }
+    
+    .expense-name {
+        font-size: 0.9em;
+    }
+    
+    .expense-input {
+        width: 90px !important;
+        padding: 6px 10px !important;
+        font-size: 0.9em !important;
+    }
+    
+    .currency {
+        font-size: 0.85em;
+    }
+    
+    .drag-handle {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 1em !important;
+        margin-right: 8px !important;
     }
 }
 
