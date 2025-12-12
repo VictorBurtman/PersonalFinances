@@ -611,9 +611,16 @@ function renderTransactions() {
     const filtersSection = document.getElementById('filtersSection');
     const transactionCount = document.getElementById('transactionCount');
     const allTransactionsList = document.getElementById('allTransactionsList');
+    const renderLoader = document.getElementById('transactionsRenderLoader'); // ✅ Nouveau
+
+        // ✅ Afficher le loader et cacher la liste
+    if (renderLoader) renderLoader.style.display = 'block';
+    if (allTransactionsList) allTransactionsList.style.display = 'none';
     
     // Cas 1 : Aucune transaction du tout
     if (transactionsData.length === 0) {
+        // ✅ Cacher le loader
+        if (renderLoader) renderLoader.style.display = 'none';
         if (emptyState) {
             const t = translations[currentLanguage] || translations['en'];
             emptyState.innerHTML = `
@@ -726,6 +733,10 @@ function renderTransactions() {
         if (typeof updateTransactionsLanguage === 'function') {
             updateTransactionsLanguage();
         }
+        
+        // ✅ Cacher le loader et afficher la liste
+        if (renderLoader) renderLoader.style.display = 'none';
+        if (allTransactionsList) allTransactionsList.style.display = 'block';
     }, 100);
 }
 
