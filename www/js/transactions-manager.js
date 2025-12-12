@@ -2284,9 +2284,7 @@ async function handleCSVUpload(event) {
             }
         }
         
-        // Show results
-        hideLoadingOverlay();
-        
+        // Show results (but don't hide overlay yet)
         if (totalImported > 0) {
             let message = t.csvImportedSuccess?.replace('{count}', totalImported) || 
                           `Successfully imported ${totalImported} transactions`;
@@ -2318,6 +2316,9 @@ async function handleCSVUpload(event) {
         // Reload
         await loadTransactions();
         await loadImportedCSVsList();
+        
+        // ✅ Hide overlay AFTER reload is complete
+        hideLoadingOverlay();
         
     } catch (error) {
         hideLoadingOverlay();
