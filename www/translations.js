@@ -146,7 +146,8 @@ const translations = {
         resetColors: 'Reset to Default',
         done: 'Done',
         customizeColors: '🎨 Customize Colors',
-
+        importPeriod: 'Import transactions from',
+        importPeriodHelp: 'Only transactions within this period will be imported',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -599,6 +600,8 @@ const translations = {
         resetColors: 'Réinitialiser',
         done: 'Terminé',
         customizeColors: '🎨 Personnaliser les couleurs', 
+        importPeriod: 'Importer les transactions depuis',
+        importPeriodHelp: 'Seules les transactions de cette période seront importées',
 
 
         // Alerts & notifications
@@ -1042,6 +1045,8 @@ const translations = {
         resetColors: 'איפוס',
         done: 'סיום',
         customizeColors: '🎨 התאמת צבעים', 
+        importPeriod: 'ייבא עסקאות מ',
+        importPeriodHelp: 'רק עסקאות מתקופה זו ייובאו',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1484,6 +1489,8 @@ const translations = {
         resetColors: 'Restablecer',
         done: 'Listo',
         customizeColors: '🎨 Personalizar colores',
+        importPeriod: 'Importar transacciones desde',
+        importPeriodHelp: 'Solo se importarán las transacciones de este período',
 
 
         // Toasts & notifications
@@ -1927,6 +1934,8 @@ const translations = {
         resetColors: 'Сбросить',
         done: 'Готово',
         customizeColors: '🎨 Настройка цветов',
+        importPeriod: 'Импортировать транзакции за',
+        importPeriodHelp: 'Будут импортированы только транзакции за этот период',
 
 
         // Toasts & notifications
@@ -2370,6 +2379,8 @@ const translations = {
         resetColors: 'إعادة تعيين',
         done: 'تم',
         customizeColors: '🎨 تخصيص الألوان',
+        importPeriod: 'استيراد المعاملات من',
+        importPeriodHelp: 'سيتم استيراد المعاملات من هذه الفترة فقط',
 
 
         // Toasts & notifications

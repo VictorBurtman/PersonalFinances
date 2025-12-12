@@ -6216,6 +6216,25 @@
                         </p>
                     </div>
                     
+                    <!-- ✅ Sélecteur de période d'import -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9em;">
+                            <span data-translate="importPeriod">Import transactions from</span>
+                        </label>
+                        <select id="csvImportMonths" class="auth-input" style="width: 100%;">
+                            <option value="1">1 month ago</option>
+                            <option value="3">3 months ago</option>
+                            <option value="6">6 months ago</option>
+                            <option value="12" selected>12 months ago</option>
+                            <option value="18">18 months ago</option>
+                            <option value="24">24 months ago</option>
+                            <option value="36">36 months ago</option>
+                        </select>
+                        <p style="font-size: 0.8em; color: #6c757d; margin-top: 5px;">
+                            <span data-translate="importPeriodHelp">Only transactions within this period will be imported</span>
+                        </p>
+                    </div>
+                    
                     <input type="file" id="csvFileInput" class="csv-file-input" accept=".csv,.xlsx,.xls" multiple onchange="handleCSVUpload(event)" />
                     <button class="csv-import-btn" onclick="triggerCSVUpload()">
                         📥 <span data-translate="chooseCSV">Choose CSV/Excel File</span>

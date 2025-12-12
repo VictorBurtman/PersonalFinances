@@ -2430,9 +2430,13 @@ function parseCSV(csvText, fileName, bankName) {
     
     const transactions = [];
     
-    // Calculate date limit (1 year ago)
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    // ✅ Récupérer le nombre de mois sélectionné par l'utilisateur
+    const monthsInput = document.getElementById('csvImportMonths');
+    const monthsBack = monthsInput ? parseInt(monthsInput.value) : 12;
+    
+    // Calculate date limit
+    const cutoffDate = new Date();
+    cutoffDate.setMonth(cutoffDate.getMonth() - monthsBack);
     
     // Parse data rows
     for (let i = 1; i < lines.length; i++) {
@@ -2452,8 +2456,8 @@ function parseCSV(csvText, fileName, bankName) {
             const date = parseDate(dateStr);
             if (!date) continue;
             
-            // Skip transactions older than 1 year
-            if (date < oneYearAgo) {
+            // ✅ Skip transactions older than selected period
+            if (date < cutoffDate) {
                 continue;
             }
             
@@ -2479,6 +2483,7 @@ function parseCSV(csvText, fileName, bankName) {
     
     return transactions;
 }
+
 /**
  * Parse a single CSV line (handles quoted values)
  */
