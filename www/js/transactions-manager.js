@@ -2574,6 +2574,7 @@ function parseDate(dateStr) {
     return null;
 }
 
+
 /**
  * Import CSV transactions to Firebase
  */
@@ -2608,11 +2609,7 @@ async function importCSVTransactions(fileName, bankName, transactions) {
         
         const skipped = transactions.length - newTransactions.length;
         
-        if (newTransactions.length === 0) {
-            return { imported: 0, skipped: skipped };
-        }
-        
-        // Add new transactions
+        // Add new transactions (even if 0, we still want to update CSV metadata)
         newTransactions.forEach(transaction => {
             const docRef = db.collection('users')
                 .doc(userId)
@@ -2628,24 +2625,49 @@ async function importCSVTransactions(fileName, bankName, transactions) {
             });
         });
         
-        // Save CSV metadata
-        const csvMetaRef = db.collection('users')
+        // ✅ Check if CSV with same fileName and bankName already exists
+        const existingCSVs = await db.collection('users')
             .doc(userId)
             .collection('importedCSVs')
-            .doc();
-        
-        batch.set(csvMetaRef, {
-            id: csvMetaRef.id,
-            fileName: fileName,
-            bankName: bankName,
-            importedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            transactionCount: newTransactions.length,
-            transactionIdentifiers: newTransactions.map(t => t.identifier)
-        });
+            .where('fileName', '==', fileName)
+            .where('bankName', '==', bankName)
+            .get();
+
+        let csvMetaRef;
+
+        if (!existingCSVs.empty) {
+            // ✅ Update existing CSV entry
+            csvMetaRef = existingCSVs.docs[0].ref;
+            
+            const existingData = existingCSVs.docs[0].data();
+            const existingIdentifiers = existingData.transactionIdentifiers || [];
+            const allIdentifiers = [...new Set([...existingIdentifiers, ...newTransactions.map(t => t.identifier)])];
+            
+            batch.update(csvMetaRef, {
+                importedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                transactionCount: allIdentifiers.length,
+                transactionIdentifiers: allIdentifiers
+            });
+        } else {
+            // ✅ Create new CSV entry
+            csvMetaRef = db.collection('users')
+                .doc(userId)
+                .collection('importedCSVs')
+                .doc();
+            
+            batch.set(csvMetaRef, {
+                id: csvMetaRef.id,
+                fileName: fileName,
+                bankName: bankName,
+                importedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                transactionCount: newTransactions.length,
+                transactionIdentifiers: newTransactions.map(t => t.identifier)
+            });
+        }
         
         await batch.commit();
         
-        // Return stats instead of showing toast
+        // Return stats
         return { imported: newTransactions.length, skipped: skipped };
         
     } catch (error) {
