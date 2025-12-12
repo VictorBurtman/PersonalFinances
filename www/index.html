@@ -5323,10 +5323,6 @@
         let budgetScrollPosition = 0;
         let transactionsScrollPosition = 0;
 
-        /**
-         * Change d'onglet (Budget <-> Transactions)
-         * @param {string} tabName - 'budget' ou 'transactions'
-         */
         function switchTab(tabName) {
             console.log('🔵 switchTab appelé avec:', tabName);
             
@@ -5361,6 +5357,10 @@
             
             // Verrouillage
             isTabSwitching = true;
+            
+            // ✅ Cacher le bouton reset pendant la transition pour éviter le flash
+            const resetBtn = document.getElementById('resetBtn');
+            if (resetBtn) resetBtn.style.opacity = '0';
             
             // ✅ PAS DE SAUVEGARDE ICI (déjà faite dans initSwipeNavigation)
             const dashboard = document.querySelector('.dashboard');
@@ -5430,6 +5430,14 @@
                             budgetTab.style.transition = 'opacity 0.15s ease';
                             budgetTab.style.opacity = '1';
                         }
+                        
+                        // ✅ Réafficher le bouton reset après le fade in
+                        setTimeout(() => {
+                            if (resetBtn) {
+                                resetBtn.style.transition = 'opacity 0.2s ease';
+                                resetBtn.style.opacity = '1';
+                            }
+                        }, 150);
                     });
                     
                     // ✅ Synchroniser les boutons du header en fonction de l'état réel
@@ -5522,6 +5530,7 @@
                 }, 200);
             }
         }
+
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
