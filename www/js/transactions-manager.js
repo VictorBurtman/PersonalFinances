@@ -843,27 +843,48 @@ function renderTransaction(txn) {
             <!-- Bottom row: Category selector or label -->
             <div style="display: flex; align-items: center; gap: 10px;">
                 ${isLabeled ? `
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em;">
-                        <span style="font-weight: 600; color: #667eea;">
-                            ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
-                        </span>
-                        <button 
-                            onclick="unlabelTransaction('${txn.id}')" 
-                            style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
-                            title="Remove label"
-                        >✕</button>
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em;">
+                            <span style="font-weight: 600; color: #667eea;">
+                                ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
+                            </span>
+                            <button 
+                                onclick="unlabelTransaction('${txn.id}', document.getElementById('unique-unlabel-${txnId}') ? document.getElementById('unique-unlabel-${txnId}').checked : false)" 
+                                style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
+                                title="Remove label"
+                            >✕</button>
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 4px; font-size: 0.75em; color: #6c757d; white-space: nowrap; cursor: pointer; user-select: none;" title="Remove label only from this transaction">
+                            <input 
+                                type="checkbox" 
+                                id="unique-unlabel-${txnId}"
+                                style="cursor: pointer; width: 14px; height: 14px;"
+                            >
+                            <span data-translate="uniqueLabel">1×</span>
+                        </label>
                     </div>
                 ` : `
-                    <select 
-                        class="transaction-category-select" 
-                        onchange="labelTransaction('${txn.id}', this.value)"
-                        style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; max-width: 250px;"
-                    >
-                        <option value="" data-translate="selectCategory">Select category</option>
-                        ${categories.map(cat => `
-                            <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
-                        `).join('')}
-                    </select>
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                        <select 
+                            id="cat-select-${txnId}"
+                            class="transaction-category-select" 
+                            onchange="labelTransaction('${txn.id}', this.value, document.getElementById('unique-${txnId}').checked)"
+                            style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; min-width: 0;"
+                        >
+                            <option value="" data-translate="selectCategory">Select category</option>
+                            ${categories.map(cat => `
+                                <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
+                            `).join('')}
+                        </select>
+                        <label style="display: flex; align-items: center; gap: 4px; font-size: 0.75em; color: #6c757d; white-space: nowrap; cursor: pointer; user-select: none;" title="Label only this transaction">
+                            <input 
+                                type="checkbox" 
+                                id="unique-${txnId}"
+                                style="cursor: pointer; width: 14px; height: 14px;"
+                            >
+                            <span data-translate="uniqueLabel">1×</span>
+                        </label>
+                    </div>
                 `}
             </div>
         </div>
@@ -1778,14 +1799,11 @@ async function autoLabelAll() {
     }
 }
 
-/**
- * Label a single transaction
- */
 
 /**
  * Label a transaction with a category
  */
-async function labelTransaction(transactionId, category) {
+async function labelTransaction(transactionId, category, isUnique = false) {
     if (!transactionsFunctions) {
         showTransactionAlert('Firebase Functions not initialized', 'error');
         return;
@@ -1796,21 +1814,36 @@ async function labelTransaction(transactionId, category) {
     try {
         // Show loading overlay
         const t = translations[currentLanguage] || translations['en'];
-        showLoadingOverlay(t.labelingTransaction || 'Labeling transaction...', t.checkingSimilar || 'Checking for similar transactions...');
+        const loadingMessage = isUnique 
+            ? (t.labelingTransactionUnique || 'Labeling this transaction only...')
+            : (t.labelingTransaction || 'Labeling transaction...');
+        const subMessage = isUnique
+            ? ''
+            : (t.checkingSimilar || 'Checking for similar transactions...');
+        
+        showLoadingOverlay(loadingMessage, subMessage);
         
         const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
-        const result = await labelTransactionFunc({ transactionId, category });
+        const result = await labelTransactionFunc({ 
+            transactionId, 
+            category,
+            isUnique: isUnique  // ✅ Nouveau paramètre
+        });
         
         // Hide loading overlay
         hideLoadingOverlay();
         
         // Show smart message based on how many were labeled
-        const similarCount = result.data.similarCount || 0;
-        if (similarCount > 0) {
-            const message = (t.labeledWithSimilar || 'Labeled 1 transaction + {count} similar ones! ✓').replace('{count}', similarCount);
-            showTransactionAlert(message, 'success');
+        if (isUnique) {
+            showTransactionAlert(t.transactionLabeledUnique || 'Transaction labeled (unique) ✓', 'success');
         } else {
-            showTransactionAlert(t.transactionLabeled || 'Transaction labeled! ✓', 'success');
+            const similarCount = result.data.similarCount || 0;
+            if (similarCount > 0) {
+                const message = (t.labeledWithSimilar || 'Labeled 1 transaction + {count} similar ones! ✓').replace('{count}', similarCount);
+                showTransactionAlert(message, 'success');
+            } else {
+                showTransactionAlert(t.transactionLabeled || 'Transaction labeled! ✓', 'success');
+            }
         }
         
         await loadTransactions();
@@ -1821,10 +1854,11 @@ async function labelTransaction(transactionId, category) {
     }
 }
 
+
 /**
  * Remove label from a transaction
  */
-async function unlabelTransaction(transactionId) {
+async function unlabelTransaction(transactionId, isUnique = false) {
     if (!transactionsFunctions) {
         showTransactionAlert('Firebase Functions not initialized', 'error');
         return;
@@ -1833,15 +1867,38 @@ async function unlabelTransaction(transactionId) {
     try {
         // Show loading overlay
         const t = translations[currentLanguage] || translations['en'];
-        showLoadingOverlay(t.unlabelingTransaction || 'Removing label...', t.checkingSimilar || 'Checking for similar transactions...');
+        const loadingMessage = isUnique 
+            ? (t.unlabelingTransactionUnique || 'Removing label from this transaction only...')
+            : (t.unlabelingTransaction || 'Removing label...');
+        const subMessage = isUnique
+            ? ''
+            : (t.checkingSimilar || 'Checking for similar transactions...');
+        
+        showLoadingOverlay(loadingMessage, subMessage);
         
         const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
-        await labelTransactionFunc({ transactionId, category: null });
+        const result = await labelTransactionFunc({ 
+            transactionId, 
+            category: null,
+            isUnique: isUnique  // ✅ Nouveau paramètre
+        });
         
         // Hide loading overlay
         hideLoadingOverlay();
         
-        showTransactionAlert(t.labelRemoved || 'Label removed! ✓', 'success');
+        // Show smart message
+        if (isUnique) {
+            showTransactionAlert(t.labelRemovedUnique || 'Label removed (unique) ✓', 'success');
+        } else {
+            const similarCount = result.data.similarCount || 0;
+            if (similarCount > 0) {
+                const message = (t.labelRemovedWithSimilar || 'Removed label from 1 transaction + {count} similar ones! ✓').replace('{count}', similarCount);
+                showTransactionAlert(message, 'success');
+            } else {
+                showTransactionAlert(t.labelRemoved || 'Label removed! ✓', 'success');
+            }
+        }
+        
         await loadTransactions();
     } catch (error) {
         hideLoadingOverlay();
@@ -1849,7 +1906,6 @@ async function unlabelTransaction(transactionId) {
         showTransactionAlert('Error: ' + error.message, 'error');
     }
 }
-
 // Store current transaction info for exclude modal
 let currentExcludeTransactionId = null;
 let currentExcludeTransactionName = null;

@@ -155,6 +155,12 @@ const translations = {
         eighteenMonthsAgo: '18 months ago',
         twentyFourMonthsAgo: '24 months ago',
         thirtySixMonthsAgo: '36 months ago',
+        unlabelingTransactionUnique: 'Removing label from this transaction only...',
+        labelRemovedUnique: 'Label removed (unique) ✓',
+        labelRemovedWithSimilar: 'Removed label from 1 transaction + {count} similar ones! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'Labeling this transaction only...',
+        transactionLabeledUnique: 'Transaction labeled (unique) ✓',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -616,6 +622,12 @@ const translations = {
         eighteenMonthsAgo: 'Il y a 18 mois',
         twentyFourMonthsAgo: 'Il y a 24 mois',
         thirtySixMonthsAgo: 'Il y a 36 mois',
+        unlabelingTransactionUnique: 'Retrait de l\'étiquette de cette transaction uniquement...',
+        labelRemovedUnique: 'Étiquette retirée (unique) ✓',
+        labelRemovedWithSimilar: 'Étiquette retirée de 1 transaction + {count} similaires ! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'Étiquetage de cette transaction uniquement...',
+        transactionLabeledUnique: 'Transaction étiquetée (unique) ✓',
 
 
         // Alerts & notifications
@@ -1068,6 +1080,12 @@ const translations = {
         eighteenMonthsAgo: 'לפני 18 חודשים',
         twentyFourMonthsAgo: 'לפני 24 חודשים',
         thirtySixMonthsAgo: 'לפני 36 חודשים',
+        unlabelingTransactionUnique: 'מסיר תווית מעסקה זו בלבד...',
+        labelRemovedUnique: 'תווית הוסרה (ייחודי) ✓',
+        labelRemovedWithSimilar: 'תווית הוסרה מ-1 עסקה + {count} דומות! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'מתייג עסקה זו בלבד...',
+        transactionLabeledUnique: 'עסקה תויגה (ייחודי) ✓',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1519,6 +1537,12 @@ const translations = {
         eighteenMonthsAgo: 'Hace 18 meses',
         twentyFourMonthsAgo: 'Hace 24 meses',
         thirtySixMonthsAgo: 'Hace 36 meses',
+        unlabelingTransactionUnique: 'Quitando etiqueta solo de esta transacción...',
+        labelRemovedUnique: 'Etiqueta eliminada (única) ✓',
+        labelRemovedWithSimilar: '¡Etiqueta eliminada de 1 transacción + {count} similares! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'Etiquetando solo esta transacción...',
+        transactionLabeledUnique: 'Transacción etiquetada (única) ✓',
 
 
         // Toasts & notifications
@@ -1971,6 +1995,12 @@ const translations = {
         eighteenMonthsAgo: '18 месяцев назад',
         twentyFourMonthsAgo: '24 месяца назад',
         thirtySixMonthsAgo: '36 месяцев назад',
+        unlabelingTransactionUnique: 'Удаление метки только с этой транзакции...',
+        labelRemovedUnique: 'Метка удалена (уникальная) ✓',
+        labelRemovedWithSimilar: 'Метка удалена с 1 транзакции + {count} похожих! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'Маркировка только этой транзакции...',
+        transactionLabeledUnique: 'Транзакция помечена (уникальная) ✓',
 
 
         // Toasts & notifications
@@ -2423,6 +2453,12 @@ const translations = {
         eighteenMonthsAgo: 'منذ 18 شهرًا',
         twentyFourMonthsAgo: 'منذ 24 شهرًا',
         thirtySixMonthsAgo: 'منذ 36 شهرًا',
+        unlabelingTransactionUnique: 'إزالة العلامة من هذه المعاملة فقط...',
+        labelRemovedUnique: 'تمت إزالة العلامة (فريدة) ✓',
+        labelRemovedWithSimilar: 'تمت إزالة العلامة من معاملة واحدة + {count} مماثلة! ✓',
+        uniqueLabel: '1×',
+        labelingTransactionUnique: 'وضع علامة على هذه المعاملة فقط...',
+        transactionLabeledUnique: 'تم وضع علامة على المعاملة (فريدة) ✓',
 
 
         // Toasts & notifications

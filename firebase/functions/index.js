@@ -607,6 +607,7 @@ export const getTransactions = onCall(async (request) => {
   }
 });
 
+
 /**
  * Cloud Function: Label a transaction
  * Assigns a category to a transaction and creates/updates labeling rules
@@ -617,7 +618,7 @@ export const labelTransaction = onCall(async (request) => {
   }
 
   const userId = request.auth.uid;
-  const { transactionId, category } = request.data;
+  const { transactionId, category, isUnique } = request.data;
 
   if (!transactionId) {
     throw new HttpsError('invalid-argument', 'Transaction ID is required');
@@ -637,66 +638,101 @@ export const labelTransaction = onCall(async (request) => {
 
     const transaction = transactionDoc.data();
 
+    // ✅ Si isUnique = true, labéliser/délabéliser uniquement cette transaction
+    if (isUnique) {
+      await transactionRef.update({
+        category: category,
+        isLabeled: category !== null,
+        isUniqueLabel: category !== null, // ✅ Marquer comme unique seulement si on labélise
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+
+      console.log(`Transaction ${transactionId} ${category ? 'labeled' : 'unlabeled'} (unique)`);
+
+      return {
+        success: true,
+        message: category ? 'Labeled 1 transaction (unique)' : 'Unlabeled 1 transaction (unique)',
+        similarCount: 0
+      };
+    }
+
+    // ✅ Sinon, labéliser/délabéliser cette transaction + toutes les similaires (sauf celles marquées unique)
+    
     // Update the main transaction
     await transactionRef.update({
       category: category,
       isLabeled: category !== null,
+      isUniqueLabel: false, // ✅ Pas unique
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    console.log(`Transaction ${transactionId} labeled as ${category}`);
+    console.log(`Transaction ${transactionId} ${category ? 'labeled' : 'unlabeled'}`);
 
-    // If labeling (not unlabeling), find and label similar transactions
+    // Find and process similar transactions
     let similarCount = 0;
-    if (category) {
-      // Extract keywords from transaction description
-      const description = transaction.description.toLowerCase();
-      const keywords = extractKeywords(description);
+    
+    // Extract keywords from transaction description
+    const description = transaction.description.toLowerCase();
+    const keywords = extractKeywords(description);
 
-      console.log(`Extracted keywords for "${description}":`, keywords);
+    console.log(`Extracted keywords for "${description}":`, keywords);
 
-      if (keywords.length > 0) {
-        // Find unlabeled transactions with similar descriptions
-        const allTransactionsSnapshot = await db.collection('users')
-          .doc(userId)
-          .collection('transactions')
-          .where('isLabeled', '==', false)
-          .get();
+    if (keywords.length > 0) {
+      // ✅ Pour labéliser : trouver les transactions non labélisées
+      // ✅ Pour délabéliser : trouver les transactions labélisées avec la même catégorie
+      const querySnapshot = category 
+        ? await db.collection('users')
+            .doc(userId)
+            .collection('transactions')
+            .where('isLabeled', '==', false)
+            .get()
+        : await db.collection('users')
+            .doc(userId)
+            .collection('transactions')
+            .where('category', '==', transaction.category)
+            .where('isLabeled', '==', true)
+            .get();
 
-        const batch = db.batch();
+      const batch = db.batch();
+      
+      querySnapshot.docs.forEach(doc => {
+        const txn = doc.data();
         
-        allTransactionsSnapshot.docs.forEach(doc => {
-          const txn = doc.data();
-          const txnDescription = txn.description.toLowerCase();
-          
-          // Check if any keyword matches (more flexible)
-          const hasMatch = keywords.some(keyword => {
-            // For short keywords (< 4 chars), require exact match
-            if (keyword.length < 4) {
-              return txnDescription.includes(keyword);
-            }
-            // For longer keywords, allow partial matches
-            // This helps with variations like "אי.אם.פי" vs "אי אם פי"
-            const cleanKeyword = keyword.replace(/[.\s:]/g, '');
-            const cleanTxnDesc = txnDescription.replace(/[.\s:]/g, '');
-            return cleanTxnDesc.includes(cleanKeyword);
-          });
-          
-          if (hasMatch && doc.id !== transactionId) {
-            batch.update(doc.ref, {
-              category: category,
-              isLabeled: true,
-              updatedAt: admin.firestore.FieldValue.serverTimestamp()
-            });
-            similarCount++;
-            console.log(`  → Auto-labeled similar transaction: ${txn.description}`);
-          }
-        });
-
-        if (similarCount > 0) {
-          await batch.commit();
-          console.log(`Auto-labeled ${similarCount} similar transactions`);
+        // ✅ Exclure les transactions déjà marquées comme uniques
+        if (txn.isUniqueLabel && doc.id !== transactionId) {
+          console.log(`  → Skipping unique transaction: ${txn.description}`);
+          return;
         }
+        
+        const txnDescription = txn.description.toLowerCase();
+        
+        // Check if any keyword matches (more flexible)
+        const hasMatch = keywords.some(keyword => {
+          // For short keywords (< 4 chars), require exact match
+          if (keyword.length < 4) {
+            return txnDescription.includes(keyword);
+          }
+          // For longer keywords, allow partial matches
+          const cleanKeyword = keyword.replace(/[.\s:]/g, '');
+          const cleanTxnDesc = txnDescription.replace(/[.\s:]/g, '');
+          return cleanTxnDesc.includes(cleanKeyword);
+        });
+        
+        if (hasMatch && doc.id !== transactionId) {
+          batch.update(doc.ref, {
+            category: category,
+            isLabeled: category !== null,
+            isUniqueLabel: false, // ✅ Réinitialiser le flag
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+          similarCount++;
+          console.log(`  → Auto-${category ? 'labeled' : 'unlabeled'} similar transaction: ${txn.description}`);
+        }
+      });
+
+      if (similarCount > 0) {
+        await batch.commit();
+        console.log(`Auto-${category ? 'labeled' : 'unlabeled'} ${similarCount} similar transactions`);
       }
     }
 
@@ -704,17 +740,15 @@ export const labelTransaction = onCall(async (request) => {
       success: true,
       message: category ? 
         `Labeled ${1 + similarCount} transaction${similarCount > 0 ? 's' : ''}` :
-        'Label removed',
+        `Unlabeled ${1 + similarCount} transaction${similarCount > 0 ? 's' : ''}`,
       similarCount: similarCount
     };
 
   } catch (error) {
-    console.error('Error labeling transaction:', error);
-    throw new HttpsError('internal', `Failed to label transaction: ${error.message}`);
+    console.error('Error processing transaction:', error);
+    throw new HttpsError('internal', `Failed to process transaction: ${error.message}`);
   }
 });
-
-
 
 /**
  * Rename a category and update all associated transactions
