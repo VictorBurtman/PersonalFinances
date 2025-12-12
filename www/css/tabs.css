@@ -2190,7 +2190,7 @@ body.dark-mode .settings-select {
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
-    z-index: 99999;
+    z-index: 999999;
     justify-content: center;
     align-items: center;
 }
