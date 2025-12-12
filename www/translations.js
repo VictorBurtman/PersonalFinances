@@ -148,6 +148,13 @@ const translations = {
         customizeColors: '🎨 Customize Colors',
         importPeriod: 'Import transactions from',
         importPeriodHelp: 'Only transactions within this period will be imported',
+        oneMonthAgo: '1 month ago',
+        threeMonthsAgo: '3 months ago',
+        sixMonthsAgo: '6 months ago',
+        twelveMonthsAgo: '12 months ago',
+        eighteenMonthsAgo: '18 months ago',
+        twentyFourMonthsAgo: '24 months ago',
+        thirtySixMonthsAgo: '36 months ago',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -602,6 +609,13 @@ const translations = {
         customizeColors: '🎨 Personnaliser les couleurs', 
         importPeriod: 'Importer les transactions depuis',
         importPeriodHelp: 'Seules les transactions de cette période seront importées',
+        oneMonthAgo: 'Il y a 1 mois',
+        threeMonthsAgo: 'Il y a 3 mois',
+        sixMonthsAgo: 'Il y a 6 mois',
+        twelveMonthsAgo: 'Il y a 12 mois',
+        eighteenMonthsAgo: 'Il y a 18 mois',
+        twentyFourMonthsAgo: 'Il y a 24 mois',
+        thirtySixMonthsAgo: 'Il y a 36 mois',
 
 
         // Alerts & notifications
@@ -1047,6 +1061,13 @@ const translations = {
         customizeColors: '🎨 התאמת צבעים', 
         importPeriod: 'ייבא עסקאות מ',
         importPeriodHelp: 'רק עסקאות מתקופה זו ייובאו',
+        oneMonthAgo: 'לפני חודש',
+        threeMonthsAgo: 'לפני 3 חודשים',
+        sixMonthsAgo: 'לפני 6 חודשים',
+        twelveMonthsAgo: 'לפני 12 חודשים',
+        eighteenMonthsAgo: 'לפני 18 חודשים',
+        twentyFourMonthsAgo: 'לפני 24 חודשים',
+        thirtySixMonthsAgo: 'לפני 36 חודשים',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1491,6 +1512,13 @@ const translations = {
         customizeColors: '🎨 Personalizar colores',
         importPeriod: 'Importar transacciones desde',
         importPeriodHelp: 'Solo se importarán las transacciones de este período',
+        oneMonthAgo: 'Hace 1 mes',
+        threeMonthsAgo: 'Hace 3 meses',
+        sixMonthsAgo: 'Hace 6 meses',
+        twelveMonthsAgo: 'Hace 12 meses',
+        eighteenMonthsAgo: 'Hace 18 meses',
+        twentyFourMonthsAgo: 'Hace 24 meses',
+        thirtySixMonthsAgo: 'Hace 36 meses',
 
 
         // Toasts & notifications
@@ -1936,6 +1964,13 @@ const translations = {
         customizeColors: '🎨 Настройка цветов',
         importPeriod: 'Импортировать транзакции за',
         importPeriodHelp: 'Будут импортированы только транзакции за этот период',
+        oneMonthAgo: '1 месяц назад',
+        threeMonthsAgo: '3 месяца назад',
+        sixMonthsAgo: '6 месяцев назад',
+        twelveMonthsAgo: '12 месяцев назад',
+        eighteenMonthsAgo: '18 месяцев назад',
+        twentyFourMonthsAgo: '24 месяца назад',
+        thirtySixMonthsAgo: '36 месяцев назад',
 
 
         // Toasts & notifications
@@ -2381,6 +2416,13 @@ const translations = {
         customizeColors: '🎨 تخصيص الألوان',
         importPeriod: 'استيراد المعاملات من',
         importPeriodHelp: 'سيتم استيراد المعاملات من هذه الفترة فقط',
+        oneMonthAgo: 'منذ شهر واحد',
+        threeMonthsAgo: 'منذ 3 أشهر',
+        sixMonthsAgo: 'منذ 6 أشهر',
+        twelveMonthsAgo: 'منذ 12 شهرًا',
+        eighteenMonthsAgo: 'منذ 18 شهرًا',
+        twentyFourMonthsAgo: 'منذ 24 شهرًا',
+        thirtySixMonthsAgo: 'منذ 36 شهرًا',
 
 
         // Toasts & notifications
