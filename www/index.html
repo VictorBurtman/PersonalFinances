@@ -2214,13 +2214,21 @@
                 const typeChanged = chart.config.type !== currentChartType;
 
                 if (typeChanged || (wasEmpty !== isEmpty)) {
+                    // ✅ Seulement reconstruire si le type change ou si on passe de vide à non-vide
                     chart.destroy();
                     createNewChart();
                 } else {
-                    // ✅ Mise à jour douce avec animation
-                    chart.data = chartData;
+                    // ✅ Mise à jour douce - NE JAMAIS reconstruire
+                    chart.data.labels = chartData.labels;
+                    chart.data.datasets[0].data = chartData.datasets[0].data;
+                    chart.data.datasets[0].backgroundColor = chartData.datasets[0].backgroundColor;
                     chart.options = finalOptions;
-                    chart.update('active');
+                    chart.update('none'); // ✅ 'none' puis on force l'animation après
+                    
+                    // ✅ Forcer l'animation après un micro-délai
+                    setTimeout(() => {
+                        chart.update('active');
+                    }, 10);
                 }
             } else {
                 createNewChart();
