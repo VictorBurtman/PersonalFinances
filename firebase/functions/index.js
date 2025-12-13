@@ -620,7 +620,7 @@ export const labelTransaction = onCall(async (request) => {
   const userId = request.auth.uid;
   const { transactionId, category, isUnique } = request.data;
 
-    // ✅ AJOUTER CES LOGS DE DEBUG
+  // ✅ LOGS DE DEBUG
   console.log('🔍 labelTransaction called with:', {
     transactionId,
     category,
@@ -646,8 +646,9 @@ export const labelTransaction = onCall(async (request) => {
     }
 
     const transaction = transactionDoc.data();
-    // ✅ AJOUTER CE LOG AUSSI
+    
     console.log('🔍 isUnique check:', isUnique, 'will enter unique block?', isUnique === true);
+    
     // ✅ Si isUnique = true, labéliser/délabéliser uniquement cette transaction
     if (isUnique) {
       await transactionRef.update({
@@ -678,72 +679,56 @@ export const labelTransaction = onCall(async (request) => {
 
     console.log(`Transaction ${transactionId} ${category ? 'labeled' : 'unlabeled'}`);
 
-    // Find and process similar transactions
+    // ✅ NOUVEAU : Matching exact sur la description au lieu de keywords
+    const description = transaction.description;
+    console.log(`Looking for transactions matching exactly: "${description}"`);
+
+    // ✅ Chercher les transactions avec EXACTEMENT la même description
+    const querySnapshot = category 
+      ? await db.collection('users')
+          .doc(userId)
+          .collection('transactions')
+          .where('isLabeled', '==', false)
+          .where('description', '==', description) // ✅ Match exact
+          .get()
+      : await db.collection('users')
+          .doc(userId)
+          .collection('transactions')
+          .where('category', '==', transaction.category)
+          .where('isLabeled', '==', true)
+          .where('description', '==', description) // ✅ Match exact
+          .get();
+
+    const batch = db.batch();
     let similarCount = 0;
     
-    // Extract keywords from transaction description
-    const description = transaction.description.toLowerCase();
-    const keywords = extractKeywords(description);
-
-    console.log(`Extracted keywords for "${description}":`, keywords);
-
-    if (keywords.length > 0) {
-      // ✅ Pour labéliser : trouver les transactions non labélisées
-      // ✅ Pour délabéliser : trouver les transactions labélisées avec la même catégorie
-      const querySnapshot = category 
-        ? await db.collection('users')
-            .doc(userId)
-            .collection('transactions')
-            .where('isLabeled', '==', false)
-            .get()
-        : await db.collection('users')
-            .doc(userId)
-            .collection('transactions')
-            .where('category', '==', transaction.category)
-            .where('isLabeled', '==', true)
-            .get();
-
-      const batch = db.batch();
+    querySnapshot.docs.forEach(doc => {
+      const txn = doc.data();
       
-      querySnapshot.docs.forEach(doc => {
-        const txn = doc.data();
-        
-        // ✅ Exclure les transactions déjà marquées comme uniques
-        if (txn.isUniqueLabel && doc.id !== transactionId) {
-          console.log(`  → Skipping unique transaction: ${txn.description}`);
-          return;
-        }
-        
-        const txnDescription = txn.description.toLowerCase();
-        
-        // Check if any keyword matches (more flexible)
-        const hasMatch = keywords.some(keyword => {
-          // For short keywords (< 4 chars), require exact match
-          if (keyword.length < 4) {
-            return txnDescription.includes(keyword);
-          }
-          // For longer keywords, allow partial matches
-          const cleanKeyword = keyword.replace(/[.\s:]/g, '');
-          const cleanTxnDesc = txnDescription.replace(/[.\s:]/g, '');
-          return cleanTxnDesc.includes(cleanKeyword);
-        });
-        
-        if (hasMatch && doc.id !== transactionId) {
-          batch.update(doc.ref, {
-            category: category,
-            isLabeled: category !== null,
-            isUniqueLabel: false, // ✅ Réinitialiser le flag
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-          });
-          similarCount++;
-          console.log(`  → Auto-${category ? 'labeled' : 'unlabeled'} similar transaction: ${txn.description}`);
-        }
-      });
-
-      if (similarCount > 0) {
-        await batch.commit();
-        console.log(`Auto-${category ? 'labeled' : 'unlabeled'} ${similarCount} similar transactions`);
+      // ✅ Exclure les transactions déjà marquées comme uniques
+      if (txn.isUniqueLabel && doc.id !== transactionId) {
+        console.log(`  → Skipping unique transaction: ${txn.description}`);
+        return;
       }
+      
+      // ✅ Ne pas relabéliser la transaction originale
+      if (doc.id === transactionId) {
+        return;
+      }
+      
+      batch.update(doc.ref, {
+        category: category,
+        isLabeled: category !== null,
+        isUniqueLabel: false, // ✅ Réinitialiser le flag
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      similarCount++;
+      console.log(`  → Auto-${category ? 'labeled' : 'unlabeled'} similar transaction: ${txn.description}`);
+    });
+
+    if (similarCount > 0) {
+      await batch.commit();
+      console.log(`Auto-${category ? 'labeled' : 'unlabeled'} ${similarCount} similar transactions`);
     }
 
     return {
