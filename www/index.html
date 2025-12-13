@@ -2001,12 +2001,21 @@
                     if (titleElement && categoryMetadata[categoryKey]) {
                         const meta = categoryMetadata[categoryKey];
                         
-                        // ✅ Rendre le nom cliquable uniquement en mode Edit
-                        const nameHTML = isEditMode 
-                            ? `<span class="category-name-editable" onclick="editCategoryName('${categoryKey}')" style="cursor: pointer;">${meta.displayName}</span>`
-                            : meta.displayName;
-                        
-                        titleElement.innerHTML = `${meta.emoji} ${nameHTML}`;
+                        // ✅ Pour Income : cas spécial (NON éditable)
+                        if (categoryKey === 'income') {
+                            titleElement.innerHTML = `
+                                <img src="img/icons/income.svg" alt="Income" class="category-icon income-icon">
+                                <span data-translate="income">${meta.displayName}</span>
+                            `;
+                        } 
+                        // ✅ Pour les autres catégories : cliquable en mode Edit
+                        else {
+                            const nameHTML = isEditMode 
+                                ? `<span class="category-name-editable" onclick="renameCategory('${categoryKey}')" style="cursor: pointer;">${meta.displayName}</span>`
+                                : meta.displayName;
+                            
+                            titleElement.innerHTML = `${meta.emoji} ${nameHTML}`;
+                        }
                     }
 
                     // Update stats
@@ -3161,7 +3170,7 @@
             
             // ✅ Rendre le nom cliquable uniquement en mode Edit
             const nameHTML = isEditMode 
-                ? `<span class="category-name-editable" onclick="editCategoryName('${categoryKey}')" style="cursor: pointer;">${categoryName}</span>`
+                ? `<span class="category-name-editable" onclick="renameCategory('${categoryKey}')" style="cursor: pointer;">${categoryName}</span>`
                 : categoryName;
             
             // Create the HTML structure
