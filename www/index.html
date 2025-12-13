@@ -4049,11 +4049,33 @@
                         const renameBtnEl = oldSection.querySelector(`button[onclick*="renameCategory"]`);
                         if (renameBtnEl) renameBtnEl.setAttribute('onclick', `renameCategory('${newKey}')`);
                     }
+                } else {
+                    // Si juste l'emoji a changé, mettre à jour le titre
+                    const section = document.getElementById(`category-${categoryKey}`);
+                    if (section) {
+                        const titleElement = section.querySelector('.category-title');
+                        if (titleElement && categoryMetadata[categoryKey]) {
+                            const meta = categoryMetadata[categoryKey];
+                            const renameBtn = titleElement.querySelector('.rename-btn');
+                            const renameBtnHTML = renameBtn ? renameBtn.outerHTML : '';
+                            titleElement.innerHTML = `${meta.emoji} ${meta.displayName} ${renameBtnHTML}`;
+                        }
+                    }
                 }
                 
-                // ✅ Actualiser l'affichage
-                updateDisplay();
-                setTimeout(() => restoreEditMode(), 50);
+                // ✅ Actualiser les stats SANS reconstruire tout le HTML
+                Object.keys(expenses).forEach(cat => {
+                    if (expenses[cat]) {
+                        updateCategoryStats(cat);
+                    }
+                });
+                
+                // ✅ Forcer le réordonnancement pour garantir l'ordre correct
+                setTimeout(() => {
+                    console.log('🔄 Forcing category reorder after rename');
+                    renderCategoriesInOrder();
+                    restoreEditMode();
+                }, 100);
                 
                 // Cacher l'overlay
                 if (overlay) {
@@ -4083,8 +4105,6 @@
                 showToast('Error renaming category: ' + error.message, 'error');
             }
         }
-
-
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
