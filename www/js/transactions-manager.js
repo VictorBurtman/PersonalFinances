@@ -2670,7 +2670,7 @@ function parseCSV(csvText, fileName, bankName) {
             if (isNaN(amount)) continue;
             
             // ✅ Skip income/credits (positive amounts) - only import expenses
-            if (amount >= 0) {
+            if (amount > 0) {
                 console.log(`Skipping income/credit transaction: ${description} (${amount})`);
                 continue;
             }
