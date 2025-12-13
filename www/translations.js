@@ -161,6 +161,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'Labeling this transaction only...',
         transactionLabeledUnique: 'Transaction labeled (unique) ✓',
+        labelingMultipleTransactions: 'Labeling {count} transactions...',
+        multipleTransactionsLabeled: '{count} transactions labeled!',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -628,6 +630,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'Étiquetage de cette transaction uniquement...',
         transactionLabeledUnique: 'Transaction étiquetée (unique) ✓',
+        labelingMultipleTransactions: 'Étiquetage de {count} transactions...',
+        multipleTransactionsLabeled: '{count} transactions étiquetées !',
 
 
         // Alerts & notifications
@@ -1086,6 +1090,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'מתייג עסקה זו בלבד...',
         transactionLabeledUnique: 'עסקה תויגה (ייחודי) ✓',
+        labelingMultipleTransactions: 'מתייג {count} עסקאות...',
+        multipleTransactionsLabeled: '{count} עסקאות תויגו!',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1543,6 +1549,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'Etiquetando solo esta transacción...',
         transactionLabeledUnique: 'Transacción etiquetada (única) ✓',
+        labelingMultipleTransactions: 'Etiquetando {count} transacciones...',
+        multipleTransactionsLabeled: '¡{count} transacciones etiquetadas!',
 
 
         // Toasts & notifications
@@ -2001,6 +2009,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'Маркировка только этой транзакции...',
         transactionLabeledUnique: 'Транзакция помечена (уникальная) ✓',
+        labelingMultipleTransactions: 'Маркировка {count} транзакций...',
+        multipleTransactionsLabeled: '{count} транзакций помечено!',
 
 
         // Toasts & notifications
@@ -2459,6 +2469,8 @@ const translations = {
         uniqueLabel: '1×',
         labelingTransactionUnique: 'وضع علامة على هذه المعاملة فقط...',
         transactionLabeledUnique: 'تم وضع علامة على المعاملة (فريدة) ✓',
+        labelingMultipleTransactions: 'وضع علامة على {count} معاملات...',
+        multipleTransactionsLabeled: 'تم وضع علامة على {count} معاملات!',
 
 
         // Toasts & notifications

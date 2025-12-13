@@ -877,56 +877,75 @@ function renderTransaction(txn) {
                     ${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}
                 </div>
             </div>
-            
-            <!-- Bottom row: Category selector or label -->
+            <!-- Bottom row: Checkbox + Category selector or label -->
             <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- ✅ Checkbox pour sélection multiple -->
+                <input 
+                    type="checkbox" 
+                    class="transaction-checkbox" 
+                    data-transaction-id="${txn.id}"
+                    onchange="handleTransactionCheckboxChange()"
+                    style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;"
+                />
+                
                 ${isLabeled ? `
-                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em;">
-                            <span style="font-weight: 600; color: #667eea;">
-                                ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
-                            </span>
-                            <button 
-                                onclick="unlabelTransaction('${txn.id}', document.getElementById('unique-unlabel-${txnId}') ? document.getElementById('unique-unlabel-${txnId}').checked : false)" 
-                                style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
-                                title="Remove label"
-                            >✕</button>
-                        </div>
-                        <label style="display: flex; align-items: center; gap: 4px; font-size: 0.75em; color: #6c757d; white-space: nowrap; cursor: pointer; user-select: none;" title="Remove label only from this transaction">
-                            <input 
-                                type="checkbox" 
-                                id="unique-unlabel-${txnId}"
-                                style="cursor: pointer; width: 14px; height: 14px;"
-                            >
-                            <span data-translate="uniqueLabel">1×</span>
-                        </label>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em; flex: 1;">
+                        <span style="font-weight: 600; color: #667eea;">
+                            ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
+                        </span>
+                        <button 
+                            onclick="unlabelTransaction('${txn.id}'); event.stopPropagation();" 
+                            style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
+                            title="Remove label"
+                        >✕</button>
                     </div>
                 ` : `
-                    <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
-                        <select 
-                            id="cat-select-${txnId}"
-                            class="transaction-category-select" 
-                            onchange="labelTransaction('${txn.id}', this.value, document.getElementById('unique-${txnId}').checked)"
-                            style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; min-width: 0;"
-                        >
-                            <option value="" data-translate="selectCategory">Select category</option>
-                            ${categories.map(cat => `
-                                <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
-                            `).join('')}
-                        </select>
-                        <label style="display: flex; align-items: center; gap: 4px; font-size: 0.75em; color: #6c757d; white-space: nowrap; cursor: pointer; user-select: none;" title="Label only this transaction">
-                            <input 
-                                type="checkbox" 
-                                id="unique-${txnId}"
-                                style="cursor: pointer; width: 14px; height: 14px;"
-                            >
-                            <span data-translate="uniqueLabel">1×</span>
-                        </label>
-                    </div>
+                    <select 
+                        id="cat-select-${txnId}"
+                        class="transaction-category-select" 
+                        onchange="labelTransaction('${txn.id}', this.value)"
+                        style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; min-width: 0;"
+                    >
+                        <option value="" data-translate="selectCategory">Select category</option>
+                        ${categories.map(cat => `
+                            <option value="${cat}">${getCategoryEmoji(cat)} ${getCategoryDisplayName(cat)}</option>
+                        `).join('')}
+                    </select>
                 `}
             </div>
         </div>
     `;
+}
+
+
+// ✅ Variables globales pour gérer les checkboxes
+let selectedTransactionIds = new Set();
+
+/**
+ * Handle transaction checkbox change
+ */
+function handleTransactionCheckboxChange() {
+    // Récupérer toutes les checkboxes cochées
+    const checkboxes = document.querySelectorAll('.transaction-checkbox:checked');
+    selectedTransactionIds = new Set();
+    
+    checkboxes.forEach(cb => {
+        const txnId = cb.getAttribute('data-transaction-id');
+        if (txnId) {
+            selectedTransactionIds.add(txnId);
+        }
+    });
+    
+    console.log(`${selectedTransactionIds.size} transaction(s) selected`);
+}
+
+/**
+ * Clear all transaction checkboxes
+ */
+function clearTransactionCheckboxes() {
+    const checkboxes = document.querySelectorAll('.transaction-checkbox');
+    checkboxes.forEach(cb => cb.checked = false);
+    selectedTransactionIds.clear();
 }
 
 /**
@@ -1841,7 +1860,7 @@ async function autoLabelAll() {
 /**
  * Label a transaction with a category
  */
-async function labelTransaction(transactionId, category, isUnique = false) {
+async function labelTransaction(transactionId, category) {
     if (!transactionsFunctions) {
         showTransactionAlert('Firebase Functions not initialized', 'error');
         return;
@@ -1850,34 +1869,60 @@ async function labelTransaction(transactionId, category, isUnique = false) {
     if (!category) return; // User selected "Select category..."
     
     try {
-        // Show loading overlay
         const t = translations[currentLanguage] || translations['en'];
-        const loadingMessage = isUnique 
-            ? (t.labelingTransactionUnique || 'Labeling this transaction only...')
-            : (t.labelingTransaction || 'Labeling transaction...');
-        const subMessage = isUnique
-            ? ''
-            : (t.checkingSimilar || 'Checking for similar transactions...');
         
-        showLoadingOverlay(loadingMessage, subMessage);
-        
-        const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
-        const result = await labelTransactionFunc({ 
-            transactionId, 
-            category,
-            isUnique: isUnique  // ✅ Nouveau paramètre
-        });
-        
-        // Hide loading overlay
-        hideLoadingOverlay();
-        
-        // Show smart message based on how many were labeled
-        if (isUnique) {
-            showTransactionAlert(t.transactionLabeledUnique || 'Transaction labeled (unique) ✓', 'success');
+        // ✅ Si des transactions sont sélectionnées via checkbox
+        if (selectedTransactionIds.size > 0) {
+            // Ajouter la transaction actuelle si elle n'est pas déjà sélectionnée
+            selectedTransactionIds.add(transactionId);
+            
+            showLoadingOverlay(
+                t.labelingMultipleTransactions || `Labeling ${selectedTransactionIds.size} transactions...`,
+                ''
+            );
+            
+            // Labéliser toutes les transactions sélectionnées (mode unique pour chacune)
+            const labelPromises = Array.from(selectedTransactionIds).map(txnId => {
+                const labelFunc = transactionsFunctions.httpsCallable('labelTransaction');
+                return labelFunc({ 
+                    transactionId: txnId, 
+                    category,
+                    isUnique: true // ✅ Mode unique quand des checkboxes sont cochées
+                });
+            });
+            
+            await Promise.all(labelPromises);
+            
+            hideLoadingOverlay();
+            showTransactionAlert(
+                t.multipleTransactionsLabeled.replace('{count}', selectedTransactionIds.size) || 
+                `${selectedTransactionIds.size} transactions labeled!`,
+                'success'
+            );
+            
+            // ✅ Décocher toutes les checkboxes
+            clearTransactionCheckboxes();
+            
         } else {
+            // ✅ Mode normal : labéliser avec transactions similaires
+            showLoadingOverlay(
+                t.labelingTransaction || 'Labeling transaction...',
+                t.checkingSimilar || 'Checking for similar transactions...'
+            );
+            
+            const labelTransactionFunc = transactionsFunctions.httpsCallable('labelTransaction');
+            const result = await labelTransactionFunc({ 
+                transactionId, 
+                category,
+                isUnique: false
+            });
+            
+            hideLoadingOverlay();
+            
             const similarCount = result.data.similarCount || 0;
             if (similarCount > 0) {
-                const message = (t.labeledWithSimilar || 'Labeled 1 transaction + {count} similar ones! ✓').replace('{count}', similarCount);
+                const message = (t.labeledWithSimilar || 'Labeled 1 transaction + {count} similar ones! ✓')
+                    .replace('{count}', similarCount);
                 showTransactionAlert(message, 'success');
             } else {
                 showTransactionAlert(t.transactionLabeled || 'Transaction labeled! ✓', 'success');
@@ -1885,6 +1930,7 @@ async function labelTransaction(transactionId, category, isUnique = false) {
         }
         
         await loadTransactions();
+        
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error labeling:', error);
