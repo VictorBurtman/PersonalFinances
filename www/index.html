@@ -437,7 +437,6 @@
                             <div class="category-title" style="color: #28a745; border-color: #28a745; display: flex; align-items: center; gap: 10px;">
                                 <img src="img/icons/income.svg" alt="Income" class="category-icon income-icon">
                                 <span data-translate="income">Income</span>
-                                <button class="rename-btn rename-btn-income" onclick="renameCategory('income')" style="display: none;">✏️</button>
                             </div>
 
                             <div class="category-stats" id="incomeStats" style="color: #28a745;"></div>
@@ -451,7 +450,6 @@
                         <div class="category-section" id="category-housing">
                             <div class="category-title">
                                 🏠 Housing
-                                <button class="rename-btn" onclick="renameCategory('housing')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="housingStats"></div>
                             <div class="category-controls">
@@ -476,7 +474,6 @@
                         <div class="category-section" id="category-subscriptions">
                             <div class="category-title">
                                 🎬 Subscriptions
-                                <button class="rename-btn" onclick="renameCategory('subscriptions')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="subscriptionsStats"></div>
                             <div class="category-controls">
@@ -501,7 +498,6 @@
                         <div class="category-section" id="category-groceries">
                             <div class="category-title">
                                 🛒 Groceries
-                                <button class="rename-btn" onclick="renameCategory('groceries')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="groceriesStats"></div>
                             <div class="category-controls">
@@ -526,7 +522,6 @@
                         <div class="category-section" id="category-pet">
                             <div class="category-title">
                                 🐱 Pet Care
-                                <button class="rename-btn" onclick="renameCategory('pet')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="petStats"></div>
                             <div class="category-controls">
@@ -551,7 +546,6 @@
                         <div class="category-section" id="category-hobbies">
                             <div class="category-title">
                                 🎮 Hobbies
-                                <button class="rename-btn" onclick="renameCategory('hobbies')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="hobbiesStats"></div>
                             <div class="category-controls">
@@ -576,7 +570,6 @@
                         <div class="category-section" id="category-other">
                             <div class="category-title">
                                 💸 Other Expenses
-                                <button class="rename-btn" onclick="renameCategory('other')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="otherStats"></div>
                             <div class="category-controls">
@@ -1726,7 +1719,6 @@
                         categorySection.innerHTML = `
                             <div class="category-title">
                                 ${meta.emoji} ${meta.displayName}
-                                <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: none;">✏️</button>
                             </div>
                             <div class="category-stats" id="${statsId}"></div>
                             <div class="category-controls">
@@ -2008,10 +2000,13 @@
                     const titleElement = section.querySelector('.category-title');
                     if (titleElement && categoryMetadata[categoryKey]) {
                         const meta = categoryMetadata[categoryKey];
-                        const renameBtn = titleElement.querySelector('.rename-btn');
-                        const renameBtnHTML = renameBtn ? renameBtn.outerHTML : '';
                         
-                        titleElement.innerHTML = `${meta.emoji} ${meta.displayName} ${renameBtnHTML}`;
+                        // ✅ Rendre le nom cliquable uniquement en mode Edit
+                        const nameHTML = isEditMode 
+                            ? `<span class="category-name-editable" onclick="editCategoryName('${categoryKey}')" style="cursor: pointer;">${meta.displayName}</span>`
+                            : meta.displayName;
+                        
+                        titleElement.innerHTML = `${meta.emoji} ${nameHTML}`;
                     }
 
                     // Update stats
@@ -3132,8 +3127,6 @@
         }
 
 
-
-
         async function addNewCategory() {
             const t = translations[currentLanguage] || translations['en'];
             
@@ -3166,14 +3159,18 @@
             const statsId = `${categoryKey}Stats`;
             const expensesId = `${categoryKey}Expenses`;
             
+            // ✅ Rendre le nom cliquable uniquement en mode Edit
+            const nameHTML = isEditMode 
+                ? `<span class="category-name-editable" onclick="editCategoryName('${categoryKey}')" style="cursor: pointer;">${categoryName}</span>`
+                : categoryName;
+            
             // Create the HTML structure
             const categorySection = document.createElement('div');
             categorySection.className = 'category-section';
             categorySection.id = `category-${categoryKey}`;
             categorySection.innerHTML = `
                 <div class="category-title">
-                    ${emoji} ${categoryName}
-                    <button class="rename-btn" onclick="renameCategory('${categoryKey}')" style="display: ${isEditMode ? 'inline-block' : 'none'};">✏️</button>
+                    ${emoji} ${nameHTML}
                 </div>
                 <div class="category-stats" id="${statsId}"></div>
                 <div class="category-controls ${isEditMode ? 'show' : ''}">
@@ -3205,7 +3202,6 @@
                 alert(t.errorCreatingCategory || 'Error creating category. Please try again.');
             });
         }
-
 
 
         // ============================================
