@@ -1876,10 +1876,10 @@ async function labelTransaction(transactionId, category) {
             // Ajouter la transaction actuelle si elle n'est pas déjà sélectionnée
             selectedTransactionIds.add(transactionId);
             
-            showLoadingOverlay(
-                t.labelingMultipleTransactions || `Labeling ${selectedTransactionIds.size} transactions...`,
-                ''
-            );
+            const loadingMsg = (t.labelingMultipleTransactions || 'Labeling {count} transactions...')
+                .replace('{count}', selectedTransactionIds.size);
+
+            showLoadingOverlay(loadingMsg, '');
             
             // Labéliser toutes les transactions sélectionnées (mode unique pour chacune)
             const labelPromises = Array.from(selectedTransactionIds).map(txnId => {
