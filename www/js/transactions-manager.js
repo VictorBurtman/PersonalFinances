@@ -407,7 +407,13 @@ async function applyFilters() {
     const categoryFilter = document.getElementById('categoryFilter')?.value || '';
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
     
-    // ✅ NOUVEAU : Sauvegarder les filtres dans Firebase
+    // ✅ Afficher/cacher le bouton clear search
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    if (clearSearchBtn) {
+        clearSearchBtn.style.display = searchFilter ? 'block' : 'none';
+    }
+    
+    // ✅ Sauvegarder les filtres dans Firebase
     if (window.currentUser && db) {
         try {
             await db.collection('users').doc(window.currentUser.uid).set({
@@ -480,8 +486,50 @@ async function applyFilters() {
     // Apply sorting
     sortTransactions();
     renderTransactions();
+    
+    // ✅ Mettre à jour la couleur du bouton filtres
+    updateFiltersButtonColor();
 }
 
+/**
+ * Clear search filter
+ */
+function clearSearchFilter() {
+    const searchInput = document.getElementById('searchFilter');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    
+    if (searchInput) {
+        searchInput.value = '';
+        if (clearBtn) clearBtn.style.display = 'none';
+        applyFilters();
+    }
+}
+
+/**
+ * Update filters button color based on active filters
+ */
+function updateFiltersButtonColor() {
+    const filtersBtn = document.getElementById('filtersBtn');
+    if (!filtersBtn) return;
+    
+    const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
+    const monthFilter = document.getElementById('monthFilter')?.value || '';
+    const sourceFilter = document.getElementById('sourceFilter')?.value || '';
+    const searchFilter = document.getElementById('searchFilter')?.value || '';
+    
+    // Vérifier si au moins un filtre est actif
+    const hasActiveFilters = 
+        labelFilter !== 'all' ||
+        monthFilter !== '' ||
+        sourceFilter !== '' ||
+        searchFilter !== '';
+    
+    const img = filtersBtn.querySelector('img');
+    if (img) {
+        // Orange filter (même couleur que le crayon en mode edit)
+        img.style.filter = hasActiveFilters ? 'invert(58%) sepia(85%) saturate(1804%) hue-rotate(360deg) brightness(102%) contrast(101%)' : '';
+    }
+}
 
 /**
  * Sort filtered transactions based on current sort order

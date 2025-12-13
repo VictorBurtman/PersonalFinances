@@ -3149,6 +3149,7 @@
         }
 
 
+
         // ============================================
         // == DÉBUT DU CODE CORRIGÉ ==
         // ============================================
@@ -6098,15 +6099,23 @@
                     <label style="display: block; margin-bottom: 5px; font-weight: 500;">
                         <span data-translate="search">Search</span>
                     </label>
-                    <input 
-                        type="text" 
-                        id="searchFilter" 
-                        data-translate-placeholder="search"
-                        placeholder="Search..." 
-                        oninput="applyFilters()"
-                        class="auth-input"
-                        style="width: 100%;"
-                    />
+                    <div style="position: relative; width: 100%;">
+                        <input 
+                            type="text" 
+                            id="searchFilter" 
+                            data-translate-placeholder="search"
+                            placeholder="Search..." 
+                            oninput="applyFilters()"
+                            class="auth-input"
+                            style="width: 100%; padding: 12px 40px 12px 12px; font-size: 1em;"
+                        />
+                        <button 
+                            id="clearSearchBtn"
+                            onclick="clearSearchFilter()"
+                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6c757d; cursor: pointer; font-size: 1.2em; padding: 5px; display: none;"
+                            title="Clear search"
+                        >✕</button>
+                    </div>
                 </div>
                 
                 <!-- Sort -->
