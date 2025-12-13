@@ -620,6 +620,15 @@ export const labelTransaction = onCall(async (request) => {
   const userId = request.auth.uid;
   const { transactionId, category, isUnique } = request.data;
 
+    // ✅ AJOUTER CES LOGS DE DEBUG
+  console.log('🔍 labelTransaction called with:', {
+    transactionId,
+    category,
+    isUnique,
+    isUniqueType: typeof isUnique,
+    rawData: request.data
+  });
+
   if (!transactionId) {
     throw new HttpsError('invalid-argument', 'Transaction ID is required');
   }
@@ -637,7 +646,8 @@ export const labelTransaction = onCall(async (request) => {
     }
 
     const transaction = transactionDoc.data();
-
+    // ✅ AJOUTER CE LOG AUSSI
+    console.log('🔍 isUnique check:', isUnique, 'will enter unique block?', isUnique === true);
     // ✅ Si isUnique = true, labéliser/délabéliser uniquement cette transaction
     if (isUnique) {
       await transactionRef.update({
