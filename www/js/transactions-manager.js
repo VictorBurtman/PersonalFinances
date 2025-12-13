@@ -2669,6 +2669,13 @@ function parseCSV(csvText, fileName, bankName) {
             const amount = parseFloat(amountStr.replace(/[^\d.-]/g, ''));
             if (isNaN(amount)) continue;
             
+            // ✅ Skip income/credits (positive amounts) - only import expenses
+            if (amount >= 0) {
+                console.log(`Skipping income/credit transaction: ${description} (${amount})`);
+                continue;
+            }
+
+
             transactions.push({
                 date: date.toISOString(),
                 description: description.trim(),
