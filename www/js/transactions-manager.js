@@ -3223,9 +3223,8 @@ async function monitorCredentials() {
  * Count similar transactions
  */
 function countSimilarTransactions(description) {
-    const cleanDesc = description.toLowerCase();
     return transactionsData.filter(txn => 
-        txn.description.toLowerCase() === cleanDesc
+        txn.description === description
     ).length;
 }
 
@@ -3235,7 +3234,7 @@ function countSimilarTransactions(description) {
  */
 function getTransactionFrequency(description) {
     return transactionsData.filter(t => 
-        t.description.toLowerCase().trim() === description.toLowerCase().trim()
+        t.description === description
     ).length;
 }
 
