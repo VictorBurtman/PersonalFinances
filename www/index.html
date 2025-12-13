@@ -4064,12 +4064,10 @@
                     }
                 }
                 
-                // ✅ Forcer le réordonnancement pour garantir l'ordre correct
+                // ✅ Juste restaurer le mode edit, sans réorganiser
                 setTimeout(() => {
-                    console.log('🔄 Forcing category reorder after rename');
-                    renderCategoriesInOrder();
                     restoreEditMode();
-                }, 100);
+                }, 50);
                 
                 // Cacher l'overlay
                 if (overlay) {
@@ -4099,8 +4097,6 @@
                 showToast('Error renaming category: ' + error.message, 'error');
             }
         }
-
-
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
