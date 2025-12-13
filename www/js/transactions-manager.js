@@ -952,6 +952,9 @@ function clearTransactionCheckboxes() {
     const checkboxes = document.querySelectorAll('.transaction-checkbox');
     checkboxes.forEach(cb => cb.checked = false);
     selectedTransactionIds.clear();
+    
+    // ✅ Mettre à jour l'affichage des boutons
+    handleTransactionCheckboxChange();
 }
 
 /**
