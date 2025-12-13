@@ -5466,16 +5466,73 @@
                     if (expensesList) expensesList.style.display = 'none';
                     
                     if (transactionsTab) {
-                        transactionsTab.style.opacity = '0';
                         transactionsTab.style.display = 'block';
                         transactionsTab.classList.add('active');
                     }
                     
-                    // ✅ FONCTION pour restaurer le scroll et faire le fade-in
-                    const restoreScrollAndFadeIn = () => {
+                    // ✅ Chargement lazy des transactions (uniquement au premier accès)
+                    if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
+                        console.log('🔄 Chargement initial des transactions...');
+                        
+                        // ✅ Créer et afficher un loader centré
+                        const allTransactionsList = document.getElementById('allTransactionsList');
+                        const emptyState = document.getElementById('emptyState');
+                        const allTransactionsSection = document.getElementById('allTransactionsSection');
+                        
+                        // Cacher tout le contenu
+                        if (allTransactionsList) allTransactionsList.style.display = 'none';
+                        if (emptyState) emptyState.style.display = 'none';
+                        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+                        
+                        // Créer un loader centré temporaire
+                        let tempLoader = document.getElementById('tempTransactionsLoader');
+                        if (!tempLoader) {
+                            tempLoader = document.createElement('div');
+                            tempLoader.id = 'tempTransactionsLoader';
+                            tempLoader.style.cssText = `
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                min-height: 300px;
+                                padding: 60px 20px;
+                            `;
+                            tempLoader.innerHTML = `
+                                <img src="img/anims/Interwind@1x-1.0s-200px-200px.svg" 
+                                    alt="Loading" 
+                                    style="width: 60px; height: 60px; opacity: 0.6;">
+                            `;
+                            transactionsTab.insertBefore(tempLoader, transactionsTab.firstChild);
+                        }
+                        tempLoader.style.display = 'flex';
+                        
+                        // ✅ Fade in l'onglet immédiatement avec le loader
+                        requestAnimationFrame(() => {
+                            if (transactionsTab) {
+                                transactionsTab.style.transition = 'opacity 0.15s ease';
+                                transactionsTab.style.opacity = '1';
+                            }
+                        });
+                        
+                        // ✅ Charger les transactions
+                        loadTransactions().then(() => {
+                            window.transactionsLoaded = true;
+                            console.log('✅ Transactions chargées');
+                            
+                            // ✅ Supprimer le loader
+                            if (tempLoader) tempLoader.style.display = 'none';
+                            
+                            // ✅ Restaurer le scroll
+                            if (dashboard) {
+                                dashboard.scrollTop = transactionsScrollPosition;
+                                console.log('📜 Position Transactions restaurée dans switchTab:', transactionsScrollPosition);
+                            }
+                        });
+                    } else {
+                        console.log('ℹ️ Transactions déjà chargées, restauration immédiate du scroll');
+                        
+                        // ✅ Restaurer le scroll immédiatement si pas de chargement
                         if (dashboard) {
                             dashboard.scrollTop = transactionsScrollPosition;
-                            console.log('📜 Position Transactions restaurée dans switchTab:', transactionsScrollPosition);
                         }
                         
                         // Fade in
@@ -5485,27 +5542,6 @@
                                 transactionsTab.style.opacity = '1';
                             }
                         });
-                    };
-                    
-                    // ✅ Chargement lazy des transactions (uniquement au premier accès)
-                    if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
-                        console.log('🔄 Chargement initial des transactions...');
-                        setTimeout(() => {
-                            if (transactionsTab && transactionsTab.style.display === 'block') {
-                                loadTransactions().then(() => {
-                                    window.transactionsLoaded = true;
-                                    console.log('✅ Transactions chargées');
-                                    
-                                    // ✅ Restaurer le scroll APRÈS le chargement
-                                    setTimeout(restoreScrollAndFadeIn, 100);
-                                });
-                            }
-                        }, 400);
-                    } else {
-                        console.log('ℹ️ Transactions déjà chargées, restauration immédiate du scroll');
-                        
-                        // ✅ Restaurer le scroll immédiatement si pas de chargement
-                        restoreScrollAndFadeIn();
                     }
                     
                     if (floatingAddBtn) floatingAddBtn.style.display = 'flex';
@@ -5523,7 +5559,6 @@
                 }, 200);
             }
         }
-
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
