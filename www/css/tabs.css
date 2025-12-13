@@ -1442,6 +1442,22 @@ body.dark-mode .compare-info .diff {
     color: #e0e0e0;
 }
 
+/* Dark mode pour les diff */
+body.dark-mode .compare-info .diff.positive {
+    color: #ff6b7a;
+    background: #3d1f23;
+}
+
+body.dark-mode .compare-info .diff.negative {
+    color: #4caf50;
+    background: #1f2e23;
+}
+
+body.dark-mode .compare-info .diff.neutral {
+    color: #ffd54f;
+    background: #3d3520;
+}
+
 .compare-info .real-label {
     font-weight: 600;
 }
