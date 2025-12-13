@@ -3897,6 +3897,7 @@
             };
         }
 
+
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -4063,13 +4064,6 @@
                     }
                 }
                 
-                // ✅ Actualiser les stats SANS reconstruire tout le HTML
-                Object.keys(expenses).forEach(cat => {
-                    if (expenses[cat]) {
-                        updateCategoryStats(cat);
-                    }
-                });
-                
                 // ✅ Forcer le réordonnancement pour garantir l'ordre correct
                 setTimeout(() => {
                     console.log('🔄 Forcing category reorder after rename');
@@ -4105,6 +4099,8 @@
                 showToast('Error renaming category: ' + error.message, 'error');
             }
         }
+
+
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
