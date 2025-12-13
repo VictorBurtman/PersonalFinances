@@ -764,12 +764,6 @@ function renderTransactions() {
             allTransactionsList.innerHTML = transactionsToShow
                 .map(txn => renderTransaction(txn))
                 .join('');
-
-            // ✅ Afficher les boutons Select All / Deselect All si des transactions sont visibles
-            const bulkSelectButtons = document.getElementById('bulkSelectButtons');
-            if (bulkSelectButtons) {
-                bulkSelectButtons.style.display = transactionsToShow.length > 0 ? 'flex' : 'none';
-            }
             
             // Message si des transactions sont cachées
             if (hiddenCount > 0) {
@@ -943,6 +937,12 @@ function handleTransactionCheckboxChange() {
     });
     
     console.log(`${selectedTransactionIds.size} transaction(s) selected`);
+    
+    // ✅ Afficher/cacher les boutons Select All / Deselect All
+    const bulkSelectButtons = document.getElementById('bulkSelectButtons');
+    if (bulkSelectButtons) {
+        bulkSelectButtons.style.display = selectedTransactionIds.size > 0 ? 'flex' : 'none';
+    }
 }
 
 /**
