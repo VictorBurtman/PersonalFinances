@@ -3897,7 +3897,6 @@
             };
         }
 
-        
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -4010,66 +4009,20 @@
                 // ✅ Sauvegarder dans Firebase
                 await saveUserData();
                 
-                // ✅ Mettre à jour le HTML en place au lieu de le supprimer/recréer
+                // ✅ NOUVEAU : Recharger depuis Firebase pour avoir l'ordre correct
+                await loadUserData();
+                
+                // ✅ Forcer la recréation du HTML si changement de clé
                 if (newKey !== categoryKey) {
-                    // Trouver l'ancien élément HTML
                     const oldSection = document.getElementById(`category-${categoryKey}`);
                     if (oldSection) {
-                        // Changer l'ID
-                        oldSection.id = `category-${newKey}`;
-                        
-                        // Mettre à jour les IDs des éléments enfants
-                        const statsElement = oldSection.querySelector(`#${categoryKey}Stats`);
-                        if (statsElement) statsElement.id = `${newKey}Stats`;
-                        
-                        const expensesElement = oldSection.querySelector(`#${categoryKey}Expenses`);
-                        if (expensesElement) expensesElement.id = `${newKey}Expenses`;
-                        
-                        // Mettre à jour le titre (emoji + nom)
-                        const titleElement = oldSection.querySelector('.category-title');
-                        if (titleElement && categoryMetadata[newKey]) {
-                            const meta = categoryMetadata[newKey];
-                            const renameBtn = titleElement.querySelector('.rename-btn');
-                            const renameBtnHTML = renameBtn ? renameBtn.outerHTML : '';
-                            titleElement.innerHTML = `${meta.emoji} ${meta.displayName} ${renameBtnHTML}`;
-                        }
-                        
-                        // Mettre à jour les attributs onclick des boutons
-                        const moveUpBtn = oldSection.querySelector(`button[onclick*="moveCategoryUp"]`);
-                        if (moveUpBtn) moveUpBtn.setAttribute('onclick', `moveCategoryUp('${newKey}')`);
-                        
-                        const moveDownBtn = oldSection.querySelector(`button[onclick*="moveCategoryDown"]`);
-                        if (moveDownBtn) moveDownBtn.setAttribute('onclick', `moveCategoryDown('${newKey}')`);
-                        
-                        const addItemBtn = oldSection.querySelector(`button[onclick*="addItemToCategory"]`);
-                        if (addItemBtn) addItemBtn.setAttribute('onclick', `addItemToCategory('${newKey}')`);
-                        
-                        const deleteBtn = oldSection.querySelector(`button[onclick*="deleteCategory"]`);
-                        if (deleteBtn) deleteBtn.setAttribute('onclick', `deleteCategory('${newKey}')`);
-                        
-                        const renameBtnEl = oldSection.querySelector(`button[onclick*="renameCategory"]`);
-                        if (renameBtnEl) renameBtnEl.setAttribute('onclick', `renameCategory('${newKey}')`);
-                    }
-                } else {
-                    // Si juste l'emoji a changé, mettre à jour le titre
-                    const section = document.getElementById(`category-${categoryKey}`);
-                    if (section) {
-                        const titleElement = section.querySelector('.category-title');
-                        if (titleElement && categoryMetadata[categoryKey]) {
-                            const meta = categoryMetadata[categoryKey];
-                            const renameBtn = titleElement.querySelector('.rename-btn');
-                            const renameBtnHTML = renameBtn ? renameBtn.outerHTML : '';
-                            titleElement.innerHTML = `${meta.emoji} ${meta.displayName} ${renameBtnHTML}`;
-                        }
+                        oldSection.remove();
                     }
                 }
                 
-                // ✅ Forcer le réordonnancement pour garantir l'ordre correct
-                setTimeout(() => {
-                    console.log('🔄 Forcing category reorder after rename');
-                    renderCategoriesInOrder();
-                    restoreEditMode();
-                }, 100);
+                // Actualiser l'affichage
+                updateDisplay();
+                setTimeout(() => restoreEditMode(), 50);
                 
                 // Cacher l'overlay
                 if (overlay) {
@@ -4099,8 +4052,6 @@
                 showToast('Error renaming category: ' + error.message, 'error');
             }
         }
-
-
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
