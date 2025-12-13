@@ -597,6 +597,23 @@
                                 <span data-translate="loadingTransactions">Loading transactions...</span>
                             </div>
                         </div>
+
+
+                        <!-- Bulk select buttons -->
+                        <div id="bulkSelectButtons" style="display: none; padding: 10px; background: var(--block-bg, #f8f9fa); border-radius: 8px; margin-bottom: 10px; gap: 10px; justify-content: center;">
+                            <button 
+                                onclick="selectAllTransactions()"
+                                style="padding: 6px 12px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;"
+                            >
+                                ✓ <span data-translate="selectAll">Select All</span>
+                            </button>
+                            <button 
+                                onclick="deselectAllTransactions()"
+                                style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;"
+                            >
+                                ✗ <span data-translate="deselectAll">Deselect All</span>
+                            </button>
+                        </div>
                         
                         <!-- Transactions list -->
                          <!-- ✅ Loader pour le rendu des transactions -->

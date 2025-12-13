@@ -163,6 +163,8 @@ const translations = {
         transactionLabeledUnique: 'Transaction labeled (unique) ✓',
         labelingMultipleTransactions: 'Labeling {count} transactions...',
         multipleTransactionsLabeled: '{count} transactions labeled!',
+        selectAll: 'Select All',
+        deselectAll: 'Deselect All',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -632,6 +634,8 @@ const translations = {
         transactionLabeledUnique: 'Transaction étiquetée (unique) ✓',
         labelingMultipleTransactions: 'Étiquetage de {count} transactions...',
         multipleTransactionsLabeled: '{count} transactions étiquetées !',
+        selectAll: 'Tout sélectionner',
+        deselectAll: 'Tout désélectionner',
 
 
         // Alerts & notifications
@@ -1092,6 +1096,8 @@ const translations = {
         transactionLabeledUnique: 'עסקה תויגה (ייחודי) ✓',
         labelingMultipleTransactions: 'מתייג {count} עסקאות...',
         multipleTransactionsLabeled: '{count} עסקאות תויגו!',
+        selectAll: 'בחר הכל',
+        deselectAll: 'בטל בחירה',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1551,6 +1557,8 @@ const translations = {
         transactionLabeledUnique: 'Transacción etiquetada (única) ✓',
         labelingMultipleTransactions: 'Etiquetando {count} transacciones...',
         multipleTransactionsLabeled: '¡{count} transacciones etiquetadas!',
+        selectAll: 'Seleccionar todo',
+        deselectAll: 'Deseleccionar todo',
 
 
         // Toasts & notifications
@@ -2011,6 +2019,8 @@ const translations = {
         transactionLabeledUnique: 'Транзакция помечена (уникальная) ✓',
         labelingMultipleTransactions: 'Маркировка {count} транзакций...',
         multipleTransactionsLabeled: '{count} транзакций помечено!',
+        selectAll: 'Выбрать все',
+        deselectAll: 'Отменить выбор',
 
 
         // Toasts & notifications
@@ -2471,6 +2481,8 @@ const translations = {
         transactionLabeledUnique: 'تم وضع علامة على المعاملة (فريدة) ✓',
         labelingMultipleTransactions: 'وضع علامة على {count} معاملات...',
         multipleTransactionsLabeled: 'تم وضع علامة على {count} معاملات!',
+        selectAll: 'تحديد الكل',
+        deselectAll: 'إلغاء التحديد',
 
 
         // Toasts & notifications

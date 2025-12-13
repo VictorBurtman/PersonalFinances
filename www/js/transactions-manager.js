@@ -764,6 +764,12 @@ function renderTransactions() {
             allTransactionsList.innerHTML = transactionsToShow
                 .map(txn => renderTransaction(txn))
                 .join('');
+
+            // ✅ Afficher les boutons Select All / Deselect All si des transactions sont visibles
+            const bulkSelectButtons = document.getElementById('bulkSelectButtons');
+            if (bulkSelectButtons) {
+                bulkSelectButtons.style.display = transactionsToShow.length > 0 ? 'flex' : 'none';
+            }
             
             // Message si des transactions sont cachées
             if (hiddenCount > 0) {
@@ -3237,6 +3243,23 @@ function getTransactionFrequency(description) {
         t.description === description
     ).length;
 }
+
+/**
+ * Select all visible transactions
+ */
+function selectAllTransactions() {
+    const checkboxes = document.querySelectorAll('.transaction-checkbox');
+    checkboxes.forEach(cb => cb.checked = true);
+    handleTransactionCheckboxChange();
+}
+
+/**
+ * Deselect all transactions
+ */
+function deselectAllTransactions() {
+    clearTransactionCheckboxes();
+}
+
 
 /**
  * Scroll to top functionality
