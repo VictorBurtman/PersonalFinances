@@ -5474,36 +5474,16 @@
                     if (typeof loadTransactions === 'function' && !window.transactionsLoaded) {
                         console.log('🔄 Chargement initial des transactions...');
                         
-                        // ✅ Créer et afficher un loader centré
+                        // ✅ Afficher le loader existant
+                        const transactionsLoading = document.getElementById('transactionsLoading');
                         const allTransactionsList = document.getElementById('allTransactionsList');
                         const emptyState = document.getElementById('emptyState');
                         const allTransactionsSection = document.getElementById('allTransactionsSection');
                         
-                        // Cacher tout le contenu
+                        if (transactionsLoading) transactionsLoading.style.display = 'block';
                         if (allTransactionsList) allTransactionsList.style.display = 'none';
                         if (emptyState) emptyState.style.display = 'none';
-                        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
-                        
-                        // Créer un loader centré temporaire
-                        let tempLoader = document.getElementById('tempTransactionsLoader');
-                        if (!tempLoader) {
-                            tempLoader = document.createElement('div');
-                            tempLoader.id = 'tempTransactionsLoader';
-                            tempLoader.style.cssText = `
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                min-height: 300px;
-                                padding: 60px 20px;
-                            `;
-                            tempLoader.innerHTML = `
-                                <img src="img/anims/Interwind@1x-1.0s-200px-200px.svg" 
-                                    alt="Loading" 
-                                    style="width: 60px; height: 60px; opacity: 0.6;">
-                            `;
-                            transactionsTab.insertBefore(tempLoader, transactionsTab.firstChild);
-                        }
-                        tempLoader.style.display = 'flex';
+                        if (allTransactionsSection) allTransactionsSection.style.display = 'block';
                         
                         // ✅ Fade in l'onglet immédiatement avec le loader
                         requestAnimationFrame(() => {
@@ -5518,8 +5498,7 @@
                             window.transactionsLoaded = true;
                             console.log('✅ Transactions chargées');
                             
-                            // ✅ Supprimer le loader
-                            if (tempLoader) tempLoader.style.display = 'none';
+                            // ✅ Le loader sera caché par renderTransactions()
                             
                             // ✅ Restaurer le scroll
                             if (dashboard) {
@@ -5559,6 +5538,7 @@
                 }, 200);
             }
         }
+
 
         // ✅ Fermer tous les modals ouverts
         function closeAllModals() {
