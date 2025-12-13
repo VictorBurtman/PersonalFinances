@@ -5484,6 +5484,8 @@
                         if (allTransactionsList) allTransactionsList.style.display = 'none';
                         if (emptyState) emptyState.style.display = 'none';
                         if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+                        if (allTransactionsList) allTransactionsList.style.display = 'block'; // ✅ AJOUTER CETTE LIGNE
+
                         
                         // ✅ Fade in l'onglet immédiatement avec le loader
                         requestAnimationFrame(() => {
