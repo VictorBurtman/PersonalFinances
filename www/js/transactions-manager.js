@@ -611,147 +611,122 @@ function renderTransactions() {
     const filtersSection = document.getElementById('filtersSection');
     const transactionCount = document.getElementById('transactionCount');
     const allTransactionsList = document.getElementById('allTransactionsList');
-    const renderLoader = document.getElementById('transactionsRenderLoader');
     
-    // ✅ Afficher le loader et cacher la liste
-    if (renderLoader) renderLoader.style.display = 'block';
-    if (allTransactionsList) {
-        allTransactionsList.style.display = 'none';
-        allTransactionsList.innerHTML = ''; // Vider immédiatement
+    // ✅ Cas 1 : Aucune transaction du tout - AFFICHER IMMÉDIATEMENT
+    if (transactionsData.length === 0) {
+        if (emptyState) {
+            const t = translations[currentLanguage] || translations['en'];
+            emptyState.innerHTML = `
+                <div class="empty-state-icon">📭</div>
+                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                    <span data-translate="noTransactionsAdded">${t.noTransactionsAdded || 'No transactions added yet'}</span>
+                </div>
+                <div style="font-size: 0.9em; opacity: 0.8;">
+                    <span data-translate="addTransactionToStart">${t.addTransactionToStart || 'Add a transaction to get started'}</span>
+                </div>
+            `;
+            emptyState.style.display = 'block';
+        }
+        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        if (filtersSection) filtersSection.style.display = 'none';
+        return; // ✅ Retour immédiat, pas de délai
     }
     
-    // ✅ Forcer le navigateur à peindre le loader avant de continuer
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            // Le vrai rendu commence ici
-            doActualRender();
-        });
+    // Cas 2 : Il y a des transactions - Cacher l'empty state
+    if (emptyState) emptyState.style.display = 'none';
+    if (filtersSection) filtersSection.style.display = 'block';
+    if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+    
+    // Mettre à jour le compteur
+    if (transactionCount) {
+        transactionCount.textContent = filteredTransactionsData.length;
+    }
+    
+    // Calculer le total par devise
+    const totalsByCurrency = {};
+    filteredTransactionsData.forEach(txn => {
+        // Ignorer les montants positifs (revenus/remboursements)
+        if (txn.chargedAmount < 0) {
+            let currency = txn.currency || window.currency || '₪';
+            
+            // Normaliser les devises vers leurs symboles
+            if (currency === 'ILS') currency = '₪';
+            if (currency === 'EUR') currency = '€';
+            if (currency === 'USD') currency = '$';
+            if (currency === 'GBP') currency = '£';
+            
+            if (!totalsByCurrency[currency]) {
+                totalsByCurrency[currency] = 0;
+            }
+            totalsByCurrency[currency] += Math.abs(txn.chargedAmount);
+        }
     });
     
-    function doActualRender() {
-        // Cas 1 : Aucune transaction du tout
-        if (transactionsData.length === 0) {
-            // Cacher le loader
-            if (renderLoader) renderLoader.style.display = 'none';
-            
-            if (emptyState) {
-                const t = translations[currentLanguage] || translations['en'];
-                emptyState.innerHTML = `
-                    <div class="empty-state-icon">📭</div>
-                    <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
-                        <span data-translate="noTransactionsAdded">${t.noTransactionsAdded || 'No transactions added yet'}</span>
-                    </div>
-                    <div style="font-size: 0.9em; opacity: 0.8;">
-                        <span data-translate="addTransactionToStart">${t.addTransactionToStart || 'Add a transaction to get started'}</span>
-                    </div>
-                `;
-                emptyState.style.display = 'block';
-            }
-            if (allTransactionsSection) allTransactionsSection.style.display = 'none';
-            if (filtersSection) filtersSection.style.display = 'none';
-            return;
-        }
-        
-        // Cas 2 : Il y a des transactions - Cacher l'empty state
-        if (emptyState) emptyState.style.display = 'none';
-        if (filtersSection) filtersSection.style.display = 'block';
-        if (allTransactionsSection) allTransactionsSection.style.display = 'block';
-        
-        // Mettre à jour le compteur
-        if (transactionCount) {
-            transactionCount.textContent = filteredTransactionsData.length;
-        }
-        
-        // Calculer le total par devise
-        const totalsByCurrency = {};
-        filteredTransactionsData.forEach(txn => {
-            // Ignorer les montants positifs (revenus/remboursements)
-            if (txn.chargedAmount < 0) {
-                let currency = txn.currency || window.currency || '₪';
-                
-                // Normaliser les devises vers leurs symboles
-                if (currency === 'ILS') currency = '₪';
-                if (currency === 'EUR') currency = '€';
-                if (currency === 'USD') currency = '$';
-                if (currency === 'GBP') currency = '£';
-                
-                if (!totalsByCurrency[currency]) {
-                    totalsByCurrency[currency] = 0;
-                }
-                totalsByCurrency[currency] += Math.abs(txn.chargedAmount);
-            }
+    // Afficher tous les totaux
+    const transactionTotal = document.getElementById('transactionTotal');
+    if (transactionTotal) {
+        const mainCurrency = window.currency || '₪';
+        const currencies = Object.keys(totalsByCurrency).sort((a, b) => {
+            if (a === mainCurrency) return -1;
+            if (b === mainCurrency) return 1;
+            return a.localeCompare(b);
         });
         
-        // Afficher tous les totaux
-        const transactionTotal = document.getElementById('transactionTotal');
-        if (transactionTotal) {
-            const mainCurrency = window.currency || '₪';
-            const currencies = Object.keys(totalsByCurrency).sort((a, b) => {
-                if (a === mainCurrency) return -1;
-                if (b === mainCurrency) return 1;
-                return a.localeCompare(b);
-            });
+        if (currencies.length === 0) {
+            transactionTotal.textContent = `${mainCurrency}0.00`;
+        } else {
+            const totalsText = currencies.map(curr => {
+                return `<span style="color: white; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
+            }).join(' <span style="color: white; opacity: 0.5;">|</span> ');
             
-            if (currencies.length === 0) {
-                transactionTotal.textContent = `${mainCurrency}0.00`;
-            } else {
-                const totalsText = currencies.map(curr => {
-                    return `<span style="color: white; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
-                }).join(' <span style="color: white; opacity: 0.5;">|</span> ');
-                
-                transactionTotal.innerHTML = totalsText;
-            }
+            transactionTotal.innerHTML = totalsText;
         }
-        
-        // Afficher les transactions
-        if (allTransactionsList) {
-            // Cas 2a : Aucune transaction ne correspond aux filtres
-            if (filteredTransactionsData.length === 0) {
-                const t = translations[currentLanguage] || translations['en'];
-                allTransactionsList.innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: #6c757d;">
-                        <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
-                    </div>
-                `;
-            } else {
-                // Cas 2b : Afficher les transactions filtrées
-                const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
-                const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
-                
-                allTransactionsList.innerHTML = transactionsToShow
-                    .map(txn => renderTransaction(txn))
-                    .join('');
-                
-                // Message si des transactions sont cachées
-                if (hiddenCount > 0) {
-                    const limitMessage = document.createElement('div');
-                    limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
-                    const t = translations[currentLanguage] || translations['en'];
-                    const showingText = t.showingTransactions
-                        .replace('{shown}', transactionsToShow.length)
-                        .replace('{total}', filteredTransactionsData.length);
-                    const moreHiddenText = t.moreHidden.replace('{count}', hiddenCount);
-                    
-                    limitMessage.innerHTML = `
-                        ${showingText}<br>
-                        <span style="font-size: 0.85em;">${moreHiddenText}</span>
-                    `;
-                    allTransactionsList.appendChild(limitMessage);
-                }
-            }
-        }
-        
-        // ✅ Cacher le loader et afficher la liste
-        if (renderLoader) renderLoader.style.display = 'none';
-        if (allTransactionsList) allTransactionsList.style.display = 'block';
-        
-        // Appliquer les traductions au contenu dynamique
-        setTimeout(() => {
-            if (typeof updateTransactionsLanguage === 'function') {
-                updateTransactionsLanguage();
-            }
-        }, 100);
     }
+    
+    // Afficher les transactions
+    if (allTransactionsList) {
+        // Cas 2a : Aucune transaction ne correspond aux filtres
+        if (filteredTransactionsData.length === 0) {
+            const t = translations[currentLanguage] || translations['en'];
+            allTransactionsList.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #6c757d;">
+                    <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
+                </div>
+            `;
+        } else {
+            // Cas 2b : Afficher les transactions filtrées
+            const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
+            const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
+            
+            allTransactionsList.innerHTML = transactionsToShow
+                .map(txn => renderTransaction(txn))
+                .join('');
+            
+            // Message si des transactions sont cachées
+            if (hiddenCount > 0) {
+                const limitMessage = document.createElement('div');
+                limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
+                const t = translations[currentLanguage] || translations['en'];
+                const showingText = t.showingTransactions
+                    .replace('{shown}', transactionsToShow.length)
+                    .replace('{total}', filteredTransactionsData.length);
+                const moreHiddenText = t.moreHidden.replace('{count}', hiddenCount);
+                
+                limitMessage.innerHTML = `
+                    ${showingText}<br>
+                    <span style="font-size: 0.85em;">${moreHiddenText}</span>
+                `;
+                allTransactionsList.appendChild(limitMessage);
+            }
+        }
+    }
+    
+    // Appliquer les traductions au contenu dynamique
+    setTimeout(() => {
+        if (typeof updateTransactionsLanguage === 'function') {
+            updateTransactionsLanguage();
+        }
+    }, 100);
 }
 
 /**
