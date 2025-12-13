@@ -3897,7 +3897,7 @@
             };
         }
 
-
+        
         async function renameCategory(categoryKey) {
             const currentDisplayName = getCategoryDisplayName(categoryKey);
             const t = translations[currentLanguage] || translations['en'];
@@ -4064,10 +4064,12 @@
                     }
                 }
                 
-                // ✅ Juste restaurer le mode edit, sans réorganiser
+                // ✅ Forcer le réordonnancement pour garantir l'ordre correct
                 setTimeout(() => {
+                    console.log('🔄 Forcing category reorder after rename');
+                    renderCategoriesInOrder();
                     restoreEditMode();
-                }, 50);
+                }, 100);
                 
                 // Cacher l'overlay
                 if (overlay) {
@@ -4097,6 +4099,8 @@
                 showToast('Error renaming category: ' + error.message, 'error');
             }
         }
+
+
 
         async function renameItem(category, index) {
             const t = translations[currentLanguage] || translations['en'];
