@@ -1951,9 +1951,9 @@ let currentExcludeTransactionName = null;
 /**
  * Open exclude modal
  */
-function openExcludeModal(transactionId, transactionName) {
-    const t = translations[currentLanguage] || translations['en'];  // ← Cette ligne
-    console.log('Opening exclude modal for:', transactionId, transactionName); // Debug
+async function openExcludeModal(transactionId, transactionName) {
+    const t = translations[currentLanguage] || translations['en'];
+    console.log('Opening exclude modal for:', transactionId, transactionName);
     currentExcludeTransactionId = transactionId;
     currentExcludeTransactionName = transactionName;
     
@@ -1968,10 +1968,33 @@ function openExcludeModal(transactionId, transactionName) {
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
-    // Update translations
-    const excludeAllBtn = document.getElementById('excludeAllSimilarText');
-    if (excludeAllBtn) {
-        excludeAllBtn.textContent = t.excludeAllSimilar || 'Exclude all similar transactions';
+    
+    // ✅ Compter les transactions similaires
+    try {
+        const currentTxn = transactionsData.find(t => t.id === transactionId);
+        if (currentTxn) {
+            const similarCount = transactionsData.filter(txn => 
+                txn.description === currentTxn.description && 
+                txn.id !== transactionId &&
+                !txn.excluded
+            ).length;
+            
+            // ✅ Mettre à jour le texte du bouton avec le compteur
+            const excludeAllBtn = document.getElementById('excludeAllSimilarText');
+            if (excludeAllBtn) {
+                const baseText = t.excludeAllSimilar || 'Exclude all similar transactions';
+                excludeAllBtn.textContent = similarCount > 0 
+                    ? `${baseText} (${similarCount})` 
+                    : baseText;
+            }
+        }
+    } catch (error) {
+        console.error('Error counting similar transactions:', error);
+        // En cas d'erreur, afficher le texte sans compteur
+        const excludeAllBtn = document.getElementById('excludeAllSimilarText');
+        if (excludeAllBtn) {
+            excludeAllBtn.textContent = t.excludeAllSimilar || 'Exclude all similar transactions';
+        }
     }
 }
 
