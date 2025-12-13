@@ -82,6 +82,33 @@
         body.dark-mode::before {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
+
+        /* ✅ Safe area Android - uniquement sur mobile natif */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .edit-mode-controls {
+                padding-top: calc(10px + env(safe-area-inset-top));
+            }
+            
+            .dashboard {
+                padding-top: calc(80px + env(safe-area-inset-top));
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+            
+            .footer-nav {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        /* ✅ Android spécifique - padding supplémentaire si besoin */
+        body.platform-android .dashboard {
+            padding-top: 100px;  /* Au lieu de 80px */
+            padding-bottom: 40px; /* Au lieu de 20px */
+        }
+
+        body.platform-android .edit-mode-controls {
+            padding-top: 20px; /* Au lieu de 10px */
+        }
+
     </style>
 
 
@@ -987,6 +1014,19 @@
         let categoryMetadata = {};
 
         let currentLanguage = 'en'; // Variable pour la langue actuelle
+
+
+        // ✅ Détecter la plateforme (Android/iOS/Web)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Capacitor) {
+                const platform = window.Capacitor.getPlatform();
+                document.body.classList.add(`platform-${platform}`);
+                console.log('📱 Plateforme détectée:', platform);
+            } else {
+                document.body.classList.add('platform-web');
+                console.log('🌐 Plateforme: Web/PWA');
+            }
+        });
 
 
         // ========== DÉBUT DU CODE POUR L'ÉCRAN DE CONNEXION ==========

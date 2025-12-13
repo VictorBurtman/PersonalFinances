@@ -12,6 +12,22 @@ if not exist "www\" (
     exit /b 1
 )
 
+echo Appareils disponibles pour test:
+echo.
+echo [1] Pixel 4a (5.8" - actuel)
+echo [2] Pixel 5 (6.0" - proche iPhone 13 Pro)
+echo [3] Pixel 6 (6.4" - ecran plus grand)
+echo [4] Laisser Android Studio choisir
+echo.
+set /p device_choice="Choisis un appareil (1-4): "
+
+REM Definir le nom de l'AVD selon le choix
+if "%device_choice%"=="1" set AVD_NAME=Pixel_4a_API_30
+if "%device_choice%"=="2" set AVD_NAME=Pixel_5_API_31
+if "%device_choice%"=="3" set AVD_NAME=Pixel_6_API_31
+if "%device_choice%"=="4" set AVD_NAME=
+
+echo.
 echo [1/4] Verification de la configuration...
 echo.
 
@@ -41,7 +57,12 @@ if %errorlevel% neq 0 (
     
     echo.
     echo [3/4] Lancement de l'emulateur Android...
-    call npx cap run android
+    if defined AVD_NAME (
+        echo Lancement de %AVD_NAME%...
+        call npx cap run android --target=%AVD_NAME%
+    ) else (
+        call npx cap run android
+    )
     
 ) else (
     echo [OK] Live Reload ACTIVE
@@ -59,7 +80,12 @@ if %errorlevel% neq 0 (
     
     echo.
     echo [4/4] Lancement de l'emulateur Android...
-    call npx cap run android
+    if defined AVD_NAME (
+        echo Lancement de %AVD_NAME%...
+        call npx cap run android --target=%AVD_NAME%
+    ) else (
+        call npx cap run android
+    )
     
     echo.
     echo IMPORTANT: N'oublie pas de fermer la fenetre du serveur Python!
@@ -71,3 +97,19 @@ echo ====================================
 echo  Session terminee
 echo ====================================
 pause
+```
+
+---
+
+## **Ce qui change**
+
+**Au lancement, tu verras :**
+```
+Appareils disponibles pour test:
+
+[1] Pixel 4a (5.8" - actuel)
+[2] Pixel 5 (6.0" - proche iPhone 13 Pro)
+[3] Pixel 6 (6.4" - ecran plus grand)
+[4] Laisser Android Studio choisir
+
+Choisis un appareil (1-4): _
