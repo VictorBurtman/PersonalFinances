@@ -2116,6 +2116,12 @@ async function openExcludedTransactionsModal() {
             ...doc.data()
         }));
         
+        // ✅ Mettre à jour le compteur dans le titre
+        const excludedCountEl = document.getElementById('excludedCount');
+        if (excludedCountEl) {
+            excludedCountEl.textContent = excludedTxns.length > 0 ? `(${excludedTxns.length})` : '';
+        }
+
         if (excludedTxns.length === 0) {
             if (listEl) listEl.innerHTML = '';
             if (noExcludedEl) noExcludedEl.style.display = 'block';
