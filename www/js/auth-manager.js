@@ -47,9 +47,7 @@ class AuthManager {
     async detectUserCurrency() {
         let detectedCurrency = 'USD'; // Défaut
         
-        try {
-            console.log('🌐 Détection de la devise via géolocalisation IP...');
-            
+        try {            
             // Appeler l'API de géolocalisation
             const response = await fetch('https://ipapi.co/json/', {
                 method: 'GET',
@@ -61,9 +59,7 @@ class AuthManager {
             if (response.ok) {
                 const geoData = await response.json();
                 const countryCode = geoData.country_code; // Ex: "FR", "IL", "US"
-                
-                console.log('📍 Pays détecté:', countryCode, geoData.country_name);
-                
+                                
                 // Mapping pays → devise
                 const currencyMap = {
                     // Europe
@@ -107,14 +103,12 @@ class AuthManager {
                 };
                 
                 detectedCurrency = currencyMap[countryCode] || 'USD';
-                console.log('✅ Devise détectée:', detectedCurrency);
                 
             } else {
                 console.warn('⚠️ Géolocalisation IP échouée, devise par défaut: USD');
             }
         } catch (error) {
             console.warn('⚠️ Erreur géolocalisation IP:', error.message);
-            console.log('ℹ️ Utilisation de la devise par défaut: USD');
         }
         
         return detectedCurrency;
@@ -210,14 +204,9 @@ class AuthManager {
         }
 
         try {
-            console.log('🆕 Configuration initiale pour nouvel utilisateur...');
-            console.log('🌍 navigator.language:', navigator.language);
-            console.log('🌍 navigator.userLanguage:', navigator.userLanguage);
             // Détecter langue et devise
             const detectedLang = this.detectSystemLanguage();
             const detectedCurr = await this.detectUserCurrency();
-
-            console.log('✅ Détecté: langue =', detectedLang, ', devise =', detectedCurr);
 
             // Sauvegarder dans Firestore
             await db.collection('users').doc(userId).set({
@@ -243,8 +232,6 @@ class AuthManager {
                 window.currentCurrency = detectedCurr;
             }
 
-            console.log('✅ Configuration initiale sauvegardée');
-
         } catch (error) {
             console.error('❌ Error setting up initial config:', error);
             
@@ -261,7 +248,6 @@ class AuthManager {
                 localStorage.setItem('language', 'en');
                 localStorage.setItem('currency', 'USD');
                 
-                console.log('⚠️ Fallback: configuration par défaut appliquée');
             } catch (fallbackError) {
                 console.error('❌ Erreur fallback:', fallbackError);
             }
@@ -298,11 +284,9 @@ class AuthManager {
      * @param {string} langCode
      */
     applyLanguage(langCode) {
-        console.log('🌍 Application de la langue:', langCode);
         
         // ✅ SAUVEGARDER dans localStorage IMMÉDIATEMENT
         localStorage.setItem('language', langCode);
-        console.log('💾 Langue sauvegardée dans localStorage:', langCode);
         
         const trans = translations[langCode];
         
@@ -338,9 +322,7 @@ class AuthManager {
         } else {
             document.documentElement.setAttribute('dir', 'ltr');
             document.getElementById('auth-screen')?.classList.remove('rtl');
-        }
-        
-        console.log('✅ Langue appliquée:', langCode);
+        }  
     }
 
     /**
@@ -502,7 +484,6 @@ class AuthManager {
         const trans = translations[lang] || translations['en'];
         
         try {
-            console.log('✅ Tentative de connexion...');
             
             // ❌ SUPPRIMER CETTE VÉRIFICATION (ne fonctionne plus)
             // const emailExists = await this.checkIfEmailExists(email);
@@ -729,9 +710,7 @@ class AuthManager {
             
             // Utiliser la traduction
             this.showAuthError('✅ ' + trans.resetEmailSent);
-            
-            console.log('✅ Email de réinitialisation envoyé à:', email);
-            
+                        
         } catch (error) {
             console.error('❌ Erreur envoi email reset:', error);
             
@@ -741,7 +720,6 @@ class AuthManager {
     }
 
     getErrorMessage(errorCode) {
-        console.log('🔍 Error code reçu:', errorCode);
         
         const lang = localStorage.getItem('language') || 'en';
         const trans = translations[lang] || translations['en'];
@@ -761,7 +739,6 @@ class AuthManager {
         };
         
         const message = errorMap[errorCode] || trans.unknownError;
-        console.log('💬 Message retourné:', message);
         
         return message;
     }

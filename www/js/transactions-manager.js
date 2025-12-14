@@ -61,17 +61,14 @@ let isLoadingTransactions = false;
 async function loadTransactions() {
     // ✅ Bloquer si déjà en cours
     if (isLoadingTransactions) {
-        console.log('⏸️ Transactions déjà en cours de chargement');
         return;
     }
     
     if (!window.currentUser || !transactionsFunctions) {
-        console.log('Cannot load transactions: user not logged in or functions not initialized');
         return;
     }
     
     isLoadingTransactions = true;
-    console.log('🔵 [START] loadTransactions');
     
     try {
         // Appliquer les traductions dès le début
@@ -191,9 +188,7 @@ async function loadTransactions() {
                 ...data
             });
         });
-        
-        console.log(`Loaded ${bankTransactions.length} bank transactions and ${manualTransactions.length} manual transactions`);
-        
+                
         // Combiner les deux sources
         transactionsData = [...bankTransactions, ...manualTransactions];
         
@@ -205,14 +200,12 @@ async function loadTransactions() {
         // ✅ MODIFIÉ : Charger les filtres sauvegardés avec !== undefined
         if (userDoc.exists && userDoc.data().transactionFilters) {
             const savedFilters = userDoc.data().transactionFilters;
-            console.log('📥 Restauration des filtres depuis Firebase:', savedFilters);
             
             // Label filter (radio buttons)
             if (savedFilters.labelFilter) {
                 const radio = document.querySelector(`input[name="labelFilter"][value="${savedFilters.labelFilter}"]`);
                 if (radio) {
                     radio.checked = true;
-                    console.log('✅ Label filter restauré:', savedFilters.labelFilter);
                 }
             }
             
@@ -220,45 +213,37 @@ async function loadTransactions() {
             const monthSelect = document.getElementById('monthFilter');
             if (monthSelect && savedFilters.monthFilter !== undefined) {
                 monthSelect.value = savedFilters.monthFilter;
-                console.log('✅ Month filter restauré:', savedFilters.monthFilter || '(all)');
             }
             
             // ✅ Source filter
             const sourceSelect = document.getElementById('sourceFilter');
             if (sourceSelect && savedFilters.sourceFilter !== undefined) {
                 sourceSelect.value = savedFilters.sourceFilter;
-                console.log('✅ Source filter restauré:', savedFilters.sourceFilter || '(all)');
             }
             
             // ✅ Category filter
             const categorySelect = document.getElementById('categoryFilter');
             if (categorySelect && savedFilters.categoryFilter !== undefined) {
                 categorySelect.value = savedFilters.categoryFilter;
-                console.log('✅ Category filter restauré:', savedFilters.categoryFilter || '(all)');
             }
             
             // ✅ Search filter
             const searchInput = document.getElementById('searchFilter');
             if (searchInput && savedFilters.searchFilter !== undefined) {
                 searchInput.value = savedFilters.searchFilter;
-                console.log('✅ Search filter restauré:', savedFilters.searchFilter || '(empty)');
             }
             
             // ✅ Sort filter
             const sortSelect = document.getElementById('sortFilter');
             if (sortSelect && savedFilters.sortFilter) {
                 sortSelect.value = savedFilters.sortFilter;
-                console.log('✅ Sort filter restauré:', savedFilters.sortFilter);
             }
             
             // ✅ Limit filter
             const limitSelect = document.getElementById('limitFilter');
             if (limitSelect && savedFilters.limitFilter) {
                 limitSelect.value = savedFilters.limitFilter;
-                console.log('✅ Limit filter restauré:', savedFilters.limitFilter);
-            }
-            
-            console.log('✅ Tous les filtres restaurés');
+            }     
         }
         
         // Appliquer les filtres et render
@@ -268,7 +253,6 @@ async function loadTransactions() {
         if (transactionsLoading) transactionsLoading.style.display = 'none';
         
         // Note : renderTransactions() va gérer l'affichage de emptyState et filtersSection
-        console.log('🟢 [SUCCESS] loadTransactions terminée');
         
     } catch (error) {
         console.error('🔴 [ERROR] loadTransactions:', error);
@@ -509,13 +493,10 @@ function clearSearchFilter() {
  * Update filters button color based on active filters
  */
 function updateFiltersButtonColor() {
-    console.log('🔍 updateFiltersButtonColor called');
     
     const filtersBtn = document.getElementById('filtersBtn');
-    console.log('filtersBtn:', filtersBtn);
     
     if (!filtersBtn) {
-        console.log('❌ filtersBtn not found!');
         return;
     }
     
@@ -523,9 +504,7 @@ function updateFiltersButtonColor() {
     const monthFilter = document.getElementById('monthFilter')?.value || '';
     const sourceFilter = document.getElementById('sourceFilter')?.value || '';
     const searchFilter = document.getElementById('searchFilter')?.value || '';
-    
-    console.log('Filters:', { labelFilter, monthFilter, sourceFilter, searchFilter });
-    
+        
     // Vérifier si au moins un filtre est actif
     const hasActiveFilters = 
         labelFilter !== 'all' ||
@@ -533,15 +512,12 @@ function updateFiltersButtonColor() {
         sourceFilter !== '' ||
         searchFilter !== '';
     
-    console.log('hasActiveFilters:', hasActiveFilters);
     
     const img = filtersBtn.querySelector('img');
-    console.log('img:', img);
     
     if (img) {
         // Orange filter (même couleur que le crayon en mode edit)
         img.style.filter = hasActiveFilters ? 'invert(58%) sepia(85%) saturate(1804%) hue-rotate(360deg) brightness(102%) contrast(101%)' : '';
-        console.log('Applied filter:', img.style.filter);
     } else {
         console.log('❌ img not found inside filtersBtn!');
     }
@@ -613,7 +589,6 @@ async function changeTransactionLimit(limit) {
             await db.collection('users').doc(window.currentUser.uid).set({
                 transactionLimit: transactionLimit
             }, { merge: true });
-            console.log('Transaction limit saved:', transactionLimit);
         } catch (error) {
             console.error('Error saving transaction limit:', error);
         }
@@ -635,9 +610,7 @@ function changeSortOrder(sortOrder) {
 /**
  * Clear all filters except Sort and Limit
  */
-function clearFilters() {
-    console.log('🔄 Réinitialisation des filtres (sauf Sort et Limit)...');
-    
+function clearFilters() {    
     // Reset label filter to 'all'
     const allRadio = document.querySelector('input[name="labelFilter"][value="all"]');
     if (allRadio) allRadio.checked = true;
@@ -661,8 +634,6 @@ function clearFilters() {
     // Sort et Limit ne sont PAS touchés (comme voulu)
     
     applyFilters();
-    
-    console.log('✅ Filtres réinitialisés');
 }
 
 /**
@@ -948,9 +919,7 @@ function handleTransactionCheckboxChange() {
             selectedTransactionIds.add(txnId);
         }
     });
-    
-    console.log(`${selectedTransactionIds.size} transaction(s) selected`);
-    
+        
     // ✅ Afficher/cacher les boutons Select All / Deselect All
     const bulkSelectButtons = document.getElementById('bulkSelectButtons');
     if (bulkSelectButtons) {
@@ -1113,8 +1082,6 @@ async function saveManualTransaction(event) {
             ...transaction,
             id: docRef.id // Use Firestore auto-generated ID
         });
-
-        console.log('Manual transaction added:', { id: docRef.id, ...transaction });
 
         // Close modal
         closeAddManualTransactionModal();
@@ -1400,7 +1367,6 @@ async function openBankAccountsModal() {
         
         // ✅ APPLIQUER LES TRADUCTIONS
         setTimeout(() => {
-            console.log('📝 Application des traductions (Bank Accounts Modal)...');
             if (typeof updateUILanguage === 'function') {
                 updateUILanguage();
             } else if (typeof updateTransactionsLanguage === 'function') {
@@ -1921,7 +1887,6 @@ async function saveMemo(transactionId, memo) {
     
     // ✅ Éviter les doubles appels
     if (savingMemo) {
-        console.log('Already saving memo, skipping...');
         return;
     }
     
@@ -2133,7 +2098,6 @@ let currentExcludeTransactionName = null;
  */
 async function openExcludeModal(transactionId, transactionName) {
     const t = translations[currentLanguage] || translations['en'];
-    console.log('Opening exclude modal for:', transactionId, transactionName);
     currentExcludeTransactionId = transactionId;
     currentExcludeTransactionName = transactionName;
     
@@ -2195,7 +2159,6 @@ function closeExcludeModal() {
  * Confirm exclusion from modal
  */
 function confirmExclude(excludeSimilar) {
-    console.log('Confirm exclude called with:', currentExcludeTransactionId, excludeSimilar);
     if (currentExcludeTransactionId && currentExcludeTransactionId.trim() !== '') {
         // Save the ID locally before closing modal
         const txnIdToExclude = currentExcludeTransactionId;
@@ -2214,9 +2177,7 @@ function confirmExclude(excludeSimilar) {
 /**
  * Exclude a transaction or all similar ones
  */
-async function excludeTransaction(transactionId, excludeSimilar) {
-    console.log('excludeTransaction called with:', transactionId, excludeSimilar);
-    
+async function excludeTransaction(transactionId, excludeSimilar) {    
     if (!window.currentUser || !window.currentUser.uid) {
         console.error('No current user!');
         showToast('Error: User not authenticated', 'error');
@@ -2524,7 +2485,6 @@ async function convertExcelToCSV(file) {
                 // Convert to CSV
                 const csv = XLSX.utils.sheet_to_csv(worksheet);
                 
-                console.log(`✓ Converted Excel file: ${file.name}`);
                 resolve(csv);
             } catch (error) {
                 reject(new Error(`Failed to read Excel file: ${error.message}`));
@@ -2676,9 +2636,7 @@ function convertIsraeliCSV(csvText) {
     if (headerLineIndex === -1) {
         return csvText;
     }
-    
-    console.log(`✓ Israeli CSV format detected at line ${headerLineIndex + 1}`);
-    
+        
     // Créer le nouveau CSV avec headers anglais
     const newLines = [];
     newLines.push('date,description,amount,currency');
@@ -2727,7 +2685,6 @@ function convertIsraeliCSV(csvText) {
     }
     
     const convertedCSV = newLines.join('\n');
-    console.log(`✓ Converted ${newLines.length - 1} Israeli transactions`);
     
     return convertedCSV;
 }
@@ -2796,7 +2753,6 @@ function parseCSV(csvText, fileName, bankName) {
             
             // ✅ Skip income/credits (positive amounts) - only import expenses
             if (amount > 0) {
-                console.log(`Skipping income/credit transaction: ${description} (${amount})`);
                 continue;
             }
 
@@ -3186,9 +3142,7 @@ async function toggleSection(sectionId) {
             try {
                 // L'état APRÈS le toggle (true = déplié, false = replié)
                 const newState = (content.style.display === 'block');
-                
-                console.log(`Saving ${sectionId} state:`, newState, `(display: ${content.style.display})`);
-                
+                                
                 await db.collection('users').doc(window.currentUser.uid).set({
                     uiPreferences: {
                         [sectionId]: newState
@@ -3209,16 +3163,13 @@ window.toggleSection = toggleSection;
  */
 async function loadSectionStates() {
     if (!window.currentUser || !db) {
-        console.log('Cannot load section states: user not logged in');
         return;
     }
     
     try {
         const userDoc = await db.collection('users').doc(window.currentUser.uid).get();
         const prefs = userDoc.data()?.uiPreferences || {};
-        
-        console.log('Loaded UI preferences:', prefs);
-        
+                
         // Apply saved states for Bank Config
         if (prefs.bankConfigSection !== undefined) {
             const content = document.getElementById('bankConfigContent');
@@ -3226,7 +3177,6 @@ async function loadSectionStates() {
             if (content && toggle) {
                 content.style.display = prefs.bankConfigSection ? 'block' : 'none';
                 toggle.textContent = prefs.bankConfigSection ? '▼' : '▶';
-                console.log('Applied bankConfigSection state:', prefs.bankConfigSection);
             }
         }
         
@@ -3238,7 +3188,6 @@ async function loadSectionStates() {
             if (content && toggle) {
                 content.style.display = prefs.filtersSection ? 'block' : 'none';
                 toggle.textContent = prefs.filtersSection ? '▼' : '▶';
-                console.log('Applied filtersSection state:', prefs.filtersSection);
             }
         }
     } catch (error) {

@@ -162,12 +162,10 @@ export const scrapeMaxTransactions = onCall(
                 // Remonter de 10 jours pour la sécurité
                 lastDate.setDate(lastDate.getDate() - 10);
                 startDate = lastDate.toISOString();
-                console.log(`Using incremental sync from: ${startDate}`);
             } else {
                 // Première sync - utiliser monthsBack ou défaut 6 mois
                 const months = monthsBack || 6;
                 startDate = getMonthsAgo(months).toISOString();
-                console.log(`First sync - using ${months} months back`);
             }
         } catch (error) {
             console.error('Error calculating incremental sync date:', error);
@@ -177,8 +175,6 @@ export const scrapeMaxTransactions = onCall(
     }
 
     try {
-      console.log(`Starting scrape for user ${userId}`);
-
       // Get encrypted credentials
       const userDoc = await db.collection('users').doc(userId).get();
       
@@ -194,8 +190,6 @@ export const scrapeMaxTransactions = onCall(
 
       const credentials = decryptCredentials(userData.maxCredentials.encrypted);
       
-      console.log('Credentials decrypted, starting scraper...');
-
       // Configure Puppeteer avec Chromium
       const executablePath = await chromium.executablePath();
       process.env.PUPPETEER_EXECUTABLE_PATH = executablePath;
@@ -213,8 +207,6 @@ export const scrapeMaxTransactions = onCall(
           headless: 'new'
         }
       };
-
-      console.log('Creating scraper with chromium path:', executablePath);
 
       const scraper = createScraper(scraperOptions);
       
@@ -234,8 +226,6 @@ export const scrapeMaxTransactions = onCall(
           { errorType: scrapeResult.errorType, errorMessage: scrapeResult.errorMessage }
         );
       }
-
-      console.log(`Scrape successful, found ${scrapeResult.accounts.length} accounts`);
 
       // Process transactions
       const allTransactions = [];
@@ -266,8 +256,6 @@ export const scrapeMaxTransactions = onCall(
         });
       });
 
-      console.log(`Processed ${transactionCount} transactions`);
-
       // Save transactions to Firestore
       const batch = db.batch();
       const transactionsRef = db.collection('users').doc(userId).collection('transactions');
@@ -293,8 +281,6 @@ export const scrapeMaxTransactions = onCall(
         lastMaxSync: admin.firestore.FieldValue.serverTimestamp(),
         lastSyncTransactionCount: transactionCount
       }, { merge: true });
-
-      console.log(`Saved ${transactionCount} transactions to Firestore`);
 
       return {
         success: true,
@@ -365,8 +351,6 @@ export const saveIsracardCredentials = onCall(async (request) => {
       }
     }, { merge: true });
 
-    console.log(`Isracard credentials saved for user ${userId}`);
-
     return {
       success: true,
       message: 'Isracard credentials saved successfully'
@@ -422,7 +406,6 @@ export const scrapeIsracardTransactions = onCall(
     const { startDate } = request.data;
 
     try {
-      console.log(`Starting Isracard scrape for user ${userId}`);
 
       const userDoc = await db.collection('users').doc(userId).get();
       
@@ -438,8 +421,6 @@ export const scrapeIsracardTransactions = onCall(
 
       const credentials = decryptCredentials(userData.isracardCredentials.encrypted);
       
-      console.log('Isracard credentials decrypted, starting scraper...');
-
       // Configure Puppeteer avec Chromium
       const executablePath = await chromium.executablePath();
       process.env.PUPPETEER_EXECUTABLE_PATH = executablePath;
@@ -453,8 +434,6 @@ export const scrapeIsracardTransactions = onCall(
         args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox']
       };
 
-      console.log('Creating Isracard scraper');
-
       const scraper = createScraper(scraperOptions);
       const scrapeResult = await scraper.scrape(credentials);
 
@@ -466,8 +445,6 @@ export const scrapeIsracardTransactions = onCall(
           { errorType: scrapeResult.errorType, errorMessage: scrapeResult.errorMessage }
         );
       }
-
-      console.log(`Isracard scrape successful, found ${scrapeResult.accounts.length} accounts`);
 
       const allTransactions = [];
       let transactionCount = 0;
@@ -498,8 +475,6 @@ export const scrapeIsracardTransactions = onCall(
         });
       });
 
-      console.log(`Processed ${transactionCount} Isracard transactions`);
-
       // Save to Firestore
       const batch = db.batch();
       const transactionsRef = db.collection('users').doc(userId).collection('transactions');
@@ -524,8 +499,6 @@ export const scrapeIsracardTransactions = onCall(
         lastIsracardSync: admin.firestore.FieldValue.serverTimestamp(),
         lastIsracardSyncTransactionCount: transactionCount
       }, { merge: true });
-
-      console.log(`Saved ${transactionCount} Isracard transactions`);
 
       return {
         success: true,
@@ -620,14 +593,6 @@ export const labelTransaction = onCall(async (request) => {
   const userId = request.auth.uid;
   const { transactionId, category, isUnique } = request.data;
 
-  // ✅ LOGS DE DEBUG
-  console.log('🔍 labelTransaction called with:', {
-    transactionId,
-    category,
-    isUnique,
-    isUniqueType: typeof isUnique,
-    rawData: request.data
-  });
 
   if (!transactionId) {
     throw new HttpsError('invalid-argument', 'Transaction ID is required');
@@ -646,9 +611,7 @@ export const labelTransaction = onCall(async (request) => {
     }
 
     const transaction = transactionDoc.data();
-    
-    console.log('🔍 isUnique check:', isUnique, 'will enter unique block?', isUnique === true);
-    
+        
     // ✅ Si isUnique = true, labéliser/délabéliser uniquement cette transaction
     if (isUnique) {
       await transactionRef.update({
@@ -657,8 +620,6 @@ export const labelTransaction = onCall(async (request) => {
         isUniqueLabel: category !== null, // ✅ Marquer comme unique seulement si on labélise
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
-
-      console.log(`Transaction ${transactionId} ${category ? 'labeled' : 'unlabeled'} (unique)`);
 
       return {
         success: true,
@@ -677,11 +638,8 @@ export const labelTransaction = onCall(async (request) => {
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
-    console.log(`Transaction ${transactionId} ${category ? 'labeled' : 'unlabeled'}`);
-
     // ✅ NOUVEAU : Matching exact sur la description au lieu de keywords
     const description = transaction.description;
-    console.log(`Looking for transactions matching exactly: "${description}"`);
 
     // ✅ Chercher les transactions avec EXACTEMENT la même description
     const querySnapshot = category 
@@ -707,7 +665,6 @@ export const labelTransaction = onCall(async (request) => {
       
       // ✅ Exclure les transactions déjà marquées comme uniques
       if (txn.isUniqueLabel && doc.id !== transactionId) {
-        console.log(`  → Skipping unique transaction: ${txn.description}`);
         return;
       }
       
@@ -723,12 +680,10 @@ export const labelTransaction = onCall(async (request) => {
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
       similarCount++;
-      console.log(`  → Auto-${category ? 'labeled' : 'unlabeled'} similar transaction: ${txn.description}`);
     });
 
     if (similarCount > 0) {
       await batch.commit();
-      console.log(`Auto-${category ? 'labeled' : 'unlabeled'} ${similarCount} similar transactions`);
     }
 
     return {
@@ -780,7 +735,6 @@ export const renameCategory = onCall(async (request) => {
       });
 
       await batch.commit();
-      console.log(`Updated ${snapshot.size} transactions from ${oldName} to ${newName}`);
     }
 
     return {
@@ -827,7 +781,6 @@ export const deleteCategory = onCall(async (request) => {
       });
 
       await batch.commit();
-      console.log(`Unlabeled ${snapshot.size} transactions from deleted category ${categoryName}`);
     }
 
     return {
