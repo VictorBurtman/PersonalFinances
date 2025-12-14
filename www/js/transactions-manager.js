@@ -863,7 +863,7 @@ function renderTransaction(txn) {
                         <!-- Memo/Note field (always visible and editable) -->
                         <div style="margin-bottom: 5px;">
                             <strong>${t.note || 'Note'}:</strong>
-                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
                                 <input 
                                     type="text" 
                                     id="memo-${txnId}"
@@ -871,7 +871,7 @@ function renderTransaction(txn) {
                                     placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
                                     maxlength="100"
                                     onblur="saveMemo('${txn.id}', this.value)"
-                                    style="flex: 1; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
+                                    style="flex: 1; min-width: 150px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white); color: var(--text-color, #000);"
                                 />
                                 <button
                                     onclick="saveMemo('${txn.id}', document.getElementById('memo-${txnId}').value); event.stopPropagation();"
@@ -1919,13 +1919,23 @@ async function autoLabelAll() {
 /**
  * Save memo/note for a transaction
  */
+let savingMemo = false; // ✅ Flag pour éviter les doubles appels
+
 async function saveMemo(transactionId, memo) {
     if (!window.currentUser) {
         showToast('Please login first', 'error');
         return;
     }
     
+    // ✅ Éviter les doubles appels
+    if (savingMemo) {
+        console.log('Already saving memo, skipping...');
+        return;
+    }
+    
     try {
+        savingMemo = true;
+        
         // Limiter à 10 mots
         const words = memo.trim().split(/\s+/).filter(w => w.length > 0);
         if (words.length > 10) {
@@ -1958,6 +1968,11 @@ async function saveMemo(transactionId, memo) {
     } catch (error) {
         console.error('Error saving memo:', error);
         showToast('Error saving note', 'error');
+    } finally {
+        // ✅ Réinitialiser le flag après un délai
+        setTimeout(() => {
+            savingMemo = false;
+        }, 500);
     }
 }
 
