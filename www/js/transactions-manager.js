@@ -863,23 +863,16 @@ function renderTransaction(txn) {
                         <!-- Memo/Note field (always visible and editable) -->
                         <div style="margin-bottom: 5px;">
                             <strong>${t.note || 'Note'}:</strong>
-                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
-                                <input 
-                                    type="text" 
-                                    id="memo-${txnId}"
-                                    value="${escapeHtml(txn.memo || '')}"
-                                    placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
-                                    maxlength="100"
-                                    onblur="saveMemo('${txn.id}', this.value)"
-                                    style="flex: 1; min-width: 150px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white); color: var(--text-color, #000);"
-                                />
-                                <button
-                                    onclick="saveMemo('${txn.id}', document.getElementById('memo-${txnId}').value); event.stopPropagation();"
-                                    style="padding: 6px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap;"
-                                >
-                                    <span data-translate="save">Save</span>
-                                </button>
-                            </div>
+                            <input 
+                                type="text" 
+                                id="memo-${txnId}"
+                                value="${escapeHtml(txn.memo || '')}"
+                                placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
+                                maxlength="100"
+                                onblur="saveMemo('${txn.id}', this.value)"
+                                style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
+                            />
+                        </div>
                         </div>
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>

@@ -1307,7 +1307,9 @@ body.dark-mode .transaction-details {
 
 /* Dark mode pour les inputs de memo */
 body.dark-mode .transaction-details input[type="text"] {
-    color: #e0e0e0;
+    color: #e0e0e0 !important;
+    background: #1f1f2e !important;
+    border-color: #404050 !important;
 }
 
 body.dark-mode .transaction-details strong {
