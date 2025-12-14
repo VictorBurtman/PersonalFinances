@@ -1835,32 +1835,61 @@ async function autoLabelAll() {
     }
     
     const btn = document.getElementById('autoLabelBtn');
+    const btnModal = document.getElementById('autoLabelBtnModal'); // Bouton dans Bank Sync
+    
+    // ✅ Afficher le loading overlay
+    const t = translations[currentLanguage] || translations['en'];
+    showLoadingOverlay(
+        t.autoLabeling || 'Auto-labeling transactions...',
+        t.pleaseWait || 'Please wait...'
+    );
+    
+    // Désactiver les boutons
     if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Labeling...';
+    }
+    if (btnModal) {
+        btnModal.disabled = true;
     }
     
     try {
         const autoLabelTransactions = transactionsFunctions.httpsCallable('autoLabelTransactions');
         const result = await autoLabelTransactions({});
         
+        // ✅ Cacher le loading overlay
+        hideLoadingOverlay();
+        
         const count = result.data.labeledCount || 0;
         if (count > 0) {
-            const t = translations[currentLanguage] || translations['en'];
             showToast(t.autoLabelCompleted.replace('{count}', count), 'success');
         } else {
-            const t = translations[currentLanguage] || translations['en'];
             showToast(t.noTransactionsToLabel || 'No transactions could be auto-labeled.', 'info');
         }
         
+        // ✅ Sauvegarder et restaurer la position du scroll
+        const dashboard = document.querySelector('.dashboard');
+        const scrollPosition = dashboard ? dashboard.scrollTop : 0;
+        
         await loadTransactions();
+        
+        // ✅ Restaurer la position du scroll
+        if (dashboard) {
+            setTimeout(() => {
+                dashboard.scrollTop = scrollPosition;
+            }, 100);
+        }
+        
     } catch (error) {
+        hideLoadingOverlay();
         console.error('Error auto-labeling:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
     } finally {
+        // Réactiver les boutons
         if (btn) {
             btn.disabled = false;
-            btn.textContent = '🏷️ Auto-label';
+        }
+        if (btnModal) {
+            btnModal.disabled = false;
         }
     }
 }
@@ -2015,7 +2044,7 @@ async function unlabelTransaction(transactionId, isUnique = false) {
                 dashboard.scrollTop = scrollPosition;
             }, 100);
         }
-        
+
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error removing label:', error);
