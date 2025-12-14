@@ -860,7 +860,27 @@ function renderTransaction(txn) {
                                 <span data-translate="copy">Copy</span>
                             </button>
                         </div>
-                        ${txn.memo ? `<div style="margin-bottom: 5px;"><strong>${t.memo || 'Memo'}:</strong> ${escapeHtml(txn.memo)}</div>` : ''}
+                        <!-- Memo/Note field (always visible and editable) -->
+                        <div style="margin-bottom: 5px;">
+                            <strong>${t.note || 'Note'}:</strong>
+                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                                <input 
+                                    type="text" 
+                                    id="memo-${txnId}"
+                                    value="${escapeHtml(txn.memo || '')}"
+                                    placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
+                                    maxlength="100"
+                                    onblur="saveMemo('${txn.id}', this.value)"
+                                    style="flex: 1; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
+                                />
+                                <button
+                                    onclick="saveMemo('${txn.id}', document.getElementById('memo-${txnId}').value); event.stopPropagation();"
+                                    style="padding: 6px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap;"
+                                >
+                                    <span data-translate="save">Save</span>
+                                </button>
+                            </div>
+                        </div>
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
