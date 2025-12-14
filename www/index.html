@@ -6387,6 +6387,17 @@
                     <div class="csv-list" id="csvList">
                         <!-- Les CSV importés apparaîtront ici -->
                     </div>
+                    
+                    <!-- ✅ NOUVEAU : Bouton Auto-label sorti du menu Bank Sync -->
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                        <h4 style="margin-bottom: 10px;">🏷️ <span data-translate="autoLabelTitle">Automatic Labeling</span></h4>
+                        <p style="font-size: 0.9em; color: #6c757d; margin-bottom: 15px;">
+                            <span data-translate="autoLabelDescription">Automatically label unlabeled transactions based on existing patterns</span>
+                        </p>
+                        <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtn" style="width: 100%; padding: 12px; font-size: 1em;">
+                            🏷️ <span data-translate="autoLabel">Auto-label</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Bank Synchronization (Collapsible) -->
@@ -6430,14 +6441,9 @@
                                     <div><strong>Isracard:</strong> <span id="lastIsracardSyncTimeModal" data-translate="never">Never</span> <span id="lastIsracardSyncCountModal"></span></div>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="flex: 1;">
-                                    <span data-translate="syncAll">🔄 Sync All</span>
-                                </button>
-                                <button class="btn btn-success" onclick="autoLabelAll()" id="autoLabelBtnModal" style="flex: 1;">
-                                    <span data-translate="autoLabel">🏷️ Auto-label</span>
-                                </button>
-                            </div>
+                            <button class="btn btn-primary" onclick="syncAllTransactions()" id="syncAllBtnModal" style="width: 100%;">
+                                <span data-translate="syncAll">🔄 Sync All</span>
+                            </button>
                         </div>
                     </div>
                 </div>
