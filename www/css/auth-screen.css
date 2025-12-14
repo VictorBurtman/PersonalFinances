@@ -330,21 +330,23 @@ body.dark-mode .auth-error {
    ============================================ */
 .language-selector {
     position: absolute;
-    top: max(20px, env(safe-area-inset-top, 20px));  /* ← Remplace cette ligne */
-    right: 20px !important;
-    left: auto !important;
+    top: 80px;  /* ← Descend plus bas */
+    left: 50%;  /* ← Centre horizontalement */
+    transform: translateX(-50%);  /* ← Centre horizontalement */
+    right: auto !important;  /* ← Enlève le positionnement à droite */
     display: flex;
     gap: 5px;
     direction: ltr !important;
     z-index: 1000;
-    padding-top: 10px;  /* ← Ajoute cette ligne */
 }
 
 
 /* ✅ Force explicitement même en mode RTL */
 html[dir="rtl"] .language-selector {
-    right: 20px !important;
-    left: auto !important;
+    /* right: 20px !important; */  /* ← Commente ou supprime */
+    /* left: auto !important; */   /* ← Commente ou supprime */
+    left: 50%;  /* ← Ajoute ceci */
+    transform: translateX(-50%);  /* ← Ajoute ceci */
 }
 
 .language-selector button {
