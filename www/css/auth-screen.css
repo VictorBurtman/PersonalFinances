@@ -133,6 +133,12 @@ body.dark-mode #auth-screen .language-selector button {
     font-weight: 700;
 }
 
+.auth-container p {
+    text-align: center;
+    color: var(--auth-text-secondary);
+    margin-bottom: 30px;
+    font-size: 14px;
+}
 
 /* ============================================
    FORMULAIRE
