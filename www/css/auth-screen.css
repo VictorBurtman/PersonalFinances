@@ -429,7 +429,8 @@ html[dir="rtl"] .auth-buttons {
     
     .language-selector {
         top: 60px !important;
-        right: 10px !important;
+        right: 50% !important;  /* au lieu de 10px */
+        transform: translateX(50%) !important;  /* ajoute cette ligne */
         gap: 0 !important; /* ✅ Désactive le gap */
     }
     
@@ -482,7 +483,8 @@ html[dir="rtl"] .auth-buttons {
     
     .language-selector {
         top: 60px !important;
-        right: 10px !important;
+        right: 50% !important;  /* au lieu de 10px */
+        transform: translateX(50%) !important;  /* ajoute cette ligne */
         gap: 0 !important; /* ✅ Désactive le gap */
     }
     
