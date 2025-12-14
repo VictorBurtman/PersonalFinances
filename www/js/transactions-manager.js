@@ -1938,7 +1938,18 @@ async function labelTransaction(transactionId, category) {
             }
         }
         
+        // ✅ Sauvegarder la position du scroll
+        const dashboard = document.querySelector('.dashboard');
+        const scrollPosition = dashboard ? dashboard.scrollTop : 0;
+
         await loadTransactions();
+
+        // ✅ Restaurer la position du scroll
+        if (dashboard) {
+            setTimeout(() => {
+                dashboard.scrollTop = scrollPosition;
+            }, 100);
+        }
         
     } catch (error) {
         hideLoadingOverlay();
@@ -1992,7 +2003,19 @@ async function unlabelTransaction(transactionId, isUnique = false) {
             }
         }
         
+        // ✅ Sauvegarder la position du scroll
+        const dashboard = document.querySelector('.dashboard');
+        const scrollPosition = dashboard ? dashboard.scrollTop : 0;
+
         await loadTransactions();
+
+        // ✅ Restaurer la position du scroll
+        if (dashboard) {
+            setTimeout(() => {
+                dashboard.scrollTop = scrollPosition;
+            }, 100);
+        }
+        
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error removing label:', error);
