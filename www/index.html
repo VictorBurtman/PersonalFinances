@@ -2153,6 +2153,11 @@
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {                    // ← AJOUTE CES 5 LIGNES ICI
+                    padding: {
+                        bottom: 20
+                    }
+                },
                 animation: {
                     duration: 600,
                     easing: 'easeInOutQuart'
@@ -2161,7 +2166,7 @@
                     legend: {
                         display: !isEmpty,
                         position: 'bottom',
-                        maxHeight: 120,  /* ← Ajoute cette ligne pour limiter la hauteur de la légende */
+                        align: 'start',  // ← AJOUTE CETTE LIGNE ICI
                         labels: {
                             padding: 10,
                             font: { size: 11 },
