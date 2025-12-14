@@ -165,6 +165,10 @@ const translations = {
         multipleTransactionsLabeled: '{count} transactions labeled!',
         selectAll: 'Select All',
         deselectAll: 'Deselect All',
+        note: 'Note',
+        addNote: 'Add a note (max 10 words)...',
+        memoTooLong: 'Note is too long. Maximum 10 words.',
+        noteSaved: 'Note saved ✓',
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -639,6 +643,10 @@ const translations = {
         multipleTransactionsLabeled: '{count} transactions étiquetées !',
         selectAll: 'Tout sélectionner',
         deselectAll: 'Tout désélectionner',
+        note: 'Note',
+        addNote: 'Ajouter une note (max 10 mots)...',
+        memoTooLong: 'Note trop longue. Maximum 10 mots.',
+        noteSaved: 'Note enregistrée ✓',
 
 
         // Alerts & notifications
@@ -1103,6 +1111,10 @@ const translations = {
         multipleTransactionsLabeled: '{count} עסקאות תויגו!',
         selectAll: 'בחר הכל',
         deselectAll: 'בטל בחירה',
+        note: 'הערה',
+        addNote: 'הוסף הערה (עד 10 מילים)...',
+        memoTooLong: 'הערה ארוכה מדי. מקסימום 10 מילים.',
+        noteSaved: 'הערה נשמרה ✓',
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1566,6 +1578,10 @@ const translations = {
         multipleTransactionsLabeled: '¡{count} transacciones etiquetadas!',
         selectAll: 'Seleccionar todo',
         deselectAll: 'Deseleccionar todo',
+        note: 'Nota',
+        addNote: 'Añadir una nota (máx 10 palabras)...',
+        memoTooLong: 'Nota demasiado larga. Máximo 10 palabras.',
+        noteSaved: 'Nota guardada ✓',
 
 
         // Toasts & notifications
@@ -2030,6 +2046,10 @@ const translations = {
         multipleTransactionsLabeled: '{count} транзакций помечено!',
         selectAll: 'Выбрать все',
         deselectAll: 'Отменить выбор',
+        note: 'Заметка',
+        addNote: 'Добавить заметку (макс 10 слов)...',
+        memoTooLong: 'Заметка слишком длинная. Максимум 10 слов.',
+        noteSaved: 'Заметка сохранена ✓',
 
 
         // Toasts & notifications
@@ -2494,6 +2514,10 @@ const translations = {
         multipleTransactionsLabeled: 'تم وضع علامة على {count} معاملات!',
         selectAll: 'تحديد الكل',
         deselectAll: 'إلغاء التحديد',
+        note: 'ملاحظة',
+        addNote: 'أضف ملاحظة (10 كلمات كحد أقصى)...',
+        memoTooLong: 'الملاحظة طويلة جدًا. 10 كلمات كحد أقصى.',
+        noteSaved: 'تم حفظ الملاحظة ✓',
 
 
         // Toasts & notifications

@@ -699,6 +699,7 @@ function renderTransactions() {
     if (emptyState) emptyState.style.display = 'none';
     if (filtersSection) filtersSection.style.display = 'block';
     if (allTransactionsSection) allTransactionsSection.style.display = 'block';
+    if (allTransactionsList) allTransactionsList.style.display = 'block';
     
     // Mettre à jour le compteur
     if (transactionCount) {
@@ -1894,6 +1895,51 @@ async function autoLabelAll() {
     }
 }
 
+
+/**
+ * Save memo/note for a transaction
+ */
+async function saveMemo(transactionId, memo) {
+    if (!window.currentUser) {
+        showToast('Please login first', 'error');
+        return;
+    }
+    
+    try {
+        // Limiter à 10 mots
+        const words = memo.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length > 10) {
+            const t = translations[currentLanguage] || translations['en'];
+            showToast(t.memoTooLong || 'Note is too long. Maximum 10 words.', 'error');
+            return;
+        }
+        
+        const trimmedMemo = memo.trim();
+        
+        // Sauvegarder dans Firestore
+        await db.collection('users')
+            .doc(window.currentUser.uid)
+            .collection('transactions')
+            .doc(transactionId)
+            .update({
+                memo: trimmedMemo,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        
+        // Mettre à jour localement
+        const txn = transactionsData.find(t => t.id === transactionId);
+        if (txn) {
+            txn.memo = trimmedMemo;
+        }
+        
+        const t = translations[currentLanguage] || translations['en'];
+        showToast(t.noteSaved || 'Note saved ✓', 'success');
+        
+    } catch (error) {
+        console.error('Error saving memo:', error);
+        showToast('Error saving note', 'error');
+    }
+}
 
 /**
  * Label a transaction with a category
