@@ -387,6 +387,19 @@
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
                     <div class="total-section">
+                        
+                        <div class="budget-mode-toggle">
+                            <div class="toggle-wrapper">
+                                <label class="toggle-label" data-translate="estimated">Estimé</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="budgetModeToggle" onchange="toggleBudgetMode()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <label class="toggle-label" data-translate="spent">Dépensé</label>
+                            </div>
+                            <select id="realSpendingMonth" class="month-selector" onchange="loadRealSpendingForChart()" style="display: none;">
+                            </select>
+                        </div>
                         <div id="incomeDisplay" style="display: none; margin-bottom: 15px; opacity: 0.9;">
                             <h3 style="font-size: 1em; margin-bottom: 5px;" data-translate="totalIncome">Total Income</h3>
                             <div style="font-size: 1.8em; font-weight: 600;" id="totalIncome">₪0</div>
@@ -2044,40 +2057,51 @@
             // --- 2. AGRÉGATION DES DONNÉES ---
             const aggregatedItems = {};
 
-            Object.keys(expenses).forEach(categoryKey => {
-                // On ignore la catégorie revenus
-                if (categoryKey === 'income') return;
-
-                expenses[categoryKey].forEach(expense => {
-                    const amount = parseFloat(expense.amount) || 0;
+            // ✅ MODE DÉPENSÉ: Utiliser les vraies transactions par catégorie
+            if (isRealSpendingMode && Object.keys(realSpendingChartData).length > 0) {
+                Object.keys(realSpendingChartData).forEach(category => {
+                    const amount = realSpendingChartData[category];
                     if (amount > 0) {
-                        const name = expense.name;
-                        
-                        // Cumul des montants pour le même nom d'item
-                        if (aggregatedItems[name]) {
-                            aggregatedItems[name].amount += amount;
-                        } else {
-                            // Gestion de la couleur
-                            let color;
-                            if (customColors[name]) {
-                                color = customColors[name];
-                            } else {
-                                // Génération de couleur basée sur le nom
-                                const hash = name.split('').reduce((acc, char) => {
-                                    return char.charCodeAt(0) + ((acc << 5) - acc);
-                                }, 0);
-                                const colorIdx = Math.abs(hash) % colors.length;
-                                color = colors[colorIdx];
-                            }
-
-                            aggregatedItems[name] = {
-                                amount: amount,
-                                color: color
-                            };
-                        }
+                        aggregatedItems[category] = {
+                            amount: amount,
+                            color: categoryColors[category] || generateRandomColor()
+                        };
                     }
                 });
-            });
+            } 
+            // ✅ MODE ESTIMÉ: Utiliser les items comme avant
+            else {
+                Object.keys(expenses).forEach(categoryKey => {
+                    if (categoryKey === 'income') return;
+
+                    expenses[categoryKey].forEach(expense => {
+                        const amount = parseFloat(expense.amount) || 0;
+                        if (amount > 0) {
+                            const name = expense.name;
+                            
+                            if (aggregatedItems[name]) {
+                                aggregatedItems[name].amount += amount;
+                            } else {
+                                let color;
+                                if (customColors[name]) {
+                                    color = customColors[name];
+                                } else {
+                                    const hash = name.split('').reduce((acc, char) => {
+                                        return char.charCodeAt(0) + ((acc << 5) - acc);
+                                    }, 0);
+                                    const colorIdx = Math.abs(hash) % colors.length;
+                                    color = colors[colorIdx];
+                                }
+
+                                aggregatedItems[name] = {
+                                    amount: amount,
+                                    color: color
+                                };
+                            }
+                        }
+                    });
+                });
+            }
 
             // Conversion en tableaux
             const allLabels = Object.keys(aggregatedItems);
@@ -2963,6 +2987,133 @@
             }
         }
         
+
+        // ============================================
+        // BUDGET MODE: ESTIMATED VS REAL SPENDING
+        // ============================================
+
+        let isRealSpendingMode = false;
+        let realSpendingChartData = {};
+        const categoryColors = {}; // Pour stocker les couleurs des catégories
+
+        /**
+         * Toggle between Estimated and Real Spending modes
+         */
+        function toggleBudgetMode() {
+            const toggle = document.getElementById('budgetModeToggle');
+            const monthSelect = document.getElementById('realSpendingMonth');
+            
+            isRealSpendingMode = toggle.checked;
+            
+            if (isRealSpendingMode) {
+                // Mode "Dépensé" activé
+                monthSelect.style.display = 'inline-block';
+                populateRealSpendingMonthDropdown();
+                loadRealSpendingForChart();
+            } else {
+                // Mode "Estimé" activé
+                monthSelect.style.display = 'none';
+                realSpendingChartData = {};
+                updateChart(); // Retour au graphique normal
+            }
+        }
+
+        /**
+         * Populate month dropdown for real spending
+         */
+        function populateRealSpendingMonthDropdown() {
+            const select = document.getElementById('realSpendingMonth');
+            if (!select) return;
+            
+            select.innerHTML = '';
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // Generate last 12 months
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(currentYear, currentMonth - i, 1);
+                const monthName = date.toLocaleString(currentLanguage || 'en', { month: 'long', year: 'numeric' });
+                const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = monthName;
+                if (i === 0) option.selected = true;
+                
+                select.appendChild(option);
+            }
+        }
+
+        /**
+         * Load real spending data for chart
+         */
+        async function loadRealSpendingForChart() {
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
+                return;
+            }
+            
+            const monthKey = document.getElementById('realSpendingMonth')?.value;
+            if (!monthKey) return;
+            
+            const [year, month] = monthKey.split('-');
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+            
+            try {
+                const getTransactions = firebase.functions().httpsCallable('getTransactions');
+                const result = await getTransactions({
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    isLabeled: true,
+                    limit: 1000
+                });
+                
+                const transactions = result.data.transactions || [];
+                
+                // Group by category and sum amounts
+                realSpendingChartData = {};
+                
+                transactions.forEach(txn => {
+                    if (txn.category && txn.category !== 'income') {
+                        if (!realSpendingChartData[txn.category]) {
+                            realSpendingChartData[txn.category] = 0;
+                        }
+                        if (txn.chargedAmount < 0) {
+                            realSpendingChartData[txn.category] += Math.abs(txn.chargedAmount);
+                        }
+                    }
+                });
+                
+                // Assign random colors to categories if not already assigned
+                Object.keys(realSpendingChartData).forEach(category => {
+                    if (!categoryColors[category]) {
+                        categoryColors[category] = generateRandomColor();
+                    }
+                });
+                
+                // Update chart with real spending data
+                updateChart();
+                
+            } catch (error) {
+                console.error('Error loading real spending for chart:', error);
+            }
+        }
+
+        /**
+         * Generate random color for category
+         */
+        function generateRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            const saturation = 65 + Math.floor(Math.random() * 20); // 65-85%
+            const lightness = 55 + Math.floor(Math.random() * 15);  // 55-70%
+            return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        }
+
+
+
+
         /**
          * Get comparison info for a category
          */

@@ -169,6 +169,8 @@ const translations = {
         addNote: 'Add a note (max 10 words)...',
         memoTooLong: 'Note is too long. Maximum 10 words.',
         noteSaved: 'Note saved ✓',
+        estimated: "Estimated",
+        spent: "Spent",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -647,6 +649,8 @@ const translations = {
         addNote: 'Ajouter une note (max 10 mots)...',
         memoTooLong: 'Note trop longue. Maximum 10 mots.',
         noteSaved: 'Note enregistrée ✓',
+        estimated: "Estimé",
+        spent: "Dépensé",
 
 
         // Alerts & notifications
@@ -1115,6 +1119,8 @@ const translations = {
         addNote: 'הוסף הערה (עד 10 מילים)...',
         memoTooLong: 'הערה ארוכה מדי. מקסימום 10 מילים.',
         noteSaved: 'הערה נשמרה ✓',
+        estimated: "משוער",
+        spent: "הוצא",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1582,6 +1588,8 @@ const translations = {
         addNote: 'Añadir una nota (máx 10 palabras)...',
         memoTooLong: 'Nota demasiado larga. Máximo 10 palabras.',
         noteSaved: 'Nota guardada ✓',
+        estimated: "Estimado",
+        spent: "Gastado",
 
 
         // Toasts & notifications
@@ -2050,6 +2058,8 @@ const translations = {
         addNote: 'Добавить заметку (макс 10 слов)...',
         memoTooLong: 'Заметка слишком длинная. Максимум 10 слов.',
         noteSaved: 'Заметка сохранена ✓',
+        estimated: "Планируемое",
+        spent: "Потрачено",
 
 
         // Toasts & notifications
@@ -2518,6 +2528,8 @@ const translations = {
         addNote: 'أضف ملاحظة (10 كلمات كحد أقصى)...',
         memoTooLong: 'الملاحظة طويلة جدًا. 10 كلمات كحد أقصى.',
         noteSaved: 'تم حفظ الملاحظة ✓',
+        estimated: "المقدر",
+        spent: "المنفق",
 
 
         // Toasts & notifications
