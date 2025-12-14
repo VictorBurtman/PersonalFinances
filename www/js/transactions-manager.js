@@ -873,7 +873,6 @@ function renderTransaction(txn) {
                                 style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
                             />
                         </div>
-                        </div>
                         <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
                         <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
