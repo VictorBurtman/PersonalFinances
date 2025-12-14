@@ -330,7 +330,7 @@ body.dark-mode .auth-error {
    ============================================ */
 .language-selector {
     position: absolute;
-    top: 100px;  /* ← Valeur très visible pour tester */
+    top: 80px;  /* ← Change de 20px à 80px */
     right: 20px !important;
     left: auto !important;
     display: flex;
