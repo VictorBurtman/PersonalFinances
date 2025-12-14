@@ -330,13 +330,14 @@ body.dark-mode .auth-error {
    ============================================ */
 .language-selector {
     position: absolute;
-    top: 60px;  /* ← Change cette ligne */
+    top: max(20px, env(safe-area-inset-top, 20px));  /* ← Remplace cette ligne */
     right: 20px !important;
     left: auto !important;
     display: flex;
     gap: 5px;
     direction: ltr !important;
     z-index: 1000;
+    padding-top: 10px;  /* ← Ajoute cette ligne */
 }
 
 
