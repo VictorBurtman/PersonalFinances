@@ -3143,7 +3143,8 @@
                 return;
             }
             
-            const monthKey = document.getElementById('compareMonth')?.value;
+            const monthKey = document.getElementById('compareMonth').value;
+            console.log('🔍 monthKey:', monthKey);
             if (!monthKey) return;
             
             const [year, month] = monthKey.split('-');
