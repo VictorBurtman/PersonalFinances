@@ -359,12 +359,8 @@
                         <img src="img/icons/add.svg" alt="Add">
                     </button>
                     
-                    <button class="edit-mode-btn budget-only icon-btn" id="compareBtn" onclick="toggleCompareMode()" title="Compare">
-                        <img src="img/icons/chart.svg" alt="Compare">
-                    </button>
-                    
-                    <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: none;">
-                        </select>
+                    <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: inline-block;">
+                    </select>
                     
                     <button id="filtersBtn" class="edit-mode-btn transactions-only icon-btn" onclick="openFiltersModal()" style="display: none;" title="Filters">
                         <img src="img/icons/loupe.svg" alt="Filters">
@@ -397,8 +393,6 @@
                                 </label>
                                 <label class="toggle-label" data-translate="spent">Dépensé</label>
                             </div>
-                            <select id="realSpendingMonth" class="month-selector" onchange="loadRealSpendingForChart()" style="display: none;">
-                            </select>
                         </div>
                         <div id="incomeDisplay" style="display: none; margin-bottom: 15px; opacity: 0.9;">
                             <h3 style="font-size: 1em; margin-bottom: 5px;" data-translate="totalIncome">Total Income</h3>
@@ -2199,7 +2193,7 @@
                             boxHeight: 15,
                             generateLabels: function(chart) {
                                 return sortedLabels.map((label, i) => ({
-                                    text: label,
+                                    text: label.charAt(0).toUpperCase() + label.slice(1), // ✅ Majuscule
                                     fillStyle: sortedColors[i],
                                     strokeStyle: sortedColors[i],
                                     lineWidth: 0,
@@ -2981,6 +2975,10 @@
                                 
                 // Refresh display with comparison
                 updateDisplay();
+                // ✅ Si le mode dépensé est activé, mettre à jour le graphique aussi
+                if (isRealSpendingMode) {
+                    loadRealSpendingForChart();
+                }
                 
             } catch (error) {
                 console.error('Error loading real spending:', error);
@@ -3001,60 +2999,29 @@
          */
         function toggleBudgetMode() {
             const toggle = document.getElementById('budgetModeToggle');
-            const monthSelect = document.getElementById('realSpendingMonth');
             
             isRealSpendingMode = toggle.checked;
             
             if (isRealSpendingMode) {
-                // Mode "Dépensé" activé
-                monthSelect.style.display = 'inline-block';
-                populateRealSpendingMonthDropdown();
+                // Mode "Dépensé" activé - utilise le mois du header
                 loadRealSpendingForChart();
             } else {
                 // Mode "Estimé" activé
-                monthSelect.style.display = 'none';
                 realSpendingChartData = {};
-                updateChart(); // Retour au graphique normal
-            }
-        }
-
-        /**
-         * Populate month dropdown for real spending
-         */
-        function populateRealSpendingMonthDropdown() {
-            const select = document.getElementById('realSpendingMonth');
-            if (!select) return;
-            
-            select.innerHTML = '';
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            
-            // Generate last 12 months
-            for (let i = 0; i < 12; i++) {
-                const date = new Date(currentYear, currentMonth - i, 1);
-                const monthName = date.toLocaleString(currentLanguage || 'en', { month: 'long', year: 'numeric' });
-                const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                
-                const option = document.createElement('option');
-                option.value = value;
-                option.textContent = monthName;
-                if (i === 0) option.selected = true;
-                
-                select.appendChild(option);
+                updateChart();
             }
         }
 
         /**
          * Load real spending data for chart
-         */
+        */
         async function loadRealSpendingForChart() {
             if (!firebase.functions || !currentUser) {
                 console.log('Cannot load real spending: Firebase not initialized or user not logged in');
                 return;
             }
             
-            const monthKey = document.getElementById('realSpendingMonth')?.value;
+            const monthKey = document.getElementById('compareMonth')?.value; // ✅ Utilise compareMonth au lieu de realSpendingMonth
             if (!monthKey) return;
             
             const [year, month] = monthKey.split('-');
@@ -3072,7 +3039,6 @@
                 
                 const transactions = result.data.transactions || [];
                 
-                // Group by category and sum amounts
                 realSpendingChartData = {};
                 
                 transactions.forEach(txn => {
@@ -3086,20 +3052,19 @@
                     }
                 });
                 
-                // Assign random colors to categories if not already assigned
                 Object.keys(realSpendingChartData).forEach(category => {
                     if (!categoryColors[category]) {
                         categoryColors[category] = generateRandomColor();
                     }
                 });
                 
-                // Update chart with real spending data
                 updateChart();
                 
             } catch (error) {
                 console.error('Error loading real spending for chart:', error);
             }
         }
+
 
         /**
          * Generate random color for category
@@ -5898,7 +5863,10 @@
                 });
                 
                 updateDisplay();
-                
+                // ✅ Initialiser le sélecteur de mois (toujours visible maintenant)
+                populateMonthDropdown();
+                loadRealSpending(); // Charger les données du mois actuel
+
                 // ✨ AJOUT CRITIQUE ICI ✨
                 // On lance l'ajustement du titre après que tout soit chargé et affiché
                 setTimeout(fitAppTitle, 100); 
