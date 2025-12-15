@@ -2948,6 +2948,9 @@ body.dark-mode .chartjs-legend span {
     transform: scale(1.1);
 }
 
+#editModeBtn {
+    margin-left: 30px; /* ✅ Ajuste la valeur selon tes besoins */
+}
 
 /* ============================================
    STYLE DES ICONES DE CATÉGORIES
