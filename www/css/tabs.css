@@ -2828,10 +2828,6 @@ body.dark-mode .chartjs-legend span {
     transform: scale(1.1);
 }
 
-#editModeBtn {
-    margin-left: 15px !important; /* ✅ Change margin-right en margin-left */
-}
-
 /* 2. Bouton COMPARER activé -> Violet/Bleu (#667eea) */
 #compareBtn.active img {
     /* Filtre calculé pour obtenir du violet depuis du noir */

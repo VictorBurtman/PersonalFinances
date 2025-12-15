@@ -1570,9 +1570,117 @@
         let currentChartType = 'doughnut';
         let hiddenItems = {};
         let customColors = {};
+        let categoryBaseColors = {}; // { categoryName: color } - Couleur de base de chaque catégorie
+
+
+
+
+        /**
+         * Génère une variation de couleur pour un item basée sur la couleur de sa catégorie
+         * @param {string} baseColor - Couleur de base en format HSL ou hex
+         * @param {number} index - Index de l'item dans la catégorie (pour la variation)
+         * @param {number} total - Nombre total d'items dans la catégorie
+         */
+        function generateColorVariation(baseColor, index, total) {
+            // Convertir hex en HSL si nécessaire
+            let hsl;
+            if (baseColor.startsWith('#')) {
+                hsl = hexToHSL(baseColor);
+            } else if (baseColor.startsWith('hsl')) {
+                const match = baseColor.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+                hsl = { h: parseInt(match[1]), s: parseInt(match[2]), l: parseInt(match[3]) };
+            } else {
+                return baseColor; // Si format inconnu, retourner tel quel
+            }
+            
+            // Créer une variation légère
+            const hueShift = (index - total / 2) * 5; // Variation de teinte ±5 degrés
+            const lightnessShift = (index % 2 === 0) ? 5 : -5; // Alternance de luminosité
+            
+            const newH = (hsl.h + hueShift + 360) % 360;
+            const newL = Math.max(40, Math.min(70, hsl.l + lightnessShift));
+            
+            return `hsl(${newH}, ${hsl.s}%, ${newL}%)`;
+        }
+
+        /**
+         * Convertit une couleur hexadécimale en HSL
+         */
+        function hexToHSL(hex) {
+            // Retirer le #
+            hex = hex.replace('#', '');
+            
+            // Convertir en RGB
+            const r = parseInt(hex.substr(0, 2), 16) / 255;
+            const g = parseInt(hex.substr(2, 2), 16) / 255;
+            const b = parseInt(hex.substr(4, 2), 16) / 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+            
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+
+
+
+        /**
+         * Initialise les couleurs de base pour chaque catégorie
+         */
+        function initializeCategoryColors() {
+            const defaultCategoryColors = {
+                housing: '#FF6B6B',
+                transportation: '#4ECDC4',
+                food: '#45B7D1',
+                utilities: '#FFA07A',
+                insurance: '#98D8C8',
+                healthcare: '#F7DC6F',
+                savings: '#BB8FCE',
+                personal: '#85C1E2',
+                entertainment: '#F8B739',
+                other: '#95A5A6'
+            };
+            
+            // Initialiser les couleurs de catégories si elles n'existent pas
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey !== 'income' && !categoryBaseColors[categoryKey]) {
+                    categoryBaseColors[categoryKey] = defaultCategoryColors[categoryKey] || generateRandomColor();
+                }
+            });
+            
+            // Couleur spéciale pour income
+            if (!categoryBaseColors['income']) {
+                categoryBaseColors['income'] = '#28a745';
+            }
+        }
+
+
+
+
 
         // Firestore functions
 
+
+
+        
         async function loadUserData() {
             if (!currentUser) return;
             
@@ -2078,13 +2186,18 @@
                             } else {
                                 let color;
                                 if (customColors[name]) {
+                                    // L'utilisateur a défini une couleur personnalisée pour cet item
                                     color = customColors[name];
                                 } else {
-                                    const hash = name.split('').reduce((acc, char) => {
-                                        return char.charCodeAt(0) + ((acc << 5) - acc);
-                                    }, 0);
-                                    const colorIdx = Math.abs(hash) % colors.length;
-                                    color = colors[colorIdx];
+                                    // Utiliser la couleur de la catégorie avec variation
+                                    const categoryColor = categoryBaseColors[categoryKey] || generateRandomColor();
+                                    
+                                    // Calculer l'index de cet item dans sa catégorie
+                                    const categoryItems = expenses[categoryKey];
+                                    const itemIndex = categoryItems.findIndex(e => e.name === name);
+                                    
+                                    // Générer une variation basée sur la couleur de catégorie
+                                    color = generateColorVariation(categoryColor, itemIndex, categoryItems.length);
                                 }
 
                                 aggregatedItems[name] = {
@@ -5863,6 +5976,7 @@
                 // ✅ Initialiser le sélecteur de mois (toujours visible maintenant)
                 populateMonthDropdown();
                 loadRealSpending(); // Charger les données du mois actuel
+                initializeCategoryColors();
 
                 // ✨ AJOUT CRITIQUE ICI ✨
                 // On lance l'ajustement du titre après que tout soit chargé et affiché
