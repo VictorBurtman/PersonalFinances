@@ -5286,14 +5286,11 @@
                 
                 // Afficher les boutons Budget
                 document.querySelectorAll('.budget-only').forEach(btn => {
-                    // ✅ Cas spécial : sélecteur de mois Compare
+                    // ✅ Cas spécial : sélecteur de mois Compare (toujours visible maintenant)
                     if (btn.id === 'compareMonth') {
-                        const compareBtn = document.getElementById('compareBtn');
-                        const isCompareActive = compareBtn && compareBtn.classList.contains('active');
-                        
-                        btn.style.display = isCompareActive ? 'inline-block' : 'none';
-                        window.compareMode = isCompareActive; // Synchroniser 
-                    } 
+                        btn.style.display = 'inline-block';
+                        window.compareMode = true; // Toujours actif
+                    }
                     // ✅ Tous les autres boutons Budget (Edit, Add Category, Compare, etc.)
                     else {
                         btn.style.display = 'inline-flex';
@@ -5380,10 +5377,10 @@
                         btn.style.display = 'none';
                     });
                     
-                    // ✅ Cacher compareMonth par défaut pour éviter le flash
+                    // ✅ Afficher compareMonth (toujours visible maintenant)
                     const compareMonth = document.getElementById('compareMonth');
                     if (compareMonth) {
-                        compareMonth.style.display = 'none';
+                        compareMonth.style.display = 'inline-block';
                     }
                     
                     document.querySelectorAll('.budget-only').forEach(btn => {
