@@ -2596,6 +2596,10 @@ body.dark-mode .chartjs-legend span {
         box-sizing: border-box;
     }
 
+    .header-right-actions {
+        gap: 4px !important; /* ← Réduit l'espace sur mobile */
+    }
+    
     /* Le Titre ne doit PAS grandir, il reste à gauche */
     .header-title {
         flex-grow: 0 !important;
