@@ -250,15 +250,12 @@ body.dark-mode .edit-mode-btn.active {
 
 }
 
-/* Créer un groupe serré pour les boutons edit/add/etc */
-#editModeBtn,
-#addCategoryBtn {
-    margin-left: 0 !important;
+#compareMonth {
+    margin-right: auto !important; /* ✅ Tout l'espace disponible après le select */
 }
 
-/* Ajouter de l'espace AVANT le groupe de boutons */
-#compareMonth {
-    margin-right: auto !important; /* ✅ Pousse tout ce qui suit vers la droite */
+.header-right-actions {
+    gap: 8px !important;
 }
 
 /* ============================================
