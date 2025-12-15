@@ -1899,7 +1899,7 @@
                     currency: currency,
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
-                    isRealSpendingMode: isRealSpendingMode // ✅ Ajoute cette ligne
+                    isRealSpendingMode: isRealSpendingMode, // ✅ Ajoute cette ligne
                     language: currentLanguage,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -6069,7 +6069,7 @@
                         loadRealSpendingForChart();
                     }
                 }
-                
+
                 // ✨ AJOUT CRITIQUE ICI ✨
                 // On lance l'ajustement du titre après que tout soit chargé et affiché
                 setTimeout(fitAppTitle, 100); 
