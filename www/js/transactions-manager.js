@@ -800,7 +800,7 @@ function renderTransaction(txn) {
     const manualBadge = txn.isManual ? ' <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 5px;">MANUAL</span>' : '';
     
     return `
-        <div class="transaction-item" style="display: block; padding: 15px;">
+        <div class="transaction-item" style="display: block; padding: 15px; --category-color: ${getCategoryColor(txn.category)};">
             <!-- Top row: Date, Description, Amount -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                 <div style="flex: 1; min-width: 0;">
@@ -937,6 +937,15 @@ function clearTransactionCheckboxes() {
     
     // ✅ Mettre à jour l'affichage des boutons
     handleTransactionCheckboxChange();
+}
+
+
+/**
+ * Obtenir la couleur d'une catégorie
+ */
+function getCategoryColor(categoryKey) {
+    if (!categoryKey || categoryKey === 'income') return '#28a745';
+    return window.categoryBaseColors?.[categoryKey] || '#667eea';
 }
 
 /**

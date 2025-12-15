@@ -1336,15 +1336,47 @@ body.dark-mode .sync-info {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
+    padding-left: 19px; /* ✅ Espace pour le bandeau (15px + 4px) */
     background: white;
     border-radius: 10px;
     margin-bottom: 10px;
     transition: all 0.3s ease;
+    position: relative; /* ✅ Pour le pseudo-élément */
+    overflow: visible; /* ✅ Permet au bandeau d'être visible */
+}
+
+/* ✅ Bandeau coloré à gauche */
+.transaction-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--category-color, #667eea);
+    border-radius: 10px 0 0 10px; /* ✅ Arrondi avec l'item */
+    transition: width 0.3s ease;
 }
 
 .transaction-item:hover {
     transform: translateX(5px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-item:hover::before {
+    width: 6px; /* ✅ Élargit au survol */
+}
+
+/* ✅ Variante RTL - bandeau à droite */
+html[dir="rtl"] .transaction-item {
+    padding-left: 15px;
+    padding-right: 19px;
+}
+
+html[dir="rtl"] .transaction-item::before {
+    left: auto;
+    right: 0;
+    border-radius: 0 10px 10px 0;
 }
 
 body.dark-mode .transaction-item {
@@ -1398,7 +1430,6 @@ body.dark-mode .transaction-details {
     color: #e0e0e0 !important;
 }
 
-/* Dark mode pour les inputs de memo */
 body.dark-mode .transaction-details input[type="text"] {
     color: #e0e0e0 !important;
     background: #1f1f2e !important;
