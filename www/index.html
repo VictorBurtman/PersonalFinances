@@ -1756,6 +1756,7 @@
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
+                    isRealSpendingMode = data.isRealSpendingMode || false; // ✅ Ajoute cette ligne
                     categoryMetadata = data.categoryMetadata || {};
                     
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
@@ -1893,10 +1894,12 @@
                     customColors: customColors,
                     chartType: currentChartType,
                     categoryOrder: categoryOrder,
+                    categoryBaseColors: categoryBaseColors, // ✅ Ajoute si pas déjà présent
                     useIncome: useIncome,
                     currency: currency,
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
+                    isRealSpendingMode: isRealSpendingMode // ✅ Ajoute cette ligne
                     language: currentLanguage,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -2630,7 +2633,8 @@
                     }, { merge: true });
                 
                 closeColorEditor();
-                updateChart();
+                updateChart(); // ✅ Déjà présent
+                updateDisplay(); // ✅ Ajoute cette ligne pour mettre à jour toute l'interface
                 showToast('Colors saved!');
             } catch (error) {
                 console.error('Error saving colors:', error);
@@ -3189,6 +3193,9 @@
             const toggle = document.getElementById('budgetModeToggle');
             
             isRealSpendingMode = toggle.checked;
+            
+            // ✅ Sauvegarder la préférence
+            saveUserData();
             
             if (isRealSpendingMode) {
                 // Mode "Dépensé" activé - utilise le mois du header
@@ -6053,6 +6060,16 @@
                 loadRealSpending(); // Charger les données du mois actuel
                 initializeCategoryColors();
 
+
+                // ✅ Restaurer l'état du toggle Estimé/Dépensé
+                const budgetToggle = document.getElementById('budgetModeToggle');
+                if (budgetToggle) {
+                    budgetToggle.checked = isRealSpendingMode;
+                    if (isRealSpendingMode) {
+                        loadRealSpendingForChart();
+                    }
+                }
+                
                 // ✨ AJOUT CRITIQUE ICI ✨
                 // On lance l'ajustement du titre après que tout soit chargé et affiché
                 setTimeout(fitAppTitle, 100); 
