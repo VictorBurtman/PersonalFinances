@@ -1700,7 +1700,6 @@
                     const firestoreLang = data.language;
                     const localStorageLang = localStorage.getItem('language');
                     
-                    
                     if (firestoreLang && translations[firestoreLang]) {
                         currentLanguage = firestoreLang;
                     } else if (localStorageLang && translations[localStorageLang]) {
@@ -1741,11 +1740,11 @@
                     // ✅ MAINTENANT charger le reste des données
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
-                    categoryBaseColors = data.categoryBaseColors || {}; // ✅ Ajoute cette ligne
-
+                    categoryBaseColors = data.categoryBaseColors || {};
                     currentChartType = data.chartType || 'doughnut';
-                    initializeCategoryColors(); // ✅ Ajoute cette ligne
-
+                    
+                    // ✅ Initialiser les couleurs de catégories
+                    initializeCategoryColors();
                     
                     // ✅ Mettre à jour l'état des boutons SEULEMENT après chargement Firebase
                     if (typeof window.updateChartButtonsState === 'function') {
@@ -1756,9 +1755,9 @@
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
-                    isRealSpendingMode = data.isRealSpendingMode || false; // ✅ Ajoute cette ligne
-                    console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode); // ✅ Debug
-
+                    isRealSpendingMode = data.isRealSpendingMode || false;
+                    console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode);
+                    
                     categoryMetadata = data.categoryMetadata || {};
                     
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
@@ -1770,33 +1769,26 @@
                         const section = document.getElementById(`category-${categoryKey}`);
                         if (section) {
                             if (!expenses[categoryKey]) {
-                                // Category was deleted - hide it
                                 section.style.display = 'none';
                             } else {
-                                // Category exists - show it
                                 section.style.display = 'block';
                             }
                         }
                     });
                     
-                    // Recreate HTML for custom categories that don't exist in the default list
+                    // Recreate HTML for custom categories
                     const expensesList = document.getElementById('expensesList');
                     const t = translations[currentLanguage] || translations['en'];
                     
                     Object.keys(expenses).forEach(categoryKey => {
-                        // Skip default categories - they already have HTML
                         if (defaultCategories.includes(categoryKey)) return;
-                        
-                        // Check if HTML element exists
                         if (document.getElementById(`category-${categoryKey}`)) return;
                                                 
-                        // Get metadata for this category
                         const meta = categoryMetadata[categoryKey] || {
                             emoji: '📋',
                             displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
                         };
                         
-                        // Create HTML for this custom category
                         const statsId = `${categoryKey}Stats`;
                         const expensesId = `${categoryKey}Expenses`;
                         
@@ -1831,11 +1823,27 @@
                     
                     // Reorder categories according to categoryOrder
                     renderCategoriesInOrder();
+                    
+                    // ✅ NOUVEAU : Restaurer l'état du toggle après chargement des données
+                    setTimeout(() => {
+                        const budgetToggle = document.getElementById('budgetModeToggle');
+                        console.log('🔍 Restoring toggle, budgetToggle:', budgetToggle);
+                        console.log('🔍 isRealSpendingMode:', isRealSpendingMode);
+                        
+                        if (budgetToggle) {
+                            budgetToggle.checked = isRealSpendingMode;
+                            console.log('✅ Toggle set to:', budgetToggle.checked);
+                            
+                            if (isRealSpendingMode) {
+                                loadRealSpendingForChart();
+                            }
+                        }
+                    }, 300);
+                    
                 } else {
                     // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
                     
-                    // ✅ Pour nouveau compte : utiliser langue de localStorage si existe
                     const localStorageLang = localStorage.getItem('language');
                     if (localStorageLang && translations[localStorageLang]) {
                         currentLanguage = localStorageLang;
@@ -1850,7 +1858,7 @@
                 updateDisplay();
                 updateChartButtonsState();
                 
-                // ✅ AJOUTER : Forcer l'affichage de l'onglet Budget au démarrage
+                // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
                     switchTab('budget');
                 }, 100);
@@ -1859,6 +1867,8 @@
                 console.error('Error loading user data:', error);
             }
         }
+
+
 
         // AJOUTE ICI : Language change handler
         document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
@@ -6044,31 +6054,28 @@
             }
         }
 
-
-        // Wait for Chart.js to load before initializing
         function initializeApp() {
             setTimeout(() => {
                 document.body.scrollIntoView({ behavior: 'auto', block: 'start' });
-            }, 50); // Petit délai de 50ms pour laisser le temps au rendu initial
+            }, 50);
+            
             updateTransactionsLanguage(); 
+            
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
                 toggleButtons.forEach(btn => {
-                    // Add click handler
                     btn.addEventListener('click', function() {
                         currentChartType = this.dataset.type;
                         saveUserData();
                         
-                        // Update button states
                         toggleButtons.forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         
-                        // Redraw chart
                         updateChart();
                     });
                 });
-        
+
                 // Function to update button states based on current chart type
                 window.updateChartButtonsState = function() {
                     const buttons = document.querySelectorAll('.chart-toggle-btn');
@@ -6097,32 +6104,21 @@
                 });
                 
                 updateDisplay();
-                // ✅ Initialiser le sélecteur de mois (toujours visible maintenant)
+                
+                // ✅ Initialiser le sélecteur de mois
                 populateMonthDropdown();
-                loadRealSpending(); // Charger les données du mois actuel
-                initializeCategoryColors();
+                loadRealSpending();
 
-
-                // ✅ Restaurer l'état du toggle Estimé/Dépensé
-                const budgetToggle = document.getElementById('budgetModeToggle');
-                console.log('🔍 budgetToggle found:', budgetToggle); // ✅ Debug
-                console.log('🔍 isRealSpendingMode value:', isRealSpendingMode); // ✅ Debug
-                if (budgetToggle) {
-                    budgetToggle.checked = isRealSpendingMode;
-                    if (isRealSpendingMode) {
-                        loadRealSpendingForChart();
-                    }
-                }
-
-                // ✨ AJOUT CRITIQUE ICI ✨
-                // On lance l'ajustement du titre après que tout soit chargé et affiché
+                // ✨ Ajustement du titre
                 setTimeout(fitAppTitle, 100); 
-        
+
             } else {
                 console.warn('Chart.js not loaded, waiting...');
                 setTimeout(initializeApp, 100);
             }
         }
+
+
 
         // Initialize on load (Bloc final simplifié et corrigé)
         if (document.readyState === 'loading') {
