@@ -3222,28 +3222,40 @@
         /**
          * Load real spending data for chart
         */
-        async function loadRealSpendingForChart() {
-            console.log('🔍 firebase:', typeof firebase);
-            console.log('🔍 firebase.functions:', typeof firebase.functions);
-            console.log('🔍 currentUser:', currentUser);
-            console.log('🔍 generateRandomColor:', typeof generateRandomColor);
-    
 
-            if (!firebase.functions || !currentUser) {
-                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
-                return;
-            }
-            
-            const monthKey = document.getElementById('compareMonth').value;
-            console.log('🔍 monthKey:', monthKey);
-            if (!monthKey) return;
-            
-            const [year, month] = monthKey.split('-');
-            const startDate = new Date(year, month - 1, 1);
-            const endDate = new Date(year, month, 0, 23, 59, 59);
-            
+        async function loadRealSpendingForChart() {
             try {
+                console.log('🔍 Step 1: Start');
+                
+                if (!firebase.functions || !currentUser) {
+                    console.log('Cannot load real spending: Firebase not initialized or user not logged in');
+                    return;
+                }
+                
+                console.log('🔍 Step 2: Firebase OK');
+                
+                const monthSelect = document.getElementById('compareMonth');
+                console.log('🔍 Step 3: monthSelect =', monthSelect);
+                
+                const monthKey = monthSelect ? monthSelect.value : null;
+                console.log('🔍 Step 4: monthKey =', monthKey);
+                
+                if (!monthKey) {
+                    console.log('⚠️ No monthKey, returning');
+                    return;
+                }
+                
+                console.log('🔍 Step 5: Splitting monthKey');
+                const [year, month] = monthKey.split('-');
+                console.log('🔍 Step 6: year =', year, 'month =', month);
+                
+                const startDate = new Date(year, month - 1, 1);
+                const endDate = new Date(year, month, 0, 23, 59, 59);
+                console.log('🔍 Step 7: Dates created');
+                
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
+                console.log('🔍 Step 8: Calling getTransactions');
+                
                 const result = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
@@ -3251,7 +3263,10 @@
                     limit: 1000
                 });
                 
+                console.log('🔍 Step 9: Got result');
+                
                 const transactions = result.data.transactions || [];
+                console.log('🔍 Step 10: transactions count =', transactions.length);
                 
                 realSpendingChartData = {};
                 
@@ -3266,19 +3281,25 @@
                     }
                 });
                 
+                console.log('🔍 Step 11: Data aggregated');
+                
                 Object.keys(realSpendingChartData).forEach(category => {
-                    if (!categoryBaseColors[category]) {  // ✅ Bonne variable
+                    if (!categoryBaseColors[category]) {
                         categoryBaseColors[category] = generateRandomColor();
                     }
                 });
                 
+                console.log('🔍 Step 12: Colors assigned');
+                
                 updateChart();
                 
+                console.log('🔍 Step 13: Chart updated ✅');
+                
             } catch (error) {
-                console.error('Error loading real spending for chart:', error);
+                console.error('💥 Error at some step:', error);
+                console.error('💥 Error stack:', error.stack);
             }
         }
-
 
         /**
          * Generate random color for category
