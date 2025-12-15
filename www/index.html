@@ -2633,8 +2633,19 @@
                     }, { merge: true });
                 
                 closeColorEditor();
-                updateChart(); // ✅ Déjà présent
-                updateDisplay(); // ✅ Ajoute cette ligne pour mettre à jour toute l'interface
+                
+                // ✅ Forcer la destruction et recréation du graphique
+                if (chart) {
+                    chart.destroy();
+                    chart = null;
+                }
+                
+                // ✅ Petit délai pour laisser le temps au DOM
+                setTimeout(() => {
+                    updateChart();
+                    updateDisplay();
+                }, 50);
+                
                 showToast('Colors saved!');
             } catch (error) {
                 console.error('Error saving colors:', error);
@@ -3205,6 +3216,10 @@
                 realSpendingChartData = {};
                 updateChart();
             }
+            // ✅ Sauvegarder APRÈS avoir changé l'état
+            setTimeout(() => {
+                saveUserData();
+            }, 100);
         }
 
         /**
