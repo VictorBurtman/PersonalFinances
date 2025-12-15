@@ -246,6 +246,8 @@ body.dark-mode .edit-mode-btn.active {
     font-weight: 600;
     color: #667eea;
     background: white;
+    margin-right: 5px !important; /* ✅ Réduit l'espace après le sélecteur */
+
 }
 
 
@@ -1726,28 +1728,29 @@ body.dark-mode .empty-state-trans {
 
 .floating-add-btn {
     position: fixed;
-    bottom: 110px; /* ✅ MÊME position que scroll-to-top */
-    right: 20px; /* ✅ MÊME position */
-    width: 56px; /* ✅ MÊME taille */
-    height: 56px;
+    bottom: 110px;
+    right: 20px;
+    width: 50px; /* ✅ Réduit de 56px à 50px */
+    height: 50px; /* ✅ Réduit de 56px à 50px */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 50%;
-    font-size: 2em;
+    font-size: 1.8em; /* ✅ Réduit de 2em à 1.8em */
     font-weight: 300;
     line-height: 1;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
     z-index: 5000;
-    display: none; /* Caché par défaut */
+    display: none;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    opacity: 0.85; /* ✅ Ajoute de l'opacité */
 }
 
 .floating-add-btn:hover {
-    opacity: 1;
+    opacity: 1; /* ✅ Opacité totale au survol */
     transform: scale(1.1);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
@@ -2704,9 +2707,9 @@ body.dark-mode .chartjs-legend span {
     .floating-add-btn {
         bottom: 110px;
         right: 15px;
-        width: 52px;
-        height: 52px;
-        font-size: 1.8em;
+        width: 46px; /* ✅ Réduit de 52px à 46px */
+        height: 46px; /* ✅ Réduit de 52px à 46px */
+        font-size: 1.6em; /* ✅ Réduit de 1.8em à 1.6em */
     }
     
     /* Modals plein écran (ou presque) */
@@ -2948,9 +2951,6 @@ body.dark-mode .chartjs-legend span {
     transform: scale(1.1);
 }
 
-#editModeBtn {
-    margin-left: 30px; /* ✅ Ajuste la valeur selon tes besoins */
-}
 
 /* ============================================
    STYLE DES ICONES DE CATÉGORIES
