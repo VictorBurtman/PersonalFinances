@@ -250,13 +250,10 @@ body.dark-mode .edit-mode-btn.active {
 
 }
 
-#compareMonth {
-    margin-right: auto !important; /* ✅ Tout l'espace disponible après le select */
+#editModeBtn {
+    margin-right: -4px !important; /* ✅ Rapproche le bouton suivant */
 }
 
-.header-right-actions {
-    gap: 8px !important;
-}
 
 /* ============================================
    STYLE DES ICONES DU HEADER (FINAL)
