@@ -3204,17 +3204,19 @@
             const toggle = document.getElementById('budgetModeToggle');
             
             isRealSpendingMode = toggle.checked;
-            console.log('🔄 Toggle changed to:', isRealSpendingMode); // ✅ Debug
+            console.log('🔄 Toggle changed to:', isRealSpendingMode);
             
             if (isRealSpendingMode) {
+                // Mode "Dépensé" activé
                 loadRealSpendingForChart();
             } else {
+                // Mode "Estimé" activé
                 realSpendingChartData = {};
                 updateChart();
             }
             
             setTimeout(() => {
-                console.log('💾 Saving isRealSpendingMode:', isRealSpendingMode); // ✅ Debug
+                console.log('💾 Saving isRealSpendingMode:', isRealSpendingMode);
                 saveUserData();
             }, 100);
         }
