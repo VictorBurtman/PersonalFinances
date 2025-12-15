@@ -1757,6 +1757,8 @@
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
                     isRealSpendingMode = data.isRealSpendingMode || false; // ✅ Ajoute cette ligne
+                    console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode); // ✅ Debug
+
                     categoryMetadata = data.categoryMetadata || {};
                     
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
@@ -1904,7 +1906,8 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                
+                console.log('💾 Data to save:', dataToSave.isRealSpendingMode); // ✅ Debug
+
                 // IMPORTANT : Ne PAS utiliser merge pour que les clés supprimées disparaissent vraiment
                 await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
             } catch (error) {
@@ -3196,29 +3199,24 @@
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
 
-        /**
-         * Toggle between Estimated and Real Spending modes
-         */
         function toggleBudgetMode() {
             const toggle = document.getElementById('budgetModeToggle');
             
             isRealSpendingMode = toggle.checked;
+            console.log('🔄 Toggle changed to:', isRealSpendingMode); // ✅ Debug
             
             if (isRealSpendingMode) {
-                // Mode "Dépensé" activé - utilise le mois du header
                 loadRealSpendingForChart();
             } else {
-                // Mode "Estimé" activé
                 realSpendingChartData = {};
                 updateChart();
             }
             
-            // ✅ Sauvegarder APRÈS avoir changé l'état
             setTimeout(() => {
+                console.log('💾 Saving isRealSpendingMode:', isRealSpendingMode); // ✅ Debug
                 saveUserData();
             }, 100);
         }
-
         /**
          * Load real spending data for chart
         */
@@ -6075,6 +6073,8 @@
 
                 // ✅ Restaurer l'état du toggle Estimé/Dépensé
                 const budgetToggle = document.getElementById('budgetModeToggle');
+                console.log('🔍 budgetToggle found:', budgetToggle); // ✅ Debug
+                console.log('🔍 isRealSpendingMode value:', isRealSpendingMode); // ✅ Debug
                 if (budgetToggle) {
                     budgetToggle.checked = isRealSpendingMode;
                     if (isRealSpendingMode) {
