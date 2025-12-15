@@ -1577,6 +1577,8 @@
         let hiddenItems = {};
         let customColors = {};
         let categoryBaseColors = {}; // { categoryName: color } - Couleur de base de chaque catégorie
+        window.categoryBaseColors = categoryBaseColors; // ✅ Rendre accessible globalement
+
 
 
 
@@ -1676,6 +1678,7 @@
             if (!categoryBaseColors['income']) {
                 categoryBaseColors['income'] = '#28a745';
             }
+            window.categoryBaseColors = categoryBaseColors;
         }
 
 
@@ -1741,6 +1744,7 @@
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
                     categoryBaseColors = data.categoryBaseColors || {};
+                    window.categoryBaseColors = categoryBaseColors; // ✅ Synchroniser
                     currentChartType = data.chartType || 'doughnut';
                     
                     // ✅ Initialiser les couleurs de catégories
@@ -2595,7 +2599,8 @@
          */
         function updateCategoryColor(categoryKey, color) {
             categoryBaseColors[categoryKey] = color;
-            populateCategoryColors(); // Rafraîchir la vue
+            window.categoryBaseColors = categoryBaseColors; // ✅ Synchroniser
+            populateCategoryColors();
         }
 
 
