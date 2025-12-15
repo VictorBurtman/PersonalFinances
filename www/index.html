@@ -3222,6 +3222,12 @@
          * Load real spending data for chart
         */
         async function loadRealSpendingForChart() {
+            console.log('🔍 firebase:', typeof firebase);
+            console.log('🔍 firebase.functions:', typeof firebase.functions);
+            console.log('🔍 currentUser:', currentUser);
+            console.log('🔍 generateRandomColor:', typeof generateRandomColor);
+    
+
             if (!firebase.functions || !currentUser) {
                 console.log('Cannot load real spending: Firebase not initialized or user not logged in');
                 return;
