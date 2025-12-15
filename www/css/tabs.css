@@ -595,7 +595,7 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
 .budget-mode-toggle {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* ✅ Change de space-between à center */
     margin-bottom: 20px;
     gap: 15px;
 }
@@ -2823,6 +2823,8 @@ body.dark-mode .chartjs-legend span {
 #editModeBtn.active img {
     /* Filtre calculé pour obtenir du orange depuis du noir */
     filter: invert(55%) sepia(66%) saturate(3394%) hue-rotate(346deg) brightness(101%) contrast(98%) !important;
+    margin-left: auto; /* Pousse vers la droite */
+
     
     /* Petit effet de "saut" quand activé */
     transform: scale(1.1);
