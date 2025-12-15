@@ -2829,7 +2829,7 @@ body.dark-mode .chartjs-legend span {
 }
 
 #editModeBtn {
-    margin-right: 15px !important; /* Ajoute de l'espace À DROITE du bouton edit */
+    margin-left: 15px !important; /* ✅ Change margin-right en margin-left */
 }
 
 /* 2. Bouton COMPARER activé -> Violet/Bleu (#667eea) */
