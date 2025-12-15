@@ -3217,6 +3217,7 @@
                 saveUserData();
             }, 100);
         }
+
         /**
          * Load real spending data for chart
         */
@@ -3258,7 +3259,7 @@
                 });
                 
                 Object.keys(realSpendingChartData).forEach(category => {
-                    if (!categoryColors[category]) {
+                    if (!categoryBaseColors[category]) {  // ✅ Bonne variable
                         categoryBaseColors[category] = generateRandomColor();
                     }
                 });
