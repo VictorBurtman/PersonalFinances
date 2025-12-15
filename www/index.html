@@ -687,36 +687,42 @@
         </div>
         </div> <!-- Fin appScreen -->
 
-    <!-- Color Editor Modal -->
-    <div id="colorEditorModal" class="modal">
-        <div class="modal-content">
+    <!-- Modal Color Editor -->
+    <div id="colorEditorModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h2 data-translate="customizeColors">🎨 Customize Colors</h2>
-                <button class="modal-close" onclick="closeColorEditor()">✕</button>
+                <h3 data-translate="customizeColors">Customize Colors</h3>
+                <button class="modal-close" onclick="closeColorEditor()">×</button>
             </div>
             <div class="modal-body">
-                <!-- ✅ Options de randomisation -->
-                <div class="color-options">
-                    <label class="color-option-label">
-                        <input type="checkbox" id="colorByCategoryCheckbox">
-                        <span data-translate="colorByCategory">Group by categories</span>
-                    </label>
-                    <button class="modal-button secondary" onclick="randomizeColors()">
-                        <span data-translate="randomizeColors">🎲 Randomize Colors</span>
+                <!-- Toggle entre vue Simple et Avancée -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button id="randomColorsBtn" class="secondary-btn" onclick="randomizeAllColors()">
+                        🎲 <span data-translate="randomColors">Random Colors</span>
+                    </button>
+                    <button id="toggleAdvancedBtn" class="secondary-btn" onclick="toggleAdvancedView()">
+                        <span id="advancedBtnText" data-translate="advanced">Advanced</span> →
                     </button>
                 </div>
                 
-                <div id="colorEditorBody">
-                    <!-- Color items will be generated here -->
+                <!-- Vue Simple : Catégories uniquement -->
+                <div id="categoryColorsView">
+                    <h4 style="margin-bottom: 15px;" data-translate="categoryColors">Category Colors</h4>
+                    <div id="categoryColorsList"></div>
+                </div>
+                
+                <!-- Vue Avancée : Items détaillés -->
+                <div id="itemColorsView" style="display: none;">
+                    <button class="secondary-btn" onclick="toggleAdvancedView()" style="margin-bottom: 15px;">
+                        ← <span data-translate="backToCategories">Back to Categories</span>
+                    </button>
+                    <h4 style="margin-bottom: 15px;" data-translate="itemColors">Item Colors</h4>
+                    <div id="itemColorsList"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-button secondary" onclick="resetColors()">
-                    <span data-translate="resetColors">Reset to Default</span>
-                </button>
-                <button class="modal-button primary" onclick="closeColorEditor()">
-                    <span data-translate="done">Done</span>
-                </button>
+                <button class="primary-btn" onclick="saveColors()" data-translate="save">Save</button>
+                <button class="secondary-btn" onclick="closeColorEditor()" data-translate="cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -1735,7 +1741,11 @@
                     // ✅ MAINTENANT charger le reste des données
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
+                    categoryBaseColors = data.categoryBaseColors || {}; // ✅ Ajoute cette ligne
+
                     currentChartType = data.chartType || 'doughnut';
+                    initializeCategoryColors(); // ✅ Ajoute cette ligne
+
                     
                     // ✅ Mettre à jour l'état des boutons SEULEMENT après chargement Firebase
                     if (typeof window.updateChartButtonsState === 'function') {
@@ -2452,91 +2462,180 @@
             }
         }
 
+        let isAdvancedView = false;
+
+        /**
+         * Ouvrir le modal de couleurs
+         */
         function openColorEditor() {
             const modal = document.getElementById('colorEditorModal');
-            const body = document.getElementById('colorEditorBody');
-            
-            // Build list of all expenses with their current colors - EXCLUDE income
-            body.innerHTML = '';
-            
-            // ✅ Utiliser categoryOrder pour afficher dans le bon ordre
-            categoryOrder.forEach(categoryKey => {
-                // Skip income category et catégories qui n'existent pas
-                if (categoryKey === 'income' || !expenses[categoryKey]) return;
-                
-                expenses[categoryKey].forEach(expense => {
-                    // Use the same hash-based color calculation as the chart
-                    let currentColor;
-                    if (customColors[expense.name]) {
-                        currentColor = customColors[expense.name];
-                    } else {
-                        // Generate consistent color based on item name (hash) - same as chart
-                        const hash = expense.name.split('').reduce((acc, char) => {
-                            return char.charCodeAt(0) + ((acc << 5) - acc);
-                        }, 0);
-                        const colorIdx = Math.abs(hash) % colors.length;
-                        currentColor = colors[colorIdx];
-                    }
-                    
-                    const colorItem = document.createElement('div');
-                    colorItem.className = 'color-item';
-                    colorItem.setAttribute('data-category', categoryKey); // ✅ Ajouter catégorie pour randomize
-                    colorItem.innerHTML = `
-                        <span class="color-item-name">${expense.name}</span>
-                        <div class="color-picker-wrapper">
-                            <input 
-                                type="color" 
-                                value="${currentColor}" 
-                                onchange="updateColor('${expense.name}', this.value)"
-                            />
-                        </div>
-                    `;
-                    body.appendChild(colorItem);
-                });
-            });
-            
-            // Prevent background scrolling
-            document.body.style.overflow = 'hidden';
-            
-            modal.classList.add('show');
+            modal.style.display = 'flex';
+            isAdvancedView = false;
+            populateCategoryColors();
         }
 
-        function randomizeColors() {
-            const byCategory = document.getElementById('colorByCategoryCheckbox').checked;
-            const colorItems = document.querySelectorAll('.color-item');
+
+        /**
+         * Fermer le modal
+         */
+        function closeColorEditor() {
+            const modal = document.getElementById('colorEditorModal');
+            modal.style.display = 'none';
+        }
+
+
+        /**
+         * Toggle entre vue simple (catégories) et avancée (items)
+         */
+        function toggleAdvancedView() {
+            isAdvancedView = !isAdvancedView;
             
-            if (byCategory) {
-                // Grouper par catégorie et assigner des tons similaires
-                const categoryColors = {};
-                
-                colorItems.forEach(item => {
-                    const category = item.getAttribute('data-category');
-                    const itemName = item.querySelector('.color-item-name').textContent;
-                    const colorInput = item.querySelector('input[type="color"]');
-                    
-                    // Si c'est la première fois qu'on voit cette catégorie, générer une couleur de base
-                    if (!categoryColors[category]) {
-                        categoryColors[category] = generateRandomHue();
-                    }
-                    
-                    // Générer une variation de la couleur de base de la catégorie
-                    const color = generateColorVariation(categoryColors[category]);
-                    colorInput.value = color;
-                    customColors[itemName] = color;
-                });
+            const categoryView = document.getElementById('categoryColorsView');
+            const itemView = document.getElementById('itemColorsView');
+            
+            if (isAdvancedView) {
+                categoryView.style.display = 'none';
+                itemView.style.display = 'block';
+                populateItemColors();
             } else {
-                // Couleurs complètement aléatoires
-                colorItems.forEach(item => {
-                    const itemName = item.querySelector('.color-item-name').textContent;
-                    const colorInput = item.querySelector('input[type="color"]');
-                    const color = generateRandomColor();
-                    colorInput.value = color;
-                    customColors[itemName] = color;
-                });
+                categoryView.style.display = 'block';
+                itemView.style.display = 'none';
+                populateCategoryColors();
             }
+        }
+
+
+        /**
+         * Remplir la liste des couleurs de catégories
+         */
+        function populateCategoryColors() {
+            const container = document.getElementById('categoryColorsList');
+            container.innerHTML = '';
             
-            saveUserData();
-            updateChart();
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey === 'income') return; // Skip income
+                
+                const categoryColor = categoryBaseColors[categoryKey] || generateRandomColor();
+                const categoryName = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'color-item';
+                itemDiv.innerHTML = `
+                    <div class="color-item-name">
+                        <div class="color-input-wrapper">
+                            <div class="color-preview" style="background: ${categoryColor}"></div>
+                            <input type="color" value="${categoryColor}" onchange="updateCategoryColor('${categoryKey}', this.value)">
+                        </div>
+                        <span>${categoryName}</span>
+                    </div>
+                    <span style="font-size: 12px; color: #999;">${expenses[categoryKey].length} items</span>
+                `;
+                
+                container.appendChild(itemDiv);
+            });
+        }
+
+        /**
+         * Remplir la liste des couleurs d'items (vue avancée)
+         */
+        function populateItemColors() {
+            const container = document.getElementById('itemColorsList');
+            container.innerHTML = '';
+            
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey === 'income') return;
+                
+                const categoryColor = categoryBaseColors[categoryKey] || generateRandomColor();
+                const categoryName = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
+                
+                expenses[categoryKey].forEach((expense, index) => {
+                    const itemName = expense.name;
+                    const itemColor = customColors[itemName] || generateColorVariation(categoryColor, index, expenses[categoryKey].length);
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'color-item';
+                    itemDiv.innerHTML = `
+                        <div class="color-item-name">
+                            <div class="color-input-wrapper">
+                                <div class="color-preview" style="background: ${itemColor}"></div>
+                                <input type="color" value="${itemColor}" onchange="updateItemColor('${itemName}', this.value)">
+                            </div>
+                            <div>
+                                <div>${itemName}</div>
+                                <span class="item-category-badge">${categoryName}</span>
+                            </div>
+                        </div>
+                        ${customColors[itemName] ? `<button class="reset-item-color-btn" onclick="resetItemColor('${itemName}')">Reset</button>` : ''}
+                    `;
+                    
+                    container.appendChild(itemDiv);
+                });
+            });
+        }
+
+
+        /**
+         * Mettre à jour la couleur d'une catégorie
+         */
+        function updateCategoryColor(categoryKey, color) {
+            categoryBaseColors[categoryKey] = color;
+            populateCategoryColors(); // Rafraîchir la vue
+        }
+
+
+        /**
+         * Mettre à jour la couleur d'un item
+         */
+        function updateItemColor(itemName, color) {
+            customColors[itemName] = color;
+            populateItemColors(); // Rafraîchir la vue
+        }
+
+        /**
+         * Réinitialiser la couleur d'un item (retour à la variation de catégorie)
+         */
+        function resetItemColor(itemName) {
+            delete customColors[itemName];
+            populateItemColors();
+        }
+
+        /**
+         * Générer des couleurs aléatoires pour toutes les catégories
+         */
+        function randomizeAllColors() {
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey !== 'income') {
+                    categoryBaseColors[categoryKey] = generateRandomColor();
+                }
+            });
+            
+            if (isAdvancedView) {
+                populateItemColors();
+            } else {
+                populateCategoryColors();
+            }
+        }
+
+        /**
+         * Sauvegarder les couleurs
+         */
+        async function saveColors() {
+            try {
+                await firebase.firestore()
+                    .collection('users')
+                    .doc(currentUser.uid)
+                    .set({
+                        categoryBaseColors: categoryBaseColors,
+                        customColors: customColors
+                    }, { merge: true });
+                
+                closeColorEditor();
+                updateChart();
+                showToast('Colors saved!');
+            } catch (error) {
+                console.error('Error saving colors:', error);
+                showToast('Error saving colors');
+            }
         }
 
         // Générer une teinte aléatoire (hue)
@@ -2571,30 +2670,6 @@
             return `#${f(0)}${f(8)}${f(4)}`;
         }
 
-
-        function closeColorEditor() {
-            const modal = document.getElementById('colorEditorModal');
-            modal.classList.remove('show');
-            
-            // Restore background scrolling
-            document.body.style.overflow = '';
-        }
-
-        function updateColor(expenseName, color) {
-            customColors[expenseName] = color;
-            saveUserData();
-            updateChart();
-        }
-
-        function resetColors() {
-            const t = translations[currentLanguage] || translations['en'];
-            if (confirm(t.resetColorsConfirm || 'Reset colors?')) {
-                customColors = {};
-                saveUserData();
-                closeColorEditor();
-                updateChart();
-            }
-        }
 
         // Restore edit mode UI after updateDisplay()
         function restoreEditMode() {

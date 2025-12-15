@@ -2114,6 +2114,9 @@ body.dark-mode #restoreSimilarCheckbox {
 }
 
 .color-item-name {
+    display: flex; /* ✅ Ajoute ceci */
+    align-items: center; /* ✅ Ajoute ceci */
+    gap: 10px; /* ✅ Ajoute ceci */
     font-weight: 500;
     color: #495057;
     flex: 1;
@@ -2132,6 +2135,11 @@ body.dark-mode #restoreSimilarCheckbox {
     border-radius: 6px;
     border: 2px solid #dee2e6;
     cursor: pointer;
+    transition: transform 0.2s; /* ✅ Ajoute ceci */
+}
+
+.color-preview:hover {
+    transform: scale(1.1); /* ✅ Ajoute ceci */
 }
 
 input[type="color"] {
@@ -2140,6 +2148,79 @@ input[type="color"] {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+/* ✅ AJOUTE TOUT CE QUI SUIT */
+
+/* Color editor views */
+#categoryColorsList,
+#itemColorsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+body.dark-mode .color-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .color-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .color-preview {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .color-item-name {
+    color: #e0e0e0;
+}
+
+.color-input-wrapper {
+    position: relative;
+}
+
+.color-input-wrapper input[type="color"] {
+    opacity: 0;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.item-category-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    background: rgba(102, 126, 234, 0.2);
+    border-radius: 4px;
+    color: #667eea;
+}
+
+body.dark-mode .item-category-badge {
+    background: rgba(156, 163, 255, 0.2);
+    color: #9ca3ff;
+}
+
+.reset-item-color-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    background: rgba(255, 0, 0, 0.1);
+    color: #dc3545;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reset-item-color-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+}
+
+body.dark-mode .reset-item-color-btn {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ff6b6b;
 }
 
 /* ============================================
