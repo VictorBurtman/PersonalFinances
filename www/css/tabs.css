@@ -2829,7 +2829,7 @@ body.dark-mode .chartjs-legend span {
 }
 
 #editModeBtn {
-    margin-left: auto; /* Pousse vers la droite */
+    margin-left: 15px !important; /* Ajuste la valeur selon tes besoins */
 }
 
 /* 2. Bouton COMPARER activé -> Violet/Bleu (#667eea) */
