@@ -2179,7 +2179,7 @@
                     if (amount > 0) {
                         aggregatedItems[category] = {
                             amount: amount,
-                            color: categoryColors[category] || generateRandomColor()
+                            color: categoryBaseColors[category] || generateRandomColor()
                         };
                     }
                 });
@@ -3195,7 +3195,6 @@
 
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
-        const categoryColors = {}; // Pour stocker les couleurs des catégories
 
         /**
          * Toggle between Estimated and Real Spending modes
@@ -3205,9 +3204,6 @@
             
             isRealSpendingMode = toggle.checked;
             
-            // ✅ Sauvegarder la préférence
-            saveUserData();
-            
             if (isRealSpendingMode) {
                 // Mode "Dépensé" activé - utilise le mois du header
                 loadRealSpendingForChart();
@@ -3216,6 +3212,7 @@
                 realSpendingChartData = {};
                 updateChart();
             }
+            
             // ✅ Sauvegarder APRÈS avoir changé l'état
             setTimeout(() => {
                 saveUserData();
@@ -3264,7 +3261,7 @@
                 
                 Object.keys(realSpendingChartData).forEach(category => {
                     if (!categoryColors[category]) {
-                        categoryColors[category] = generateRandomColor();
+                        categoryBaseColors[category] = generateRandomColor();
                     }
                 });
                 
