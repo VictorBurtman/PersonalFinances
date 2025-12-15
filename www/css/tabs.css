@@ -2823,11 +2823,13 @@ body.dark-mode .chartjs-legend span {
 #editModeBtn.active img {
     /* Filtre calculé pour obtenir du orange depuis du noir */
     filter: invert(55%) sepia(66%) saturate(3394%) hue-rotate(346deg) brightness(101%) contrast(98%) !important;
-    margin-left: auto; /* Pousse vers la droite */
 
-    
     /* Petit effet de "saut" quand activé */
     transform: scale(1.1);
+}
+
+#editModeBtn {
+    margin-right: 15px !important; /* Ajoute de l'espace À DROITE du bouton edit */
 }
 
 /* 2. Bouton COMPARER activé -> Violet/Bleu (#667eea) */
