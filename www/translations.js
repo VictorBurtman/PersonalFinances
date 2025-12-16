@@ -171,6 +171,14 @@ const translations = {
         noteSaved: 'Note saved ✓',
         estimated: "Estimated",
         spent: "Spent",
+        customizeColors: "Customize Colors",
+        randomColors: "Random Colors",
+        advanced: "Advanced",
+        backToCategories: "Back to Categories",
+        categoryColors: "Category Colors",
+        itemColors: "Item Colors",
+        save: "Save",
+        cancel: "Cancel",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -651,6 +659,14 @@ const translations = {
         noteSaved: 'Note enregistrée ✓',
         estimated: "Estimé",
         spent: "Dépensé",
+        customizeColors: "Personnaliser les couleurs",
+        randomColors: "Couleurs aléatoires",
+        advanced: "Avancé",
+        backToCategories: "Retour aux catégories",
+        categoryColors: "Couleurs des catégories",
+        itemColors: "Couleurs des items",
+        save: "Enregistrer",
+        cancel: "Annuler",
 
 
         // Alerts & notifications
@@ -1121,6 +1137,14 @@ const translations = {
         noteSaved: 'הערה נשמרה ✓',
         estimated: "משוער",
         spent: "הוצא",
+        customizeColors: "התאמת צבעים",
+        randomColors: "צבעים אקראיים",
+        advanced: "מתקדם",
+        backToCategories: "חזרה לקטגוריות",
+        categoryColors: "צבעי קטגוריות",
+        itemColors: "צבעי פריטים",
+        save: "שמור",
+        cancel: "ביטול",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1590,6 +1614,14 @@ const translations = {
         noteSaved: 'Nota guardada ✓',
         estimated: "Estimado",
         spent: "Gastado",
+        customizeColors: "Personalizar colores",
+        randomColors: "Colores aleatorios",
+        advanced: "Avanzado",
+        backToCategories: "Volver a categorías",
+        categoryColors: "Colores de categorías",
+        itemColors: "Colores de elementos",
+        save: "Guardar",
+        cancel: "Cancelar",
 
 
         // Toasts & notifications
@@ -2060,6 +2092,14 @@ const translations = {
         noteSaved: 'Заметка сохранена ✓',
         estimated: "Планируемое",
         spent: "Потрачено",
+        customizeColors: "Настроить цвета",
+        randomColors: "Случайные цвета",
+        advanced: "Дополнительно",
+        backToCategories: "Назад к категориям",
+        categoryColors: "Цвета категорий",
+        itemColors: "Цвета элементов",
+        save: "Сохранить",
+        cancel: "Отмена",
 
 
         // Toasts & notifications
@@ -2530,6 +2570,14 @@ const translations = {
         noteSaved: 'تم حفظ الملاحظة ✓',
         estimated: "المقدر",
         spent: "المنفق",
+        customizeColors: "تخصيص الألوان",
+        randomColors: "ألوان عشوائية",
+        advanced: "متقدم",
+        backToCategories: "العودة للفئات",
+        categoryColors: "ألوان الفئات",
+        itemColors: "ألوان العناصر",
+        save: "حفظ",
+        cancel: "إلغاء",
 
 
         // Toasts & notifications
