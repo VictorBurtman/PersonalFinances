@@ -955,7 +955,8 @@ function clearTransactionCheckboxes() {
  * Obtenir la couleur d'une catégorie
  */
 function getCategoryColor(categoryKey) {
-    if (!categoryKey || categoryKey === 'income') return '#28a745';
+    if (!categoryKey) return 'transparent'; // ✅ Pas de bandeau si pas de catégorie
+    if (categoryKey === 'income') return '#28a745';
     return window.categoryBaseColors?.[categoryKey] || '#667eea';
 }
 
