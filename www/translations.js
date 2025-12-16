@@ -179,6 +179,8 @@ const translations = {
         itemColors: "Item Colors",
         save: "Save",
         cancel: "Cancel",
+        selectCategories: "Select Categories",
+        monthlySpendingTrend: "Monthly Spending Trend", 
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -667,7 +669,8 @@ const translations = {
         itemColors: "Couleurs des items",
         save: "Enregistrer",
         cancel: "Annuler",
-
+        selectCategories: "Sélectionner les catégories",
+        monthlySpendingTrend: "Évolution mensuelle des dépenses",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -1145,6 +1148,8 @@ const translations = {
         itemColors: "צבעי פריטים",
         save: "שמור",
         cancel: "ביטול",
+        selectCategories: "בחר קטגוריות",
+        monthlySpendingTrend: "מגמת הוצאות חודשית",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1622,6 +1627,8 @@ const translations = {
         itemColors: "Colores de elementos",
         save: "Guardar",
         cancel: "Cancelar",
+        selectCategories: "Seleccionar categorías",
+        monthlySpendingTrend: "Tendencia de gastos mensuales",
 
 
         // Toasts & notifications
@@ -2100,6 +2107,8 @@ const translations = {
         itemColors: "Цвета элементов",
         save: "Сохранить",
         cancel: "Отмена",
+        selectCategories: "Выбрать категории",
+        monthlySpendingTrend: "Месячная динамика расходов",
 
 
         // Toasts & notifications
@@ -2578,6 +2587,8 @@ const translations = {
         itemColors: "ألوان العناصر",
         save: "حفظ",
         cancel: "إلغاء",
+        selectCategories: "اختيار الفئات",
+        monthlySpendingTrend: "اتجاه الإنفاق الشهري",
 
 
         // Toasts & notifications

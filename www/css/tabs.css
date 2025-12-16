@@ -2599,7 +2599,7 @@ body.dark-mode .chartjs-legend span {
     .header-right-actions {
         gap: 4px !important; /* ← Réduit l'espace sur mobile */
     }
-    
+
     /* Le Titre ne doit PAS grandir, il reste à gauche */
     .header-title {
         flex-grow: 0 !important;
@@ -3372,4 +3372,21 @@ body.dark-mode .color-options {
     .color-options button {
         width: 100%;
     }
+}
+
+
+
+body.dark-mode #trendCategoriesBtn {
+    background: #2a2a3e;
+    color: #e0e0e0;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode #trendCategoriesDropdown {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+}
+
+body.dark-mode #trendCategoriesDropdown label:hover {
+    background: #3a3a4e !important;
 }
