@@ -2327,7 +2327,7 @@
                     legend: {
                         display: !isEmpty,
                         position: 'bottom',
-                        align: 'start',  // ← AJOUTE CETTE LIGNE ICI
+                        align: 'center', // ✅ Ajoute cette ligne
                         labels: {
                             padding: 10,
                             font: { size: 11 },
@@ -2362,6 +2362,7 @@
                         callbacks: {
                             label: function(context) {
                                 const label = context.label || '';
+                                const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1); // ✅ Ajoute cette ligne
                                 const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
                                 
                                 // ✅ Calculer le total des items visibles uniquement
@@ -2370,7 +2371,7 @@
                                 }, 0);
                                 
                                 const percentage = ((value / visibleTotal) * 100).toFixed(1);
-                                return `${label}: ${currency}${value.toFixed(2)} (${percentage}%)`;
+                                return `${capitalizedLabel}: ${currency}${value.toFixed(2)} (${percentage}%)`; // ✅ Utilise capitalizedLabel
                             }
                         }
                     }
