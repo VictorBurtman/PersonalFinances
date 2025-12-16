@@ -493,35 +493,46 @@ function clearSearchFilter() {
  * Update filters button color based on active filters
  */
 function updateFiltersButtonColor() {
+    console.log('🔍 updateFiltersButtonColor called');
     
     const filtersBtn = document.getElementById('filtersBtn');
+    console.log('filtersBtn:', filtersBtn);
     
     if (!filtersBtn) {
+        console.log('❌ filtersBtn not found!');
         return;
     }
     
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
     const monthFilter = document.getElementById('monthFilter')?.value || '';
     const sourceFilter = document.getElementById('sourceFilter')?.value || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || ''; // ✅ Ajoute cette ligne
     const searchFilter = document.getElementById('searchFilter')?.value || '';
-        
+    
+    console.log('Filters:', { labelFilter, monthFilter, sourceFilter, categoryFilter, searchFilter }); // ✅ Ajoute categoryFilter
+    
     // Vérifier si au moins un filtre est actif
     const hasActiveFilters = 
         labelFilter !== 'all' ||
         monthFilter !== '' ||
         sourceFilter !== '' ||
+        categoryFilter !== '' || // ✅ Ajoute cette ligne
         searchFilter !== '';
     
+    console.log('hasActiveFilters:', hasActiveFilters);
     
     const img = filtersBtn.querySelector('img');
+    console.log('img:', img);
     
     if (img) {
         // Orange filter (même couleur que le crayon en mode edit)
         img.style.filter = hasActiveFilters ? 'invert(58%) sepia(85%) saturate(1804%) hue-rotate(360deg) brightness(102%) contrast(101%)' : '';
+        console.log('Applied filter:', img.style.filter);
     } else {
         console.log('❌ img not found inside filtersBtn!');
     }
 }
+
 /**
  * Sort filtered transactions based on current sort order
  */
