@@ -432,6 +432,16 @@
                         <div class="chart-header">
                             <h3 style="font-size: 1em; color: #667eea; font-weight: 600;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
                         </div>
+                        
+                        <!-- Sélecteur de catégories -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; padding: 10px; background: var(--block-bg); border-radius: 10px;">
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.9em;">
+                                <input type="checkbox" id="totalTrendCheckbox" checked onchange="updateMonthlyTrendSelection()">
+                                <span data-translate="total">Total</span>
+                            </label>
+                            <div id="categoryTrendCheckboxes" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+                        </div>
+                        
                         <div class="chart-container" style="height: 300px;">
                             <canvas id="monthlyTrendChart"></canvas>
                         </div>
@@ -1872,7 +1882,6 @@
                 updateDisplay();
                 updateChartButtonsState();
                 loadMonthlyTrendChart();
-
                 
                 // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
@@ -2462,6 +2471,8 @@
         // ============================================
 
         let monthlyTrendChart = null;
+        let monthlyTrendData = {}; // Stocker toutes les données
+        let selectedTrendCategories = new Set(['total']); // Catégories sélectionnées
 
         /**
          * Charger et afficher le graphique d'évolution mensuelle
@@ -2486,9 +2497,22 @@
                     });
                 }
                 
+                // Initialiser les données
+                monthlyTrendData = {
+                    labels: months.map(m => m.label),
+                    total: [],
+                    categories: {}
+                };
+                
+                // Initialiser les catégories
+                Object.keys(expenses).forEach(categoryKey => {
+                    if (categoryKey !== 'income') {
+                        monthlyTrendData.categories[categoryKey] = [];
+                    }
+                });
+                
                 // Charger les transactions pour chaque mois
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
-                const monthlyData = [];
                 
                 for (const monthInfo of months) {
                     const startDate = new Date(monthInfo.year, monthInfo.month - 1, 1);
@@ -2504,23 +2528,43 @@
                         
                         const transactions = result.data.transactions || [];
                         
-                        // Calculer le total des dépenses (montants négatifs)
-                        const total = transactions.reduce((sum, txn) => {
-                            if (txn.chargedAmount < 0 && txn.category !== 'income') {
-                                return sum + Math.abs(txn.chargedAmount);
-                            }
-                            return sum;
-                        }, 0);
+                        // Calculer le total et par catégorie
+                        let monthTotal = 0;
+                        const categoryTotals = {};
                         
-                        monthlyData.push(total);
+                        transactions.forEach(txn => {
+                            if (txn.chargedAmount < 0 && txn.category !== 'income') {
+                                const amount = Math.abs(txn.chargedAmount);
+                                monthTotal += amount;
+                                
+                                if (!categoryTotals[txn.category]) {
+                                    categoryTotals[txn.category] = 0;
+                                }
+                                categoryTotals[txn.category] += amount;
+                            }
+                        });
+                        
+                        monthlyTrendData.total.push(monthTotal);
+                        
+                        // Ajouter les totaux par catégorie
+                        Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                            monthlyTrendData.categories[categoryKey].push(categoryTotals[categoryKey] || 0);
+                        });
+                        
                     } catch (error) {
                         console.error('Error loading month:', monthInfo, error);
-                        monthlyData.push(0);
+                        monthlyTrendData.total.push(0);
+                        Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                            monthlyTrendData.categories[categoryKey].push(0);
+                        });
                     }
                 }
                 
+                // Générer les checkboxes des catégories
+                populateCategoryTrendCheckboxes();
+                
                 // Afficher le graphique
-                updateMonthlyTrendChart(months.map(m => m.label), monthlyData);
+                updateMonthlyTrendChart();
                 
             } catch (error) {
                 console.error('Error loading monthly trend:', error);
@@ -2528,9 +2572,64 @@
         }
 
         /**
+         * Générer les checkboxes de sélection de catégories
+         */
+        function populateCategoryTrendCheckboxes() {
+            const container = document.getElementById('categoryTrendCheckboxes');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                const meta = categoryMetadata[categoryKey] || {
+                    emoji: '📋',
+                    displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+                };
+                
+                const label = document.createElement('label');
+                label.style.cssText = 'display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.9em;';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `trend-${categoryKey}`;
+                checkbox.onchange = updateMonthlyTrendSelection;
+                
+                const span = document.createElement('span');
+                span.textContent = `${meta.emoji} ${meta.displayName}`;
+                
+                label.appendChild(checkbox);
+                label.appendChild(span);
+                container.appendChild(label);
+            });
+        }
+
+        /**
+         * Mettre à jour la sélection des catégories
+         */
+        function updateMonthlyTrendSelection() {
+            selectedTrendCategories.clear();
+            
+            // Vérifier le total
+            const totalCheckbox = document.getElementById('totalTrendCheckbox');
+            if (totalCheckbox && totalCheckbox.checked) {
+                selectedTrendCategories.add('total');
+            }
+            
+            // Vérifier les catégories
+            Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                const checkbox = document.getElementById(`trend-${categoryKey}`);
+                if (checkbox && checkbox.checked) {
+                    selectedTrendCategories.add(categoryKey);
+                }
+            });
+            
+            updateMonthlyTrendChart();
+        }
+
+        /**
          * Mettre à jour le graphique d'évolution mensuelle
          */
-        function updateMonthlyTrendChart(labels, data) {
+        function updateMonthlyTrendChart() {
             const ctx = document.getElementById('monthlyTrendChart');
             if (!ctx) return;
             
@@ -2543,36 +2642,79 @@
                 monthlyTrendChart.destroy();
             }
             
+            // Préparer les datasets
+            const datasets = [];
+            
+            // Ajouter le total si sélectionné
+            if (selectedTrendCategories.has('total')) {
+                datasets.push({
+                    label: translations[currentLanguage].total || 'Total',
+                    data: monthlyTrendData.total,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                });
+            }
+            
+            // Ajouter les catégories sélectionnées
+            Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                if (selectedTrendCategories.has(categoryKey)) {
+                    const color = categoryBaseColors[categoryKey] || generateRandomColor();
+                    const meta = categoryMetadata[categoryKey] || {
+                        displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+                    };
+                    
+                    datasets.push({
+                        label: meta.displayName,
+                        data: monthlyTrendData.categories[categoryKey],
+                        borderColor: color,
+                        backgroundColor: color + '20', // Ajoute transparence
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: color,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    });
+                }
+            });
+            
             monthlyTrendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                        label: translations[currentLanguage].totalSpending || 'Total Spending',
-                        data: data,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: '#667eea',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
-                    }]
+                    labels: monthlyTrendData.labels,
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
-                            display: false
+                            display: datasets.length > 1,
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                padding: 10,
+                                font: { size: 11 }
+                            }
                         },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `${currency}${context.parsed.y.toFixed(2)}`;
+                                    return `${context.dataset.label}: ${currency}${context.parsed.y.toFixed(2)}`;
                                 }
                             }
                         }
@@ -2602,6 +2744,7 @@
                 }
             });
         }
+
 
 
         async function resetExpenses() {
