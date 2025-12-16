@@ -2780,11 +2780,10 @@ function parseCSV(csvText, fileName, bankName) {
             const amount = parseFloat(amountStr.replace(/[^\d.-]/g, ''));
             if (isNaN(amount)) continue;
             
-            // ✅ Skip income/credits (positive amounts) - only import expenses
-            if (amount > 0) {
-                continue;
-            }
-
+            // ✅ MODIFIÉ : Inclure les revenus et les assigner à "income"
+            const isIncome = amount > 0;
+            const category = isIncome ? 'income' : null;
+            const isLabeled = isIncome ? true : false;
 
             transactions.push({
                 date: date.toISOString(),
@@ -2794,7 +2793,9 @@ function parseCSV(csvText, fileName, bankName) {
                 source: 'csv',
                 csvFileName: fileName,
                 bankName: bankName,
-                identifier: `${date.toISOString()}_${description.trim()}_${amount}`
+                identifier: `${date.toISOString()}_${description.trim()}_${amount}`,
+                category: category, // ✅ Ajoute la catégorie
+                isLabeled: isLabeled // ✅ Marque comme labellisé si c'est un revenu
             });
             
         } catch (error) {
