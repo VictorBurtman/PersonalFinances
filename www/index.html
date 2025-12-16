@@ -427,6 +427,16 @@
                         </div>
                     </div>
 
+                    <!-- Graphique des dépenses mensuelles -->
+                    <div class="chart-section">
+                        <div class="chart-header">
+                            <h3 style="font-size: 1em; color: #667eea; font-weight: 600;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
+                        </div>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="monthlyTrendChart"></canvas>
+                        </div>
+                    </div>
+
                     <div class="expenses-list" id="expensesList">
                         <!-- Income Category -->
                         <div class="category-section income-category" id="category-income" style="display: none;">
@@ -1861,6 +1871,8 @@
                 updateChartIndicators();
                 updateDisplay();
                 updateChartButtonsState();
+                loadMonthlyTrendChart();
+
                 
                 // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
@@ -2444,6 +2456,153 @@
             
             document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
         }
+
+        // ============================================
+        // MONTHLY TREND CHART
+        // ============================================
+
+        let monthlyTrendChart = null;
+
+        /**
+         * Charger et afficher le graphique d'évolution mensuelle
+         */
+        async function loadMonthlyTrendChart() {
+            if (!currentUser || !firebase.functions) {
+                console.log('Cannot load monthly trend: Firebase not initialized');
+                return;
+            }
+            
+            try {
+                // Charger les 6 derniers mois de transactions
+                const months = [];
+                const currentDate = new Date();
+                
+                for (let i = 5; i >= 0; i--) {
+                    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                    months.push({
+                        year: date.getFullYear(),
+                        month: date.getMonth() + 1,
+                        label: date.toLocaleDateString(currentLanguage, { month: 'short', year: 'numeric' })
+                    });
+                }
+                
+                // Charger les transactions pour chaque mois
+                const getTransactions = firebase.functions().httpsCallable('getTransactions');
+                const monthlyData = [];
+                
+                for (const monthInfo of months) {
+                    const startDate = new Date(monthInfo.year, monthInfo.month - 1, 1);
+                    const endDate = new Date(monthInfo.year, monthInfo.month, 0, 23, 59, 59);
+                    
+                    try {
+                        const result = await getTransactions({
+                            startDate: startDate.toISOString(),
+                            endDate: endDate.toISOString(),
+                            isLabeled: true,
+                            limit: 10000
+                        });
+                        
+                        const transactions = result.data.transactions || [];
+                        
+                        // Calculer le total des dépenses (montants négatifs)
+                        const total = transactions.reduce((sum, txn) => {
+                            if (txn.chargedAmount < 0 && txn.category !== 'income') {
+                                return sum + Math.abs(txn.chargedAmount);
+                            }
+                            return sum;
+                        }, 0);
+                        
+                        monthlyData.push(total);
+                    } catch (error) {
+                        console.error('Error loading month:', monthInfo, error);
+                        monthlyData.push(0);
+                    }
+                }
+                
+                // Afficher le graphique
+                updateMonthlyTrendChart(months.map(m => m.label), monthlyData);
+                
+            } catch (error) {
+                console.error('Error loading monthly trend:', error);
+            }
+        }
+
+        /**
+         * Mettre à jour le graphique d'évolution mensuelle
+         */
+        function updateMonthlyTrendChart(labels, data) {
+            const ctx = document.getElementById('monthlyTrendChart');
+            if (!ctx) return;
+            
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const textColor = isDarkMode ? '#e0e0e0' : '#666';
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            // Détruire le graphique existant
+            if (monthlyTrendChart) {
+                monthlyTrendChart.destroy();
+            }
+            
+            monthlyTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: translations[currentLanguage].totalSpending || 'Total Spending',
+                        data: data,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${currency}${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return currency + value.toFixed(0);
+                                }
+                            },
+                            grid: {
+                                color: gridColor
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: textColor
+                            },
+                            grid: {
+                                color: gridColor
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
 
         async function resetExpenses() {
             const t = translations[currentLanguage] || translations['en'];
@@ -6114,6 +6273,8 @@
                 // ✅ Initialiser le sélecteur de mois
                 populateMonthDropdown();
                 loadRealSpending();
+                loadMonthlyTrendChart();
+
 
                 // ✨ Ajustement du titre
                 setTimeout(fitAppTitle, 100); 
