@@ -3376,6 +3376,11 @@ body.dark-mode .color-options {
 
 
 
+
+/* ============================================
+   MONTHLY TREND CHART - DROPDOWN
+   ============================================ */
+
 body.dark-mode #trendCategoriesBtn {
     background: #2a2a3e;
     color: #e0e0e0;
@@ -3385,8 +3390,22 @@ body.dark-mode #trendCategoriesBtn {
 body.dark-mode #trendCategoriesDropdown {
     background: #2a2a3e;
     border-color: #3a3a4e;
+    color: #e0e0e0;
+}
+
+body.dark-mode #trendCategoriesDropdown label {
+    color: #e0e0e0;
 }
 
 body.dark-mode #trendCategoriesDropdown label:hover {
+    background: #3a3a4e !important;
+}
+
+body.dark-mode #trendCategoriesDropdown input[type="checkbox"] {
+    accent-color: #667eea;
+}
+
+/* Divider en dark mode */
+body.dark-mode #trendCategoriesDropdown > div > div[style*="background: #dee2e6"] {
     background: #3a3a4e !important;
 }
