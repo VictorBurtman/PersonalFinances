@@ -1390,6 +1390,20 @@ body.dark-mode .transaction-item {
     color: #e0e0e0;
 }
 
+/* Transactions de revenus (income) */
+.transaction-item.income-transaction {
+    background: rgba(40, 167, 69, 0.05) !important;
+}
+
+body.dark-mode .transaction-item.income-transaction {
+    background: rgba(40, 167, 69, 0.1) !important;
+}
+
+/* Pas de bandeau pour les revenus */
+.transaction-item.income-transaction::before {
+    display: none !important;
+}
+
 .transaction-info {
     flex: 1;
     min-width: 0;
@@ -3494,3 +3508,4 @@ body.dark-mode .trend-count-badge {
     background: #667eea;
     color: white;
 }
+

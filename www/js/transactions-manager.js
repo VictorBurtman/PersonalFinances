@@ -810,8 +810,13 @@ function renderTransaction(txn) {
     const descColor = txn.isManual ? '#ff6b6b' : 'inherit';
     const manualBadge = txn.isManual ? ' <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 5px;">MANUAL</span>' : '';
     
+    // ✅ NOUVEAU : Déterminer si c'est un revenu (income)
+    const isIncome = txn.chargedAmount > 0 || txn.category === 'income';
+    const categoryColor = isIncome ? 'transparent' : getCategoryColor(txn.category);
+    const backgroundStyle = isIncome ? 'background: rgba(40, 167, 69, 0.05);' : '';
+    
     return `
-        <div class="transaction-item" style="display: block; padding: 15px; --category-color: ${getCategoryColor(txn.category)};">
+        <div class="transaction-item ${isIncome ? 'income-transaction' : ''}" style="display: block; padding: 15px; --category-color: ${categoryColor}; ${backgroundStyle}">
             <!-- Top row: Date, Description, Amount -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                 <div style="flex: 1; min-width: 0;">
@@ -855,21 +860,23 @@ function renderTransaction(txn) {
                                 style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
                             />
                         </div>
-                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
+                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${isIncome ? '#28a745' : amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
-                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
-                            <button 
-                                class="btn btn-sm" 
-                                style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
-                                onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
-                            >
-                                <span data-translate="exclude">Exclude</span>
-                            </button>
-                        </div>
+                        ${!isIncome ? `
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                                <button 
+                                    class="btn btn-sm" 
+                                    style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
+                                    onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
+                                >
+                                    <span data-translate="exclude">Exclude</span>
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
-                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: ${amountColor}; white-space: nowrap; margin-left: 15px;">
-                    ${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}
+                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: ${isIncome ? '#28a745' : amountColor}; white-space: nowrap; margin-left: 15px;">
+                    ${isIncome ? '+' : ''}${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}
                 </div>
             </div>
             <!-- Bottom row: Checkbox + Category selector or label -->
@@ -883,16 +890,18 @@ function renderTransaction(txn) {
                     style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;"
                 />
                 
-                ${isLabeled ? `
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #e7f3ff; border: 2px solid #667eea; border-radius: 8px; font-size: 0.9em; flex: 1;">
-                        <span style="font-weight: 600; color: #667eea;">
+                ${isLabeled || isIncome ? `
+                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: ${isIncome ? 'rgba(40, 167, 69, 0.1)' : '#e7f3ff'}; border: 2px solid ${isIncome ? '#28a745' : '#667eea'}; border-radius: 8px; font-size: 0.9em; flex: 1;">
+                        <span style="font-weight: 600; color: ${isIncome ? '#28a745' : '#667eea'};">
                             ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
                         </span>
-                        <button 
-                            onclick="unlabelTransaction('${txn.id}'); event.stopPropagation();" 
-                            style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
-                            title="Remove label"
-                        >✕</button>
+                        ${!isIncome ? `
+                            <button 
+                                onclick="unlabelTransaction('${txn.id}'); event.stopPropagation();" 
+                                style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
+                                title="Remove label"
+                            >✕</button>
+                        ` : ''}
                     </div>
                 ` : `
                     <select 
@@ -911,7 +920,6 @@ function renderTransaction(txn) {
         </div>
     `;
 }
-
 
 // ✅ Variables globales pour gérer les checkboxes
 let selectedTransactionIds = new Set();
