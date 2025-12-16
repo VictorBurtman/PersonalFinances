@@ -1144,6 +1144,11 @@ async function saveManualTransaction(event) {
  * Get category emoji
  */
 function getCategoryEmoji(category) {
+    // ✅ Cas spécial pour income - utiliser l'icône SVG
+    if (category === 'income') {
+        return '<img src="img/icons/income.svg" alt="Income" style="width: 20px; height: 20px; vertical-align: middle; display: inline-block;">';
+    }
+    
     // Essayer de récupérer depuis index.html
     if (typeof categoryMetadata !== 'undefined' && categoryMetadata[category]?.emoji) {
         return categoryMetadata[category].emoji;
@@ -1154,7 +1159,7 @@ function getCategoryEmoji(category) {
     if (meta && meta.emoji) return meta.emoji;
     
     const defaultEmojis = {
-        'income': '💰',
+        'income': '💰', // Fallback si l'image ne charge pas
         'housing': '🏠',
         'tech': '📱',
         'pet': '🐱',
@@ -1171,7 +1176,13 @@ function getCategoryEmoji(category) {
 function getCategoryDisplayName(category) {
     // ✅ Gérer le cas où category est null ou undefined
     if (!category) {
-        return 'Uncategorized'; // ou retourner une chaîne vide ''
+        return 'Uncategorized';
+    }
+    
+    // ✅ Cas spécial pour income - utiliser la traduction
+    if (category === 'income') {
+        const t = translations[currentLanguage] || translations['en'];
+        return t.income || 'Income';
     }
     
     // Essayer de récupérer depuis index.html
