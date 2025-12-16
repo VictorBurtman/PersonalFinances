@@ -1169,6 +1169,11 @@ function getCategoryEmoji(category) {
  * Get category display name
  */
 function getCategoryDisplayName(category) {
+    // ✅ Gérer le cas où category est null ou undefined
+    if (!category) {
+        return 'Uncategorized'; // ou retourner une chaîne vide ''
+    }
+    
     // Essayer de récupérer depuis index.html
     if (typeof categoryMetadata !== 'undefined' && categoryMetadata[category]?.displayName) {
         return categoryMetadata[category].displayName;
