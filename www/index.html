@@ -2355,14 +2355,14 @@
                     },
                     tooltip: {
                         enabled: !isEmpty,
-                        filter: function(tooltipItem) {
-                            // ✅ Ne pas afficher le tooltip si la valeur est 0 (item caché)
-                            return tooltipItem.parsed.y !== 0 && tooltipItem.parsed !== 0;
-                        },
+                        displayColors: false, // ✅ Ajoute cette ligne (optionnel, enlève le carré coloré)
                         callbacks: {
+                            title: function() {
+                                return ''; // ✅ Ajoute cette ligne pour retourner un titre vide
+                            },
                             label: function(context) {
                                 const label = context.label || '';
-                                const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1); // ✅ Ajoute cette ligne
+                                const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
                                 const value = currentChartType === 'bar' ? context.parsed.y : context.parsed;
                                 
                                 // ✅ Calculer le total des items visibles uniquement
@@ -2371,7 +2371,7 @@
                                 }, 0);
                                 
                                 const percentage = ((value / visibleTotal) * 100).toFixed(1);
-                                return `${capitalizedLabel}: ${currency}${value.toFixed(2)} (${percentage}%)`; // ✅ Utilise capitalizedLabel
+                                return `${capitalizedLabel}: ${currency}${value.toFixed(2)} (${percentage}%)`;
                             }
                         }
                     }
