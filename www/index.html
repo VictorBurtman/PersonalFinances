@@ -441,13 +441,13 @@
                                 </button>
                                 
                                 <!-- Dropdown menu -->
-                                <div id="trendCategoriesDropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 5px; background: white; border: 2px solid #dee2e6; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; min-width: 200px; max-height: 400px; overflow-y: auto;">
-                                    <div style="padding: 10px;">
-                                        <label style="display: flex; align-items: center; gap: 8px; padding: 8px; cursor: pointer; border-radius: 6px; transition: background 0.2s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='transparent'">
-                                            <input type="checkbox" id="totalTrendCheckbox" checked onchange="updateMonthlyTrendSelection()" style="width: 18px; height: 18px; cursor: pointer;">
+                                <div id="trendCategoriesDropdown" class="trend-dropdown" style="display: none;">
+                                    <div class="trend-dropdown-content">
+                                        <label class="trend-checkbox-label">
+                                            <input type="checkbox" id="totalTrendCheckbox" checked onchange="updateMonthlyTrendSelection()">
                                             <span style="font-weight: 600;" data-translate="total">Total</span>
                                         </label>
-                                        <div style="height: 1px; background: #dee2e6; margin: 8px 0;"></div>
+                                        <div class="trend-divider"></div>
                                         <div id="categoryTrendCheckboxes"></div>
                                     </div>
                                 </div>
@@ -2599,19 +2599,15 @@
                 };
                 
                 const label = document.createElement('label');
-                label.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px; cursor: pointer; border-radius: 6px; transition: background 0.2s;';
-                label.onmouseover = function() { this.style.background = '#f8f9fa'; };
-                label.onmouseout = function() { this.style.background = 'transparent'; };
+                label.className = 'trend-checkbox-label'; // ✅ Ajoute une classe
                 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = `trend-${categoryKey}`;
-                checkbox.style.cssText = 'width: 18px; height: 18px; cursor: pointer;';
                 checkbox.onchange = updateMonthlyTrendSelection;
                 
                 const span = document.createElement('span');
                 span.textContent = `${meta.emoji} ${meta.displayName}`;
-                span.style.fontSize = '0.9em';
                 
                 label.appendChild(checkbox);
                 label.appendChild(span);
