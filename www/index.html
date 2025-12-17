@@ -3761,16 +3761,18 @@
             console.log('🔄 Toggle changed to:', isRealSpendingMode);
             
             if (isRealSpendingMode) {
-                // Mode "Dépensé" activé
-                loadRealSpendingForChart();
+                // Mode "Dépensé" activé - utilise le mois du header
+                loadRealSpending();
             } else {
-                // Mode "Estimé" activé
+                // Mode "Estimé" activé - réinitialiser les données réelles
+                realSpendingData = {};
                 realSpendingChartData = {};
-                updateChart();
+                updateDisplay(); // ✅ Recalculer avec les valeurs manuelles
+                updateChart();   // ✅ Mettre à jour le graphique
             }
             
+            // Sauvegarder APRÈS avoir changé l'état
             setTimeout(() => {
-                console.log('💾 Saving isRealSpendingMode:', isRealSpendingMode);
                 saveUserData();
             }, 100);
         }
