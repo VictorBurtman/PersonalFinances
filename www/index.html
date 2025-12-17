@@ -2102,8 +2102,8 @@
                 // Calculate totals
                 let totalExpenses, totalIncome;
 
-                // ✅ NOUVEAU : Si en mode "Dépensé", utiliser les données des transactions
-                if (compareMode && realSpendingData) {
+                // ✅ MODIFIÉ : Utiliser isRealSpendingMode au lieu de compareMode
+                if (isRealSpendingMode && realSpendingData) {
                     // Calculer le total des dépenses depuis realSpendingData
                     totalExpenses = 0;
                     Object.keys(realSpendingData).forEach(key => {
@@ -2181,12 +2181,12 @@
                             statsElement.innerHTML = stats.total > 0 ? 
                                 `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
                         } else {
-                            // NOUVEAU : Ajouter la comparaison si le mode est activé
+                            // Ajouter la comparaison si le mode est activé
                             let statsHTML = stats.total > 0 ? 
                                 `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                             
-                            // Ajouter les infos de comparaison
-                            if (compareMode && stats.total > 0) {
+                            // ✅ MODIFIÉ : Utiliser isRealSpendingMode au lieu de compareMode
+                            if (isRealSpendingMode && stats.total > 0) {
                                 statsHTML += renderComparisonInfo(categoryKey, stats.total);
                             }
                             
@@ -2212,6 +2212,7 @@
                 initDragAndDrop();
             }
         }
+
 
         function updateChart() {
             // Mise à jour visuelle des boutons (Bar/Doughnut)
