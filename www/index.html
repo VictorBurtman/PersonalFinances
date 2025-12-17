@@ -6631,12 +6631,15 @@
                 // Charger les taux de change
                 loadExchangeRates();
 
-                // Définir le tooltip de l'icône de conversion
-                const conversionIcon = document.getElementById('conversionInfoIcon');
-                if (conversionIcon) {
-                    const t = translations[currentLanguage] || translations['en'];
-                    conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
-                }
+                // ✅ Définir le tooltip de l'icône de conversion
+                setTimeout(() => {
+                    const conversionIcon = document.getElementById('conversionInfoIcon');
+                    if (conversionIcon) {
+                        const t = translations[currentLanguage] || translations['en'];
+                        conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
+                    }
+                }, 500);
+
                 // ✨ Ajustement du titre
                 setTimeout(fitAppTitle, 100); 
 
