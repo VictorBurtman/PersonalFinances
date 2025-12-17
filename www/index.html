@@ -2226,18 +2226,6 @@
                 const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
 
-                // ✅ Afficher/cacher l'icône de conversion
-                const conversionIcon = document.getElementById('conversionInfoIcon');
-                if (conversionIcon) {
-                    if (isRealSpendingMode && realSpendingData) {
-                        conversionIcon.style.display = 'inline';
-                        const t = translations[currentLanguage] || translations['en'];
-                        conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
-                    } else {
-                        conversionIcon.style.display = 'none';
-                    }
-                }
-
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');
                 allSections.forEach(section => {
@@ -6644,7 +6632,12 @@
                 // Charger les taux de change
                 loadExchangeRates();
 
-
+                // Définir le tooltip de l'icône de conversion
+                const conversionIcon = document.getElementById('conversionInfoIcon');
+                if (conversionIcon) {
+                    const t = translations[currentLanguage] || translations['en'];
+                    conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
+                }
                 // ✨ Ajustement du titre
                 setTimeout(fitAppTitle, 100); 
 
