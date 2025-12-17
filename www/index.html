@@ -1039,6 +1039,103 @@
         };
         let percentageMode = 'expenses'; // 'expenses' or 'income'
 
+
+
+        // Taux de change de secours
+        const fallbackExchangeRates = {
+            'ILS': 1,
+            'USD': 0.27,
+            'EUR': 0.26,
+            'GBP': 0.22,
+            'JPY': 41,
+            'RUB': 27,
+            'CNY': 1.95,
+            'EGP': 13.5,
+            'SAR': 1.02,
+            'AED': 1.0,
+            'INR': 23,
+            'THB': 9.3,
+            'CHF': 0.24,
+            'CAD': 0.38,
+            'AUD': 0.42,
+            'MXN': 5.5,
+            'BRL': 1.6,
+            'NZD': 0.46
+        };
+
+        // Taux actuels (chargés depuis Firestore)
+        let liveExchangeRates = { ...fallbackExchangeRates };
+
+        /**
+         * Charger les taux depuis Firestore (1 lecture par session)
+         */
+        async function loadExchangeRates() {
+            try {
+                const doc = await db.collection('config').doc('exchangeRates').get();
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    liveExchangeRates = {
+                        ILS: data.ILS || 1,
+                        USD: data.USD || fallbackExchangeRates.USD,
+                        EUR: data.EUR || fallbackExchangeRates.EUR,
+                        GBP: data.GBP || fallbackExchangeRates.GBP,
+                        JPY: data.JPY || fallbackExchangeRates.JPY,
+                        RUB: data.RUB || fallbackExchangeRates.RUB,
+                        CNY: data.CNY || fallbackExchangeRates.CNY,
+                        EGP: data.EGP || fallbackExchangeRates.EGP,
+                        SAR: data.SAR || fallbackExchangeRates.SAR,
+                        AED: data.AED || fallbackExchangeRates.AED,
+                        INR: data.INR || fallbackExchangeRates.INR,
+                        THB: data.THB || fallbackExchangeRates.THB,
+                        CHF: data.CHF || fallbackExchangeRates.CHF,
+                        CAD: data.CAD || fallbackExchangeRates.CAD,
+                        AUD: data.AUD || fallbackExchangeRates.AUD,
+                        MXN: data.MXN || fallbackExchangeRates.MXN,
+                        BRL: data.BRL || fallbackExchangeRates.BRL,
+                        NZD: data.NZD || fallbackExchangeRates.NZD
+                    };
+                    
+                    const updatedAt = data.updatedAt?.toDate();
+                    console.log('✅ Exchange rates loaded from Firestore', updatedAt);
+                } else {
+                    console.warn('⚠️ No exchange rates in Firestore, using fallback');
+                }
+            } catch (error) {
+                console.error('❌ Error loading exchange rates:', error);
+            }
+        }
+
+        /**
+         * Convertir un montant dans la devise de l'app
+         */
+        function convertToAppCurrency(amount, fromCurrency) {
+            if (!fromCurrency || fromCurrency === currency) {
+                return amount;
+            }
+            
+            // Map des symboles vers codes ISO
+            const currencyMap = {
+                '₪': 'ILS', '$': 'USD', '€': 'EUR', '£': 'GBP',
+                '¥': 'JPY', '₽': 'RUB', 'E£': 'EGP', '﷼': 'SAR',
+                'د.إ': 'AED', '₹': 'INR', '฿': 'THB',
+                'CA$': 'CAD', 'A$': 'AUD', 'MX$': 'MXN',
+                'R$': 'BRL', 'NZ$': 'NZD'
+            };
+            
+            const normalizedFrom = currencyMap[fromCurrency] || fromCurrency;
+            const normalizedTo = currencyMap[currency] || currency;
+            
+            const fromRate = liveExchangeRates[normalizedFrom] || fallbackExchangeRates[normalizedFrom] || 1;
+            const toRate = liveExchangeRates[normalizedTo] || fallbackExchangeRates[normalizedTo] || 1;
+            
+            const amountInILS = amount / fromRate;
+            const convertedAmount = amountInILS * toRate;
+            
+            return convertedAmount;
+        }
+
+
         // Store category metadata (emoji, display name)
         let categoryMetadata = {};
 
@@ -3575,7 +3672,7 @@
                 const result = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
-                    isLabeled: true, // Only labeled transactions
+                    isLabeled: true,
                     limit: 1000
                 });
                 
@@ -3583,29 +3680,33 @@
                 
                 // Group by category and sum amounts
                 realSpendingData = {};
-                let realIncomeTotal = 0; // ✅ NOUVEAU : Calculer le revenu total
+                let realIncomeTotal = 0;
                 
                 transactions.forEach(txn => {
-                    // ✅ NOUVEAU : Traiter les revenus séparément
+                    // ✅ NOUVEAU : Convertir le montant dans la devise de l'app
+                    const convertedAmount = convertToAppCurrency(
+                        Math.abs(txn.chargedAmount),
+                        txn.currency
+                    );
+                    
+                    // Traiter les revenus
                     if (txn.category === 'income' && txn.chargedAmount > 0) {
-                        realIncomeTotal += Math.abs(txn.chargedAmount);
+                        realIncomeTotal += convertedAmount;
                     }
                     // Traiter les dépenses
                     else if (txn.category && txn.category !== 'income') {
                         if (!realSpendingData[txn.category]) {
                             realSpendingData[txn.category] = 0;
                         }
-                        // Prendre la valeur absolue (ignorer le signe négatif)
-                        // Et ignorer les montants positifs (remboursements/revenus)
                         if (txn.chargedAmount < 0) {
-                            realSpendingData[txn.category] += Math.abs(txn.chargedAmount);
+                            realSpendingData[txn.category] += convertedAmount;
                         }
                     }
                 });
                 
-                // ✅ NOUVEAU : Stocker le revenu total pour l'affichage
+                // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
-                                
+                
                 // Refresh display with comparison
                 updateDisplay();
                 
@@ -3613,7 +3714,8 @@
                 console.error('Error loading real spending:', error);
             }
         }
-
+        
+        
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
         // ============================================
@@ -3647,38 +3749,20 @@
         */
 
         async function loadRealSpendingForChart() {
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
+                return;
+            }
+            
+            const monthKey = document.getElementById('compareMonth')?.value;
+            if (!monthKey) return;
+            
+            const [year, month] = monthKey.split('-');
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+            
             try {
-                console.log('🔍 Step 1: Start');
-                
-                if (!firebase.functions || !currentUser) {
-                    console.log('Cannot load real spending: Firebase not initialized or user not logged in');
-                    return;
-                }
-                
-                console.log('🔍 Step 2: Firebase OK');
-                
-                const monthSelect = document.getElementById('compareMonth');
-                console.log('🔍 Step 3: monthSelect =', monthSelect);
-                
-                const monthKey = monthSelect ? monthSelect.value : null;
-                console.log('🔍 Step 4: monthKey =', monthKey);
-                
-                if (!monthKey) {
-                    console.log('⚠️ No monthKey, returning');
-                    return;
-                }
-                
-                console.log('🔍 Step 5: Splitting monthKey');
-                const [year, month] = monthKey.split('-');
-                console.log('🔍 Step 6: year =', year, 'month =', month);
-                
-                const startDate = new Date(year, month - 1, 1);
-                const endDate = new Date(year, month, 0, 23, 59, 59);
-                console.log('🔍 Step 7: Dates created');
-                
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
-                console.log('🔍 Step 8: Calling getTransactions');
-                
                 const result = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
@@ -3686,10 +3770,7 @@
                     limit: 1000
                 });
                 
-                console.log('🔍 Step 9: Got result');
-                
                 const transactions = result.data.transactions || [];
-                console.log('🔍 Step 10: transactions count =', transactions.length);
                 
                 realSpendingChartData = {};
                 
@@ -3699,12 +3780,15 @@
                             realSpendingChartData[txn.category] = 0;
                         }
                         if (txn.chargedAmount < 0) {
-                            realSpendingChartData[txn.category] += Math.abs(txn.chargedAmount);
+                            // ✅ NOUVEAU : Convertir le montant
+                            const convertedAmount = convertToAppCurrency(
+                                Math.abs(txn.chargedAmount),
+                                txn.currency
+                            );
+                            realSpendingChartData[txn.category] += convertedAmount;
                         }
                     }
                 });
-                
-                console.log('🔍 Step 11: Data aggregated');
                 
                 Object.keys(realSpendingChartData).forEach(category => {
                     if (!categoryBaseColors[category]) {
@@ -3712,15 +3796,10 @@
                     }
                 });
                 
-                console.log('🔍 Step 12: Colors assigned');
-                
                 updateChart();
                 
-                console.log('🔍 Step 13: Chart updated ✅');
-                
             } catch (error) {
-                console.error('💥 Error at some step:', error);
-                console.error('💥 Error stack:', error.stack);
+                console.error('Error loading real spending for chart:', error);
             }
         }
 
@@ -6520,6 +6599,8 @@
                 populateMonthDropdown();
                 loadRealSpending();
                 loadMonthlyTrendChart();
+                // Charger les taux de change
+                loadExchangeRates();
 
 
                 // ✨ Ajustement du titre
@@ -6530,7 +6611,6 @@
                 setTimeout(initializeApp, 100);
             }
         }
-
 
 
         // Initialize on load (Bloc final simplifié et corrigé)

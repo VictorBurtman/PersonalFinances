@@ -3,6 +3,8 @@ import admin from 'firebase-admin';
 import { CompanyTypes, createScraper } from 'israeli-bank-scrapers';
 import CryptoJS from 'crypto-js';
 import chromium from '@sparticuz/chromium';
+import axios from 'axios'; // ✅ Change require en import
+import functions from 'firebase-functions'; // ✅ Ajoute cette ligne pour les scheduled functions
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -938,5 +940,91 @@ export const getUserPreferences = onCall(async (request) => {
   } catch (error) {
     console.error('Error getting user preferences:', error);
     throw new HttpsError('internal', 'Failed to get user preferences');
+  }
+});
+
+
+// ============================================
+// EXCHANGE RATES - Mise à jour automatique
+// ============================================
+
+export const updateExchangeRates = functions.pubsub
+  .schedule('0 2 * * *')
+  .timeZone('Asia/Jerusalem')
+  .onRun(async (context) => {
+    try {
+      console.log('Fetching exchange rates...');
+      
+      const response = await axios.get('https://open.er-api.com/v6/latest/ILS');
+      
+      if (response.data.result === 'success' && response.data.rates) {
+        const rates = {
+          ILS: 1,
+          USD: response.data.rates.USD,
+          EUR: response.data.rates.EUR,
+          GBP: response.data.rates.GBP,
+          JPY: response.data.rates.JPY,
+          RUB: response.data.rates.RUB,
+          CNY: response.data.rates.CNY,
+          EGP: response.data.rates.EGP,
+          SAR: response.data.rates.SAR,
+          AED: response.data.rates.AED,
+          INR: response.data.rates.INR,
+          THB: response.data.rates.THB,
+          CHF: response.data.rates.CHF,
+          CAD: response.data.rates.CAD,
+          AUD: response.data.rates.AUD,
+          MXN: response.data.rates.MXN,
+          BRL: response.data.rates.BRL,
+          NZD: response.data.rates.NZD,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await db.collection('config').doc('exchangeRates').set(rates);
+        
+        console.log('✅ Exchange rates updated successfully');
+        return null;
+      } else {
+        throw new Error('Invalid API response');
+      }
+    } catch (error) {
+      console.error('❌ Error updating exchange rates:', error);
+      return null;
+    }
+  });
+
+export const updateExchangeRatesManual = functions.https.onCall(async (data, context) => {
+  try {
+    const response = await axios.get('https://open.er-api.com/v6/latest/ILS');
+    
+    if (response.data.result === 'success' && response.data.rates) {
+      const rates = {
+        ILS: 1,
+        USD: response.data.rates.USD,
+        EUR: response.data.rates.EUR,
+        GBP: response.data.rates.GBP,
+        JPY: response.data.rates.JPY,
+        RUB: response.data.rates.RUB,
+        CNY: response.data.rates.CNY,
+        EGP: response.data.rates.EGP,
+        SAR: response.data.rates.SAR,
+        AED: response.data.rates.AED,
+        INR: response.data.rates.INR,
+        THB: response.data.rates.THB,
+        CHF: response.data.rates.CHF,
+        CAD: response.data.rates.CAD,
+        AUD: response.data.rates.AUD,
+        MXN: response.data.rates.MXN,
+        BRL: response.data.rates.BRL,
+        NZD: response.data.rates.NZD,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await db.collection('config').doc('exchangeRates').set(rates);
+      
+      return { success: true, rates: rates };
+    }
+  } catch (error) {
+    throw new functions.https.HttpsError('internal', error.message);
   }
 });
