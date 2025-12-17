@@ -1820,9 +1820,6 @@
 
         // Firestore functions
 
-
-
-        
         async function loadUserData() {
             if (!currentUser) return;
             
@@ -1896,6 +1893,17 @@
                     console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode);
                     
                     categoryMetadata = data.categoryMetadata || {};
+                    
+                    // ✅ NOUVEAU : Charger le mois sélectionné
+                    if (data.selectedMonth) {
+                        setTimeout(() => {
+                            const monthSelect = document.getElementById('compareMonth');
+                            if (monthSelect) {
+                                monthSelect.value = data.selectedMonth;
+                                console.log('📅 Loaded selected month:', data.selectedMonth);
+                            }
+                        }, 100);
+                    }
                     
                     // NOUVEAU : Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
@@ -2005,8 +2013,6 @@
                 console.error('Error loading user data:', error);
             }
         }
-
-
 
         // AJOUTE ICI : Language change handler
         document.getElementById('languageSelect')?.addEventListener('change', async function(e) {
@@ -6649,16 +6655,6 @@
                 
                 // ✅ Initialiser le sélecteur de mois
                 populateMonthDropdown();
-                // ✅ Charger le mois sauvegardé
-                if (currentUser && db) {
-                    const userDoc = db.collection('users').doc(currentUser.uid).get();
-                    if (userDoc.exists && userDoc.data().selectedMonth) {
-                        const monthSelect = document.getElementById('compareMonth');
-                        if (monthSelect) {
-                            monthSelect.value = userDoc.data().selectedMonth;
-                        }
-                    }
-                }
                 loadRealSpending();
                 loadMonthlyTrendChart();
                 // Charger les taux de change
