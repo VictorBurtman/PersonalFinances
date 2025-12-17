@@ -1980,7 +1980,8 @@
                             console.log('✅ Toggle set to:', budgetToggle.checked);
                             
                             if (isRealSpendingMode) {
-                                loadRealSpendingForChart();
+                                loadRealSpending(); // ✅ Pour les totaux
+                                loadRealSpendingForChart(); // ✅ Pour le graphique
                             }
                         }
                     }, 300);
