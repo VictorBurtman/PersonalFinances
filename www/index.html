@@ -124,7 +124,6 @@
             try {
                 // Récupérer la version locale
                 const localVersion = localStorage.getItem(CURRENT_VERSION_KEY);
-                console.log('📱 Version locale:', localVersion || 'Aucune');
                 
                 // Fetch la version serveur (bypass TOUS les caches)
                 const response = await fetch(VERSION_CHECK_URL, {
@@ -143,11 +142,9 @@
                 
                 const versionData = await response.json();
                 const serverVersion = versionData.version;
-                console.log('☁️ Version serveur:', serverVersion);
                 
                 // Première installation (pas de version locale)
                 if (!localVersion) {
-                    console.log('🆕 Première installation, enregistrement de la version');
                     localStorage.setItem(CURRENT_VERSION_KEY, serverVersion);
                     window.APP_VERSION = serverVersion;
                     updateVersionDisplay();
@@ -156,8 +153,6 @@
                 
                 // Comparer les versions
                 if (localVersion !== serverVersion) {
-                    console.log('🔄 Nouvelle version détectée!');
-                    console.log('📦 Mise à jour:', localVersion, '→', serverVersion);
                     
                     // ✅ Récupérer la langue depuis localStorage
                     const userLang = localStorage.getItem('language') || 'en';
@@ -221,7 +216,6 @@
                         
                         // 2. Mettre à jour la version locale
                         localStorage.setItem(CURRENT_VERSION_KEY, serverVersion);
-                        console.log('✅ Version mise à jour dans localStorage');
                         
                         // 3. Recharger l'application
                         window.location.reload(true);
@@ -231,7 +225,6 @@
                         window.location.reload(true);
                     }
                 } else {
-                    console.log('✅ Application à jour (v' + serverVersion + ')');
                     window.APP_VERSION = serverVersion;
                     updateVersionDisplay();
                 }
@@ -3683,11 +3676,25 @@
                 let realIncomeTotal = 0;
                 
                 transactions.forEach(txn => {
-                    // ✅ NOUVEAU : Convertir le montant dans la devise de l'app
+                    // ✅ DEBUG : Logger les transactions de revenus
+                    if (txn.category === 'income') {
+                        console.log('💰 Income transaction:', {
+                            amount: txn.chargedAmount,
+                            currency: txn.currency,
+                            description: txn.description
+                        });
+                    }
+                    
+                    // Convertir le montant dans la devise de l'app
                     const convertedAmount = convertToAppCurrency(
                         Math.abs(txn.chargedAmount),
                         txn.currency
                     );
+                    
+                    // ✅ DEBUG : Logger la conversion
+                    if (txn.category === 'income') {
+                        console.log('💱 Converted to:', convertedAmount, currency);
+                    }
                     
                     // Traiter les revenus
                     if (txn.category === 'income' && txn.chargedAmount > 0) {
@@ -3703,6 +3710,10 @@
                         }
                     }
                 });
+                
+                // ✅ DEBUG : Logger le total final
+                console.log('💰 Total income calculated:', realIncomeTotal);
+                console.log('📊 Exchange rates used:', liveExchangeRates);
                 
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
@@ -3943,7 +3954,6 @@
                     overlay.classList.remove('active');
                     document.body.style.overflow = '';
                 }
-                console.error('Error deleting item:', error);
                 alert('Error deleting item: ' + error.message);
             }
         }
