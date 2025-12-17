@@ -3671,11 +3671,14 @@
                 
                 const transactions = result.data.transactions || [];
                 
+                // ✅ Filtrer les transactions exclues
+                const activeTransactions = transactions.filter(txn => !txn.excluded);
+                
                 // Group by category and sum amounts
                 realSpendingData = {};
                 let realIncomeTotal = 0;
                 
-                transactions.forEach(txn => {
+                activeTransactions.forEach(txn => {
                     // ✅ DEBUG : Logger les transactions de revenus
                     if (txn.category === 'income') {
                         console.log('💰 Income transaction:', {
@@ -3725,8 +3728,9 @@
                 console.error('Error loading real spending:', error);
             }
         }
-        
-        
+
+
+
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
         // ============================================
@@ -3758,7 +3762,6 @@
         /**
          * Load real spending data for chart
         */
-
         async function loadRealSpendingForChart() {
             if (!firebase.functions || !currentUser) {
                 console.log('Cannot load real spending: Firebase not initialized or user not logged in');
@@ -3783,15 +3786,18 @@
                 
                 const transactions = result.data.transactions || [];
                 
+                // ✅ Filtrer les transactions exclues
+                const activeTransactions = transactions.filter(txn => !txn.excluded);
+                
                 realSpendingChartData = {};
                 
-                transactions.forEach(txn => {
+                activeTransactions.forEach(txn => {
                     if (txn.category && txn.category !== 'income') {
                         if (!realSpendingChartData[txn.category]) {
                             realSpendingChartData[txn.category] = 0;
                         }
                         if (txn.chargedAmount < 0) {
-                            // ✅ NOUVEAU : Convertir le montant
+                            // Convertir le montant
                             const convertedAmount = convertToAppCurrency(
                                 Math.abs(txn.chargedAmount),
                                 txn.currency
@@ -3813,6 +3819,8 @@
                 console.error('Error loading real spending for chart:', error);
             }
         }
+
+
 
         /**
          * Generate random color for category
