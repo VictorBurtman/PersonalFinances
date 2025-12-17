@@ -2931,8 +2931,8 @@ async function importCSVTransactions(fileName, bankName, transactions) {
             batch.set(docRef, {
                 ...transaction,
                 id: docRef.id,
-                isLabeled: false,
-                category: null,
+                isLabeled: transaction.isLabeled || false, // ✅ Garde la valeur du transaction
+                category: transaction.category || null, // ✅ Garde la valeur du transaction
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
         });
