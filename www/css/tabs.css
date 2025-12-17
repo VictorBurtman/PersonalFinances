@@ -2688,6 +2688,8 @@ body.dark-mode .chartjs-legend span {
         width: 100%;
     }
     
+
+
     /* Sync Status en colonne */
     .sync-status {
         flex-direction: column;
@@ -3509,3 +3511,10 @@ body.dark-mode .trend-count-badge {
     color: white;
 }
 
+#conversionInfoIcon:hover {
+    color: rgba(255,255,255,1);
+}
+
+body.dark-mode #conversionInfoIcon {
+    color: rgba(255,255,255,0.7);
+}

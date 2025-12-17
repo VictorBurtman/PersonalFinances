@@ -388,7 +388,10 @@
                             </div>
                         </div>
                         <div id="incomeDisplay" style="display: none; margin-bottom: 15px; opacity: 0.9;">
-                            <h3 style="font-size: 1em; margin-bottom: 5px;" data-translate="totalIncome">Total Income</h3>
+                            <h3 style="font-size: 1em; margin-bottom: 5px;">
+                                <span data-translate="totalIncome">Total Income</span>
+                                <span id="conversionInfoIcon" style="display: none; cursor: help; margin-left: 5px; color: rgba(255,255,255,0.7);" title="">ⓘ</span>
+                            </h3>
                             <div style="font-size: 1.8em; font-weight: 600;" id="totalIncome">₪0</div>
                         </div>
                         <h2 data-translate="totalExpenses">Total Monthly Expenses</h2>
@@ -2192,7 +2195,7 @@
                 // Calculate totals
                 let totalExpenses, totalIncome;
 
-                // ✅ MODIFIÉ : Utiliser isRealSpendingMode au lieu de compareMode
+                // ✅ Utiliser isRealSpendingMode au lieu de compareMode
                 if (isRealSpendingMode && realSpendingData) {
                     // Calculer le total des dépenses depuis realSpendingData
                     totalExpenses = 0;
@@ -2222,6 +2225,18 @@
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
+
+                // ✅ Afficher/cacher l'icône de conversion
+                const conversionIcon = document.getElementById('conversionInfoIcon');
+                if (conversionIcon) {
+                    if (isRealSpendingMode && realSpendingData) {
+                        conversionIcon.style.display = 'inline';
+                        const t = translations[currentLanguage] || translations['en'];
+                        conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
+                    } else {
+                        conversionIcon.style.display = 'none';
+                    }
+                }
 
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');
@@ -2275,7 +2290,7 @@
                             let statsHTML = stats.total > 0 ? 
                                 `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                             
-                            // ✅ MODIFIÉ : Utiliser isRealSpendingMode au lieu de compareMode
+                            // ✅ Utiliser isRealSpendingMode au lieu de compareMode
                             if (isRealSpendingMode && stats.total > 0) {
                                 statsHTML += renderComparisonInfo(categoryKey, stats.total);
                             }
@@ -2302,6 +2317,7 @@
                 initDragAndDrop();
             }
         }
+
 
 
         function updateChart() {
