@@ -1599,10 +1599,13 @@
             });
 
             // Mettre à jour le tooltip de conversion
+            // Mettre à jour le tooltip de conversion
             const conversionIcon = document.getElementById('conversionInfoIcon');
             if (conversionIcon) {
                 const t = translations[currentLanguage] || translations['en'];
-                conversionIcon.title = t.conversionInfo || 'Amounts converted using daily exchange rates';
+                const tooltipText = t.conversionInfo || 'Amounts converted using daily exchange rates';
+                conversionIcon.setAttribute('data-tooltip', tooltipText);
+                conversionIcon.title = tooltipText; // Garde aussi title pour desktop
             }
         }
 

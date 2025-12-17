@@ -185,6 +185,8 @@ const translations = {
         income: "Income",
         expenses: "Expenses",
         all: "All",
+        conversionInfo: "Amounts are converted using daily exchange rates and may be approximate",
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -679,6 +681,8 @@ const translations = {
         income: "Revenus",
         expenses: "Dépenses",
         all: "Tous",
+        conversionInfo: "Les montants sont convertis selon les taux de change du jour et peuvent être approximatifs",
+
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -1162,6 +1166,8 @@ const translations = {
         income: "הכנסות",
         expenses: "הוצאות",
         all: "הכל",
+        conversionInfo: "הסכומים מומרים לפי שערי חליפין יומיים ועשויים להיות משוערים",
+
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1645,6 +1651,8 @@ const translations = {
         income: "Ingresos",
         expenses: "Gastos",
         all: "Todos",
+        conversionInfo: "Los montos se convierten usando tasas de cambio diarias y pueden ser aproximados",
+
 
 
         // Toasts & notifications
@@ -2129,6 +2137,8 @@ const translations = {
         income: "Доходы",
         expenses: "Расходы",
         all: "Все",
+        conversionInfo: "Суммы конвертируются по ежедневным курсам и могут быть приблизительными",
+
 
 
         // Toasts & notifications
@@ -2613,6 +2623,8 @@ const translations = {
         income: "الدخل",
         expenses: "النفقات",
         all: "الكل",
+        conversionInfo: "يتم تحويل المبالغ باستخدام أسعار الصرف اليومية وقد تكون تقريبية",
+
 
 
         // Toasts & notifications

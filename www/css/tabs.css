@@ -3518,3 +3518,51 @@ body.dark-mode .trend-count-badge {
 body.dark-mode #conversionInfoIcon {
     color: rgba(255,255,255,0.7);
 }
+
+/* Tooltip custom pour mobile */
+#conversionInfoIcon {
+    position: relative;
+}
+
+#conversionInfoIcon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 1000;
+}
+
+#conversionInfoIcon:hover::after,
+#conversionInfoIcon:active::after {
+    opacity: 1;
+}
+
+/* Flèche du tooltip */
+#conversionInfoIcon::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 1000;
+}
+
+#conversionInfoIcon:hover::before,
+#conversionInfoIcon:active::before {
+    opacity: 1;
+}
