@@ -3667,6 +3667,18 @@
             const monthKey = document.getElementById('compareMonth')?.value;
             if (!monthKey) return;
             
+            // ✅ Sauvegarder le mois sélectionné
+            if (currentUser && db) {
+                try {
+                    await db.collection('users').doc(currentUser.uid).set({
+                        selectedMonth: monthKey
+                    }, { merge: true });
+                } catch (error) {
+                    console.error('Error saving selected month:', error);
+                }
+            }
+
+
             const [year, month] = monthKey.split('-');
             
             // Calculate start and end dates for the month
@@ -6637,6 +6649,16 @@
                 
                 // ✅ Initialiser le sélecteur de mois
                 populateMonthDropdown();
+                // ✅ Charger le mois sauvegardé
+                if (currentUser && db) {
+                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    if (userDoc.exists && userDoc.data().selectedMonth) {
+                        const monthSelect = document.getElementById('compareMonth');
+                        if (monthSelect) {
+                            monthSelect.value = userDoc.data().selectedMonth;
+                        }
+                    }
+                }
                 loadRealSpending();
                 loadMonthlyTrendChart();
                 // Charger les taux de change
