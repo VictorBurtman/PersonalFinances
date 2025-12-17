@@ -388,6 +388,9 @@ function populateSourceFilter() {
 /**
  * Apply filters and sorting, then render transactions
  */
+/**
+ * Apply filters and sorting, then render transactions
+ */
 async function applyFilters() {
     // Get filter values
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
@@ -395,6 +398,7 @@ async function applyFilters() {
     const sourceFilter = document.getElementById('sourceFilter')?.value || '';
     const categoryFilter = document.getElementById('categoryFilter')?.value || '';
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
+    const typeFilter = document.getElementById('typeFilter')?.value || 'all'; // ✅ AJOUTE
     
     // ✅ Afficher/cacher le bouton clear search
     const clearSearchBtn = document.getElementById('clearSearchBtn');
@@ -411,7 +415,8 @@ async function applyFilters() {
                     monthFilter: monthFilter,
                     sourceFilter: sourceFilter,
                     categoryFilter: categoryFilter,
-                    searchFilter: searchFilter
+                    searchFilter: searchFilter,
+                    typeFilter: typeFilter // ✅ AJOUTE
                 }
             }, { merge: true });
         } catch (error) {
@@ -429,6 +434,14 @@ async function applyFilters() {
             return false;
         }
         // 'all' = no filter on labeled status
+        
+        // ✅ AJOUTE : Filter by type (income/expenses)
+        if (typeFilter === 'expenses' && txn.chargedAmount > 0) {
+            return false;
+        }
+        if (typeFilter === 'income' && txn.chargedAmount < 0) {
+            return false;
+        }
         
         // Filter by month
         if (monthFilter) {
@@ -479,7 +492,6 @@ async function applyFilters() {
     // ✅ Mettre à jour la couleur du bouton filtres
     updateFiltersButtonColor();
 }
-
 
 /**
  * Clear search filter
