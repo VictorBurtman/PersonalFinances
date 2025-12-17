@@ -2804,7 +2804,8 @@
                     backgroundColor: 'rgba(102, 126, 234, 0.1)',
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.4,
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',  // ✅ Couleur de remplissage transparente
+                    tension: 0,
                     pointRadius: 5,
                     pointHoverRadius: 7,
                     pointBackgroundColor: '#667eea',
@@ -2827,8 +2828,8 @@
                         borderColor: color,
                         backgroundColor: color + '20', // Ajoute transparence
                         borderWidth: 2,
-                        fill: false,
-                        tension: 0.4,
+                        fill: true,
+                        tension: 0,
                         pointRadius: 4,
                         pointHoverRadius: 6,
                         pointBackgroundColor: color,
