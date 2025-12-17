@@ -2241,7 +2241,7 @@
             const aggregatedItems = {};
 
             // ✅ MODE DÉPENSÉ: Utiliser les vraies transactions par catégorie
-            if (isRealSpendingMode && Object.keys(realSpendingChartData).length > 0) {
+            if (isRealSpendingMode && realSpendingChartData && Object.keys(realSpendingChartData).length > 0) {
                 Object.keys(realSpendingChartData).forEach(category => {
                     const amount = realSpendingChartData[category];
                     if (amount > 0) {
@@ -2365,7 +2365,7 @@
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
-                layout: {                    // ← AJOUTE CES 5 LIGNES ICI
+                layout: {
                     padding: {
                         bottom: 20
                     }
@@ -2378,7 +2378,7 @@
                     legend: {
                         display: !isEmpty,
                         position: 'bottom',
-                        align: 'center', // ✅ Ajoute cette ligne
+                        align: 'center',
                         labels: {
                             padding: 10,
                             font: { size: 11 },
@@ -2387,7 +2387,7 @@
                             boxHeight: 15,
                             generateLabels: function(chart) {
                                 return sortedLabels.map((label, i) => ({
-                                    text: label.charAt(0).toUpperCase() + label.slice(1), // ✅ Majuscule
+                                    text: label.charAt(0).toUpperCase() + label.slice(1),
                                     fillStyle: sortedColors[i],
                                     strokeStyle: sortedColors[i],
                                     lineWidth: 0,
@@ -2406,10 +2406,10 @@
                     },
                     tooltip: {
                         enabled: !isEmpty,
-                        displayColors: false, // ✅ Ajoute cette ligne (optionnel, enlève le carré coloré)
+                        displayColors: false,
                         callbacks: {
                             title: function() {
-                                return ''; // ✅ Ajoute cette ligne pour retourner un titre vide
+                                return '';
                             },
                             label: function(context) {
                                 const label = context.label || '';
@@ -2488,12 +2488,24 @@
                 });
             }
             
-            // ✅ Calculer le total des items visibles uniquement
-            const visibleTotal = isEmpty ? 0 : sortedData.reduce((sum, value, i) => {
-                return hiddenItems[sortedLabels[i]] ? sum : sum + value;
-            }, 0);
+            // ✅ MODIFIÉ : Utiliser le total calculé dans updateDisplay() en mode "Dépensé"
+            let displayTotal;
+            if (isRealSpendingMode && realSpendingData) {
+                // Mode "Dépensé" : calculer le total depuis realSpendingData
+                displayTotal = 0;
+                Object.keys(realSpendingData).forEach(key => {
+                    if (key !== '_incomeTotal') {
+                        displayTotal += realSpendingData[key] || 0;
+                    }
+                });
+            } else {
+                // Mode "Estimé" : utiliser le total des items visibles
+                displayTotal = isEmpty ? 0 : sortedData.reduce((sum, value, i) => {
+                    return hiddenItems[sortedLabels[i]] ? sum : sum + value;
+                }, 0);
+            }
             
-            document.getElementById('totalAmount').textContent = `${currency}${visibleTotal.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = `${currency}${displayTotal.toFixed(2)}`;
         }
 
         // ============================================
