@@ -181,6 +181,10 @@ const translations = {
         cancel: "Cancel",
         selectCategories: "Select Categories",
         monthlySpendingTrend: "Monthly Spending Trend", 
+        type: "Type",
+        income: "Income",
+        expenses: "Expenses",
+        all: "All",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Category renamed successfully! {count} transaction(s) updated.",
@@ -671,6 +675,10 @@ const translations = {
         cancel: "Annuler",
         selectCategories: "Sélectionner les catégories",
         monthlySpendingTrend: "Évolution mensuelle des dépenses",
+        type: "Type",
+        income: "Revenus",
+        expenses: "Dépenses",
+        all: "Tous",
 
         // Alerts & notifications
         categoryRenamedSuccess: "Catégorie renommée avec succès ! {count} transaction(s) mise(s) à jour.",
@@ -1150,6 +1158,10 @@ const translations = {
         cancel: "ביטול",
         selectCategories: "בחר קטגוריות",
         monthlySpendingTrend: "מגמת הוצאות חודשית",
+        type: "סוג",
+        income: "הכנסות",
+        expenses: "הוצאות",
+        all: "הכל",
 
         // Toasts & notifications
         categoryRenamedSuccess: "הקטגוריה שונתה! {count} עסקאות עודכנו.",
@@ -1629,6 +1641,10 @@ const translations = {
         cancel: "Cancelar",
         selectCategories: "Seleccionar categorías",
         monthlySpendingTrend: "Tendencia de gastos mensuales",
+        type: "Tipo",
+        income: "Ingresos",
+        expenses: "Gastos",
+        all: "Todos",
 
 
         // Toasts & notifications
@@ -2109,6 +2125,10 @@ const translations = {
         cancel: "Отмена",
         selectCategories: "Выбрать категории",
         monthlySpendingTrend: "Месячная динамика расходов",
+        type: "Тип",
+        income: "Доходы",
+        expenses: "Расходы",
+        all: "Все",
 
 
         // Toasts & notifications
@@ -2589,6 +2609,10 @@ const translations = {
         cancel: "إلغاء",
         selectCategories: "اختيار الفئات",
         monthlySpendingTrend: "اتجاه الإنفاق الشهري",
+        type: "النوع",
+        income: "الدخل",
+        expenses: "النفقات",
+        all: "الكل",
 
 
         // Toasts & notifications

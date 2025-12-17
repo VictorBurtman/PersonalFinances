@@ -233,6 +233,12 @@ async function loadTransactions() {
                 searchInput.value = savedFilters.searchFilter;
             }
             
+            // ✅ Type filter - NOUVEAU
+            const typeSelect = document.getElementById('typeFilter');
+            if (typeSelect && savedFilters.typeFilter !== undefined) {
+                typeSelect.value = savedFilters.typeFilter;
+            }
+            
             // ✅ Sort filter
             const sortSelect = document.getElementById('sortFilter');
             if (sortSelect && savedFilters.sortFilter) {
@@ -287,7 +293,6 @@ async function loadTransactions() {
         isLoadingTransactions = false;
     }
 }
-
 
 /**
  * Populate month filter dropdown with available months
@@ -475,6 +480,7 @@ async function applyFilters() {
     updateFiltersButtonColor();
 }
 
+
 /**
  * Clear search filter
  */
@@ -506,18 +512,20 @@ function updateFiltersButtonColor() {
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
     const monthFilter = document.getElementById('monthFilter')?.value || '';
     const sourceFilter = document.getElementById('sourceFilter')?.value || '';
-    const categoryFilter = document.getElementById('categoryFilter')?.value || ''; // ✅ Ajoute cette ligne
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
     const searchFilter = document.getElementById('searchFilter')?.value || '';
+    const typeFilter = document.getElementById('typeFilter')?.value || 'all'; // ✅ AJOUTE
     
-    console.log('Filters:', { labelFilter, monthFilter, sourceFilter, categoryFilter, searchFilter }); // ✅ Ajoute categoryFilter
+    console.log('Filters:', { labelFilter, monthFilter, sourceFilter, categoryFilter, searchFilter, typeFilter });
     
     // Vérifier si au moins un filtre est actif
     const hasActiveFilters = 
         labelFilter !== 'all' ||
         monthFilter !== '' ||
         sourceFilter !== '' ||
-        categoryFilter !== '' || // ✅ Ajoute cette ligne
-        searchFilter !== '';
+        categoryFilter !== '' ||
+        searchFilter !== '' ||
+        typeFilter !== 'all'; // ✅ AJOUTE
     
     console.log('hasActiveFilters:', hasActiveFilters);
     
@@ -630,7 +638,7 @@ function clearFilters() {
     const monthFilter = document.getElementById('monthFilter');
     if (monthFilter) monthFilter.value = '';
     
-    // ✅ AJOUTE : Reset source filter
+    // Reset source filter
     const sourceFilter = document.getElementById('sourceFilter');
     if (sourceFilter) sourceFilter.value = '';
     
@@ -641,6 +649,10 @@ function clearFilters() {
     // Reset search filter
     const searchFilter = document.getElementById('searchFilter');
     if (searchFilter) searchFilter.value = '';
+    
+    // ✅ AJOUTE : Reset type filter
+    const typeFilter = document.getElementById('typeFilter');
+    if (typeFilter) typeFilter.value = 'all';
     
     // Sort et Limit ne sont PAS touchés (comme voulu)
     
