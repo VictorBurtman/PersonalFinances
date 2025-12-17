@@ -3737,6 +3737,12 @@
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
                 
+                // Refresh display with conversion icon (avec délai pour s'assurer que le DOM est prêt)
+                setTimeout(() => {
+                    updateDisplay();
+                }, 200);
+
+
                 // Refresh display with comparison
                 updateDisplay();
                 
