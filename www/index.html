@@ -3519,15 +3519,33 @@
             const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
             
+            // ✅ Récupérer les traductions
+            const t = translations[currentLanguage] || translations['en'];
+            
+            // ✅ Tableau des noms de mois en clés de traduction
+            const monthKeys = [
+                'january', 'february', 'march', 'april', 'may', 'june',
+                'july', 'august', 'september', 'october', 'november', 'december'
+            ];
+            
             // Generate last 12 months
             for (let i = 0; i < 12; i++) {
                 const date = new Date(currentYear, currentMonth - i, 1);
-                const monthName = date.toLocaleString(currentLanguage || 'en', { month: 'long', year: 'numeric' });
-                const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                const monthIndex = date.getMonth();
+                const year = date.getFullYear();
+                
+                // ✅ Obtenir le nom traduit du mois et raccourcir aux 3 premières lettres
+                const monthKey = monthKeys[monthIndex];
+                const fullMonthName = t[monthKey] || monthKeys[monthIndex];
+                const shortMonthName = fullMonthName.substring(0, 3);
+                
+                // ✅ Format : "Jan 2025"
+                const displayText = `${shortMonthName} ${year}`;
+                const value = `${year}-${String(monthIndex + 1).padStart(2, '0')}`;
                 
                 const option = document.createElement('option');
                 option.value = value;
-                option.textContent = monthName;
+                option.textContent = displayText;
                 if (i === 0) option.selected = true; // Current month selected by default
                 
                 select.appendChild(option);
