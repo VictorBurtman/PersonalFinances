@@ -6651,7 +6651,7 @@
                 populateMonthDropdown();
                 // ✅ Charger le mois sauvegardé
                 if (currentUser && db) {
-                    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                    const userDoc = db.collection('users').doc(currentUser.uid).get();
                     if (userDoc.exists && userDoc.data().selectedMonth) {
                         const monthSelect = document.getElementById('compareMonth');
                         if (monthSelect) {
