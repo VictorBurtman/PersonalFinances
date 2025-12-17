@@ -3511,14 +3511,6 @@ body.dark-mode .trend-count-badge {
     color: white;
 }
 
-#conversionInfoIcon:hover {
-    color: rgba(255,255,255,1);
-}
-
-body.dark-mode #conversionInfoIcon {
-    color: rgba(255,255,255,0.7);
-}
-
 /* Tooltip custom pour mobile */
 #conversionInfoIcon {
     position: relative;
@@ -3535,11 +3527,22 @@ body.dark-mode #conversionInfoIcon {
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 12px;
-    white-space: nowrap;
+    white-space: normal; /* ✅ Change de nowrap à normal */
+    max-width: 250px; /* ✅ Limite la largeur */
+    width: max-content; /* ✅ S'adapte au contenu */
+    text-align: center; /* ✅ Centre le texte */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
     z-index: 1000;
+}
+
+/* ✅ NOUVEAU : Sur petit écran, limite encore plus */
+@media (max-width: 400px) {
+    #conversionInfoIcon::after {
+        max-width: 200px;
+        font-size: 11px;
+    }
 }
 
 #conversionInfoIcon:hover::after,
