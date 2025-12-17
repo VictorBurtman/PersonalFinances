@@ -3765,7 +3765,8 @@
             
             if (isRealSpendingMode) {
                 // Mode "Dépensé" activé - utilise le mois du header
-                loadRealSpending();
+                loadRealSpending(); // Pour les totaux
+                loadRealSpendingForChart(); // ✅ AJOUTE cette ligne pour le graphique
             } else {
                 // Mode "Estimé" activé - réinitialiser les données réelles
                 realSpendingData = {};
