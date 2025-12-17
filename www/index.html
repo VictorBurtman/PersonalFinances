@@ -2100,8 +2100,26 @@
                 }
                 
                 // Calculate totals
-                const totalExpenses = calculateTotal();
-                const totalIncome = calculateIncome();
+                let totalExpenses, totalIncome;
+
+                // ✅ NOUVEAU : Si en mode "Dépensé", utiliser les données des transactions
+                if (compareMode && realSpendingData) {
+                    // Calculer le total des dépenses depuis realSpendingData
+                    totalExpenses = 0;
+                    Object.keys(realSpendingData).forEach(key => {
+                        if (key !== '_incomeTotal') { // Ignorer le revenu stocké
+                            totalExpenses += realSpendingData[key] || 0;
+                        }
+                    });
+                    
+                    // Utiliser le revenu total des transactions
+                    totalIncome = realSpendingData._incomeTotal || 0;
+                } else {
+                    // Mode "Estimé" : utiliser les valeurs manuelles
+                    totalExpenses = calculateTotal();
+                    totalIncome = calculateIncome();
+                }
+
                 const remaining = totalIncome - totalExpenses;
                 
                 // Calculate remaining percentage
@@ -2114,13 +2132,13 @@
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
-        
+
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');
                 allSections.forEach(section => {
                     section.style.display = 'none';
                 });
-        
+
                 // Then, update ONLY categories that exist in expenses
                 Object.keys(expenses).forEach(categoryKey => {
                     const section = document.getElementById(`category-${categoryKey}`);
@@ -2183,7 +2201,7 @@
                             renderExpenseItem(exp, categoryKey, i)).join('');
                     }
                 });
-        
+
                 // Update chart
                 updateChart();
             } catch (error) {
@@ -2194,7 +2212,6 @@
                 initDragAndDrop();
             }
         }
-
 
         function updateChart() {
             // Mise à jour visuelle des boutons (Bar/Doughnut)
@@ -3509,11 +3526,11 @@
          */
         async function loadRealSpending() {
             if (!firebase.functions || !currentUser) {
+                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
                 return;
             }
             
-            const monthKey = document.getElementById('compareMonth').value;
-            console.log('🔍 monthKey:', monthKey);
+            const monthKey = document.getElementById('compareMonth')?.value;
             if (!monthKey) return;
             
             const [year, month] = monthKey.split('-');
@@ -3535,9 +3552,15 @@
                 
                 // Group by category and sum amounts
                 realSpendingData = {};
+                let realIncomeTotal = 0; // ✅ NOUVEAU : Calculer le revenu total
                 
                 transactions.forEach(txn => {
-                    if (txn.category && txn.category !== 'income') {
+                    // ✅ NOUVEAU : Traiter les revenus séparément
+                    if (txn.category === 'income' && txn.chargedAmount > 0) {
+                        realIncomeTotal += Math.abs(txn.chargedAmount);
+                    }
+                    // Traiter les dépenses
+                    else if (txn.category && txn.category !== 'income') {
                         if (!realSpendingData[txn.category]) {
                             realSpendingData[txn.category] = 0;
                         }
@@ -3548,19 +3571,17 @@
                         }
                     }
                 });
+                
+                // ✅ NOUVEAU : Stocker le revenu total pour l'affichage
+                realSpendingData._incomeTotal = realIncomeTotal;
                                 
                 // Refresh display with comparison
                 updateDisplay();
-                // ✅ Si le mode dépensé est activé, mettre à jour le graphique aussi
-                if (isRealSpendingMode) {
-                    loadRealSpendingForChart();
-                }
                 
             } catch (error) {
                 console.error('Error loading real spending:', error);
             }
         }
-        
 
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
@@ -6642,7 +6663,7 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <!-- Type Filter -->
                 <div class="filter-group">
                     <label data-translate="type">Type</label>
