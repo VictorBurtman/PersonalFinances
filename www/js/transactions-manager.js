@@ -4,6 +4,8 @@
 // Global state for transactions
 let transactionsData = [];
 let filteredTransactionsData = [];
+let displayedTransactionsCount = 50; // Nombre de transactions affichées
+const BATCH_SIZE = 50; // Taille du batch
 let transactionsFunctions = null;
 // Ajoute cette ligne après la ligne 7 (après transactionsFunctions = null;)
 let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'
@@ -485,6 +487,9 @@ async function applyFilters() {
         return true;
     });
     
+    // ✅ Réinitialiser la pagination
+    displayedTransactionsCount = BATCH_SIZE;
+
     // Apply sorting
     sortTransactions();
     renderTransactions();
@@ -675,129 +680,52 @@ function clearFilters() {
  * Render all transactions
  */
 function renderTransactions() {
+    const container = document.getElementById('allTransactionsList');
     const emptyState = document.getElementById('emptyState');
-    const allTransactionsSection = document.getElementById('allTransactionsSection');
     const filtersSection = document.getElementById('filtersSection');
-    const transactionCount = document.getElementById('transactionCount');
-    const allTransactionsList = document.getElementById('allTransactionsList');
+    const allTransactionsSection = document.getElementById('allTransactionsSection');
     
-    // ✅ Cas 1 : Aucune transaction du tout - AFFICHER IMMÉDIATEMENT
-    if (transactionsData.length === 0) {
-        if (emptyState) {
-            const t = translations[currentLanguage] || translations['en'];
-            emptyState.innerHTML = `
-                <div class="empty-state-icon">📭</div>
-                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
-                    <span data-translate="noTransactionsAdded">${t.noTransactionsAdded || 'No transactions added yet'}</span>
-                </div>
-                <div style="font-size: 0.9em; opacity: 0.8;">
-                    <span data-translate="addTransactionToStart">${t.addTransactionToStart || 'Add a transaction to get started'}</span>
-                </div>
-            `;
-            emptyState.style.display = 'block';
-        }
-        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+    if (filteredTransactionsData.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.style.display = 'block';
         if (filtersSection) filtersSection.style.display = 'none';
-        return; // ✅ Retour immédiat, pas de délai
+        if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        return;
     }
     
-    // Cas 2 : Il y a des transactions - Cacher l'empty state
     if (emptyState) emptyState.style.display = 'none';
     if (filtersSection) filtersSection.style.display = 'block';
     if (allTransactionsSection) allTransactionsSection.style.display = 'block';
-    if (allTransactionsList) allTransactionsList.style.display = 'block';
     
-    // Mettre à jour le compteur
-    if (transactionCount) {
-        transactionCount.textContent = filteredTransactionsData.length;
+    // ✅ Afficher seulement les N premières transactions
+    const transactionsToDisplay = filteredTransactionsData.slice(0, displayedTransactionsCount);
+    
+    container.innerHTML = transactionsToDisplay.map((txn, index) => 
+        renderTransaction(txn, index)
+    ).join('');
+    
+    // ✅ Ajouter un bouton "Charger plus" si il y a plus de transactions
+    if (displayedTransactionsCount < filteredTransactionsData.length) {
+        const loadMoreBtn = document.createElement('div');
+        loadMoreBtn.style.cssText = 'text-align: center; padding: 20px;';
+        loadMoreBtn.innerHTML = `
+            <button onclick="loadMoreTransactions()" class="primary-btn" style="min-width: 200px;">
+                <span data-translate="loadMore">Load More</span> 
+                (${filteredTransactionsData.length - displayedTransactionsCount} remaining)
+            </button>
+        `;
+        container.appendChild(loadMoreBtn);
     }
-    
-    // Calculer le total par devise
-    const totalsByCurrency = {};
-    filteredTransactionsData.forEach(txn => {
-        // Ignorer les montants positifs (revenus/remboursements)
-        if (txn.chargedAmount < 0) {
-            let currency = txn.currency || window.currency || '₪';
-            
-            // Normaliser les devises vers leurs symboles
-            if (currency === 'ILS') currency = '₪';
-            if (currency === 'EUR') currency = '€';
-            if (currency === 'USD') currency = '$';
-            if (currency === 'GBP') currency = '£';
-            
-            if (!totalsByCurrency[currency]) {
-                totalsByCurrency[currency] = 0;
-            }
-            totalsByCurrency[currency] += Math.abs(txn.chargedAmount);
-        }
-    });
-    
-    // Afficher tous les totaux
-    const transactionTotal = document.getElementById('transactionTotal');
-    if (transactionTotal) {
-        const mainCurrency = window.currency || '₪';
-        const currencies = Object.keys(totalsByCurrency).sort((a, b) => {
-            if (a === mainCurrency) return -1;
-            if (b === mainCurrency) return 1;
-            return a.localeCompare(b);
-        });
-        
-        if (currencies.length === 0) {
-            transactionTotal.textContent = `${mainCurrency}0.00`;
-        } else {
-            const totalsText = currencies.map(curr => {
-                return `<span style="color: white; font-weight: 600;">${curr}${totalsByCurrency[curr].toFixed(2)}</span>`;
-            }).join(' <span style="color: white; opacity: 0.5;">|</span> ');
-            
-            transactionTotal.innerHTML = totalsText;
-        }
-    }
-    
-    // Afficher les transactions
-    if (allTransactionsList) {
-        // Cas 2a : Aucune transaction ne correspond aux filtres
-        if (filteredTransactionsData.length === 0) {
-            const t = translations[currentLanguage] || translations['en'];
-            allTransactionsList.innerHTML = `
-                <div style="text-align: center; padding: 20px; color: #6c757d;">
-                    <span data-translate="noMatchingTransactions">${t.noMatchingTransactions || 'No transactions match the current filters'}</span>
-                </div>
-            `;
-        } else {
-            // Cas 2b : Afficher les transactions filtrées
-            const transactionsToShow = filteredTransactionsData.slice(0, transactionLimit);
-            const hiddenCount = filteredTransactionsData.length - transactionsToShow.length;
-            
-            allTransactionsList.innerHTML = transactionsToShow
-                .map(txn => renderTransaction(txn))
-                .join('');
-            
-            // Message si des transactions sont cachées
-            if (hiddenCount > 0) {
-                const limitMessage = document.createElement('div');
-                limitMessage.style.cssText = 'text-align: center; padding: 20px; color: #6c757d; font-size: 0.9em;';
-                const t = translations[currentLanguage] || translations['en'];
-                const showingText = t.showingTransactions
-                    .replace('{shown}', transactionsToShow.length)
-                    .replace('{total}', filteredTransactionsData.length);
-                const moreHiddenText = t.moreHidden.replace('{count}', hiddenCount);
-                
-                limitMessage.innerHTML = `
-                    ${showingText}<br>
-                    <span style="font-size: 0.85em;">${moreHiddenText}</span>
-                `;
-                allTransactionsList.appendChild(limitMessage);
-            }
-        }
-    }
-    
-    // Appliquer les traductions au contenu dynamique
-    setTimeout(() => {
-        if (typeof updateTransactionsLanguage === 'function') {
-            updateTransactionsLanguage();
-        }
-    }, 100);
 }
+
+/**
+ * Load more transactions (pagination)
+ */
+function loadMoreTransactions() {
+    displayedTransactionsCount += BATCH_SIZE;
+    renderTransactions();
+}
+
 
 /**
  * Render a single transaction with improved layout

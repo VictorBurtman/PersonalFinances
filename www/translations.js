@@ -186,6 +186,7 @@ const translations = {
         expenses: "Expenses",
         all: "All",
         conversionInfo: "Amounts are converted using daily exchange rates and may be approximate",
+        loadMore: "Load More",
 
 
         // Alerts & notifications
@@ -682,6 +683,8 @@ const translations = {
         expenses: "Dépenses",
         all: "Tous",
         conversionInfo: "Les montants sont convertis selon les taux de change du jour et peuvent être approximatifs",
+        loadMore: "Charger plus",
+        
 
 
         // Alerts & notifications
@@ -1167,6 +1170,7 @@ const translations = {
         expenses: "הוצאות",
         all: "הכל",
         conversionInfo: "הסכומים מומרים לפי שערי חליפין יומיים ועשויים להיות משוערים",
+        loadMore: "טען עוד",
 
 
         // Toasts & notifications
@@ -1652,6 +1656,7 @@ const translations = {
         expenses: "Gastos",
         all: "Todos",
         conversionInfo: "Los montos se convierten usando tasas de cambio diarias y pueden ser aproximados",
+        loadMore: "Cargar más",
 
 
 
@@ -2138,6 +2143,7 @@ const translations = {
         expenses: "Расходы",
         all: "Все",
         conversionInfo: "Суммы конвертируются по ежедневным курсам и могут быть приблизительными",
+        loadMore: "Загрузить еще",
 
 
 
@@ -2624,6 +2630,7 @@ const translations = {
         expenses: "النفقات",
         all: "الكل",
         conversionInfo: "يتم تحويل المبالغ باستخدام أسعار الصرف اليومية وقد تكون تقريبية",
+        loadMore: "تحميل المزيد",
 
 
 
