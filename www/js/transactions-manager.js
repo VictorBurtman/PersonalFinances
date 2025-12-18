@@ -706,12 +706,14 @@ function renderTransactions() {
     
     // ✅ Ajouter un bouton "Charger plus" si il y a plus de transactions
     if (displayedTransactionsCount < filteredTransactionsData.length) {
+        const t = translations[currentLanguage] || translations['en']; // ✅ AJOUTE
+        const remaining = filteredTransactionsData.length - displayedTransactionsCount;
+        
         const loadMoreBtn = document.createElement('div');
         loadMoreBtn.style.cssText = 'text-align: center; padding: 20px;';
         loadMoreBtn.innerHTML = `
             <button onclick="loadMoreTransactions()" class="primary-btn" style="min-width: 200px;">
-                <span data-translate="loadMore">Load More</span> 
-                (${filteredTransactionsData.length - displayedTransactionsCount} remaining)
+                ${t.loadMore || 'Load More'} (${remaining})
             </button>
         `;
         container.appendChild(loadMoreBtn);
