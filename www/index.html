@@ -5022,7 +5022,7 @@
         function updateBatchSize() {
             const select = document.getElementById('batchSize');
             BATCH_SIZE = parseInt(select.value);
-            displayedTransactionsCount = BATCH_SIZE; // Réinitialiser
+            displayedTransactionsCount = BATCH_SIZE;
             
             // Sauvegarder la préférence
             if (currentUser && db) {
@@ -5031,7 +5031,7 @@
                 }, { merge: true }).catch(err => console.error('Error saving batch size:', err));
             }
             
-            renderTransactions(); // Recharger avec la nouvelle taille
+            applyFilters(); // ✅ AJOUTE cette ligne
         }
 
         // Item Movement Functions
