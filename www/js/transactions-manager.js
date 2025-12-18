@@ -690,6 +690,13 @@ function renderTransactions() {
         if (emptyState) emptyState.style.display = 'block';
         if (filtersSection) filtersSection.style.display = 'none';
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        
+        // ✅ Mettre à jour le header même si vide
+        const countEl = document.getElementById('transactionCount');
+        const totalEl = document.getElementById('transactionTotal');
+        if (countEl) countEl.textContent = '0';
+        if (totalEl) totalEl.textContent = `${currency}0`;
+        
         return;
     }
     
@@ -706,7 +713,7 @@ function renderTransactions() {
     
     // ✅ Ajouter un bouton "Charger plus" si il y a plus de transactions
     if (displayedTransactionsCount < filteredTransactionsData.length) {
-        const t = translations[currentLanguage] || translations['en']; // ✅ AJOUTE
+        const t = translations[currentLanguage] || translations['en'];
         const remaining = filteredTransactionsData.length - displayedTransactionsCount;
         
         const loadMoreBtn = document.createElement('div');
@@ -718,7 +725,21 @@ function renderTransactions() {
         `;
         container.appendChild(loadMoreBtn);
     }
+    
+    // ✅ NOUVEAU : Mettre à jour le compteur et le total
+    const countEl = document.getElementById('transactionCount');
+    const totalEl = document.getElementById('transactionTotal');
+    
+    if (countEl) {
+        countEl.textContent = filteredTransactionsData.length;
+    }
+    
+    if (totalEl) {
+        const total = filteredTransactionsData.reduce((sum, txn) => sum + txn.chargedAmount, 0);
+        totalEl.textContent = `${currency}${Math.abs(total).toFixed(2)}`;
+    }
 }
+
 
 /**
  * Load more transactions (pagination)
