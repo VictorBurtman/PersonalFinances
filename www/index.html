@@ -1987,7 +1987,7 @@
                     }, 300);
                     
                 } else {
-                    // First time user - use defaults
+                    // First time user - use defaults<option value="50">50</option>
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
                     
                     const localStorageLang = localStorage.getItem('language');
@@ -1996,6 +1996,16 @@
                     }
                     
                     await saveUserData();
+                }
+
+                // ✅ NOUVEAU : Charger la taille du batch
+                if (data.batchSize) {
+                    BATCH_SIZE = data.batchSize;
+                    displayedTransactionsCount = BATCH_SIZE;
+                    const batchSelect = document.getElementById('batchSize');
+                    if (batchSelect) {
+                        batchSelect.value = BATCH_SIZE.toString();
+                    }
                 }
                 
                 // Mettre à jour l'interface avec la langue chargée
@@ -5006,6 +5016,24 @@
             }
         }
 
+        /**
+         * Update batch size when user changes the setting
+         */
+        function updateBatchSize() {
+            const select = document.getElementById('batchSize');
+            BATCH_SIZE = parseInt(select.value);
+            displayedTransactionsCount = BATCH_SIZE; // Réinitialiser
+            
+            // Sauvegarder la préférence
+            if (currentUser && db) {
+                db.collection('users').doc(currentUser.uid).set({
+                    batchSize: BATCH_SIZE
+                }, { merge: true }).catch(err => console.error('Error saving batch size:', err));
+            }
+            
+            renderTransactions(); // Recharger avec la nouvelle taille
+        }
+
         // Item Movement Functions
         function moveItemUp(category, index) {
             if (index === 0) return; // Already at top
@@ -6923,16 +6951,15 @@
                     </select>
                 </div>
                 
-                <!-- Limit -->
+                <!-- Batch Size -->
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 500;">
-                        <span data-translate="showTransactions">Show transactions</span>
+                        <span data-translate="batchSize">Transactions per page</span>
                     </label>
-                    <select id="limitFilter" onchange="changeTransactionLimit(this.value)" class="settings-select" style="width: 100%;">
-                        <option value="2000" data-translate="show2000">Show 2000</option>
-                        <option value="1000" data-translate="show1000">Show 1000</option>
-                        <option value="500" data-translate="show500">Show 500</option>
-                        <option value="50" data-translate="show50">Show 50</option>
+                    <select id="batchSize" onchange="updateBatchSize()" class="settings-select" style="width: 100%;">
+                        <option value="50">50</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
                     </select>
                 </div>
             </div>

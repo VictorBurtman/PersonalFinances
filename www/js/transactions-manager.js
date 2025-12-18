@@ -5,7 +5,7 @@
 let transactionsData = [];
 let filteredTransactionsData = [];
 let displayedTransactionsCount = 50; // Nombre de transactions affichées
-const BATCH_SIZE = 50; // Taille du batch
+let BATCH_SIZE = 50; // ✅ Change const en let pour pouvoir le modifier
 let transactionsFunctions = null;
 // Ajoute cette ligne après la ligne 7 (après transactionsFunctions = null;)
 let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'

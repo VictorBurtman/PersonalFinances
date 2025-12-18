@@ -187,6 +187,8 @@ const translations = {
         all: "All",
         conversionInfo: "Amounts are converted using daily exchange rates and may be approximate",
         loadMore: "Load More",
+        batchSize: "Transactions per page",
+
 
 
         // Alerts & notifications
@@ -684,6 +686,8 @@ const translations = {
         all: "Tous",
         conversionInfo: "Les montants sont convertis selon les taux de change du jour et peuvent être approximatifs",
         loadMore: "Charger plus",
+        batchSize: "Transactions par page",
+
         
 
 
@@ -1171,6 +1175,8 @@ const translations = {
         all: "הכל",
         conversionInfo: "הסכומים מומרים לפי שערי חליפין יומיים ועשויים להיות משוערים",
         loadMore: "טען עוד",
+        batchSize: "עסקאות לדף",
+
 
 
         // Toasts & notifications
@@ -1657,6 +1663,7 @@ const translations = {
         all: "Todos",
         conversionInfo: "Los montos se convierten usando tasas de cambio diarias y pueden ser aproximados",
         loadMore: "Cargar más",
+        batchSize: "Transacciones por página",
 
 
 
@@ -2144,6 +2151,8 @@ const translations = {
         all: "Все",
         conversionInfo: "Суммы конвертируются по ежедневным курсам и могут быть приблизительными",
         loadMore: "Загрузить еще",
+        batchSize: "Транзакций на страницу",
+
 
 
 
@@ -2631,6 +2640,8 @@ const translations = {
         all: "الكل",
         conversionInfo: "يتم تحويل المبالغ باستخدام أسعار الصرف اليومية وقد تكون تقريبية",
         loadMore: "تحميل المزيد",
+        batchSize: "المعاملات لكل صفحة",
+
 
 
 
