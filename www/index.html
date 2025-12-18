@@ -1986,6 +1986,16 @@
                         }
                     }, 300);
                     
+                // ✅ NOUVEAU : Charger la taille du batch
+                if (data.batchSize) {
+                    BATCH_SIZE = data.batchSize;
+                    displayedTransactionsCount = BATCH_SIZE;
+                    const batchSelect = document.getElementById('batchSize');
+                    if (batchSelect) {
+                        batchSelect.value = BATCH_SIZE.toString();
+                    }
+                }
+
                 } else {
                     // First time user - use defaults<option value="50">50</option>
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
@@ -1996,16 +2006,6 @@
                     }
                     
                     await saveUserData();
-                }
-
-                // ✅ NOUVEAU : Charger la taille du batch
-                if (data.batchSize) {
-                    BATCH_SIZE = data.batchSize;
-                    displayedTransactionsCount = BATCH_SIZE;
-                    const batchSelect = document.getElementById('batchSize');
-                    if (batchSelect) {
-                        batchSelect.value = BATCH_SIZE.toString();
-                    }
                 }
                 
                 // Mettre à jour l'interface avec la langue chargée
