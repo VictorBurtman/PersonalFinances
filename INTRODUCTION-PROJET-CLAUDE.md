@@ -15,7 +15,7 @@ Bonjour ! Je travaille sur **PersonalFinances**, une application de gestion budg
 
 **Objectif :** Gérer ses finances personnelles avec import des transactions bancaires et catégorisation intelligente.
 
-**Utilisateurs :** Moi-même + quelques amis/famille (distribution via Google Play Internal Testing et PWA iphone).
+**Utilisateurs :** (distribution via Google Play Internal Testing et PWA iphone).
 
 ---
 
@@ -27,7 +27,7 @@ Bonjour ! Je travaille sur **PersonalFinances**, une application de gestion budg
 - HTML5 / CSS3 / JavaScript vanilla
 - Capacitor (pour convertir web → Android)
 - Chart.js (visualisations)
-- 6 langues supportées : EN, FR, HE, ES, RU, AR (avec support RTL)
+- 11 langues supportées : EN, FR, HE, ES, RU, AR, IT, DE, TR, PT, HI (avec support RTL)
 
 **Backend :**
 - Firebase Authentication
@@ -155,14 +155,6 @@ PersonalFinances/
 ---
 
 ## 🌍 Internationalisation (i18n)
-
-**Langues supportées :**
-- 🇬🇧 English
-- 🇫🇷 Français
-- 🇮🇱 עברית (Hebrew - RTL)
-- 🇪🇸 Español
-- 🇷🇺 Русский
-- 🇸🇦 العربية (Arabic - RTL)
 
 **Gestion :**
 - Fichier `translations.js` avec objet par langue
