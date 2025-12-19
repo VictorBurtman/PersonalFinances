@@ -2698,17 +2698,18 @@
          * Charger et afficher le graphique d'évolution mensuelle
          */
         async function loadMonthlyTrendChart() {
-
             console.log('📊 loadMonthlyTrendChart called');
             console.log('currentUser:', currentUser);
             console.log('firebase.functions:', firebase.functions);
-    
+
             if (!currentUser || !firebase.functions) {
-                console.log('Cannot load monthly trend: Firebase not initialized');
+                console.log('❌ Cannot load monthly trend: Firebase not initialized');
                 return;
             }
             
             try {
+                console.log('📊 Step 1: Creating months array');
+                
                 // Charger les 6 derniers mois de transactions
                 const months = [];
                 const currentDate = new Date();
@@ -2736,14 +2737,14 @@
                     });
                 }
                 
+                console.log('📊 Step 2: Months created:', months);
+                
                 // Initialiser les données
                 monthlyTrendData = {
                     labels: months.map(m => m.label),
                     total: [],
                     categories: {}
                 };
-                
-                // ... le reste du code reste identique
                 
                 // Initialiser les catégories
                 Object.keys(expenses).forEach(categoryKey => {
@@ -2752,10 +2753,14 @@
                     }
                 });
                 
+                console.log('📊 Step 3: Starting transaction loading for', months.length, 'months');
+                
                 // Charger les transactions pour chaque mois
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
                 
                 for (const monthInfo of months) {
+                    console.log('📊 Loading month:', monthInfo.label);
+                    
                     const startDate = new Date(monthInfo.year, monthInfo.month - 1, 1);
                     const endDate = new Date(monthInfo.year, monthInfo.month, 0, 23, 59, 59);
                     
@@ -2766,6 +2771,8 @@
                             isLabeled: true,
                             limit: 10000
                         });
+                        
+                        console.log('📊 Received', result.data.transactions?.length || 0, 'transactions for', monthInfo.label);
                         
                         const transactions = result.data.transactions || [];
                         
@@ -2793,7 +2800,7 @@
                         });
                         
                     } catch (error) {
-                        console.error('Error loading month:', monthInfo, error);
+                        console.error('❌ Error loading month:', monthInfo, error);
                         monthlyTrendData.total.push(0);
                         Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
                             monthlyTrendData.categories[categoryKey].push(0);
@@ -2801,17 +2808,22 @@
                     }
                 }
                 
+                console.log('📊 Step 4: All months loaded. Data:', monthlyTrendData);
+                
                 // Générer les checkboxes des catégories
                 populateCategoryTrendCheckboxes();
+                
+                console.log('📊 Step 5: Calling updateMonthlyTrendChart');
                 
                 // Afficher le graphique
                 updateMonthlyTrendChart();
                 
+                console.log('📊 Step 6: Chart updated successfully! ✅');
+                
             } catch (error) {
-                console.error('Error loading monthly trend:', error);
+                console.error('❌ FATAL Error loading monthly trend:', error);
             }
         }
-
 
         /**
          * Générer les checkboxes de sélection de catégories
