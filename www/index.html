@@ -1501,6 +1501,14 @@
                 updateTransactionsLanguage();
             }
             
+            // ✅ NOUVEAU : Mettre à jour les mois traduits
+            if (typeof populateMonthDropdown === 'function') {
+                populateMonthDropdown();
+            }
+            if (typeof loadMonthlyTrendChart === 'function') {
+                loadMonthlyTrendChart();
+            }
+            
             // === AJUSTEMENT DU TITRE ===
             fitAppTitle();
             setTimeout(fitAppTitle, 50);
@@ -1555,6 +1563,7 @@
                 appVersionDisplay.textContent = 'v' + window.APP_VERSION;
             }      
         }
+
 
         // Fonction pour mettre à jour l'écran de connexion uniquement
         function updateAuthScreenLanguage() {
