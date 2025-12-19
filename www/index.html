@@ -1398,28 +1398,39 @@
             return translations[currentLanguage][key] || key;
         }
         
-        function changeLanguage(lang) {
+        
+        async function changeLanguage(lang) {
             currentLanguage = lang;
             
-            // Sauvegarder la langue choisie
-            if (currentUser) {
-                db.collection('users').doc(currentUser.uid).set({
-                    language: lang
-                }, { merge: true });
-            }
-            
-            // ✅ Toujours sauvegarder dans localStorage aussi (pour sync entre écran de co et app)
+            // ✅ AJOUTE : Sauvegarder dans localStorage
             localStorage.setItem('language', lang);
             
-            // Mettre à jour l'attribut dir pour RTL (arabe et hébreu)
+            // Appliquer RTL si nécessaire
             if (lang === 'ar' || lang === 'he') {
                 document.documentElement.setAttribute('dir', 'rtl');
             } else {
                 document.documentElement.setAttribute('dir', 'ltr');
             }
             
-            // Recharger l'interface avec les nouvelles traductions
+            // Sauvegarder dans Firebase
+            if (currentUser && db) {
+                try {
+                    await db.collection('users').doc(currentUser.uid).set({
+                        language: lang
+                    }, { merge: true });
+                } catch (error) {
+                    console.error('Error saving language:', error);
+                }
+            }
+            
+            // Mettre à jour l'interface
             updateUILanguage();
+            if (typeof populateMonthDropdown === 'function') {
+                populateMonthDropdown();
+            }
+            if (typeof loadMonthlyTrendChart === 'function') {
+                loadMonthlyTrendChart();
+            }
         }
         
 

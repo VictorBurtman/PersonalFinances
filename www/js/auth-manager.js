@@ -565,8 +565,10 @@ class AuthManager {
         this.applyDarkMode(systemDarkMode);
         
         // Détecter et appliquer la langue système
-        const systemLanguage = this.detectSystemLanguage();
-        this.applyLanguage(systemLanguage);
+        // ✅ Charger la langue sauvegardée ou détecter la langue système
+        const savedLanguage = localStorage.getItem('language');
+        const languageToApply = savedLanguage || this.detectSystemLanguage();
+        this.applyLanguage(languageToApply);
     }
     
 
