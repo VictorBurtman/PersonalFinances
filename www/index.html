@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <title>Monthly Expenses Tracker</title>
     <!-- ✅ PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -2698,6 +2698,11 @@
          * Charger et afficher le graphique d'évolution mensuelle
          */
         async function loadMonthlyTrendChart() {
+            
+            console.log('📊 loadMonthlyTrendChart called');
+            console.log('currentUser:', currentUser);
+            console.log('firebase.functions:', firebase.functions);
+    
             if (!currentUser || !firebase.functions) {
                 console.log('Cannot load monthly trend: Firebase not initialized');
                 return;

@@ -1,12 +1,21 @@
 /* ============================================
    VARIABLES CSS
    ============================================ */
+/* ===== TYPOGRAPHY ===== */
 * {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+body,
+input,
+button,
+select,
+textarea,
+.auth-container,
+.category-section,
+.modal-content,
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 
