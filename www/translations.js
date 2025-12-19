@@ -142,7 +142,7 @@ const translations = {
     // ============================================
     // TRANSACTIONS
     // ============================================
-    allTransactions: "📋 All Transactions",
+    allTransactions: "Transactions",
     noTransactionsAdded: "No transactions added yet",
     addTransactionToStart: "Add a transaction to get started",
     noMatchingTransactions: "No transactions match the current filters",
@@ -633,7 +633,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Toutes les transactions",
+        allTransactions: "Transactions",
         noTransactionsAdded: "Aucune transaction ajoutée",
         addTransactionToStart: "Ajoutez une transaction pour commencer",
         noMatchingTransactions: "Aucune transaction ne correspond aux filtres actuels",
@@ -1124,7 +1124,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 כל העסקאות",
+        allTransactions: "העסקאות",
         noTransactionsAdded: "לא נוספו עסקאות עדיין",
         addTransactionToStart: "הוסף עסקה כדי להתחיל",
         noMatchingTransactions: "אין עסקאות התואמות את המסננים הנוכחיים",
@@ -1615,7 +1615,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Todas las transacciones",
+        allTransactions: "Transacciones",
         noTransactionsAdded: "No se han agregado transacciones aún",
         addTransactionToStart: "Agrega una transacción para comenzar",
         noMatchingTransactions: "No hay transacciones que coincidan con los filtros actuales",
@@ -2106,7 +2106,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Все транзакции",
+        allTransactions: "транзакции",
         noTransactionsAdded: "Транзакции еще не добавлены",
         addTransactionToStart: "Добавьте транзакцию для начала",
         noMatchingTransactions: "Нет транзакций, соответствующих текущим фильтрам",
@@ -2597,7 +2597,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 جميع المعاملات",
+        allTransactions: "المعاملات",
         noTransactionsAdded: "لم تتم إضافة معاملات بعد",
         addTransactionToStart: "أضف معاملة للبدء",
         noMatchingTransactions: "لا توجد معاملات تطابق المرشحات الحالية",
@@ -3088,7 +3088,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Alle Transaktionen",
+        allTransactions: "Transaktionen",
         noTransactionsAdded: "Noch keine Transaktionen hinzugefügt",
         addTransactionToStart: "Fügen Sie eine Transaktion hinzu, um zu beginnen",
         noMatchingTransactions: "Keine Transaktionen entsprechen den aktuellen Filtern",
@@ -3567,7 +3567,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Tutte le transazioni",
+        allTransactions: "Transazioni",
         noTransactionsAdded: "Nessuna transazione aggiunta",
         addTransactionToStart: "Aggiungi una transazione per iniziare",
         noMatchingTransactions: "Nessuna transazione corrisponde ai filtri attuali",
@@ -4019,7 +4019,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Todas as transações",
+        allTransactions: "Transações",
         noTransactionsAdded: "Nenhuma transação adicionada ainda",
         addTransactionToStart: "Adicione uma transação para começar",
         noMatchingTransactions: "Nenhuma transação corresponde aos filtros atuais",
@@ -4510,7 +4510,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 Tüm işlemler",
+        allTransactions: "Işlemler",
         noTransactionsAdded: "Henüz işlem eklenmedi",
         addTransactionToStart: "Başlamak için bir işlem ekleyin",
         noMatchingTransactions: "Mevcut filtrelere uyan işlem yok",
@@ -5001,7 +5001,7 @@ const translations = {
         // ============================================
         // TRANSACTIONS
         // ============================================
-        allTransactions: "📋 सभी लेनदेन",
+        allTransactions: "लेनदेन",
         noTransactionsAdded: "अभी तक कोई लेनदेन नहीं जोड़ा गया",
         addTransactionToStart: "शुरू करने के लिए एक लेनदेन जोड़ें",
         noMatchingTransactions: "वर्तमान फ़िल्टर से मेल खाने वाला कोई लेनदेन नहीं",
