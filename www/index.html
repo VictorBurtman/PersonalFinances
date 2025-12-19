@@ -6789,11 +6789,7 @@
                 // ✅ Initialiser le sélecteur de mois
                 populateMonthDropdown();
                 loadRealSpending();
-                setTimeout(() => {
-                    if (currentUser && firebase.functions) {
-                        loadMonthlyTrendChart();
-                    }
-                }, 1000);
+                loadMonthlyTrendChart();
 
                 // Charger les taux de change
                 loadExchangeRates();
