@@ -265,13 +265,23 @@
     <!-- Auth Screen -->
     <div id="auth-screen" style="display: block;">
         <!-- Language Selector -->
-        <div class="language-selector">
-            <button onclick="authManager.applyLanguage('en'); updateLanguageButtons('en')" data-lang="en">EN</button>
-            <button onclick="authManager.applyLanguage('fr'); updateLanguageButtons('fr')" data-lang="fr">FR</button>
-            <button onclick="authManager.applyLanguage('he'); updateLanguageButtons('he')" data-lang="he">עב</button>
-            <button onclick="authManager.applyLanguage('es'); updateLanguageButtons('es')" data-lang="es">ES</button>
-            <button onclick="authManager.applyLanguage('ru'); updateLanguageButtons('ru')" data-lang="ru">РУ</button>
-            <button onclick="authManager.applyLanguage('ar'); updateLanguageButtons('ar')" data-lang="ar">عر</button>
+        <div class="language-selector-dropdown">
+            <button class="language-btn" onclick="toggleLanguageDropdown()">
+                <img src="img/icons/language.svg" alt="Language" style="width: 20px; height: 20px;">
+            </button>
+            <div id="languageDropdown" class="language-dropdown" style="display: none;">
+                <button onclick="selectAuthLanguage('en')">🇬🇧 English</button>
+                <button onclick="selectAuthLanguage('fr')">🇫🇷 Français</button>
+                <button onclick="selectAuthLanguage('he')">🇮🇱 עברית</button>
+                <button onclick="selectAuthLanguage('es')">🇪🇸 Español</button>
+                <button onclick="selectAuthLanguage('ru')">🇷🇺 Русский</button>
+                <button onclick="selectAuthLanguage('ar')">🇸🇦 العربية</button>
+                <button onclick="selectAuthLanguage('de')">🇩🇪 Deutsch</button>
+                <button onclick="selectAuthLanguage('it')">🇮🇹 Italiano</button>
+                <button onclick="selectAuthLanguage('tr')">🇹🇷 Türkçe</button>
+                <button onclick="selectAuthLanguage('pt')">🇵🇹 Português</button>
+                <button onclick="selectAuthLanguage('hi')">🇮🇳 हिन्दी</button>
+            </div>
         </div>
         
         <div class="auth-container">
@@ -1565,30 +1575,41 @@
         }
 
 
-        // Fonction pour mettre à jour l'écran de connexion uniquement
-        function updateAuthScreenLanguage() {
-            const authTitle = document.querySelector('.auth-title');
-            if (!authTitle) return; // L'écran de connexion n'est pas visible
-            
-            document.querySelector('.auth-title').textContent = t('appTitle');
-            document.querySelector('.auth-subtitle').textContent = t('authSubtitle');
-            document.getElementById('authEmail').placeholder = t('email');
-            document.getElementById('authPassword').placeholder = t('password');
-            
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const isSignUp = submitBtn.textContent.includes('Sign Up') || 
-                            submitBtn.textContent.includes('S\'inscrire') ||
-                            submitBtn.textContent.includes('Зарегистрироваться') ||
-                            submitBtn.textContent.includes('הירשם') ||
-                            submitBtn.textContent.includes('Registrarse') ||
-                            submitBtn.textContent.includes('إنشاء حساب');
-            
-            document.getElementById('authSubmitBtn').textContent = isSignUp ? t('signUp') : t('signIn');
-            document.getElementById('authToggleText').textContent = isSignUp ? t('hasAccount') : t('noAccount');
-            document.getElementById('authToggleBtn').textContent = isSignUp ? t('signIn') : t('signUp');
+        /**
+         * Toggle language dropdown
+         */
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            if (dropdown.style.display === 'none') {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
         }
 
+        /**
+         * Select language from dropdown
+         */
+        function selectAuthLanguage(lang) {
+            authManager.applyLanguage(lang);
+            updateLanguageButtons(lang);
+            
+            // Fermer le dropdown
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.style.display = 'none';
+        }
 
+        /**
+         * Close dropdown when clicking outside
+         */
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('languageDropdown');
+            const languageBtn = document.querySelector('.language-btn');
+            
+            if (dropdown && languageBtn && !languageBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
 
         /**
          * Update translations for transactions tab
