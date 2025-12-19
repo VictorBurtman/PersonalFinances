@@ -2693,19 +2693,27 @@
         let monthlyTrendChart = null;
         let monthlyTrendData = {}; // Stocker toutes les données
         let selectedTrendCategories = new Set(['total']); // Catégories sélectionnées
+        let isLoadingMonthlyTrend = false; // ✅ AJOUTE
 
         /**
          * Charger et afficher le graphique d'évolution mensuelle
          */
         async function loadMonthlyTrendChart() {
+            // ✅ Bloquer si déjà en cours
+            if (isLoadingMonthlyTrend) {
+                console.log('📊 Already loading, skipping...');
+                return;
+            }
+            
             console.log('📊 loadMonthlyTrendChart called');
-            console.log('currentUser:', currentUser);
-            console.log('firebase.functions:', firebase.functions);
-
+            
             if (!currentUser || !firebase.functions) {
                 console.log('❌ Cannot load monthly trend: Firebase not initialized');
                 return;
             }
+            
+            // ✅ Marquer comme en cours
+            isLoadingMonthlyTrend = true;
             
             try {
                 console.log('📊 Step 1: Creating months array');
@@ -2822,6 +2830,9 @@
                 
             } catch (error) {
                 console.error('❌ FATAL Error loading monthly trend:', error);
+            } finally {
+                // ✅ Débloquer à la fin
+                isLoadingMonthlyTrend = false;
             }
         }
 
