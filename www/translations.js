@@ -487,6 +487,10 @@ const translations = {
     october: "October",
     november: "November",
     december: "December",
+
+    janShort: "Jan", febShort: "Feb", marShort: "Mar", aprShort: "Apr",
+    mayShort: "May", junShort: "Jun", julShort: "Jul", augShort: "Aug",
+    sepShort: "Sep", octShort: "Oct", novShort: "Nov", decShort: "Dec",
     
     // ============================================
     // CURRENCY & CONVERSION
@@ -974,6 +978,10 @@ const translations = {
         october: "Octobre",
         november: "Novembre",
         december: "Décembre",
+
+        janShort: "Jan", febShort: "Fév", marShort: "Mar", aprShort: "Avr",
+        mayShort: "Mai", junShort: "Juin", julShort: "Juil", augShort: "Août",
+        sepShort: "Sept", octShort: "Oct", novShort: "Nov", decShort: "Déc",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -1461,6 +1469,10 @@ const translations = {
         october: "אוקטובר",
         november: "נובמבר",
         december: "דצמבר",
+
+        janShort: "ינו", febShort: "פבר", marShort: "מרץ", aprShort: "אפר",
+        mayShort: "מאי", junShort: "יונ", julShort: "יול", augShort: "אוג",
+        sepShort: "ספט", octShort: "אוק", novShort: "נוב", decShort: "דצמ",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -1948,6 +1960,10 @@ const translations = {
         october: "Octubre",
         november: "Noviembre",
         december: "Diciembre",
+
+        janShort: "Ene", febShort: "Feb", marShort: "Mar", aprShort: "Abr",
+        mayShort: "May", junShort: "Jun", julShort: "Jul", augShort: "Ago",
+        sepShort: "Sep", octShort: "Oct", novShort: "Nov", decShort: "Dic",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -2435,6 +2451,10 @@ const translations = {
         october: "Октябрь",
         november: "Ноябрь",
         december: "Декабрь",
+
+        janShort: "Янв", febShort: "Фев", marShort: "Мар", aprShort: "Апр",
+        mayShort: "Май", junShort: "Июн", julShort: "Июл", augShort: "Авг",
+        sepShort: "Сен", octShort: "Окт", novShort: "Ноя", decShort: "Дек",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -2922,6 +2942,10 @@ const translations = {
         october: "أكتوبر",
         november: "نوفمبر",
         december: "ديسمبر",
+
+        janShort: "ينا", febShort: "فبر", marShort: "مار", aprShort: "أبر",
+        mayShort: "ماي", junShort: "يون", julShort: "يول", augShort: "أغس",
+        sepShort: "سبت", octShort: "أكت", novShort: "نوف", decShort: "ديس",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -3409,6 +3433,10 @@ const translations = {
         october: "Oktober",
         november: "November",
         december: "Dezember",
+
+        janShort: "Jan", febShort: "Feb", marShort: "Mär", aprShort: "Apr",
+        mayShort: "Mai", junShort: "Jun", julShort: "Jul", augShort: "Aug",
+        sepShort: "Sep", octShort: "Okt", novShort: "Nov", decShort: "Dez",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -3845,6 +3873,10 @@ const translations = {
         october: "Ottobre",
         november: "Novembre",
         december: "Dicembre",
+
+        janShort: "Gen", febShort: "Feb", marShort: "Mar", aprShort: "Apr",
+        mayShort: "Mag", junShort: "Giu", julShort: "Lug", augShort: "Ago",
+        sepShort: "Set", octShort: "Ott", novShort: "Nov", decShort: "Dic",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -4332,6 +4364,10 @@ const translations = {
         october: "Outubro",
         november: "Novembro",
         december: "Dezembro",
+
+        janShort: "Jan", febShort: "Fev", marShort: "Mar", aprShort: "Abr",
+        mayShort: "Mai", junShort: "Jun", julShort: "Jul", augShort: "Ago",
+        sepShort: "Set", octShort: "Out", novShort: "Nov", decShort: "Dez",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -4819,6 +4855,10 @@ const translations = {
         october: "Ekim",
         november: "Kasım",
         december: "Aralık",
+
+        janShort: "Oca", febShort: "Şub", marShort: "Mar", aprShort: "Nis",
+        mayShort: "May", junShort: "Haz", julShort: "Tem", augShort: "Ağu",
+        sepShort: "Eyl", octShort: "Eki", novShort: "Kas", decShort: "Ara",
         
         // ============================================
         // CURRENCY & CONVERSION
@@ -5306,6 +5346,10 @@ const translations = {
         october: "अक्टूबर",
         november: "नवंबर",
         december: "दिसंबर",
+
+        janShort: "जन", febShort: "फ़र", marShort: "मार", aprShort: "अप्रै",
+        mayShort: "मई", junShort: "जून", julShort: "जुला", augShort: "अग",
+        sepShort: "सित", octShort: "अक्टू", novShort: "नव", decShort: "दिस",
         
         // ============================================
         // CURRENCY & CONVERSION

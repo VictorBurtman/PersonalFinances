@@ -2654,12 +2654,26 @@
                 const months = [];
                 const currentDate = new Date();
                 
+                // ✅ Récupérer les traductions
+                const t = translations[currentLanguage] || translations['en'];
+                const monthShortKeys = [
+                    'janShort', 'febShort', 'marShort', 'aprShort', 'mayShort', 'junShort',
+                    'julShort', 'augShort', 'sepShort', 'octShort', 'novShort', 'decShort'
+                ];
+                
                 for (let i = 5; i >= 0; i--) {
                     const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                    const monthIndex = date.getMonth();
+                    const year = date.getFullYear();
+                    
+                    // ✅ Utiliser les traductions au lieu de toLocaleDateString
+                    const shortMonthName = t[monthShortKeys[monthIndex]];
+                    const label = `${shortMonthName} ${year}`;
+                    
                     months.push({
-                        year: date.getFullYear(),
-                        month: date.getMonth() + 1,
-                        label: date.toLocaleDateString(currentLanguage, { month: 'short', year: 'numeric' })
+                        year: year,
+                        month: monthIndex + 1,
+                        label: label
                     });
                 }
                 
@@ -2669,6 +2683,8 @@
                     total: [],
                     categories: {}
                 };
+                
+                // ... le reste du code reste identique
                 
                 // Initialiser les catégories
                 Object.keys(expenses).forEach(categoryKey => {
@@ -2736,6 +2752,7 @@
                 console.error('Error loading monthly trend:', error);
             }
         }
+
 
         /**
          * Générer les checkboxes de sélection de catégories
@@ -3647,10 +3664,10 @@
             // ✅ Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
-            // ✅ Tableau des noms de mois en clés de traduction
-            const monthKeys = [
-                'january', 'february', 'march', 'april', 'may', 'june',
-                'july', 'august', 'september', 'october', 'november', 'december'
+            // ✅ Tableau des clés de traduction pour les mois courts
+            const monthShortKeys = [
+                'janShort', 'febShort', 'marShort', 'aprShort', 'mayShort', 'junShort',
+                'julShort', 'augShort', 'sepShort', 'octShort', 'novShort', 'decShort'
             ];
             
             // Generate last 12 months
@@ -3659,10 +3676,8 @@
                 const monthIndex = date.getMonth();
                 const year = date.getFullYear();
                 
-                // ✅ Obtenir le nom traduit du mois et raccourcir aux 3 premières lettres
-                const monthKey = monthKeys[monthIndex];
-                const fullMonthName = t[monthKey] || monthKeys[monthIndex];
-                const shortMonthName = fullMonthName.substring(0, 3);
+                // ✅ Obtenir le nom traduit du mois court
+                const shortMonthName = t[monthShortKeys[monthIndex]] || monthShortKeys[monthIndex];
                 
                 // ✅ Format : "Jan 2025"
                 const displayText = `${shortMonthName} ${year}`;
@@ -3671,12 +3686,14 @@
                 const option = document.createElement('option');
                 option.value = value;
                 option.textContent = displayText;
-                if (i === 0) option.selected = true; // Current month selected by default
+                if (i === 0) option.selected = true;
                 
                 select.appendChild(option);
             }
         }
-        
+
+
+
         /**
          * Load real spending data from transactions
          */
