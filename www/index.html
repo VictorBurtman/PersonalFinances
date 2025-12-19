@@ -1594,6 +1594,10 @@
             authManager.applyLanguage(lang);
             updateLanguageButtons(lang);
             
+            // ✅ AJOUTE : Sauvegarder dans localStorage
+            localStorage.setItem('language', lang);
+            currentLanguage = lang;
+            
             // Fermer le dropdown
             const dropdown = document.getElementById('languageDropdown');
             dropdown.style.display = 'none';
@@ -1867,14 +1871,19 @@
                     // ✅ DÉFINIR LA LANGUE EN PREMIER - AVANT TOUT
                     const firestoreLang = data.language;
                     const localStorageLang = localStorage.getItem('language');
-                    
-                    if (firestoreLang && translations[firestoreLang]) {
-                        currentLanguage = firestoreLang;
-                    } else if (localStorageLang && translations[localStorageLang]) {
+
+                    // ✅ PRIORITÉ AU LOCALSTORAGE (langue choisie sur écran de connexion)
+                    if (localStorageLang && translations[localStorageLang]) {
                         currentLanguage = localStorageLang;
-                        await db.collection('users').doc(currentUser.uid).set({
-                            language: localStorageLang
-                        }, { merge: true });
+                        // Synchroniser avec Firebase
+                        if (firestoreLang !== localStorageLang) {
+                            await db.collection('users').doc(currentUser.uid).set({
+                                language: localStorageLang
+                            }, { merge: true });
+                        }
+                    } else if (firestoreLang && translations[firestoreLang]) {
+                        currentLanguage = firestoreLang;
+                        localStorage.setItem('language', firestoreLang);
                     } else {
                         currentLanguage = 'en';
                     }

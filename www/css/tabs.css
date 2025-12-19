@@ -3573,7 +3573,7 @@ body.dark-mode .trend-count-badge {
 /* Language Dropdown */
 .language-selector-dropdown {
     position: fixed;
-    top: 20px;
+    top: 40px;
     right: 20px;
     z-index: 1000;
 }
