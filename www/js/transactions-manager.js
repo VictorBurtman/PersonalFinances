@@ -749,6 +749,9 @@ function renderTransactions() {
             countsByCurrency[curr]++;
         });
         
+        // Récupérer les traductions
+        const t = translations[currentLanguage] || translations['en'];
+        
         // Afficher chaque total de devise
         totalsContainer.innerHTML = Object.keys(totalsByCurrency)
             .sort() // Trier alphabétiquement
@@ -762,10 +765,13 @@ function renderTransactions() {
                               curr === 'JPY' ? '¥' : 
                               curr;
                 
+                // Singulier ou pluriel selon le nombre
+                const txnLabel = count === 1 ? t.transaction : t.transactions;
+                
                 return `
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
                         <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
-                        <span style="font-size: 0.7em; opacity: 0.85;">${count} ${count === 1 ? 'txn' : 'txns'}</span>
+                        <span style="font-size: 0.7em; opacity: 0.85;">${count} ${txnLabel}</span>
                     </div>
                 `;
             })

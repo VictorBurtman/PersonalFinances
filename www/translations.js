@@ -49,6 +49,8 @@ const translations = {
     // ============================================
     budgetTab: "Budget",
     transactionsTab: "Transactions",
+    transaction: "transaction",
+    transactions: "transactions",
     settings: "Settings",
     settingsTitle: "⚙️ Settings",
     
@@ -540,6 +542,8 @@ const translations = {
         // ============================================
         budgetTab: "Budget",
         transactionsTab: "Transactions",
+        transaction: "transaction",
+        transactions: "transactions",
         settings: "Paramètres",
         settingsTitle: "⚙️ Paramètres",
         
@@ -1031,6 +1035,8 @@ const translations = {
         // ============================================
         budgetTab: "תקציב",
         transactionsTab: "עסקאות",
+        transaction: "עסקה",
+        transactions: "עסקאות",
         settings: "הגדרות",
         settingsTitle: "⚙️ הגדרות",
         
@@ -1522,6 +1528,9 @@ const translations = {
         // ============================================
         budgetTab: "Presupuesto",
         transactionsTab: "Transacciones",
+        transaction: "transacción",
+        transactions: "transacciones",
+
         settings: "Configuración",
         settingsTitle: "⚙️ Configuración",
         
@@ -2013,6 +2022,8 @@ const translations = {
         // ============================================
         budgetTab: "Бюджет",
         transactionsTab: "Транзакции",
+        transaction: "транзакция",
+        transactions: "транзакции",
         settings: "Настройки",
         settingsTitle: "⚙️ Настройки",
         
@@ -2504,6 +2515,8 @@ const translations = {
         // ============================================
         budgetTab: "الميزانية",
         transactionsTab: "المعاملات",
+        transaction: "معاملة",
+        transactions: "معاملات",
         settings: "الإعدادات",
         settingsTitle: "⚙️ الإعدادات",
         
@@ -2995,6 +3008,8 @@ const translations = {
         // ============================================
         budgetTab: "Budget",
         transactionsTab: "Transaktionen",
+        transaction: "Transaktion",
+        transactions: "Transaktionen",
         settings: "Einstellungen",
         settingsTitle: "⚙️ Einstellungen",
         
@@ -3486,6 +3501,8 @@ const translations = {
         // ============================================
         budgetTab: "Budget",
         transactionsTab: "Transazioni",
+        transaction: "transazione",
+        transactions: "transazioni",
         settings: "Impostazioni",
         settingsTitle: "⚙️ Impostazioni",
         
@@ -3926,6 +3943,8 @@ const translations = {
         // ============================================
         budgetTab: "Orçamento",
         transactionsTab: "Transações",
+        transaction: "transação",
+        transactions: "transações",
         settings: "Configurações",
         settingsTitle: "⚙️ Configurações",
         
@@ -4417,6 +4436,8 @@ const translations = {
         // ============================================
         budgetTab: "Bütçe",
         transactionsTab: "İşlemler",
+        transaction: "işlem",
+        transactions: "işlemler",
         settings: "Ayarlar",
         settingsTitle: "⚙️ Ayarlar",
         
@@ -4908,6 +4929,8 @@ const translations = {
         // ============================================
         budgetTab: "बजट",
         transactionsTab: "लेनदेन",
+        transaction: "लेन-देन",
+        transactions: "लेन-देन",
         settings: "सेटिंग्स",
         settingsTitle: "⚙️ सेटिंग्स",
         
