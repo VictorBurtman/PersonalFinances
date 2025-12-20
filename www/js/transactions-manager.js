@@ -737,13 +737,16 @@ function renderTransactions() {
     const totalsContainer = document.getElementById('transactionTotals');
     if (totalsContainer) {
         const totalsByCurrency = {};
+        const countsByCurrency = {}; // Compter les transactions par devise
         
         filteredTransactionsData.forEach(txn => {
             const curr = txn.currency || 'ILS';
             if (!totalsByCurrency[curr]) {
                 totalsByCurrency[curr] = 0;
+                countsByCurrency[curr] = 0;
             }
             totalsByCurrency[curr] += txn.chargedAmount;
+            countsByCurrency[curr]++;
         });
         
         // Afficher chaque total de devise
@@ -751,6 +754,7 @@ function renderTransactions() {
             .sort() // Trier alphabétiquement
             .map(curr => {
                 const total = totalsByCurrency[curr];
+                const count = countsByCurrency[curr];
                 const symbol = curr === 'ILS' ? '₪' : 
                               curr === 'USD' ? '$' : 
                               curr === 'EUR' ? '€' : 
@@ -759,9 +763,10 @@ function renderTransactions() {
                               curr;
                 
                 return `
-                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; font-size: 0.9em;">
-                        ${symbol}${Math.abs(total).toFixed(2)}
-                    </span>
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                        <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
+                        <span style="font-size: 0.7em; opacity: 0.85;">${count} ${count === 1 ? 'txn' : 'txns'}</span>
+                    </div>
                 `;
             })
             .join('');
