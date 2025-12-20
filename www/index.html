@@ -643,11 +643,13 @@
 
                     <!-- All Transactions - Always visible -->
                     <div class="transactions-section" id="allTransactionsSection">
-                        <div class="section-title-trans" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                            <span><span data-translate="allTransactions">📋 All Transactions</span> (<span id="transactionCount">0</span>)</span>
-                            <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; font-size: 0.9em;">
-                                <span id="transactionTotal">₪0</span>
+                        <div class="section-title-trans" style="display: flex; flex-direction: column; gap: 10px;">
+                            <span style="font-size: 1.3em; font-weight: 600;">
+                                <span data-translate="allTransactions">Transactions</span> (<span id="transactionCount">0</span>)
                             </span>
+                            <div id="transactionTotals" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <!-- Les totaux par devise seront insérés ici -->
+                            </div>
                         </div>
                         
                         <!-- Loading state inside All Transactions -->

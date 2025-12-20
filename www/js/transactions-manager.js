@@ -676,6 +676,7 @@ function clearFilters() {
     applyFilters();
 }
 
+
 /**
  * Render all transactions
  */
@@ -693,9 +694,9 @@ function renderTransactions() {
         
         // ✅ Mettre à jour le header même si vide
         const countEl = document.getElementById('transactionCount');
-        const totalEl = document.getElementById('transactionTotal');
+        const totalsContainer = document.getElementById('transactionTotals');
         if (countEl) countEl.textContent = '0';
-        if (totalEl) totalEl.textContent = `${currency}0`;
+        if (totalsContainer) totalsContainer.innerHTML = '';
         
         return;
     }
@@ -726,20 +727,46 @@ function renderTransactions() {
         container.appendChild(loadMoreBtn);
     }
     
-    // ✅ NOUVEAU : Mettre à jour le compteur et le total
+    // ✅ NOUVEAU : Mettre à jour le compteur
     const countEl = document.getElementById('transactionCount');
-    const totalEl = document.getElementById('transactionTotal');
-    
     if (countEl) {
         countEl.textContent = filteredTransactionsData.length;
     }
     
-    if (totalEl) {
-        const total = filteredTransactionsData.reduce((sum, txn) => sum + txn.chargedAmount, 0);
-        totalEl.textContent = `${currency}${Math.abs(total).toFixed(2)}`;
+    // ✅ NOUVEAU : Calculer et afficher les totaux par devise
+    const totalsContainer = document.getElementById('transactionTotals');
+    if (totalsContainer) {
+        const totalsByCurrency = {};
+        
+        filteredTransactionsData.forEach(txn => {
+            const curr = txn.currency || 'ILS';
+            if (!totalsByCurrency[curr]) {
+                totalsByCurrency[curr] = 0;
+            }
+            totalsByCurrency[curr] += txn.chargedAmount;
+        });
+        
+        // Afficher chaque total de devise
+        totalsContainer.innerHTML = Object.keys(totalsByCurrency)
+            .sort() // Trier alphabétiquement
+            .map(curr => {
+                const total = totalsByCurrency[curr];
+                const symbol = curr === 'ILS' ? '₪' : 
+                              curr === 'USD' ? '$' : 
+                              curr === 'EUR' ? '€' : 
+                              curr === 'GBP' ? '£' : 
+                              curr === 'JPY' ? '¥' : 
+                              curr;
+                
+                return `
+                    <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; font-size: 0.9em;">
+                        ${symbol}${Math.abs(total).toFixed(2)}
+                    </span>
+                `;
+            })
+            .join('');
     }
 }
-
 
 /**
  * Load more transactions (pagination)
