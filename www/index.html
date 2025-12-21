@@ -3234,12 +3234,36 @@
 
         /**
          * Générer des couleurs aléatoires pour toutes les catégories
+         * Distribution uniforme sur la plage de hue avec écart minimum
          */
         function randomizeAllColors() {
-            Object.keys(expenses).forEach(categoryKey => {
-                if (categoryKey !== 'income') {
-                    categoryBaseColors[categoryKey] = generateRandomColor();
-                }
+            // Récupérer toutes les catégories sauf income
+            const categoryKeys = Object.keys(expenses).filter(key => key !== 'income');
+            const categoryCount = categoryKeys.length;
+            
+            if (categoryCount === 0) return;
+            
+            // Calculer l'écart entre les teintes
+            const hueStep = 360 / categoryCount;
+            
+            // Créer un array de teintes uniformément espacées
+            let hues = [];
+            for (let i = 0; i < categoryCount; i++) {
+                hues.push(i * hueStep);
+            }
+            
+            // Mélanger l'ordre des teintes (shuffle)
+            hues = hues.sort(() => Math.random() - 0.5);
+            
+            // Ajouter un offset aléatoire global
+            const globalOffset = Math.random() * 360;
+            
+            // Assigner les couleurs aux catégories
+            categoryKeys.forEach((categoryKey, index) => {
+                const finalHue = (hues[index] + globalOffset) % 360;
+                const saturation = 65 + Math.random() * 25; // 65-90%
+                const lightness = 45 + Math.random() * 15;  // 45-60%
+                categoryBaseColors[categoryKey] = hslToHex(finalHue, saturation, lightness);
             });
             
             if (isAdvancedView) {
@@ -3287,6 +3311,18 @@
         function generateRandomHue() {
             return Math.floor(Math.random() * 360);
         }
+
+        // Convertir HSL en HEX
+        function hslToHex(h, s, l) {
+            s /= 100;
+            l /= 100;
+            const k = n => (n + h / 30) % 12;
+            const a = s * Math.min(l, 1 - l);
+            const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+            const toHex = x => Math.round(x * 255).toString(16).padStart(2, '0');
+            return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+        }
+
 
         // Générer une couleur complètement aléatoire
         function generateRandomColor() {
