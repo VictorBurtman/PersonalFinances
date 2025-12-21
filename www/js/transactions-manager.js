@@ -878,7 +878,7 @@ function renderTransactions() {
                 const isSelected = selectedCurrencies.includes(curr);
                 const opacity = isMultiCurrency && !isSelected ? '0.4' : '1';
                 const cursor = isMultiCurrency ? 'pointer' : 'default';
-                const onclick = isMultiCurrency ? `onclick="toggleCurrencyFilter('${curr}', ${JSON.stringify(availableCurrencies)})"` : '';
+                const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
                     <div ${onclick} style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; cursor: ${cursor}; transition: all 0.3s ease;">
