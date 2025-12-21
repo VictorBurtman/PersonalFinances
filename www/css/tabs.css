@@ -708,6 +708,91 @@ body.dark-mode .month-selector {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+
+/* ============================================
+   METRICS CONTAINER - Modern Cards Layout
+   ============================================ */
+.metrics-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.metric-label {
+    font-size: 0.85em;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.metric-percentage {
+    font-size: 0.9em;
+    margin-top: 6px;
+    opacity: 0.85;
+}
+
+/* Dark Mode */
+body.dark-mode .metric-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .metric-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* Responsive - 2 colonnes sur écrans moyens */
+@media (min-width: 600px) {
+    .metrics-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Quand les 3 cartes sont visibles, la dernière prend toute la largeur */
+    .metrics-container:has(.metric-card:nth-child(3):not([style*="display: none"])) {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .metrics-container .metric-card:nth-child(3) {
+        grid-column: 1 / -1; /* Full width */
+    }
+}
+
+/* Responsive - 3 colonnes sur grands écrans */
+@media (min-width: 900px) {
+    .metrics-container:has(.metric-card:nth-child(3):not([style*="display: none"])) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .metrics-container .metric-card:nth-child(3) {
+        grid-column: auto; /* Reset */
+    }
+}
+
+
 /* ============================================
    CHART SECTION
    ============================================ */
