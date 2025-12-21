@@ -3622,7 +3622,7 @@ body.dark-mode .trend-count-badge {
 #conversionInfoIcon::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 125%;
+    top: 135%;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.9);
@@ -3666,6 +3666,7 @@ body.dark-mode .trend-count-badge {
     pointer-events: none;
     transition: opacity 0.3s;
     z-index: 1000;
+    border-bottom-color: rgba(0, 0, 0, 0.9);  /* ✅ Change de border-top à border-bottom */
 }
 
 #conversionInfoIcon:hover::before,
