@@ -2075,6 +2075,8 @@
                 updateDisplay();
                 updateChartButtonsState();
                 loadMonthlyTrendChart();
+                populateMonthDropdown();
+                loadRealSpending();
                 
                 // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
@@ -2365,7 +2367,7 @@
                                 `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
                             
                             // ✅ Utiliser isRealSpendingMode au lieu de compareMode
-                            if (isRealSpendingMode && stats.total > 0) {
+                            if (stats.total > 0) {
                                 statsHTML += renderComparisonInfo(categoryKey, stats.total);
                             }
                             
@@ -3777,7 +3779,6 @@
         }
 
 
-
         /**
          * Load real spending data from transactions
          */
@@ -3990,13 +3991,12 @@
         }
 
 
-
-
         /**
          * Get comparison info for a category
          */
         function getComparisonInfo(category, budget) {
-            if (!compareMode || !realSpendingData[category]) {
+            // ✅ Toujours afficher si on a des données réelles
+            if (!realSpendingData[category]) {
                 return null;
             }
             
@@ -4029,10 +4029,9 @@
             const info = getComparisonInfo(category, budget);
             if (!info) return '';
             
-            // ✅ AJOUTÉ : Récupérer les traductions
             const t = translations[currentLanguage] || translations['en'];
             
-            const emoji = info.status === 'negative' ? '🟢' : info.status === 'positive' ? '🔴' : '🟡';
+            const emoji = info.status === 'negative' ? '✅' : info.status === 'positive' ? '⚠️' : '⚖️';
             
             // Calculer le pourcentage utilisé
             const usedPercent = budget > 0 ? Math.round((info.real / budget) * 100) : 0;
@@ -4051,20 +4050,29 @@
             }
             
             const progressPercent = Math.min((info.real / info.budget) * 100, 150);
+            const progressColor = info.status === 'positive' ? '#dc3545' : 
+                                info.status === 'negative' ? '#28a745' : '#ffc107';
             
             return `
-                <div class="compare-info">
-                    <div class="budget-label">${t.budget || 'Budget'}: ${currency}${info.budget.toFixed(0)}</div>
-                    <div class="real-label">${t.real || 'Real'}: ${currency}${info.real.toFixed(0)}</div>
-                    <div class="diff ${info.status}">${message} ${emoji}</div>
-                </div>
-                <div class="compare-progress">
-                    <div class="compare-progress-bar ${info.status === 'positive' ? 'over-budget' : info.status === 'negative' ? 'under-budget' : 'near-budget'}" 
-                         style="width: ${progressPercent}%">
+                <div style="margin-top: 10px; padding: 10px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; border-left: 3px solid ${progressColor};">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85em;">
+                        <span style="color: #666;">${t.budget || 'Budget'}:</span>
+                        <span style="font-weight: 600;">${currency}${info.budget.toFixed(0)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85em;">
+                        <span style="color: #666;">${t.real || 'Real'}:</span>
+                        <span style="font-weight: 600; color: ${progressColor};">${currency}${info.real.toFixed(0)}</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
+                        <div style="width: ${progressPercent}%; height: 100%; background: ${progressColor}; transition: width 0.3s;"></div>
+                    </div>
+                    <div style="text-align: center; font-size: 0.8em; color: ${progressColor}; font-weight: 600;">
+                        ${message} ${emoji}
                     </div>
                 </div>
             `;
         }
+
 
 
         async function deleteExpenseItem(category, index) {
