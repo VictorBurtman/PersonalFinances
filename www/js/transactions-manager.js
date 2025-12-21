@@ -400,13 +400,13 @@ async function applyFilters() {
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
     const typeFilter = document.getElementById('typeFilter')?.value || 'all';
     
-    // ✅ Afficher/cacher le bouton clear search
+    // Afficher/cacher le bouton clear search
     const clearSearchBtn = document.getElementById('clearSearchBtn');
     if (clearSearchBtn) {
         clearSearchBtn.style.display = searchFilter ? 'block' : 'none';
     }
     
-    // ✅ Sauvegarder les filtres dans Firebase
+    // Sauvegarder les filtres dans Firebase
     if (window.currentUser && db) {
         try {
             await db.collection('users').doc(window.currentUser.uid).set({
@@ -426,66 +426,45 @@ async function applyFilters() {
     
     // Filter transactions
     filteredTransactionsData = transactionsData.filter(txn => {
-        // Filter by labeled status (radio buttons)
-        if (labelFilter === 'unlabeled' && txn.isLabeled) {
-            return false;
-        }
-        if (labelFilter === 'labeled' && !txn.isLabeled) {
-            return false;
-        }
-        // 'all' = no filter on labeled status
+        // Filter by labeled status
+        if (labelFilter === 'unlabeled' && txn.isLabeled) return false;
+        if (labelFilter === 'labeled' && !txn.isLabeled) return false;
         
         // Filter by type (income/expenses)
-        if (typeFilter === 'expenses' && txn.chargedAmount > 0) {
-            return false;
-        }
-        if (typeFilter === 'income' && txn.chargedAmount < 0) {
-            return false;
-        }
+        if (typeFilter === 'expenses' && txn.chargedAmount > 0) return false;
+        if (typeFilter === 'income' && txn.chargedAmount < 0) return false;
         
         // Filter by month
         if (monthFilter) {
             const date = new Date(txn.date);
             const txnMonthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-            if (txnMonthKey !== monthFilter) {
-                return false;
-            }
+            if (txnMonthKey !== monthFilter) return false;
         }
         
         // Filter by source
         if (sourceFilter) {
-            // Si c'est un CSV spécifique (filtre par bankName)
             if (sourceFilter.startsWith('csv:')) {
                 const bankName = sourceFilter.replace('csv:', '');
-                if (txn.source !== 'csv' || txn.bankName !== bankName) {
-                    return false;
-                }
-            }
-            // Si c'est max ou isracard
-            else if (txn.source !== sourceFilter) {
+                if (txn.source !== 'csv' || txn.bankName !== bankName) return false;
+            } else if (txn.source !== sourceFilter) {
                 return false;
             }
         }
         
         // Filter by category
-        if (categoryFilter && txn.category !== categoryFilter) {
-            return false;
-        }
+        if (categoryFilter && txn.category !== categoryFilter) return false;
         
         // Filter by search text
         if (searchFilter) {
             const description = (txn.description || '').toLowerCase();
             const memo = (txn.memo || '').toLowerCase();
-            
-            if (!description.includes(searchFilter) && !memo.includes(searchFilter)) {
-                return false;
-            }
+            if (!description.includes(searchFilter) && !memo.includes(searchFilter)) return false;
         }
         
         return true;
     });
     
-    // ✅ NOUVEAU : Filtre par devise sélectionnée (quick filter)
+    // Filtre par devise sélectionnée (quick filter)
     if (selectedCurrencies.length > 0) {
         const allCurrencies = [...new Set(
             transactionsData.map(txn => txn.currency || 'ILS')
@@ -499,15 +478,16 @@ async function applyFilters() {
         }
     }
     
-    // ✅ Réinitialiser la pagination
+    // Réinitialiser la pagination
     displayedTransactionsCount = BATCH_SIZE;
 
     // Apply sorting
     sortTransactions();
     renderTransactions();
     
-    // ✅ Mettre à jour la couleur du bouton filtres
+    // Mettre à jour la couleur du bouton filtres (inclut le filtre devise)
     updateFiltersButtonColor();
+    updateFiltersButtonState();
 }
 
 /**
@@ -521,6 +501,55 @@ function clearSearchFilter() {
         searchInput.value = '';
         if (clearBtn) clearBtn.style.display = 'none';
         applyFilters();
+    }
+}
+
+/**
+ * Toggle currency filter (quick filter)
+ */
+function toggleCurrencyFilter(currency, availableCurrencies) {
+    // Si une seule devise, ne rien faire
+    if (availableCurrencies.length === 1) return;
+    
+    const index = selectedCurrencies.indexOf(currency);
+    
+    if (index === -1) {
+        // Ajouter la devise
+        selectedCurrencies.push(currency);
+    } else {
+        // Retirer la devise
+        selectedCurrencies.splice(index, 1);
+    }
+    
+    // Si toutes les devises sont désélectionnées, tout réactiver
+    if (selectedCurrencies.length === 0) {
+        selectedCurrencies = [...availableCurrencies];
+    }
+    
+    // Re-rendre la liste
+    applyFilters();
+}
+
+/**
+ * Update filters button state (for currency quick filter)
+ */
+function updateFiltersButtonState() {
+    const filtersBtn = document.getElementById('filtersBtn');
+    if (!filtersBtn) return;
+    
+    // Compter le nombre total de devises disponibles
+    const allCurrencies = [...new Set(
+        transactionsData.map(txn => txn.currency || 'ILS')
+    )];
+    
+    // Si un filtre devise est actif (pas toutes sélectionnées)
+    const isFilterActive = selectedCurrencies.length > 0 && 
+                          selectedCurrencies.length < allCurrencies.length;
+    
+    if (isFilterActive) {
+        filtersBtn.style.filter = 'brightness(0) saturate(100%) invert(60%) sepia(100%) saturate(2000%) hue-rotate(10deg)';
+    } else {
+        filtersBtn.style.filter = '';
     }
 }
 
@@ -3529,3 +3558,9 @@ if (typeof tabsManager !== 'undefined' && tabsManager.getCurrentTab() === 'trans
     window.addEventListener('scroll', handleScrollButton);
     handleScrollButton();
 }
+
+
+
+// Expose functions globally
+window.toggleCurrencyFilter = toggleCurrencyFilter;
+window.updateFiltersButtonState = updateFiltersButtonState;
