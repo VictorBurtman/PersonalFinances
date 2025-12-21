@@ -71,6 +71,8 @@ const translations = {
     underBy: "Under by",
     exactly: "Exact match",
     used: "used",
+    ofExpenses: "of expenses",
+
     
     // Budget modes
     budgetVsReal: "Budget vs Real",
@@ -564,6 +566,8 @@ const translations = {
         underBy: "Économie de",
         exactly: "Montant exact",
         used: "utilisé",
+        ofExpenses: "des dépenses",
+        
         
         // Budget modes
         budgetVsReal: "Budget vs Réel",
@@ -1057,6 +1061,8 @@ const translations = {
         underBy: "חיסכון של",
         exactly: "סכום מדויק",
         used: "בשימוש",
+        ofExpenses: "מההוצאות",
+
         
         // Budget modes
         budgetVsReal: "תקציב מול בפועל",
@@ -1551,6 +1557,7 @@ const translations = {
         underBy: "Ahorro de",
         exactly: "Cantidad exacta",
         used: "usado",
+        ofExpenses: "de gastos",
         
         // Budget modes
         budgetVsReal: "Presupuesto vs Real",
@@ -2044,6 +2051,7 @@ const translations = {
         underBy: "Экономия",
         exactly: "Точная сумма",
         used: "использовано",
+        ofExpenses: "от расходов",
         
         // Budget modes
         budgetVsReal: "Бюджет vs Факт",
@@ -2537,6 +2545,8 @@ const translations = {
         underBy: "توفير بمقدار",
         exactly: "المبلغ الدقيق",
         used: "مستخدم",
+        ofExpenses: "من النفقات",
+
         
         // Budget modes
         budgetVsReal: "الميزانية مقابل الفعلي",
@@ -3030,6 +3040,8 @@ const translations = {
         underBy: "Erspart",
         exactly: "Genauer Betrag",
         used: "verwendet",
+        ofExpenses: "von Ausgaben",
+
         
         // Budget modes
         budgetVsReal: "Budget vs. Tatsächlich",
@@ -3523,6 +3535,8 @@ const translations = {
         underBy: "Risparmio di",
         exactly: "Importo esatto",
         used: "utilizzato",
+        ofExpenses: "delle spese",
+
         budgetVsReal: "Budget vs Effettivo",
         pieChart: "🍩 Grafico a torta",
         barChart: "📊 Grafico a barre",
@@ -3965,6 +3979,8 @@ const translations = {
         underBy: "Economizado",
         exactly: "Valor exato",
         used: "usado",
+        ofExpenses: "das despesas",
+
         
         // Budget modes
         budgetVsReal: "Orçamento vs Real",
@@ -4458,6 +4474,8 @@ const translations = {
         underBy: "Tasarruf",
         exactly: "Tam miktar",
         used: "kullanıldı",
+        ofExpenses: "giderlerden",
+
         
         // Budget modes
         budgetVsReal: "Bütçe vs Gerçek",
@@ -4951,6 +4969,7 @@ const translations = {
         underBy: "बचत",
         exactly: "सटीक राशि",
         used: "उपयोग किया",
+        ofExpenses: "खर्च का",
         
         // Budget modes
         budgetVsReal: "बजट बनाम वास्तविक",

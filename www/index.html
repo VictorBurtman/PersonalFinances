@@ -2364,7 +2364,7 @@
                         } else {
                             // Ajouter la comparaison si le mode est activé
                             let statsHTML = stats.total > 0 ? 
-                                `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}%)</span>` : '';
+                                `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}% ${t(percentageMode === 'income' ? 'ofIncome' : 'ofExpenses')})</span>` : '';
                             
                             // ✅ Utiliser isRealSpendingMode au lieu de compareMode
                             if (stats.total > 0) {
