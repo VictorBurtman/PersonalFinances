@@ -762,7 +762,7 @@ function updateFiltersButtonState() {
     
     // Compter le nombre total de devises disponibles
     const allCurrencies = [...new Set(
-        (allTransactions || []).map(txn => txn.currency || 'ILS')
+        (transactionsData || []).map(txn => txn.currency || 'ILS')
     )];
     
     // Si un filtre devise est actif (pas toutes sélectionnées)
