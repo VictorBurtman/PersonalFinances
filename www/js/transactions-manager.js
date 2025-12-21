@@ -11,6 +11,7 @@ let transactionsFunctions = null;
 let currentSortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'amount-desc', 'amount-asc', 'frequency-desc', 'frequency-asc'
 let transactionLimit = 2000; // Nombre de transactions à afficher
 let importedCSVs = []; // Liste des CSV importés
+let selectedCurrencies = []; // Filtre rapide par devise
 /**
  * Initialize transactions system
  * Called after Firebase is initialized
@@ -390,9 +391,6 @@ function populateSourceFilter() {
 /**
  * Apply filters and sorting, then render transactions
  */
-/**
- * Apply filters and sorting, then render transactions
- */
 async function applyFilters() {
     // Get filter values
     const labelFilter = document.querySelector('input[name="labelFilter"]:checked')?.value || 'all';
@@ -400,7 +398,7 @@ async function applyFilters() {
     const sourceFilter = document.getElementById('sourceFilter')?.value || '';
     const categoryFilter = document.getElementById('categoryFilter')?.value || '';
     const searchFilter = document.getElementById('searchFilter')?.value.toLowerCase() || '';
-    const typeFilter = document.getElementById('typeFilter')?.value || 'all'; // ✅ AJOUTE
+    const typeFilter = document.getElementById('typeFilter')?.value || 'all';
     
     // ✅ Afficher/cacher le bouton clear search
     const clearSearchBtn = document.getElementById('clearSearchBtn');
@@ -418,7 +416,7 @@ async function applyFilters() {
                     sourceFilter: sourceFilter,
                     categoryFilter: categoryFilter,
                     searchFilter: searchFilter,
-                    typeFilter: typeFilter // ✅ AJOUTE
+                    typeFilter: typeFilter
                 }
             }, { merge: true });
         } catch (error) {
@@ -437,7 +435,7 @@ async function applyFilters() {
         }
         // 'all' = no filter on labeled status
         
-        // ✅ AJOUTE : Filter by type (income/expenses)
+        // Filter by type (income/expenses)
         if (typeFilter === 'expenses' && txn.chargedAmount > 0) {
             return false;
         }
@@ -486,6 +484,20 @@ async function applyFilters() {
         
         return true;
     });
+    
+    // ✅ NOUVEAU : Filtre par devise sélectionnée (quick filter)
+    if (selectedCurrencies.length > 0) {
+        const allCurrencies = [...new Set(
+            transactionsData.map(txn => txn.currency || 'ILS')
+        )];
+        
+        // Appliquer le filtre seulement si toutes les devises ne sont pas sélectionnées
+        if (selectedCurrencies.length < allCurrencies.length) {
+            filteredTransactionsData = filteredTransactionsData.filter(txn => 
+                selectedCurrencies.includes(txn.currency || 'ILS')
+            );
+        }
+    }
     
     // ✅ Réinitialiser la pagination
     displayedTransactionsCount = BATCH_SIZE;
@@ -678,6 +690,61 @@ function clearFilters() {
 
 
 /**
+ * Toggle currency filter
+ */
+function toggleCurrencyFilter(currency, availableCurrencies) {
+    // Si une seule devise, ne rien faire
+    if (availableCurrencies.length === 1) return;
+    
+    const index = selectedCurrencies.indexOf(currency);
+    
+    if (index === -1) {
+        // Ajouter la devise
+        selectedCurrencies.push(currency);
+    } else {
+        // Retirer la devise
+        selectedCurrencies.splice(index, 1);
+    }
+    
+    // Si toutes les devises sont désélectionnées, tout réactiver
+    if (selectedCurrencies.length === 0) {
+        selectedCurrencies = [...availableCurrencies];
+    }
+    
+    // Mettre à jour le bouton filtres
+    updateFiltersButtonState();
+    
+    // Re-rendre la liste
+    renderTransactionsList();
+}
+
+/**
+ * Update filters button color if currency filter is active
+ */
+function updateFiltersButtonState() {
+    const filtersBtn = document.getElementById('filtersBtn');
+    if (!filtersBtn) return;
+    
+    const totalsContainer = document.getElementById('transactionTotals');
+    if (!totalsContainer) return;
+    
+    // Compter le nombre total de devises disponibles
+    const allCurrencies = [...new Set(
+        (allTransactions || []).map(txn => txn.currency || 'ILS')
+    )];
+    
+    // Si un filtre devise est actif (pas toutes sélectionnées)
+    const isFilterActive = selectedCurrencies.length > 0 && 
+                          selectedCurrencies.length < allCurrencies.length;
+    
+    if (isFilterActive) {
+        filtersBtn.style.filter = 'brightness(0) saturate(100%) invert(60%) sepia(100%) saturate(2000%) hue-rotate(10deg)';
+    } else {
+        filtersBtn.style.filter = '';
+    }
+}
+
+/**
  * Render all transactions
  */
 function renderTransactions() {
@@ -753,29 +820,46 @@ function renderTransactions() {
         const t = translations[currentLanguage] || translations['en'];
         
         // Afficher chaque total de devise
-        totalsContainer.innerHTML = Object.keys(totalsByCurrency)
-            .sort() // Trier alphabétiquement
+        const availableCurrencies = Object.keys(totalsByCurrency).sort();
+        const isMultiCurrency = availableCurrencies.length > 1;
+
+        // Initialiser selectedCurrencies si vide
+        if (selectedCurrencies.length === 0) {
+            selectedCurrencies = [...availableCurrencies];
+        }
+
+        totalsContainer.innerHTML = availableCurrencies
             .map(curr => {
                 const total = totalsByCurrency[curr];
                 const count = countsByCurrency[curr];
                 const symbol = curr === 'ILS' ? '₪' : 
-                              curr === 'USD' ? '$' : 
-                              curr === 'EUR' ? '€' : 
-                              curr === 'GBP' ? '£' : 
-                              curr === 'JPY' ? '¥' : 
-                              curr;
+                            curr === 'USD' ? '$' : 
+                            curr === 'EUR' ? '€' : 
+                            curr === 'GBP' ? '£' : 
+                            curr === 'JPY' ? '¥' : 
+                            curr;
                 
                 // Singulier ou pluriel selon le nombre
                 const txnLabel = count === 1 ? t.transaction : t.transactions;
                 
+                // Vérifier si cette devise est sélectionnée
+                const isSelected = selectedCurrencies.includes(curr);
+                const opacity = isMultiCurrency && !isSelected ? '0.4' : '1';
+                const cursor = isMultiCurrency ? 'pointer' : 'default';
+                const onclick = isMultiCurrency ? `onclick="toggleCurrencyFilter('${curr}', ${JSON.stringify(availableCurrencies)})"` : '';
+                
                 return `
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                    <div ${onclick} style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; cursor: ${cursor}; transition: all 0.3s ease;">
                         <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
                         <span style="font-size: 0.7em; opacity: 0.85;">${count} ${txnLabel}</span>
                     </div>
                 `;
             })
             .join('');
+
+        // Mettre à jour l'état du bouton filtres
+        updateFiltersButtonState();
+
     }
 }
 
