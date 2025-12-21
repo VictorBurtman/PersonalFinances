@@ -3623,7 +3623,7 @@ body.dark-mode .trend-count-badge {
     content: attr(data-tooltip);
     position: absolute;
     top: 135%;
-    right: 0;  /* ✅ Ancré à droite */
+    right: -10px;  /* ✅ Décale un peu vers la droite */
     transform: translateX(0);  /* ✅ Pas de décalage */
     background: rgba(0, 0, 0, 0.9);
     color: white;
@@ -3653,25 +3653,6 @@ body.dark-mode .trend-count-badge {
     opacity: 1;
 }
 
-/* Flèche du tooltip */
-#conversionInfoIcon::before {
-    content: '';
-    position: absolute;
-    top: 125%;
-    right: 12px;  /* ✅ Positionnée à droite, alignée avec l'icône */
-    transform: translateX(0);
-    border: 6px solid transparent;
-    border-bottom-color: rgba(0, 0, 0, 0.9);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    z-index: 1000;
-}
-
-#conversionInfoIcon:hover::before,
-#conversionInfoIcon:active::before {
-    opacity: 1;
-}
 
 /* Language Dropdown */
 .language-selector-dropdown {
