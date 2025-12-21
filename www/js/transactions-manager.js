@@ -747,7 +747,7 @@ function toggleCurrencyFilter(currency, availableCurrencies) {
     updateFiltersButtonState();
     
     // Re-rendre la liste
-    renderTransactionsList();
+    applyFilters();
 }
 
 /**
