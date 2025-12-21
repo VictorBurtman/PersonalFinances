@@ -876,12 +876,16 @@ function renderTransactions() {
                 
                 // Vérifier si cette devise est sélectionnée
                 const isSelected = selectedCurrencies.includes(curr);
-                const opacity = isMultiCurrency && !isSelected ? '0.4' : '1';
+                const opacity = isMultiCurrency && !isSelected ? '0.5' : '1';
+                const grayscale = isMultiCurrency && !isSelected ? 'grayscale(100%)' : 'none';
                 const cursor = isMultiCurrency ? 'pointer' : 'default';
+                const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
+                const checkmark = isMultiCurrency && isSelected ? '<span style="position: absolute; top: 4px; right: 4px; font-size: 0.9em;">✓</span>' : '';
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
-                
+
                 return `
-                    <div ${onclick} style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; cursor: ${cursor}; transition: all 0.3s ease;">
+                    <div ${onclick} style="position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; filter: ${grayscale}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">
+                        ${checkmark}
                         <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
                         <span style="font-size: 0.7em; opacity: 0.85;">${count} ${txnLabel}</span>
                     </div>
