@@ -3623,17 +3623,17 @@ body.dark-mode .trend-count-badge {
     content: attr(data-tooltip);
     position: absolute;
     top: 135%;
-    left: 0%;
-    transform: translateX(-20%);  /* ✅ Ajuste le décalage horizontal */
+    right: 0;  /* ✅ Ancré à droite */
+    transform: translateX(0);  /* ✅ Pas de décalage */
     background: rgba(0, 0, 0, 0.9);
     color: white;
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 12px;
-    white-space: normal; /* ✅ Change de nowrap à normal */
-    max-width: 250px; /* ✅ Limite la largeur */
-    width: max-content; /* ✅ S'adapte au contenu */
-    text-align: center; /* ✅ Centre le texte */
+    white-space: normal;
+    max-width: 250px;
+    width: max-content;
+    text-align: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
@@ -3657,11 +3657,11 @@ body.dark-mode .trend-count-badge {
 #conversionInfoIcon::before {
     content: '';
     position: absolute;
-    top: 125%;  /* ✅ En haut du tooltip (qui est en dessous) */
-    left: 0;
-    transform: translateX(-20%);  /* ✅ Même alignement que le tooltip */
+    top: 125%;
+    right: 12px;  /* ✅ Positionnée à droite, alignée avec l'icône */
+    transform: translateX(0);
     border: 6px solid transparent;
-    border-bottom-color: rgba(0, 0, 0, 0.9);  /* ✅ Flèche qui pointe vers le HAUT */
+    border-bottom-color: rgba(0, 0, 0, 0.9);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
