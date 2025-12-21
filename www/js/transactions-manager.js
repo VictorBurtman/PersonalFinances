@@ -507,6 +507,9 @@ function clearSearchFilter() {
 /**
  * Toggle currency filter (quick filter)
  */
+/**
+ * Toggle currency filter (quick filter)
+ */
 function toggleCurrencyFilter(currency, availableCurrencies) {
     // Si une seule devise, ne rien faire
     if (availableCurrencies.length === 1) return;
@@ -537,7 +540,7 @@ function updateFiltersButtonState() {
     const filtersBtn = document.getElementById('filtersBtn');
     if (!filtersBtn) return;
     
-    // Compter le nombre total de devises disponibles
+    // Compter le nombre total de devises disponibles dans transactionsData
     const allCurrencies = [...new Set(
         transactionsData.map(txn => txn.currency || 'ILS')
     )];
