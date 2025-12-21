@@ -3623,7 +3623,7 @@ body.dark-mode .trend-count-badge {
     content: attr(data-tooltip);
     position: absolute;
     top: 135%;
-    right: -10px;  /* ✅ Décale un peu vers la droite */
+    right: -20px;  /* ✅ Décale un peu vers la droite */
     transform: translateX(0);  /* ✅ Pas de décalage */
     background: rgba(0, 0, 0, 0.9);
     color: white;
