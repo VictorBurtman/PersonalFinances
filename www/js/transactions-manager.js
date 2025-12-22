@@ -465,17 +465,19 @@ async function applyFilters() {
     });
     
     // Filtre par devise sélectionnée (quick filter)
-    if (selectedCurrencies.length > 0) {
-        const allCurrencies = [...new Set(
-            transactionsData.map(txn => txn.currency || 'ILS')
-        )];
-        
-        // Appliquer le filtre seulement si toutes les devises ne sont pas sélectionnées
-        if (selectedCurrencies.length < allCurrencies.length) {
-            filteredTransactionsData = filteredTransactionsData.filter(txn => 
-                selectedCurrencies.includes(txn.currency || 'ILS')
-            );
-        }
+    const allCurrencies = [...new Set(
+        transactionsData.map(txn => txn.currency || 'ILS')
+    )];
+    
+    // Si aucune devise sélectionnée, ne rien afficher
+    if (selectedCurrencies.length === 0) {
+        filteredTransactionsData = [];
+    }
+    // Sinon, filtrer par devises sélectionnées (sauf si toutes sont sélectionnées)
+    else if (selectedCurrencies.length < allCurrencies.length) {
+        filteredTransactionsData = filteredTransactionsData.filter(txn => 
+            selectedCurrencies.includes(txn.currency || 'ILS')
+        );
     }
     
     // Réinitialiser la pagination
@@ -511,15 +513,17 @@ function toggleCurrencyFilter(currency, availableCurrencies) {
     // Si une seule devise, ne rien faire
     if (availableCurrencies.length === 1) return;
     
-    // Si cette devise est la seule sélectionnée, réactiver toutes les devises
-    if (selectedCurrencies.length === 1 && selectedCurrencies[0] === currency) {
-        selectedCurrencies = [...availableCurrencies];
+    const index = selectedCurrencies.indexOf(currency);
+    
+    if (index === -1) {
+        // La devise n'est pas sélectionnée → l'ajouter
+        selectedCurrencies.push(currency);
     } else {
-        // Sinon, sélectionner UNIQUEMENT cette devise
-        selectedCurrencies = [currency];
+        // La devise est sélectionnée → la retirer
+        selectedCurrencies.splice(index, 1);
     }
     
-    // Re-rendre la liste
+    // Re-rendre la liste (même si aucune devise n'est sélectionnée)
     applyFilters();
 }
 
@@ -868,18 +872,15 @@ function renderTransactions() {
                 // Vérifier si cette devise est sélectionnée
                 const isSelected = selectedCurrencies.includes(curr);
                 
-                // Styles selon l'état
-                const bgColor = isMultiCurrency && !isSelected 
-                    ? 'linear-gradient(135deg, #4a4a5e 0%, #3a3a4e 100%)' // Gris sombre désactivé
-                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; // Violet actif
-                
-                const opacity = isMultiCurrency && !isSelected ? '0.7' : '1';
+                // Styles selon l'état - simple gris sombre
+                const bgColor = '#3a3a4e'; // Gris sombre pour tous
+                const opacity = isMultiCurrency && !isSelected ? '0.5' : '1';
                 const cursor = isMultiCurrency ? 'pointer' : 'default';
-                const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.9)' : '1px solid rgba(255,255,255,0.3)';
+                const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} style="width: fit-content; position: relative; background: ${bgColor}; color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block; opacity: ${opacity}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">
+                    <div ${onclick} style="width: fit-content; position: relative; background: ${bgColor}; color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block; opacity: ${opacity}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease;">
                         <div style="display: flex; flex-direction: column; gap: 2px;">
                             <span style="font-size: 0.8em;">${symbol}${Math.abs(total).toFixed(2)}</span>
                             <span style="font-size: 0.6em; opacity: 0.75;">${count} ${txnLabel}</span>
