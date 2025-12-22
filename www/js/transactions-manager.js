@@ -782,9 +782,29 @@ function renderTransactions() {
     
     if (filteredTransactionsData.length === 0) {
         container.innerHTML = '';
-        if (emptyState) emptyState.style.display = 'block';
         if (filtersSection) filtersSection.style.display = 'none';
         if (allTransactionsSection) allTransactionsSection.style.display = 'none';
+        
+        // ✅ Différencier les deux cas d'empty state
+        if (emptyState) {
+            emptyState.style.display = 'block';
+            
+            // Récupérer les traductions
+            const t = translations[currentLanguage] || translations['en'];
+            
+            // Cas 1 : Vraiment aucune transaction
+            if (transactionsData.length === 0) {
+                emptyState.querySelector('.empty-state-icon').textContent = '📭';
+                emptyState.querySelector('[data-translate="noTransactionsAdded"]').textContent = t.noTransactionsAdded || 'No transactions added yet';
+                emptyState.querySelector('[data-translate="addTransactionToStart"]').textContent = t.addTransactionToStart || 'Add a transaction to get started';
+            }
+            // Cas 2 : Transactions existent mais filtrées
+            else {
+                emptyState.querySelector('.empty-state-icon').textContent = '🔍';
+                emptyState.querySelector('[data-translate="noTransactionsAdded"]').textContent = t.noMatchingTransactions || 'No transactions match current filters';
+                emptyState.querySelector('[data-translate="addTransactionToStart"]').textContent = t.adjustFiltersToSeeMore || 'Adjust your filters to see more transactions';
+            }
+        }
         
         // ✅ Mettre à jour le header même si vide
         const countEl = document.getElementById('transactionCount');

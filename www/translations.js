@@ -155,6 +155,8 @@ const translations = {
     loadingTransactions: "Loading transactions...",
     showingTransactions: "Showing {shown} of {total} transactions",
     moreHidden: "{count} more hidden - adjust the \"Show\" filter to see more",
+    adjustFiltersToSeeMore: "Adjust your filters to see more transactions",
+
     
     // Transaction actions
     addTransaction: 'Add Transaction',
@@ -650,6 +652,9 @@ const translations = {
         loadingTransactions: "Chargement des transactions...",
         showingTransactions: "Affichage de {shown} sur {total} transactions",
         moreHidden: "{count} transaction(s) cachée(s) - ajustez le filtre \"Afficher\" pour en voir plus",
+        adjustFiltersToSeeMore: "Ajustez vos filtres pour voir plus de transactions",
+
+        
         
         // Transaction actions
         addTransaction: 'Ajouter une transaction',
@@ -1145,6 +1150,8 @@ const translations = {
         loadingTransactions: "טוען עסקאות...",
         showingTransactions: "מציג {shown} מתוך {total} עסקאות",
         moreHidden: "{count} עסקאות מוסתרות - התאם את מסנן \"הצג\" כדי לראות יותר",
+        adjustFiltersToSeeMore: "התאם את המסננים כדי לראות עוד עסקאות",
+
         
         // Transaction actions
         addTransaction: 'הוסף עסקה',
@@ -1640,6 +1647,7 @@ const translations = {
         loadingTransactions: "Cargando transacciones...",
         showingTransactions: "Mostrando {shown} de {total} transacciones",
         moreHidden: "{count} transacciones ocultas - ajusta el filtro \"Mostrar\" para ver más",
+        adjustFiltersToSeeMore: "Ajusta tus filtros para ver más transacciones",
         
         // Transaction actions
         addTransaction: 'Agregar transacción',
@@ -2134,6 +2142,8 @@ const translations = {
         loadingTransactions: "Загрузка транзакций...",
         showingTransactions: "Показано {shown} из {total} транзакций",
         moreHidden: "Скрыто транзакций: {count} - настройте фильтр \"Показать\" для просмотра",
+        adjustFiltersToSeeMore: "Настройте фильтры, чтобы увидеть больше транзакций",
+
         
         // Transaction actions
         addTransaction: 'Добавить транзакцию',
@@ -2629,6 +2639,8 @@ const translations = {
         loadingTransactions: "جاري تحميل المعاملات...",
         showingTransactions: "عرض {shown} من {total} معاملة",
         moreHidden: "{count} معاملة مخفية - اضبط مرشح \"عرض\" لرؤية المزيد",
+        adjustFiltersToSeeMore: "اضبط الفلاتر لرؤية المزيد من المعاملات",
+
         
         // Transaction actions
         addTransaction: 'إضافة معاملة',
@@ -3124,6 +3136,8 @@ const translations = {
         loadingTransactions: "Transaktionen werden geladen...",
         showingTransactions: "{shown} von {total} Transaktionen werden angezeigt",
         moreHidden: "{count} weitere ausgeblendet - passen Sie den \"Anzeigen\"-Filter an, um mehr zu sehen",
+        adjustFiltersToSeeMore: "Passen Sie Ihre Filter an, um weitere Transaktionen zu sehen",
+
         
         // Transaction actions
         addTransaction: 'Transaktion hinzufügen',
@@ -3607,6 +3621,8 @@ const translations = {
         loadingTransactions: "Caricamento transazioni...",
         showingTransactions: "Visualizzazione di {shown} su {total} transazioni",
         moreHidden: "{count} transazione(i) nascosta(e) - regola il filtro \"Mostra\" per vederne di più",
+        adjustFiltersToSeeMore: "Regola i filtri per vedere più transazioni",
+
         addTransaction: 'Aggiungi transazione',
         addManualTransaction: 'Aggiungi transazione',
         transactionName: 'Nome',
@@ -4063,6 +4079,8 @@ const translations = {
         loadingTransactions: "Carregando transações...",
         showingTransactions: "Mostrando {shown} de {total} transações",
         moreHidden: "{count} ocultas - ajuste o filtro \"Mostrar\" para ver mais",
+        adjustFiltersToSeeMore: "Ajuste seus filtros para ver mais transações",
+
         
         // Transaction actions
         addTransaction: 'Adicionar transação',
@@ -4558,6 +4576,8 @@ const translations = {
         loadingTransactions: "İşlemler yükleniyor...",
         showingTransactions: "{total} işlemden {shown} tanesi gösteriliyor",
         moreHidden: "{count} gizli - daha fazla görmek için \"Göster\" filtresini ayarlayın",
+        adjustFiltersToSeeMore: "Daha fazla işlem görmek için filtrelerinizi ayarlayın",
+
         
         // Transaction actions
         addTransaction: 'İşlem ekle',
@@ -5052,6 +5072,8 @@ const translations = {
         loadingTransactions: "लेनदेन लोड हो रहे हैं...",
         showingTransactions: "{total} में से {shown} लेनदेन दिखाए जा रहे हैं",
         moreHidden: "{count} छिपे हुए - और देखने के लिए \"दिखाएं\" फ़िल्टर समायोजित करें",
+        adjustFiltersToSeeMore: "अधिक लेनदेन देखने के लिए अपने फ़िल्टर समायोजित करें",
+
         
         // Transaction actions
         addTransaction: 'लेनदेन जोड़ें',
