@@ -594,6 +594,7 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
    ============================================ */
 
 .total-section {
+    position: relative;  /* ✅ Ajoute cette ligne */
     text-align: center;
     padding: 20px;
     background: #3a3a4e;
