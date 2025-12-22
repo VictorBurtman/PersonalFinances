@@ -873,7 +873,7 @@ function renderTransactions() {
                 const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
                 const checkmark = isMultiCurrency && isSelected ? '<span style="position: absolute; top: 4px; right: 4px; font-size: 0.9em;">✓</span>' : '';
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
-
+                
                 return `
                     <div ${onclick} style="position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; filter: ${grayscale}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">
                         ${checkmark}
