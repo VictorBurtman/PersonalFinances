@@ -828,7 +828,8 @@ function renderTransactions() {
         const totalsByCurrency = {};
         const countsByCurrency = {}; // Compter les transactions par devise
         
-        filteredTransactionsData.forEach(txn => {
+        // ✅ Utiliser transactionsData (toutes les transactions) au lieu de filteredTransactionsData
+        transactionsData.forEach(txn => {
             const curr = txn.currency || 'ILS';
             if (!totalsByCurrency[curr]) {
                 totalsByCurrency[curr] = 0;
