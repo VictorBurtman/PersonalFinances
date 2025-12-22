@@ -875,11 +875,10 @@ function renderTransactions() {
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} style="position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 10px; border-radius: 8px; font-weight: 600; white-space: nowrap; flex: 0 0 auto; opacity: ${opacity}; filter: ${grayscale}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">                        ${checkmark}
-                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
-                            <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
-                            <span style="font-size: 0.7em; opacity: 0.85;">${count} ${txnLabel}</span>
-                        </div>
+                    <div ${onclick} style="position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; opacity: ${opacity}; filter: ${grayscale}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">
+                        ${checkmark}
+                        <span style="font-size: 0.9em;">${symbol}${Math.abs(total).toFixed(2)}</span>
+                        <span style="font-size: 0.7em; opacity: 0.85;">${count} ${txnLabel}</span>
                     </div>
                 `;
             })
