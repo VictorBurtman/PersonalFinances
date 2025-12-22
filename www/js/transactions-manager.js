@@ -875,11 +875,13 @@ function renderTransactions() {
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} style="width: fit-content; position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600;
+                    <div ${onclick} style="width: fit-content; position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block;
 
                         ${checkmark}
-                        <span style="font-size: 0.8em;">${symbol}${Math.abs(total).toFixed(2)}</span>
-                        <span style="font-size: 0.65em; opacity: 0.85;">${count} ${txnLabel}</span>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <span style="font-size: 0.8em;">${symbol}${Math.abs(total).toFixed(2)}</span>
+                            <span style="font-size: 0.65em; opacity: 0.85;">${count} ${txnLabel}</span>
+                        </div>
                     </div>
                 `;
             })
