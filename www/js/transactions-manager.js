@@ -266,7 +266,8 @@ async function loadTransactions() {
     } catch (error) {
         console.error('🔴 [ERROR] loadTransactions:', error);
         const t = translations[currentLanguage] || translations['en'];
-        showToast(t.errorLoadingTransactions + ' ' + error.message, 'error');
+        
+        // ✅ SUPPRIMÉ : showToast qui affichait "undefined..."
         
         // Récupérer les éléments DOM
         const transactionsLoading = document.getElementById('transactionsLoading');
@@ -277,12 +278,19 @@ async function loadTransactions() {
         // Cacher le loading
         if (transactionsLoading) transactionsLoading.style.display = 'none';
         
-        // Afficher l'erreur dans l'empty state
+        // Afficher l'erreur avec bouton Retry
         if (emptyState) {
             emptyState.innerHTML = `
                 <div class="empty-state-icon">⚠️</div>
-                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">Error loading transactions</div>
-                <div style="font-size: 0.9em; opacity: 0.8;">${error.message}</div>
+                <div style="font-size: 1.1em; font-weight: 600; margin-bottom: 10px;">
+                    ${t.errorLoadingTransactions || 'Error loading transactions'}
+                </div>
+                <div style="font-size: 0.9em; opacity: 0.8; margin-bottom: 20px;">
+                    ${t.checkInternetConnection || 'Please check your internet connection and try again'}
+                </div>
+                <button onclick="loadTransactions()" class="primary-btn" style="padding: 10px 20px;">
+                    ${t.retry || 'Retry'}
+                </button>
             `;
             emptyState.style.display = 'block';
         }

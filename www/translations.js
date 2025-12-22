@@ -220,6 +220,9 @@ const translations = {
     copy: 'Copy',
     copied: 'Copied!',
     clickToExpand: 'Click to expand',
+
+    checkInternetConnection: "Please check your internet connection and try again",
+    retry: "Retry",
     
     // ============================================
     // BANK SYNCHRONIZATION
@@ -718,6 +721,8 @@ const translations = {
         copy: 'Copier',
         copied: 'Copié !',
         clickToExpand: 'Cliquer pour développer',
+        checkInternetConnection: "Veuillez vérifier votre connexion internet et réessayer",
+        retry: "Réessayer",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -1215,6 +1220,8 @@ const translations = {
         copy: 'העתק',
         copied: 'הועתק!',
         clickToExpand: 'לחץ להרחבה',
+        checkInternetConnection: "אנא בדוק את החיבור לאינטרנט ונסה שוב",
+        retry: "נסה שוב",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -1711,6 +1718,8 @@ const translations = {
         copy: 'Copiar',
         copied: '¡Copiado!',
         clickToExpand: 'Haz clic para expandir',
+        checkInternetConnection: "Por favor, verifica tu conexión a internet e inténtalo de nuevo",
+        retry: "Reintentar",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -2207,6 +2216,8 @@ const translations = {
         copy: 'Копировать',
         copied: 'Скопировано!',
         clickToExpand: 'Нажмите для развертывания',
+        checkInternetConnection: "Пожалуйста, проверьте подключение к интернету и повторите попытку",
+        retry: "Повторить",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -2704,6 +2715,8 @@ const translations = {
         copy: 'نسخ',
         copied: 'تم النسخ!',
         clickToExpand: 'انقر للتوسيع',
+        checkInternetConnection: "يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى",
+        retry: "إعادة المحاولة",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -3201,6 +3214,8 @@ const translations = {
         copy: 'Kopieren',
         copied: 'Kopiert!',
         clickToExpand: 'Zum Erweitern klicken',
+        checkInternetConnection: "Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut",
+        retry: "Wiederholen",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -3676,6 +3691,8 @@ const translations = {
         copy: 'Copia',
         copied: 'Copiato!',
         clickToExpand: 'Clicca per espandere',
+        checkInternetConnection: "Controlla la tua connessione internet e riprova",
+        retry: "Riprova",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -4144,6 +4161,8 @@ const translations = {
         copy: 'Copiar',
         copied: 'Copiado!',
         clickToExpand: 'Clique para expandir',
+        checkInternetConnection: "Por favor, verifique sua conexão com a internet e tente novamente",
+        retry: "Tentar novamente",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -4641,6 +4660,8 @@ const translations = {
         copy: 'Kopyala',
         copied: 'Kopyalandı!',
         clickToExpand: 'Genişletmek için tıklayın',
+        checkInternetConnection: "Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin",
+        retry: "Tekrar dene",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -5137,6 +5158,8 @@ const translations = {
         copy: 'कॉपी करें',
         copied: 'कॉपी किया गया!',
         clickToExpand: 'विस्तार करने के लिए क्लिक करें',
+        checkInternetConnection: "कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें",
+        retry: "पुन: प्रयास करें",
         
         // ============================================
         // BANK SYNCHRONIZATION
