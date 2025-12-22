@@ -223,6 +223,7 @@ const translations = {
 
     checkInternetConnection: "Please check your internet connection and try again",
     retry: "Retry",
+    errorLoadingTransactions: "Error Loading Transactions",
     
     // ============================================
     // BANK SYNCHRONIZATION
@@ -723,6 +724,7 @@ const translations = {
         clickToExpand: 'Cliquer pour développer',
         checkInternetConnection: "Veuillez vérifier votre connexion internet et réessayer",
         retry: "Réessayer",
+        errorLoadingTransactions: "Erreur de chargement des transactions",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -1222,6 +1224,8 @@ const translations = {
         clickToExpand: 'לחץ להרחבה',
         checkInternetConnection: "אנא בדוק את החיבור לאינטרנט ונסה שוב",
         retry: "נסה שוב",
+        errorLoadingTransactions: "שגיאה בטעינת העסקאות",
+
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -1720,6 +1724,7 @@ const translations = {
         clickToExpand: 'Haz clic para expandir',
         checkInternetConnection: "Por favor, verifica tu conexión a internet e inténtalo de nuevo",
         retry: "Reintentar",
+        errorLoadingTransactions: "Error al cargar transacciones",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -2218,6 +2223,7 @@ const translations = {
         clickToExpand: 'Нажмите для развертывания',
         checkInternetConnection: "Пожалуйста, проверьте подключение к интернету и повторите попытку",
         retry: "Повторить",
+        errorLoadingTransactions: "Ошибка загрузки транзакций",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -2717,6 +2723,7 @@ const translations = {
         clickToExpand: 'انقر للتوسيع',
         checkInternetConnection: "يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى",
         retry: "إعادة المحاولة",
+        errorLoadingTransactions: "خطأ في تحميل المعاملات",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -3216,6 +3223,7 @@ const translations = {
         clickToExpand: 'Zum Erweitern klicken',
         checkInternetConnection: "Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut",
         retry: "Wiederholen",
+        errorLoadingTransactions: "Fehler beim Laden der Transaktionen",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -3693,6 +3701,7 @@ const translations = {
         clickToExpand: 'Clicca per espandere',
         checkInternetConnection: "Controlla la tua connessione internet e riprova",
         retry: "Riprova",
+        errorLoadingTransactions: "Errore nel caricamento delle transazioni",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -4163,6 +4172,7 @@ const translations = {
         clickToExpand: 'Clique para expandir',
         checkInternetConnection: "Por favor, verifique sua conexão com a internet e tente novamente",
         retry: "Tentar novamente",
+        errorLoadingTransactions: "Erro ao carregar transações",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -4662,6 +4672,7 @@ const translations = {
         clickToExpand: 'Genişletmek için tıklayın',
         checkInternetConnection: "Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin",
         retry: "Tekrar dene",
+        errorLoadingTransactions: "İşlemler yüklenirken hata oluştu",
         
         // ============================================
         // BANK SYNCHRONIZATION
@@ -5160,6 +5171,7 @@ const translations = {
         clickToExpand: 'विस्तार करने के लिए क्लिक करें',
         checkInternetConnection: "कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें",
         retry: "पुन: प्रयास करें",
+        errorLoadingTransactions: "लेनदेन लोड करने में त्रुटि",
         
         // ============================================
         // BANK SYNCHRONIZATION
