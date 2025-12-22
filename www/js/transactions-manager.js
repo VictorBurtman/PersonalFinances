@@ -469,12 +469,13 @@ async function applyFilters() {
         transactionsData.map(txn => txn.currency || 'ILS')
     )];
     
-    // Si aucune devise sélectionnée, ne rien afficher
-    if (selectedCurrencies.length === 0) {
-        filteredTransactionsData = [];
+    // ✅ Initialiser selectedCurrencies avec toutes les devises au premier chargement
+    if (selectedCurrencies.length === 0 && allCurrencies.length > 0) {
+        selectedCurrencies = [...allCurrencies];
     }
-    // Sinon, filtrer par devises sélectionnées (sauf si toutes sont sélectionnées)
-    else if (selectedCurrencies.length < allCurrencies.length) {
+    
+    // Filtrer par devises sélectionnées (seulement si pas toutes sélectionnées)
+    if (selectedCurrencies.length > 0 && selectedCurrencies.length < allCurrencies.length) {
         filteredTransactionsData = filteredTransactionsData.filter(txn => 
             selectedCurrencies.includes(txn.currency || 'ILS')
         );
