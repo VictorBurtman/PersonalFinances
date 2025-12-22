@@ -867,20 +867,22 @@ function renderTransactions() {
                 
                 // Vérifier si cette devise est sélectionnée
                 const isSelected = selectedCurrencies.includes(curr);
-                const opacity = isMultiCurrency && !isSelected ? '0.5' : '1';
-                const grayscale = isMultiCurrency && !isSelected ? 'grayscale(100%)' : 'none';
+                
+                // Styles selon l'état
+                const bgColor = isMultiCurrency && !isSelected 
+                    ? 'linear-gradient(135deg, #4a4a5e 0%, #3a3a4e 100%)' // Gris sombre désactivé
+                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; // Violet actif
+                
+                const opacity = isMultiCurrency && !isSelected ? '0.7' : '1';
                 const cursor = isMultiCurrency ? 'pointer' : 'default';
-                const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
-                const checkmark = isMultiCurrency && isSelected ? '<span style="position: absolute; top: 4px; right: 4px; font-size: 0.9em;">✓</span>' : '';
+                const border = isMultiCurrency && isSelected ? '2px solid rgba(255,255,255,0.9)' : '1px solid rgba(255,255,255,0.3)';
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} style="width: fit-content; position: relative; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block;
-
-                        ${checkmark}
+                    <div ${onclick} style="width: fit-content; position: relative; background: ${bgColor}; color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block; opacity: ${opacity}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease; box-shadow: ${isSelected && isMultiCurrency ? '0 4px 12px rgba(102, 126, 234, 0.4)' : 'none'};">
                         <div style="display: flex; flex-direction: column; gap: 2px;">
                             <span style="font-size: 0.8em;">${symbol}${Math.abs(total).toFixed(2)}</span>
-                            <span style="font-size: 0.65em; opacity: 0.85;">${count} ${txnLabel}</span>
+                            <span style="font-size: 0.6em; opacity: 0.75;">${count} ${txnLabel}</span>
                         </div>
                     </div>
                 `;
