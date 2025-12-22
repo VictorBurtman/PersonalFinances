@@ -507,26 +507,16 @@ function clearSearchFilter() {
 /**
  * Toggle currency filter (quick filter)
  */
-/**
- * Toggle currency filter (quick filter)
- */
 function toggleCurrencyFilter(currency, availableCurrencies) {
     // Si une seule devise, ne rien faire
     if (availableCurrencies.length === 1) return;
     
-    const index = selectedCurrencies.indexOf(currency);
-    
-    if (index === -1) {
-        // Ajouter la devise
-        selectedCurrencies.push(currency);
-    } else {
-        // Retirer la devise
-        selectedCurrencies.splice(index, 1);
-    }
-    
-    // Si toutes les devises sont désélectionnées, tout réactiver
-    if (selectedCurrencies.length === 0) {
+    // Si cette devise est la seule sélectionnée, réactiver toutes les devises
+    if (selectedCurrencies.length === 1 && selectedCurrencies[0] === currency) {
         selectedCurrencies = [...availableCurrencies];
+    } else {
+        // Sinon, sélectionner UNIQUEMENT cette devise
+        selectedCurrencies = [currency];
     }
     
     // Re-rendre la liste
