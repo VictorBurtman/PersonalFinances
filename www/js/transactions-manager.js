@@ -877,7 +877,7 @@ function renderTransactions() {
                 const bgColor = '#3a3a4e'; // Gris sombre pour tous
                 const opacity = isMultiCurrency && !isSelected ? '0.5' : '1';
                 const cursor = isMultiCurrency ? 'pointer' : 'default';
-                const border = isMultiCurrency && isSelected ? '1px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
+                const border = isMultiCurrency && isSelected ? '.5px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.2)';
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
