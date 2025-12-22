@@ -596,7 +596,7 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
 .total-section {
     text-align: center;
     padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #3a3a4e;
     border-radius: 15px;
     color: white;
     margin-bottom: 20px;
