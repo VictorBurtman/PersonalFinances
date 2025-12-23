@@ -3946,7 +3946,9 @@
         let isSpentMode = false; // ✅ Ajoute cette ligne si elle n'existe pas
 
         function setBudgetMode(isSpent) {
-            isSpentMode = isSpent;
+            isRealSpendingMode = isSpent; // ✅ Utilise la bonne variable
+            
+            console.log('🔄 Budget mode changed to:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
             
             // Mettre à jour les boutons actifs
             const estimatedTab = document.getElementById('estimatedTab');
@@ -3962,13 +3964,29 @@
                 }
             }
             
-            updateDisplay();
+            if (isRealSpendingMode) {
+                // Mode "Dépensé" activé
+                loadRealSpending(); // Pour les totaux
+                loadRealSpendingForChart(); // Pour le graphique
+            } else {
+                // Mode "Estimé" activé
+                updateDisplay();
+            }
         }
 
-        // Garder la compatibilité avec l'ancien code si besoin
+        // Compatibilité avec l'ancien toggle
         function toggleBudgetMode() {
-            setBudgetMode(!isSpentMode);
+            const toggle = document.getElementById('budgetModeToggle');
+            if (toggle) {
+                isRealSpendingMode = toggle.checked;
+                setBudgetMode(isRealSpendingMode);
+            } else {
+                setBudgetMode(!isRealSpendingMode);
+            }
         }
+
+
+
 
         /**
          * Load real spending data for chart
