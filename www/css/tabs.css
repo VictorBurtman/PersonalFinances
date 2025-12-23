@@ -3010,19 +3010,20 @@ body.dark-mode .chartjs-legend span {
 .budget-mode-tabs {
     display: flex;
     gap: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 2px;
+    width: fit-content; /* ✅ Prend seulement la largeur nécessaire */
 }
 
 .budget-tab {
-    padding: 8px 20px;
+    padding: 6px 14px; /* ✅ Réduit de 8px 20px à 6px 14px */
     border: none;
     background: transparent;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 13px;
+    font-size: 12px; /* ✅ Réduit de 13px à 12px */
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: 8px; /* ✅ Réduit de 10px à 8px */
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
