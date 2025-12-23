@@ -590,147 +590,30 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
 }
 
 /* ============================================
-   TOTAL SECTION (Budget Tab)
-   ============================================ */
-
-.total-section {
-    position: relative;  /* ✅ Ajoute cette ligne */
-    text-align: left;
-    padding: 0;
-    background: transparent;
-    border-radius: 15px;
-    color: white;
-    margin-bottom: 20px;
-}
-
-.total-section h2 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    opacity: 0.9;
-    font-weight: 500;
-}
-
-.total-amount {
-    font-size: 2.5em;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-
-.budget-mode-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    gap: 15px;
-}
-
-.toggle-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.toggle-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
-    white-space: nowrap;
-}
-
-body.dark-mode .toggle-label {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.3);
-    transition: 0.3s;
-    border-radius: 24px;
-}
-
-.toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-
-.toggle-switch input:checked + .toggle-slider {
-    background-color: rgba(40, 167, 69, 0.6);
-}
-
-.toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(20px);
-}
-
-.month-selector {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-    flex-shrink: 0;
-}
-
-.month-selector option {
-    background: #667eea;
-    color: white;
-}
-
-body.dark-mode .month-selector {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-
-/* ============================================
    METRICS CONTAINER - Modern Cards Layout
    ============================================ */
 .metrics-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 10px;  /* ✅ Réduit de 12px à 10px */
+    gap: 12px;
     margin-top: 15px;
-    width: 100%;  /* ✅ Assure que ça prend toute la largeur */
+    margin-left: -5px;   /* ✅ Déborde légèrement à gauche */
+    margin-right: -5px;  /* ✅ Déborde légèrement à droite */
+    width: calc(100% + 10px);  /* ✅ Compense les marges */
 }
 
 .metric-card {
     border-radius: 20px;
     padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 /* Gradient overlay subtil */
@@ -741,57 +624,76 @@ body.dark-mode .month-selector {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%);
     pointer-events: none;
 }
 
-
-/* Effet brillant sur le contour */
+/* Effet glossy concentré en haut à gauche */
 .metric-card::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 20px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.3) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
     pointer-events: none;
 }
 
-/* Effet hover : légère élévation + scale */
+/* Effet hover */
 .metric-card:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    border: 1px solid transparent;
-    background: 
-        linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%) padding-box,
-        linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2), rgba(255,255,255,0.7)) border-box;  /* ✅ Encore plus brillant au hover */
 }
 
-/* Income Card - Vert sombre subtil */
+/* Income Card - Vert sombre */
 .metric-card-income {
-    background: 
-        linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%) padding-box,
-        linear-gradient(135deg, rgba(76,175,80,0.5), rgba(255,255,255,0.2), rgba(76,175,80,0.4)) border-box;
+    background: linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%);
 }
 
-/* Expenses Card - Violet sombre subtil */
+.metric-card-income::after {
+    background: radial-gradient(circle at 25% 25%, rgba(76,175,80,0.5) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+}
+
+/* Expenses Card - Violet sombre */
 .metric-card-expenses {
-    background: 
-        linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%) padding-box,
-        linear-gradient(135deg, rgba(156,39,176,0.5), rgba(255,255,255,0.2), rgba(156,39,176,0.4)) border-box;
+    background: linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%);
 }
 
-/* Remaining Card - Bleu sombre subtil */
+.metric-card-expenses::after {
+    background: radial-gradient(circle at 25% 25%, rgba(156,39,176,0.5) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+}
+
+/* Remaining Card - Bleu sombre */
 .metric-card-remaining {
-    background: 
-        linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%) padding-box,
-        linear-gradient(135deg, rgba(77,208,225,0.6), rgba(255,255,255,0.2), rgba(77,208,225,0.5)) border-box;
+    background: linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%);
+}
+
+.metric-card-remaining::after {
+    background: radial-gradient(circle at 25% 25%, rgba(77,208,225,0.6) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+}
+
+/* ✅ Empêcher le changement de couleur au clic */
+.metric-card:active,
+.metric-card:focus,
+.metric-card:focus-visible {
+    outline: none !important;
+    transform: translateY(-4px) scale(1.02);
+}
+
+.metric-card-income:active,
+.metric-card-income:focus {
+    background: linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%) !important;
+}
+
+.metric-card-expenses:active,
+.metric-card-expenses:focus {
+    background: linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%) !important;
+}
+
+.metric-card-remaining:active,
+.metric-card-remaining:focus {
+    background: linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%) !important;
 }
 
 /* Layout colonne pour le bloc Remaining */
@@ -882,9 +784,9 @@ body.dark-mode .month-selector {
     transition: width 0.5s ease;
 }
 
-/* Dark Mode - styles identiques */
+/* Dark Mode */
 body.dark-mode .metric-card {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive - 2 colonnes sur écrans moyens */
@@ -911,20 +813,6 @@ body.dark-mode .metric-card {
     .metrics-container .metric-card:nth-child(3) {
         grid-column: auto;
     }
-}
-
-/* Désactiver les effets de clic par défaut */
-.metric-card:active,
-.metric-card:focus {
-    outline: none;
-    /* Garde le même style que normal */
-    background: inherit;
-}
-
-/* Empêcher le changement de couleur au tap sur mobile */
-.metric-card {
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
 }
 
 /* ============================================
