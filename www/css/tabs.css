@@ -589,6 +589,51 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     100% { transform: rotate(360deg); }
 }
 
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: rgba(40, 167, 69, 0.6);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
 /* ============================================
    METRICS CONTAINER - Modern Cards Layout
    ============================================ */
@@ -597,9 +642,9 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     grid-template-columns: 1fr;
     gap: 12px;
     margin-top: 15px;
-    margin-left: -5px;   /* ✅ Déborde légèrement à gauche */
-    margin-right: -5px;  /* ✅ Déborde légèrement à droite */
-    width: calc(100% + 10px);  /* ✅ Compense les marges */
+    margin-left: -2px;   /* ✅ Réduit de -5px à -2px */
+    margin-right: -2px;  /* ✅ Réduit de -5px à -2px */
+    width: calc(100% + 4px);  /* ✅ Ajusté de 10px à 4px */
 }
 
 .metric-card {
@@ -616,7 +661,7 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     user-select: none;
 }
 
-/* Gradient overlay subtil */
+/* Gradient overlay subtil à l'intérieur */
 .metric-card::before {
     content: '';
     position: absolute;
@@ -624,19 +669,21 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
     pointer-events: none;
 }
 
-/* Effet glossy concentré en haut à gauche */
+/* Bordure brillante concentrée en haut à gauche */
 .metric-card::after {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%);
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0) 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
     pointer-events: none;
 }
 
@@ -651,8 +698,9 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     background: linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%);
 }
 
+/* Income Card - bordure verte brillante */
 .metric-card-income::after {
-    background: radial-gradient(circle at 25% 25%, rgba(76,175,80,0.5) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+    background: linear-gradient(135deg, rgba(76,175,80,0.7) 0%, rgba(255,255,255,0.3) 20%, rgba(255,255,255,0) 50%);
 }
 
 /* Expenses Card - Violet sombre */
@@ -660,8 +708,9 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     background: linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%);
 }
 
+/* Expenses Card - bordure violette brillante */
 .metric-card-expenses::after {
-    background: radial-gradient(circle at 25% 25%, rgba(156,39,176,0.5) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+    background: linear-gradient(135deg, rgba(156,39,176,0.7) 0%, rgba(255,255,255,0.3) 20%, rgba(255,255,255,0) 50%);
 }
 
 /* Remaining Card - Bleu sombre */
@@ -669,8 +718,9 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     background: linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%);
 }
 
+/* Remaining Card - bordure turquoise brillante */
 .metric-card-remaining::after {
-    background: radial-gradient(circle at 25% 25%, rgba(77,208,225,0.6) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0) 40%);
+    background: linear-gradient(135deg, rgba(77,208,225,0.8) 0%, rgba(255,255,255,0.3) 20%, rgba(255,255,255,0) 50%);
 }
 
 /* ✅ Empêcher le changement de couleur au clic */
