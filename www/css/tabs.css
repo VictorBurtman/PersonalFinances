@@ -722,7 +722,7 @@ body.dark-mode .month-selector {
 
 .metric-card {
     border-radius: 20px;
-    padding: 20px;
+    padding: 24px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     display: flex;
@@ -766,21 +766,31 @@ body.dark-mode .month-selector {
 .metric-card:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    border: 1px solid transparent;
+    background: 
+        linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%) padding-box,
+        linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2), rgba(255,255,255,0.7)) border-box;  /* ✅ Encore plus brillant au hover */
 }
 
 /* Income Card - Vert sombre subtil */
 .metric-card-income {
-    background: linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%);
+    background: 
+        linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%) padding-box,
+        linear-gradient(135deg, rgba(76,175,80,0.5), rgba(255,255,255,0.2), rgba(76,175,80,0.4)) border-box;
 }
 
 /* Expenses Card - Violet sombre subtil */
 .metric-card-expenses {
-    background: linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%);
+    background: 
+        linear-gradient(135deg, #3a2d4a 0%, #2d1e3f 100%) padding-box,
+        linear-gradient(135deg, rgba(156,39,176,0.5), rgba(255,255,255,0.2), rgba(156,39,176,0.4)) border-box;
 }
 
 /* Remaining Card - Bleu sombre subtil */
 .metric-card-remaining {
-    background: linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%);
+    background: 
+        linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%) padding-box,
+        linear-gradient(135deg, rgba(77,208,225,0.6), rgba(255,255,255,0.2), rgba(77,208,225,0.5)) border-box;
 }
 
 /* Layout colonne pour le bloc Remaining */
