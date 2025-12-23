@@ -3944,25 +3944,10 @@
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
 
-        function toggleBudgetMode() {
-            const toggle = document.getElementById('budgetModeToggle');
-            
-            isRealSpendingMode = toggle ? toggle.checked : !isRealSpendingMode;
-            console.log('🔄 Toggle changed to:', isRealSpendingMode);
-            
-            if (isRealSpendingMode) {
-                // Mode "Dépensé" activé - utilise le mois du header
-                loadRealSpending(); // Pour les totaux
-                loadRealSpendingForChart(); // Pour le graphique
-            } else {
-                // Mode "Estimé" activé
-                updateDisplay();
-            }
-        }
-
-        // Fonction pour les boutons du header
         function switchBudgetMode(mode) {
             isRealSpendingMode = (mode === 'spent');
+            
+            console.log('🔄 Budget mode changed to:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
             
             // Mettre à jour l'apparence des boutons
             const estimatedTab = document.getElementById('estimatedTab');
@@ -3978,8 +3963,20 @@
                 }
             }
             
-            // Appeler la logique existante qui fonctionne
-            toggleBudgetMode();
+            // Logique qui fonctionnait avant
+            if (isRealSpendingMode) {
+                // Mode "Dépensé" activé
+                loadRealSpending(); // Pour les totaux
+                loadRealSpendingForChart(); // Pour le graphique
+            } else {
+                // Mode "Estimé" activé
+                updateDisplay();
+            }
+        }
+
+        // Garder pour compatibilité (au cas où c'est appelé ailleurs)
+        function toggleBudgetMode() {
+            switchBudgetMode(isRealSpendingMode ? 'estimated' : 'spent');
         }
 
 
