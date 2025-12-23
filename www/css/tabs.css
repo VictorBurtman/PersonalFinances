@@ -787,7 +787,7 @@ body.dark-mode .month-selector {
 .metric-content-column {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 15px;
     width: 100%;
     z-index: 1;
 }
