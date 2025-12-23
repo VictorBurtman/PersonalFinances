@@ -783,6 +783,33 @@ body.dark-mode .month-selector {
     background: linear-gradient(135deg, #2d3a4a 0%, #1e2a3f 100%);
 }
 
+/* Layout colonne pour le bloc Remaining */
+.metric-content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Couleur turquoise pour la valeur Remaining */
+.metric-value-remaining {
+    color: #4dd0e1 !important;
+}
+
+/* Barre de progression turquoise */
+.metric-card-remaining .metric-progress-fill {
+    background: #4dd0e1;
+}
+
+/* Pourcentage centré sous la barre */
+.metric-card-remaining .metric-percentage {
+    text-align: center;
+    font-size: 0.75em;
+    opacity: 0.8;
+    color: #4dd0e1;
+}
+
 /* Layout pour blocs 1 et 2 : titre à gauche, valeur à droite */
 .metric-content-row {
     display: flex;
