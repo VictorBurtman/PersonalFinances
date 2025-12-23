@@ -596,7 +596,7 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
 .total-section {
     position: relative;  /* ✅ Ajoute cette ligne */
     text-align: left;
-    padding: 20px;
+    padding: 0;
     background: transparent;
     border-radius: 15px;
     color: white;
@@ -716,8 +716,9 @@ body.dark-mode .month-selector {
 .metrics-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;  /* ✅ Réduit de 12px à 10px */
     margin-top: 15px;
+    width: 100%;  /* ✅ Assure que ça prend toute la largeur */
 }
 
 .metric-card {
@@ -910,6 +911,20 @@ body.dark-mode .metric-card {
     .metrics-container .metric-card:nth-child(3) {
         grid-column: auto;
     }
+}
+
+/* Désactiver les effets de clic par défaut */
+.metric-card:active,
+.metric-card:focus {
+    outline: none;
+    /* Garde le même style que normal */
+    background: inherit;
+}
+
+/* Empêcher le changement de couleur au tap sur mobile */
+.metric-card {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 /* ============================================
