@@ -408,22 +408,38 @@
                         <!-- Conteneur des 3 métriques -->
                         <div class="metrics-container">
                             <!-- Income Card -->
-                            <div class="metric-card" id="incomeDisplay" style="display: none;">
-                                <div class="metric-label" data-translate="totalIncome">Total Income</div>
-                                <div class="metric-value" id="totalIncome">₪0</div>
+                            <div class="metric-card metric-card-income" id="incomeDisplay" style="display: none;">
+                                <div class="metric-icon">💰</div>
+                                <div class="metric-content-row">
+                                    <div class="metric-label" data-translate="totalIncome">Total Income</div>
+                                    <div class="metric-value" id="totalIncome">₪0</div>
+                                </div>
                             </div>
 
                             <!-- Expenses Card -->
-                            <div class="metric-card">
-                                <div class="metric-label" data-translate="totalExpenses">Total Monthly Expenses</div>
-                                <div class="metric-value" id="totalAmount">₪0</div>
+                            <div class="metric-card metric-card-expenses">
+                                <div class="metric-icon">💳</div>
+                                <div class="metric-content-row">
+                                    <div class="metric-label" data-translate="totalExpenses">Total Monthly Expenses</div>
+                                    <div class="metric-value" id="totalAmount">₪0</div>
+                                </div>
                             </div>
 
                             <!-- Remaining Card -->
-                            <div class="metric-card" id="remainingDisplay" style="display: none;">
-                                <div class="metric-label" data-translate="remaining">Remaining</div>
-                                <div class="metric-value" id="remainingAmount">₪0</div>
-                                <div class="metric-percentage" id="remainingPercentage"></div>
+                            <div class="metric-card metric-card-remaining" id="remainingDisplay" style="display: none;">
+                                <div class="metric-icon">💵</div>
+                                <div class="metric-content">
+                                    <div class="metric-content-row">
+                                        <div class="metric-label" data-translate="remaining">Remaining</div>
+                                        <div class="metric-value-with-percentage">
+                                            <span class="metric-value" id="remainingAmount">₪0</span>
+                                            <span class="metric-percentage" id="remainingPercentage"></span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-progress-bar">
+                                        <div class="metric-progress-fill" id="remainingProgress" style="width: 0%;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2323,6 +2339,12 @@
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
+
+                // Mettre à jour la barre de progression
+                const progressBar = document.getElementById('remainingProgress');
+                if (progressBar) {
+                    progressBar.style.width = `${remainingPercentage}%`;
+                }
 
                 // First, hide ALL category sections
                 const allSections = document.querySelectorAll('.category-section');

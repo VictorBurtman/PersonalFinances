@@ -716,32 +716,85 @@ body.dark-mode .month-selector {
 .metrics-container {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 15px;
     margin-top: 15px;
 }
 
 .metric-card {
-    background: linear-gradient(135deg, #4a4a6a 0%, #3a3a5a 100%);
     border-radius: 20px;
     padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
-.metric-card:hover {
+/* Gradient overlay effect */
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+}
+
+/* Income Card - Green/Blue gradient */
+.metric-card-income {
+    background: linear-gradient(135deg, #667eea 0%, #4CAF50 100%);
+}
+
+/* Expenses Card - Red/Purple gradient */
+.metric-card-expenses {
+    background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%);
+}
+
+/* Remaining Card - Blue/Cyan gradient */
+.metric-card-remaining {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.metric-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+/* Layout pour blocs 1 et 2 : titre à gauche, valeur à droite */
+.metric-content-row {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Layout pour bloc 3 : titre + valeur en haut, barre en bas */
+.metric-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1;
 }
 
 .metric-label {
-    font-size: 0.7em;
-    opacity: 0.7;
-    margin-bottom: 4px;
+    font-size: 0.75em;
+    opacity: 0.9;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -750,43 +803,41 @@ body.dark-mode .month-selector {
 .metric-value {
     font-size: 1.8em;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1;
 }
 
-.metric-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
+.metric-value-with-percentage {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-    flex-shrink: 0;
-}
-
-.metric-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+    align-items: baseline;
+    gap: 8px;
 }
 
 .metric-percentage {
     font-size: 0.9em;
-    margin-top: 6px;
     opacity: 0.85;
+    font-weight: 600;
+}
+
+/* Barre de progression */
+.metric-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.metric-progress-fill {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Dark Mode */
 body.dark-mode .metric-card {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .metric-card:hover {
-    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive - 2 colonnes sur écrans moyens */
@@ -795,13 +846,12 @@ body.dark-mode .metric-card:hover {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    /* Quand les 3 cartes sont visibles, la dernière prend toute la largeur */
     .metrics-container:has(.metric-card:nth-child(3):not([style*="display: none"])) {
         grid-template-columns: 1fr 1fr;
     }
     
     .metrics-container .metric-card:nth-child(3) {
-        grid-column: 1 / -1; /* Full width */
+        grid-column: 1 / -1;
     }
 }
 
@@ -812,10 +862,9 @@ body.dark-mode .metric-card:hover {
     }
     
     .metrics-container .metric-card:nth-child(3) {
-        grid-column: auto; /* Reset */
+        grid-column: auto;
     }
 }
-
 
 /* ============================================
    CHART SECTION
