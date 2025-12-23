@@ -57,9 +57,9 @@ const translations = {
     // ============================================
     // BUDGET - MAIN APP
     // ============================================
-    monthlyExpenses: "Monthly Expenses",
-    totalIncome: "Total Income",
-    totalExpenses: "Total Monthly Expenses",
+    income: "Income",
+    expenses: "Expenses",
+    remaining: "Remaining",
     remaining: "Remaining",
     ofIncome: "of income",
     income: "Income",
@@ -558,9 +558,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Dépenses Mensuelles",
-        totalIncome: "Revenu Total",
-        totalExpenses: "Dépenses Mensuelles Totales",
+        income: "Revenus",
+        expenses: "Dépenses",
+        remaining: "Restant",
         remaining: "Restant",
         ofIncome: "du revenu",
         income: "Revenu",
@@ -1059,9 +1059,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "הוצאות חודשיות",
-        totalIncome: "הכנסה כוללת",
-        totalExpenses: "סך הוצאות חודשיות",
+        income: "הכנסות",
+        expenses: "הוצאות",
+        remaining: "יתרה",
         remaining: "יתרה",
         ofIncome: "מההכנסה",
         income: "הכנסה",
@@ -1561,9 +1561,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Gastos Mensuales",
-        totalIncome: "Ingresos Totales",
-        totalExpenses: "Gastos Mensuales Totales",
+        income: "Ingresos",
+        expenses: "Gastos",
+        remaining: "Restante",
         remaining: "Restante",
         ofIncome: "de ingresos",
         income: "Ingresos",
@@ -2059,9 +2059,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Ежемесячные расходы",
-        totalIncome: "Общий доход",
-        totalExpenses: "Общие ежемесячные расходы",
+        income: "Доходы",
+        expenses: "Расходы",
+        remaining: "Остаток",
         remaining: "Остаток",
         ofIncome: "от дохода",
         income: "Доход",
@@ -2558,9 +2558,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "النفقات الشهرية",
-        totalIncome: "إجمالي الدخل",
-        totalExpenses: "إجمالي النفقات الشهرية",
+        income: "الدخل",
+        expenses: "المصروفات",
+        remaining: "المتبقي",
         remaining: "المتبقي",
         ofIncome: "من الدخل",
         income: "الدخل",
@@ -3058,9 +3058,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Monatliche Ausgaben",
-        totalIncome: "Gesamteinkommen",
-        totalExpenses: "Gesamtausgaben pro Monat",
+        income: "Einnahmen",
+        expenses: "Ausgaben",
+        remaining: "Übrig",
         remaining: "Verbleibend",
         ofIncome: "vom Einkommen",
         income: "Einkommen",
@@ -3558,9 +3558,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Spese Mensili",
-        totalIncome: "Entrate Totali",
-        totalExpenses: "Spese Mensili Totali",
+        income: "Entrate",
+        expenses: "Spese",
+        remaining: "Rimanente",
         remaining: "Rimanente",
         ofIncome: "delle entrate",
         income: "Entrate",
@@ -4007,9 +4007,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Despesas Mensais",
-        totalIncome: "Receita Total",
-        totalExpenses: "Despesas Mensais Totais",
+        income: "Receitas",
+        expenses: "Despesas",
+        remaining: "Restante",
         remaining: "Restante",
         ofIncome: "da receita",
         income: "Receita",
@@ -4507,9 +4507,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "Aylık Harcamalar",
-        totalIncome: "Toplam Gelir",
-        totalExpenses: "Toplam Aylık Harcamalar",
+        income: "Gelir",
+        expenses: "Giderler",
+        remaining: "Kalan",
         remaining: "Kalan",
         ofIncome: "gelirden",
         income: "Gelir",
@@ -5007,9 +5007,9 @@ const translations = {
         // ============================================
         // BUDGET - MAIN APP
         // ============================================
-        monthlyExpenses: "मासिक खर्च",
-        totalIncome: "कुल आय",
-        totalExpenses: "कुल मासिक खर्च",
+        income: "आय",
+        expenses: "खर्च",
+        remaining: "शेष",
         remaining: "शेष",
         ofIncome: "आय का",
         income: "आय",
