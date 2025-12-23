@@ -354,8 +354,11 @@
         <div class="container">
             <!-- ✅ HEADER STICKY UNIFIÉ -->
             <div class="edit-mode-controls">
-                <div class="header-title">Wise Budget</div>
-
+                <!-- Nouveau toggle Estimé/Dépensé -->
+                <div class="budget-mode-tabs budget-only">
+                    <button class="budget-tab active" id="estimatedTab" onclick="setBudgetMode(false)" data-translate="estimated">Estimé</button>
+                    <button class="budget-tab" id="spentTab" onclick="setBudgetMode(true)" data-translate="spent">Dépensé</button>
+                </div>
                 <div class="header-right-actions">
                     
                     <button class="edit-mode-btn budget-only icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit">
@@ -390,21 +393,6 @@
                     ======================================== -->
                 <div id="budgetTab" class="tab-content active">
                     <div class="total-section">
-                        <!-- Tooltip en haut à droite -->
-                        <span id="conversionInfoIcon" style="position: absolute; top: 15px; right: 15px; display: inline; cursor: help; color: rgba(255,255,255,0.8); font-size: 1.1em;" title="">ⓘ</span>
-                        
-                        <!-- Toggle centré -->
-                        <div class="budget-mode-toggle">
-                            <div class="toggle-wrapper">
-                                <label class="toggle-label" data-translate="estimated">Estimé</label>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="budgetModeToggle" onchange="toggleBudgetMode()">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <label class="toggle-label" data-translate="spent">Dépensé</label>
-                            </div>
-                        </div>
-
                         <!-- Conteneur des 3 métriques -->
                         <div class="metrics-container">
                             <!-- Income Card -->
@@ -3956,28 +3944,29 @@
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
 
-        function toggleBudgetMode() {
-            const toggle = document.getElementById('budgetModeToggle');
+        function setBudgetMode(isSpent) {
+            isSpentMode = isSpent;
             
-            isRealSpendingMode = toggle.checked;
-            console.log('🔄 Toggle changed to:', isRealSpendingMode);
+            // Mettre à jour les boutons actifs
+            const estimatedTab = document.getElementById('estimatedTab');
+            const spentTab = document.getElementById('spentTab');
             
-            if (isRealSpendingMode) {
-                // Mode "Dépensé" activé - utilise le mois du header
-                loadRealSpending(); // Pour les totaux
-                loadRealSpendingForChart(); // ✅ AJOUTE cette ligne pour le graphique
-            } else {
-                // Mode "Estimé" activé - réinitialiser les données réelles
-                realSpendingData = {};
-                realSpendingChartData = {};
-                updateDisplay(); // ✅ Recalculer avec les valeurs manuelles
-                updateChart();   // ✅ Mettre à jour le graphique
+            if (estimatedTab && spentTab) {
+                if (isSpent) {
+                    estimatedTab.classList.remove('active');
+                    spentTab.classList.add('active');
+                } else {
+                    spentTab.classList.remove('active');
+                    estimatedTab.classList.add('active');
+                }
             }
             
-            // Sauvegarder APRÈS avoir changé l'état
-            setTimeout(() => {
-                saveUserData();
-            }, 100);
+            updateDisplay();
+        }
+
+        // Garder la compatibilité avec l'ancien code si besoin
+        function toggleBudgetMode() {
+            setBudgetMode(!isSpentMode);
         }
 
         /**

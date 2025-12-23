@@ -3001,6 +3001,52 @@ body.dark-mode .chartjs-legend span {
     }
 }
 
+
+
+
+/* ============================================
+   BUDGET MODE TABS (Header Toggle)
+   ============================================ */
+.budget-mode-tabs {
+    display: flex;
+    gap: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 3px;
+}
+
+.budget-tab {
+    padding: 8px 20px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.budget-tab.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.budget-tab:hover:not(.active) {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .budget-mode-tabs {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .budget-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+
 /* ============================================
    iOS PWA - FIX FINAL (Couleur corrigée - Positions Intactes)
    ============================================ */
