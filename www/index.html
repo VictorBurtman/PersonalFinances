@@ -2050,8 +2050,23 @@
                             console.log('✅ Toggle set to:', budgetToggle.checked);
                             
                             if (isRealSpendingMode) {
-                                loadRealSpending(); // ✅ Pour les totaux
-                                loadRealSpendingForChart(); // ✅ Pour le graphique
+                                // Mode "Dépensé" activé
+                                console.log('📊 Loading real spending data...');
+                                
+                                // S'assurer que les transactions sont chargées
+                                if (typeof loadTransactions === 'function') {
+                                    loadTransactions().then(() => {
+                                        loadRealSpending(); // Pour les totaux
+                                        loadRealSpendingForChart(); // Pour le graphique
+                                    }).catch(err => {
+                                        console.error('Error loading transactions:', err);
+                                        loadRealSpending(); // Essayer quand même
+                                        loadRealSpendingForChart();
+                                    });
+                                } else {
+                                    loadRealSpending();
+                                    loadRealSpendingForChart();
+                                }
                             }
                         }
                     }, 300);
