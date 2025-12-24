@@ -914,10 +914,10 @@ function renderTransactions() {
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} style="width: fit-content; position: relative; background: ${bgColor}; color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block; opacity: ${opacity}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease;">
-                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-size: 0.8em;">${symbol}${formatAmount(Math.abs(total), 2)}</span>
-                            <span style="font-size: 0.6em; opacity: 0.75;">${count} ${txnLabel}</span>
+                    <div ${onclick} class="currency-block ${isSelected && isMultiCurrency ? 'selected' : ''}" style="opacity: ${opacity}; cursor: ${cursor};">
+                        <div class="currency-content">
+                            <span class="currency-amount">${symbol}${formatAmount(Math.abs(total), 2)}</span>
+                            <span class="currency-count">${count} ${txnLabel}</span>
                         </div>
                     </div>
                 `;
