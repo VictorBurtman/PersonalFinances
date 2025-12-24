@@ -951,7 +951,7 @@ body.dark-mode .color-btn-mini:hover {
 
 .chart-container {
     position: relative;
-    height: 450px;  /* ← CHANGE 350 en 450 */
+    height: 350px;  /* ← CHANGE 350 en 450 */
     transition: transform 0.3s ease;
 }
 

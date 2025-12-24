@@ -2461,41 +2461,25 @@
                 });
             } 
             // ✅ MODE ESTIMÉ: Utiliser les items comme avant
+            // ✅ MODE ESTIMÉ: Agréger par catégorie (comme en mode Réel)
             else {
                 Object.keys(expenses).forEach(categoryKey => {
                     if (categoryKey === 'income') return;
-
+                    
+                    // Calculer le total de la catégorie
+                    let categoryTotal = 0;
                     expenses[categoryKey].forEach(expense => {
                         const amount = parseFloat(expense.amount) || 0;
-                        if (amount > 0) {
-                            const name = expense.name;
-                            
-                            if (aggregatedItems[name]) {
-                                aggregatedItems[name].amount += amount;
-                            } else {
-                                let color;
-                                if (customColors[name]) {
-                                    // L'utilisateur a défini une couleur personnalisée pour cet item
-                                    color = customColors[name];
-                                } else {
-                                    // Utiliser la couleur de la catégorie avec variation
-                                    const categoryColor = categoryBaseColors[categoryKey] || generateRandomColor();
-                                    
-                                    // Calculer l'index de cet item dans sa catégorie
-                                    const categoryItems = expenses[categoryKey];
-                                    const itemIndex = categoryItems.findIndex(e => e.name === name);
-                                    
-                                    // Générer une variation basée sur la couleur de catégorie
-                                    color = generateColorVariation(categoryColor, itemIndex, categoryItems.length);
-                                }
-
-                                aggregatedItems[name] = {
-                                    amount: amount,
-                                    color: color
-                                };
-                            }
-                        }
+                        categoryTotal += amount;
                     });
+                    
+                    // Ajouter la catégorie si elle a un montant > 0
+                    if (categoryTotal > 0) {
+                        aggregatedItems[categoryKey] = {
+                            amount: categoryTotal,
+                            color: categoryBaseColors[categoryKey] || generateRandomColor()
+                        };
+                    }
                 });
             }
 
