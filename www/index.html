@@ -359,6 +359,10 @@
                     <button class="budget-tab active" id="estimatedTab" onclick="switchBudgetMode('estimated')">Estimé</button>
                     <button class="budget-tab" id="spentTab" onclick="switchBudgetMode('spent')">Dépensé</button>
                 </div>
+                <!-- Titre Transactions (visible seulement dans l'onglet Transactions) -->
+                <div class="header-title transactions-only" style="display: none;">
+                    <span data-translate="allTransactions">Transactions</span> (<span id="transactionCountHeader">0</span>)
+                </div>
                 <div class="header-right-actions">
                     
                     <button class="edit-mode-btn budget-only icon-btn" id="editModeBtn" onclick="toggleEditMode()" title="Edit">
@@ -653,9 +657,8 @@
 
                     <!-- All Transactions - Always visible -->
                     <div class="transactions-section" id="allTransactionsSection">
-                        <div class="section-title-trans" style="display: flex; flex-direction: column; gap: 25px; align-items: flex-start; width: 100%;">                            <span style="font-size: 1.3em; font-weight: 600;">
-                                <span data-translate="allTransactions">Transactions</span> (<span id="transactionCount">0</span>)
-                            </span>
+                        <div class="section-title-trans" style="display: flex; flex-direction: column; gap: 15px; align-items: flex-start; width: 100%;">
+                            <!-- Blocs de devises -->
                             <div id="transactionTotals" style="display: flex; flex-wrap: wrap; gap: 8px;">
                                 <!-- Les totaux par devise seront insérés ici -->
                             </div>
@@ -668,7 +671,6 @@
                                 <span data-translate="loadingTransactions">Loading transactions...</span>
                             </div>
                         </div>
-
 
                         <!-- Bulk select buttons -->
                         <div id="bulkSelectButtons" style="display: none; padding: 6px; background: var(--block-bg, #f8f9fa); border-radius: 6px; margin-bottom: 8px; gap: 6px; justify-content: center;">
@@ -687,7 +689,7 @@
                         </div>
                         
                         <!-- Transactions list -->
-                         <!-- ✅ Loader pour le rendu des transactions -->
+                        <!-- ✅ Loader pour le rendu des transactions -->
                         <div id="transactionsRenderLoader" style="display: none; text-align: center; padding: 40px;">
                             <img src="img/anims/Interwind@1x-1.0s-200px-200px.svg" 
                                 alt="Loading" 
