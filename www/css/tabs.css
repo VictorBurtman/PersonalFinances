@@ -4159,9 +4159,13 @@ body.dark-mode .currency-block.selected {
 }
 
 .expand-arrow {
-    font-size: 0.8em;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.7em;
     transition: transform 0.3s ease;
     display: inline-block;
+    opacity: 0.8;
 }
 
 .expand-arrow.expanded {
@@ -4197,4 +4201,13 @@ body.dark-mode .currency-block.selected {
 
 .income-breakdown-amount {
     font-weight: 600;
+}
+
+/* Income card - gradient vert */
+.metric-card#incomeDisplay {
+    background: linear-gradient(135deg, #2d4a3e 0%, #1e3a2f 100%) !important;
+}
+
+.metric-card#incomeDisplay::after {
+    background: radial-gradient(circle at 25% 25%, rgba(76, 175, 80, 0.7) 0%, transparent 70%) !important;
 }
