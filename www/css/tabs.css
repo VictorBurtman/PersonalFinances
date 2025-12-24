@@ -3938,3 +3938,17 @@ body.dark-mode .category-trend-amount {
     position: relative;
     margin-top: 8px;
 }
+
+/* Sparkline hover effect */
+.category-sparkline-container:hover {
+    background: rgba(102, 126, 234, 0.1) !important;
+    transform: scale(1.02);
+}
+
+body.dark-mode .category-sparkline-container {
+    background: rgba(102, 126, 234, 0.08) !important;
+}
+
+body.dark-mode .category-sparkline-container:hover {
+    background: rgba(102, 126, 234, 0.15) !important;
+}

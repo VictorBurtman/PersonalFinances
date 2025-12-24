@@ -450,35 +450,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Tendances par catégorie -->
-                    <div class="chart-section">
-                        <div class="section-header">
-                            <h3 class="section-title">
-                                <span data-translate="categoryTrends">Tendances par catégorie</span>
-                            </h3>
-                        </div>
-                        
-                        <!-- Grille de cartes de tendances -->
-                        <div id="categoryTrendsGrid" class="category-trends-grid">
-                            <!-- Les cartes seront générées dynamiquement -->
-                        </div>
-                    </div>
-
-                    <!-- Modal pour vue détaillée d'une catégorie -->
-                    <div id="categoryDetailModal" class="modal" style="display: none;">
-                        <div class="modal-content" style="max-width: 600px;">
-                            <div class="modal-header">
-                                <h2 id="categoryDetailTitle"></h2>
-                                <button class="modal-close" onclick="closeCategoryDetail()">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div style="height: 300px; position: relative;">
-                                    <canvas id="categoryDetailChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="expenses-list" id="expensesList">
                         <!-- Income Category -->
                         <div class="category-section income-category" id="category-income" style="display: none;">
@@ -2407,7 +2378,7 @@
 
                 // Update chart
                 updateChart();
-                generateCategoryTrendCards();
+                addCategorySparklines();
             } catch (error) {
                 console.error('Error updating display:', error);
             }
@@ -2852,14 +2823,9 @@
         let categoryDetailChart = null;
 
         /**
-         * Générer les cartes de tendances par catégorie
+         * Ajouter les sparklines dans chaque section de catégorie
          */
-        async function generateCategoryTrendCards() {
-            const container = document.getElementById('categoryTrendsGrid');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
+        async function addCategorySparklines() {
             // Récupérer les 6 derniers mois de données pour chaque catégorie
             const monthlyData = await getCategoryMonthlyData(6);
             
@@ -2867,34 +2833,40 @@
             Object.keys(expenses).forEach(categoryKey => {
                 if (categoryKey === 'income') return;
                 
+                const categorySection = document.getElementById(`category-${categoryKey}`);
+                if (!categorySection) return;
+                
                 const categoryData = monthlyData[categoryKey] || [];
-                const currentMonthTotal = categoryData[categoryData.length - 1] || 0;
                 
-                // Métadonnées de la catégorie
-                const meta = categoryMetadata[categoryKey] || {
-                    emoji: '📋',
-                    displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
-                };
+                // Vérifier si le sparkline existe déjà
+                let sparklineContainer = categorySection.querySelector('.category-sparkline-container');
                 
-                // Créer la carte
-                const card = document.createElement('div');
-                card.className = 'category-trend-card';
-                card.onclick = () => openCategoryDetail(categoryKey, categoryData);
-                
-                card.innerHTML = `
-                    <div class="category-trend-header">
-                        <div class="category-trend-name">
-                            <span>${meta.emoji}</span>
-                            <span>${meta.displayName}</span>
-                        </div>
-                        <div class="category-trend-amount">${currency}${currentMonthTotal.toFixed(0)}</div>
-                    </div>
-                    <div class="category-trend-sparkline">
-                        <canvas id="sparkline-${categoryKey}"></canvas>
-                    </div>
-                `;
-                
-                container.appendChild(card);
+                if (!sparklineContainer) {
+                    // Créer le conteneur pour le sparkline
+                    sparklineContainer = document.createElement('div');
+                    sparklineContainer.className = 'category-sparkline-container';
+                    sparklineContainer.onclick = () => openCategoryDetail(categoryKey, categoryData);
+                    sparklineContainer.style.cssText = `
+                        height: 60px;
+                        margin: 10px 0;
+                        cursor: pointer;
+                        border-radius: 8px;
+                        padding: 8px;
+                        background: rgba(102, 126, 234, 0.05);
+                        transition: all 0.3s ease;
+                    `;
+                    
+                    sparklineContainer.innerHTML = `
+                        <div style="font-size: 0.75em; color: #999; margin-bottom: 4px;" data-translate="last6Months">6 derniers mois</div>
+                        <canvas id="sparkline-${categoryKey}" style="height: 40px;"></canvas>
+                    `;
+                    
+                    // Insérer après le titre de la catégorie
+                    const categoryTitle = categorySection.querySelector('.category-title');
+                    if (categoryTitle) {
+                        categoryTitle.after(sparklineContainer);
+                    }
+                }
                 
                 // Créer le mini-graphique sparkline
                 setTimeout(() => createSparkline(categoryKey, categoryData), 50);
@@ -7831,6 +7803,21 @@
                 <button class="modal-button primary" onclick="closeExcludedTransactionsModal()">
                     <span data-translate="done">Done</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour vue détaillée d'une catégorie -->
+    <div id="categoryDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="categoryDetailTitle"></h2>
+                <button class="modal-close" onclick="closeCategoryDetail()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="height: 300px; position: relative;">
+                    <canvas id="categoryDetailChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
