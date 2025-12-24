@@ -815,9 +815,12 @@ function renderTransactions() {
         }
         
         // ✅ Mettre à jour le header même si vide
+        // ✅ Mettre à jour le header même si vide
         const countEl = document.getElementById('transactionCount');
+        const countHeaderEl = document.getElementById('transactionCountHeader');
         const totalsContainer = document.getElementById('transactionTotals');
         if (countEl) countEl.textContent = '0';
+        if (countHeaderEl) countHeaderEl.textContent = '0';
         if (totalsContainer) totalsContainer.innerHTML = '';
         
         return;
@@ -850,10 +853,12 @@ function renderTransactions() {
     }
     
     // ✅ NOUVEAU : Mettre à jour le compteur
+    // ✅ Mettre à jour le compteur (page + header)
     const countEl = document.getElementById('transactionCount');
-    if (countEl) {
-        countEl.textContent = filteredTransactionsData.length;
-    }
+    const countHeaderEl = document.getElementById('transactionCountHeader');
+    const count = filteredTransactionsData.length;
+    if (countEl) countEl.textContent = count;
+    if (countHeaderEl) countHeaderEl.textContent = count;
     
     // ✅ NOUVEAU : Calculer et afficher les totaux par devise
     const totalsContainer = document.getElementById('transactionTotals');
