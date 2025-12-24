@@ -4050,10 +4050,10 @@ body.dark-mode .category-sparkline-container:hover {
     position: relative;
     background: #2d3a4a;
     border-radius: 12px;
-    padding: 12px 16px;
+    padding: 8px 12px; /* ✅ Réduit de 12px 16px à 8px 12px */
     display: inline-block;
-    margin-right: 8px;
-    margin-bottom: 8px;
+    margin-right: 6px; /* ✅ Réduit de 8px à 6px */
+    margin-bottom: 6px; /* ✅ Réduit de 8px à 6px */
     vertical-align: top;
     
     /* Glossy border effect */
@@ -4064,7 +4064,7 @@ body.dark-mode .category-sparkline-container:hover {
     -webkit-tap-highlight-color: transparent;
     
     /* Extension légère */
-    min-width: 120px;
+    min-width: 90px; /* ✅ Réduit de 120px à 90px */
 }
 
 /* Glossy border effect */
@@ -4125,12 +4125,12 @@ body.dark-mode .currency-block.selected {
 }
 
 .currency-amount {
-    font-size: 1.1em;
+    font-size: 0.95em; /* ✅ Réduit de 1.1em à 0.95em */
     font-weight: 700;
 }
 
 .currency-count {
-    font-size: 0.75em;
+    font-size: 0.7em; /* ✅ Réduit de 0.75em à 0.7em */
     opacity: 0.85;
     font-weight: 500;
 }
