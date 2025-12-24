@@ -1610,6 +1610,8 @@ body.dark-mode .transaction-card.income-transaction {
 .transaction-info {
     flex: 1;
     min-width: 0;
+    max-width: calc(100% - 100px); /* ✅ S'arrête 100px avant le bord droit */
+    padding-right: 10px; /* ✅ Marge de sécurité */
 }
 
 .transaction-date {
@@ -1628,9 +1630,9 @@ body.dark-mode .transaction-date {
     font-size: 0.95em;
     color: #333;
     cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 body.dark-mode .transaction-desc {
