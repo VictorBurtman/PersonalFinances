@@ -2173,7 +2173,7 @@
         // Load income breakdown by currency for current month
         async function loadIncomeBreakdown() {
             const breakdown = document.getElementById('incomeBreakdown');
-            if (!currentUser) return;
+            if (!currentUser || !breakdown) return;
             
             try {
                 // Récupérer le mois sélectionné
@@ -2188,27 +2188,33 @@
                 const startDateStr = startDate.toISOString().split('T')[0];
                 const endDateStr = endDate.toISOString().split('T')[0];
                 
-                // Récupérer les transactions de revenus du mois
+                console.log('📊 Loading income for period:', startDateStr, 'to', endDateStr);
+                
+                // Récupérer toutes les transactions de revenus (filtrer les dates en JS)
                 const snapshot = await db.collection('users')
                     .doc(currentUser.uid)
                     .collection('transactions')
                     .where('category', '==', 'income')
-                    .where('date', '>=', startDateStr)
-                    .where('date', '<=', endDateStr)
                     .get();
                 
                 const incomesByCurrency = {};
                 
                 snapshot.forEach(doc => {
                     const txn = doc.data();
-                    const curr = txn.currency || 'ILS';
-                    const amount = Math.abs(txn.chargedAmount);
                     
-                    if (!incomesByCurrency[curr]) {
-                        incomesByCurrency[curr] = 0;
+                    // Filtrer par date côté client (évite l'index composite)
+                    if (txn.date >= startDateStr && txn.date <= endDateStr) {
+                        const curr = txn.currency || 'ILS';
+                        const amount = Math.abs(txn.chargedAmount);
+                        
+                        if (!incomesByCurrency[curr]) {
+                            incomesByCurrency[curr] = 0;
+                        }
+                        incomesByCurrency[curr] += amount;
                     }
-                    incomesByCurrency[curr] += amount;
                 });
+                
+                console.log('📊 Incomes by currency:', incomesByCurrency);
                 
                 // Afficher le breakdown
                 const currencies = Object.keys(incomesByCurrency).sort();
@@ -2224,6 +2230,7 @@
                                 curr === 'USD' ? '$' : 
                                 curr === 'EUR' ? '€' : 
                                 curr === 'GBP' ? '£' : 
+                                curr === 'JPY' ? '¥' :
                                 curr;
                     
                     return `
@@ -2235,10 +2242,11 @@
                 }).join('');
                 
             } catch (error) {
-                console.error('Error loading income breakdown:', error);
+                console.error('❌ Error loading income breakdown:', error);
                 breakdown.innerHTML = '<div style="text-align: center; opacity: 0.7; font-size: 0.85em; color: #dc3545;">Error loading details</div>';
             }
         }
+        
         function saveExpenses() {
             saveUserData();
             updateDisplay();
