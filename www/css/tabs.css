@@ -642,9 +642,10 @@ body.dark-mode .footer-nav-btn:hover:not(.active) {
     grid-template-columns: 1fr;
     gap: 12px;
     margin-top: 15px;
-    margin-left: -2px;   /* ✅ Réduit de -5px à -2px */
-    margin-right: -2px;  /* ✅ Réduit de -5px à -2px */
-    width: calc(100% + 4px);  /* ✅ Ajusté de 10px à 4px */
+    margin-bottom: 25px; /* ✅ Ajoute cette ligne */
+    margin-left: -2px;
+    margin-right: -2px;
+    width: calc(100% + 4px);
 }
 
 .metric-card {
