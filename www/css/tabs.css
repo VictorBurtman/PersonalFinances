@@ -1677,8 +1677,8 @@ body.dark-mode .transaction-details strong {
     align-items: center;
     gap: 10px;
     margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 0; /* ✅ Supprimé */
+    /* border-top supprimé */
 }
 
 body.dark-mode .transaction-footer {
