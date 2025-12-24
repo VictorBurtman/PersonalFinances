@@ -3126,10 +3126,18 @@
          * Ouvrir le modal de couleurs
          */
         function openColorEditor() {
-            const modal = document.getElementById('colorEditorModal');
-            modal.style.display = 'flex';
-            isAdvancedView = false;
-            populateCategoryColors();
+            // ✅ Réinitialiser les couleurs avec les vraies valeurs sauvegardées
+            Object.keys(expenses).forEach(categoryKey => {
+                const colorInput = document.querySelector(`input[data-category="${categoryKey}"]`);
+                if (colorInput) {
+                    // Charger la couleur sauvegardée (customColors ou baseColor)
+                    const savedColor = customColors[categoryKey] || categoryBaseColors[categoryKey] || getDefaultCategoryColor(categoryKey);
+                    colorInput.value = savedColor;
+                }
+            });
+            
+            // Afficher le modal
+            document.getElementById('colorEditorModal').style.display = 'flex';
         }
 
 
