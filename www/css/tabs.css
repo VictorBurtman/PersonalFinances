@@ -4144,3 +4144,10 @@ body.dark-mode .currency-block.selected {
     color: white;
     z-index: 2;
 }
+
+#transactionTotals {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+}
