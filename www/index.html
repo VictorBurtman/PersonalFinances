@@ -3130,17 +3130,10 @@
             modal.style.display = 'flex';
             isAdvancedView = false;
             
-            // ✅ D'abord créer les éléments
-            populateCategoryColors();
+            // ✅ Créer une copie des couleurs sauvegardées
+            tempCategoryBaseColors = JSON.parse(JSON.stringify(categoryBaseColors));
             
-            // ✅ PUIS réinitialiser avec les vraies couleurs sauvegardées
-            Object.keys(expenses).forEach(categoryKey => {
-                const colorInput = document.querySelector(`input[data-category="${categoryKey}"]`);
-                if (colorInput) {
-                    const savedColor = customColors[categoryKey] || categoryBaseColors[categoryKey] || getDefaultCategoryColor(categoryKey);
-                    colorInput.value = savedColor;
-                }
-            });
+            populateCategoryColors();
         }
 
 
@@ -3184,7 +3177,7 @@
             Object.keys(expenses).forEach(categoryKey => {
                 if (categoryKey === 'income') return; // Skip income
                 
-                const categoryColor = categoryBaseColors[categoryKey] || generateRandomColor();
+                const categoryColor = tempCategoryBaseColors[categoryKey] || generateRandomColor();
                 const categoryName = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
                 
                 const itemDiv = document.createElement('div');
@@ -3242,16 +3235,13 @@
             });
         }
 
-
         /**
          * Mettre à jour la couleur d'une catégorie
          */
         function updateCategoryColor(categoryKey, color) {
-            categoryBaseColors[categoryKey] = color;
-            window.categoryBaseColors = categoryBaseColors; // ✅ Synchroniser
+            tempCategoryBaseColors[categoryKey] = color;
             populateCategoryColors();
         }
-
 
         /**
          * Mettre à jour la couleur d'un item
@@ -3300,7 +3290,7 @@
                 const finalHue = (hues[index] + globalOffset) % 360;
                 const saturation = 65 + Math.random() * 25; // 65-90%
                 const lightness = 45 + Math.random() * 15;  // 45-60%
-                categoryBaseColors[categoryKey] = hslToHex(finalHue, saturation, lightness);
+                tempCategoryBaseColors[categoryKey] = hslToHex(finalHue, saturation, lightness);
             });
             
             if (isAdvancedView) {
@@ -3315,6 +3305,11 @@
          */
         async function saveColors() {
             try {
+                // ✅ Appliquer les changements temporaires aux vraies couleurs
+                categoryBaseColors = JSON.parse(JSON.stringify(tempCategoryBaseColors));
+                window.categoryBaseColors = categoryBaseColors;
+                
+                // Sauvegarder dans Firestore
                 await firebase.firestore()
                     .collection('users')
                     .doc(currentUser.uid)
