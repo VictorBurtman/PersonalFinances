@@ -1937,14 +1937,14 @@
                         darkModeCheckbox.checked = darkMode;
                     }
                     
-                    // ✅ AJOUTÉ : Mettre à jour la couleur iOS
+                    // ✅ Mettre à jour la couleur iOS
                     updateThemeColor();
                     
                     // ✅ MAINTENANT charger le reste des données
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
                     categoryBaseColors = data.categoryBaseColors || {};
-                    window.categoryBaseColors = categoryBaseColors; // ✅ Synchroniser
+                    window.categoryBaseColors = categoryBaseColors;
                     currentChartType = data.chartType || 'doughnut';
                     
                     // ✅ Initialiser les couleurs de catégories
@@ -1959,12 +1959,14 @@
                     useIncome = data.useIncome !== undefined ? data.useIncome : true;
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
+                    
+                    // ✅ Charger l'état du mode budget
                     isRealSpendingMode = data.isRealSpendingMode || false;
                     console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode);
                     
                     categoryMetadata = data.categoryMetadata || {};
                     
-                    // ✅ NOUVEAU : Charger le mois sélectionné
+                    // ✅ Charger le mois sélectionné
                     if (data.selectedMonth) {
                         setTimeout(() => {
                             const monthSelect = document.getElementById('compareMonth');
@@ -1975,7 +1977,7 @@
                         }, 100);
                     }
                     
-                    // NOUVEAU : Nettoyer et synchroniser categoryOrder
+                    // Nettoyer et synchroniser categoryOrder
                     cleanupCategoryOrder();
                     
                     // Hide default categories that were deleted by the user
@@ -2039,50 +2041,42 @@
                     // Reorder categories according to categoryOrder
                     renderCategoriesInOrder();
                     
-                    // ✅ NOUVEAU : Restaurer l'état du toggle après chargement des données
+                    // ✅ NOUVEAU : Restaurer l'état des boutons du header après chargement
                     setTimeout(() => {
-                        const budgetToggle = document.getElementById('budgetModeToggle');
-                        console.log('🔍 Restoring toggle, budgetToggle:', budgetToggle);
-                        console.log('🔍 isRealSpendingMode:', isRealSpendingMode);
+                        const estimatedTab = document.getElementById('estimatedTab');
+                        const spentTab = document.getElementById('spentTab');
                         
-                        if (budgetToggle) {
-                            budgetToggle.checked = isRealSpendingMode;
-                            console.log('✅ Toggle set to:', budgetToggle.checked);
-                            
+                        console.log('🔍 Restoring budget mode:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
+                        
+                        if (estimatedTab && spentTab) {
+                            // Mettre à jour l'apparence des boutons
                             if (isRealSpendingMode) {
-                                // Mode "Dépensé" activé
-                                console.log('📊 Loading real spending data...');
+                                estimatedTab.classList.remove('active');
+                                spentTab.classList.add('active');
                                 
-                                // S'assurer que les transactions sont chargées
-                                if (typeof loadTransactions === 'function') {
-                                    loadTransactions().then(() => {
-                                        loadRealSpending(); // Pour les totaux
-                                        loadRealSpendingForChart(); // Pour le graphique
-                                    }).catch(err => {
-                                        console.error('Error loading transactions:', err);
-                                        loadRealSpending(); // Essayer quand même
-                                        loadRealSpendingForChart();
-                                    });
-                                } else {
-                                    loadRealSpending();
-                                    loadRealSpendingForChart();
-                                }
+                                // Mode "Dépensé" activé - charger les données
+                                console.log('📊 Loading real spending data...');
+                                loadRealSpending();
+                                loadRealSpendingForChart();
+                            } else {
+                                spentTab.classList.remove('active');
+                                estimatedTab.classList.add('active');
                             }
                         }
                     }, 300);
                     
-                // ✅ NOUVEAU : Charger la taille du batch
-                if (data.batchSize) {
-                    BATCH_SIZE = data.batchSize;
-                    displayedTransactionsCount = BATCH_SIZE;
-                    const batchSelect = document.getElementById('batchSize');
-                    if (batchSelect) {
-                        batchSelect.value = BATCH_SIZE.toString();
+                    // ✅ Charger la taille du batch
+                    if (data.batchSize) {
+                        BATCH_SIZE = data.batchSize;
+                        displayedTransactionsCount = BATCH_SIZE;
+                        const batchSelect = document.getElementById('batchSize');
+                        if (batchSelect) {
+                            batchSelect.value = BATCH_SIZE.toString();
+                        }
                     }
-                }
 
                 } else {
-                    // First time user - use defaults<option value="50">50</option>
+                    // First time user - use defaults
                     expenses = JSON.parse(JSON.stringify(defaultExpenses));
                     
                     const localStorageLang = localStorage.getItem('language');
@@ -3955,14 +3949,17 @@
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
         // ============================================
-
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
+
 
         function switchBudgetMode(mode) {
             isRealSpendingMode = (mode === 'spent');
             
             console.log('🔄 Budget mode changed to:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
+            
+            // ✅ Sauvegarder l'état dans les préférences
+            saveUserData();
             
             // Mettre à jour l'apparence des boutons
             const estimatedTab = document.getElementById('estimatedTab');
@@ -3980,11 +3977,9 @@
             
             // Logique qui fonctionnait avant
             if (isRealSpendingMode) {
-                // Mode "Dépensé" activé
-                loadRealSpending(); // Pour les totaux
-                loadRealSpendingForChart(); // Pour le graphique
+                loadRealSpending();
+                loadRealSpendingForChart();
             } else {
-                // Mode "Estimé" activé
                 updateDisplay();
             }
         }
