@@ -399,11 +399,24 @@
                     <div class="total-section">
                         <!-- Conteneur des 3 métriques -->
                         <div class="metrics-container">
-                            <!-- Income Card -->
-                            <div class="metric-card metric-card-income" id="incomeDisplay" style="display: none;">
+                            <!-- Income Card (Clickable) -->
+                            <div class="metric-card income-clickable" id="incomeDisplay" style="display: none;" onclick="toggleIncomeDetails()">
                                 <div class="metric-content-row">
-                                    <div class="metric-label" data-translate="income">Income</div>
-                                    <div class="metric-value" id="totalIncome">₪0</div>
+                                    <div>
+                                        <div class="metric-label" data-translate="income">Income</div>
+                                        <div class="metric-value" id="totalIncome">₪0</div>
+                                    </div>
+                                    <span class="expand-arrow" id="incomeArrow">▼</span>
+                                </div>
+                                
+                                <!-- Expandable details -->
+                                <div class="income-details" id="incomeDetails" style="display: none;">
+                                    <div id="incomeBreakdown" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.15);">
+                                        <!-- Les détails seront insérés ici -->
+                                    </div>
+                                    <div style="margin-top: 8px; font-size: 0.7em; opacity: 0.7; text-align: center;">
+                                        <span data-translate="conversionInfo">💱 Amounts converted using daily exchange rates</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2142,6 +2155,85 @@
             } catch (error) {
                 console.error('Error saving user data:', error);
                 throw error;
+            }
+        }
+
+
+        // Toggle income details
+        function toggleIncomeDetails() {
+            const details = document.getElementById('incomeDetails');
+            const arrow = document.getElementById('incomeArrow');
+            
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                arrow.classList.add('expanded');
+                loadIncomeBreakdown();
+            } else {
+                details.style.display = 'none';
+                arrow.classList.remove('expanded');
+            }
+        }
+
+        // Load income breakdown by currency
+        async function loadIncomeBreakdown() {
+            const breakdown = document.getElementById('incomeBreakdown');
+            if (!currentUser) return;
+            
+            try {
+                // Récupérer toutes les transactions de revenus
+                const snapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('transactions')
+                    .where('category', '==', 'income')
+                    .get();
+                
+                const incomesByCurrency = {};
+                
+                snapshot.forEach(doc => {
+                    const txn = doc.data();
+                    const curr = txn.currency || 'ILS';
+                    const amount = Math.abs(txn.chargedAmount);
+                    
+                    if (!incomesByCurrency[curr]) {
+                        incomesByCurrency[curr] = 0;
+                    }
+                    incomesByCurrency[curr] += amount;
+                });
+                
+                // Afficher le breakdown
+                const currencies = Object.keys(incomesByCurrency).sort();
+                
+                if (currencies.length === 0) {
+                    breakdown.innerHTML = '<div style="text-align: center; opacity: 0.7; font-size: 0.85em;">No income transactions</div>';
+                    return;
+                }
+                
+                breakdown.innerHTML = currencies.map(curr => {
+                    const amount = incomesByCurrency[curr];
+                    const symbol = curr === 'ILS' ? '₪' : 
+                                curr === 'USD' ? '$' : 
+                                curr === 'EUR' ? '€' : 
+                                curr === 'GBP' ? '£' : 
+                                curr;
+                    
+                    // Conversion si ce n'est pas la devise principale
+                    let conversionNote = '';
+                    if (curr !== (window.currency || '₪').replace('₪', 'ILS').replace('$', 'USD').replace('€', 'EUR').replace('£', 'GBP')) {
+                        // Ici tu peux ajouter le montant converti si tu as les taux de change
+                        conversionNote = ' <span style="opacity: 0.6; font-size: 0.9em;">→ ' + window.currency + '...</span>';
+                    }
+                    
+                    return `
+                        <div class="income-breakdown-item">
+                            <span class="income-breakdown-currency">${symbol} ${curr}</span>
+                            <span class="income-breakdown-amount">${symbol}${formatAmount(amount, 2)}${conversionNote}</span>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Error loading income breakdown:', error);
+                breakdown.innerHTML = '<div style="text-align: center; opacity: 0.7; font-size: 0.85em; color: #dc3545;">Error loading details</div>';
             }
         }
 

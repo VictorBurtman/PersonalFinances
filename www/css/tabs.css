@@ -4146,3 +4146,55 @@ body.dark-mode .currency-block.selected {
     gap: 6px !important;
     width: 100% !important;
 }
+
+
+/* Income card clickable */
+.income-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.income-clickable:hover {
+    transform: translateY(-4px) scale(1.03);
+}
+
+.expand-arrow {
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.expand-arrow.expanded {
+    transform: rotate(180deg);
+}
+
+.income-details {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 300px;
+    }
+}
+
+.income-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 0.85em;
+}
+
+.income-breakdown-currency {
+    opacity: 0.8;
+}
+
+.income-breakdown-amount {
+    font-weight: 600;
+}
