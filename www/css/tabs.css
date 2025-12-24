@@ -2785,6 +2785,12 @@ body.dark-mode .chartjs-legend span {
         box-sizing: border-box;
     }
 
+    /* ✅ Aligner à droite quand le toggle budget est caché (onglet Transactions) */
+    .edit-mode-controls:has(.budget-mode-tabs[style*="display: none"]),
+    .edit-mode-controls:not(:has(.budget-mode-tabs)) {
+        justify-content: flex-end !important;
+    }
+
     .header-right-actions {
         gap: 4px !important; /* ← Réduit l'espace sur mobile */
     }
