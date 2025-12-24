@@ -1523,9 +1523,9 @@ body.dark-mode .sync-info {
     margin-bottom: 10px;
     
     /* Extension comme les metric cards */
-    margin-left: -2px;
-    margin-right: -2px;
-    width: calc(100% + 4px);
+    margin-left: -8px; /* ✅ Augmenté de -2px à -8px */
+    margin-right: -8px; /* ✅ Augmenté de -2px à -8px */
+    width: calc(100% + 16px); /* ✅ Augmenté de 4px à 16px */
     
     /* Bordure gauche colorée (catégorie) */
     border-left: 4px solid var(--category-color, #667eea);
