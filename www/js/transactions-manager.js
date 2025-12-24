@@ -958,111 +958,122 @@ function renderTransaction(txn) {
     const txnId = txn.id.replace(/[^a-zA-Z0-9]/g, ''); // Safe ID for DOM
     const t = translations[currentLanguage] || translations['en'];
     
-    // ✅ NOUVEAU : Déterminer la devise et la couleur
+    // Déterminer la devise et la couleur
     let txnCurrency = txn.currency || window.currency || '₪';
     
-    // ✅ AJOUTÉ : Normaliser les devises vers leurs symboles
+    // Normaliser les devises vers leurs symboles
     if (txnCurrency === 'ILS') txnCurrency = '₪';
     if (txnCurrency === 'EUR') txnCurrency = '€';
     if (txnCurrency === 'USD') txnCurrency = '$';
     if (txnCurrency === 'GBP') txnCurrency = '£';
     
     const isDifferentCurrency = txnCurrency !== (window.currency || '₪');
-    const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea'; // Violet si devise différente, bleu sinon
-
-    // ✅ AJOUTÉ : Couleur différente pour transactions manuelles
+    const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea';
+    
+    // Couleur différente pour transactions manuelles
     const descColor = txn.isManual ? '#ff6b6b' : 'inherit';
     const manualBadge = txn.isManual ? ' <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 5px;">MANUAL</span>' : '';
     
-    // ✅ NOUVEAU : Déterminer si c'est un revenu (income)
+    // Déterminer si c'est un revenu
     const isIncome = txn.chargedAmount > 0 || txn.category === 'income';
-    const categoryColor = isIncome ? 'transparent' : getCategoryColor(txn.category);
-    const backgroundStyle = isIncome ? 'background: rgba(40, 167, 69, 0.05);' : '';
+    const categoryColor = isIncome ? '#28a745' : getCategoryColor(txn.category);
     
     return `
-        <div class="transaction-item ${isIncome ? 'income-transaction' : ''}" style="display: block; padding: 15px; --category-color: ${categoryColor}; ${backgroundStyle}">
-            <!-- Top row: Date, Description, Amount -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                <div style="flex: 1; min-width: 0;">
-                    <div class="transaction-date" style="font-size: 0.85em; color: #6c757d; margin-bottom: 4px;">
-                        ${date}
-                    </div>
-                    <div class="transaction-desc" style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: ${descColor};" onclick="showTransactionDetails('${txnId}')">
-                        ${escapeHtml(txn.description)}${manualBadge} <span style="font-size: 0.75em; opacity: 0.7;">▼</span>
-                    </div>
-                    
-                    <!-- Expandable details -->
-                    <div id="details-${txnId}" class="transaction-details" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9em;">
-                        
-                        
-                        <div style="margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
-                            <div style="flex: 1;">
-                                <strong>${t.fullName || 'Full name'}:</strong> 
-                                <span id="txn-name-${txnId}" style="user-select: all;">
-                                    ${escapeHtml(txn.description)}
-                                </span>
-                            </div>
-                            <button
-                                onclick="copyTransactionName('${txnId}'); event.stopPropagation();"
-                                data-description="${escapeHtml(txn.description).replace(/"/g, '&quot;')}"
-                                style="padding: 4px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-weight: 500; min-width: 70px;"
-                                id="copy-btn-${txnId}"
-                            >
-                                <span data-translate="copy">Copy</span>
-                            </button>
-                        </div>
-                        <!-- Memo/Note field (always visible and editable) -->
-                        <div style="margin-bottom: 5px;">
-                            <strong>${t.note || 'Note'}:</strong>
-                            <input 
-                                type="text" 
-                                id="memo-${txnId}"
-                                value="${escapeHtml(txn.memo || '')}"
-                                placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
-                                maxlength="100"
-                                onblur="saveMemo('${txn.id}', this.value)"
-                                style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
-                            />
-                        </div>
-                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${isIncome ? '#28a745' : amountColor};">${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}</span></div>
-                        <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
-                        ${!isIncome ? `
-                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
-                                <button 
-                                    class="btn btn-sm" 
-                                    style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
-                                    onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
-                                >
-                                    <span data-translate="exclude">Exclude</span>
-                                </button>
-                            </div>
-                        ` : ''}
+        <div class="transaction-card ${isIncome ? 'income-transaction' : ''}" style="--category-color: ${categoryColor};">
+            <!-- Layout principal : emoji | date + description | montant -->
+            <div class="transaction-main-row">
+                <!-- Gauche : Emoji catégorie -->
+                <div class="transaction-category-badge">
+                    ${getCategoryEmoji(txn.category)}
+                </div>
+                
+                <!-- Milieu : Date + Description -->
+                <div class="transaction-info">
+                    <div class="transaction-date">${date}</div>
+                    <div class="transaction-desc" style="color: ${descColor};" onclick="showTransactionDetails('${txnId}')">
+                        ${escapeHtml(txn.description)}${manualBadge}
                     </div>
                 </div>
-                <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: ${isIncome ? '#28a745' : amountColor}; white-space: nowrap; margin-left: 15px;">
+                
+                <!-- Droite : Montant -->
+                <div class="transaction-amount" style="color: ${isIncome ? '#28a745' : amountColor};">
                     ${isIncome ? '+' : ''}${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
                 </div>
             </div>
-            <!-- Bottom row: Checkbox + Category selector or label -->
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <!-- ✅ Checkbox pour sélection multiple -->
+            
+            <!-- Expandable details -->
+            <div id="details-${txnId}" class="transaction-details" style="display: none;">
+                <div style="margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
+                    <div style="flex: 1;">
+                        <strong>${t.fullName || 'Full name'}:</strong> 
+                        <span id="txn-name-${txnId}" style="user-select: all;">
+                            ${escapeHtml(txn.description)}
+                        </span>
+                    </div>
+                    <button
+                        onclick="copyTransactionName('${txnId}'); event.stopPropagation();"
+                        data-description="${escapeHtml(txn.description).replace(/"/g, '&quot;')}"
+                        style="padding: 4px 10px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8em; white-space: nowrap; font-weight: 500; min-width: 70px;"
+                        id="copy-btn-${txnId}"
+                    >
+                        <span data-translate="copy">Copy</span>
+                    </button>
+                </div>
+                
+                <!-- Memo/Note field -->
+                <div style="margin-bottom: 5px;">
+                    <strong>${t.note || 'Note'}:</strong>
+                    <input 
+                        type="text" 
+                        id="memo-${txnId}"
+                        value="${escapeHtml(txn.memo || '')}"
+                        placeholder="${t.addNote || 'Add a note (max 10 words)...'}"
+                        maxlength="100"
+                        onblur="saveMemo('${txn.id}', this.value)"
+                        style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
+                    />
+                </div>
+                
+                <div style="margin-bottom: 5px;">
+                    <strong>${t.amount || 'Amount'}:</strong> 
+                    <span style="color: ${isIncome ? '#28a745' : amountColor};">
+                        ${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
+                    </span>
+                </div>
+                
+                <div style="color: #667eea; font-weight: 600;">
+                    <strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}
+                </div>
+                
+                ${!isIncome ? `
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                        <button 
+                            class="btn btn-sm" 
+                            style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85em;"
+                            onclick="openExcludeModal('${txn.id}', '${escapeHtml(txn.description).replace(/'/g, "\\'")}'); event.stopPropagation();"
+                        >
+                            <span data-translate="exclude">Exclude</span>
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
+            
+            <!-- Footer: Checkbox + Category -->
+            <div class="transaction-footer">
                 <input 
                     type="checkbox" 
                     class="transaction-checkbox" 
                     data-transaction-id="${txn.id}"
                     onchange="handleTransactionCheckboxChange()"
-                    style="width: 18px; height: 18px; cursor: pointer; flex-shrink: 0;"
                 />
                 
                 ${isLabeled || isIncome ? `
-                    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: ${isIncome ? 'rgba(40, 167, 69, 0.1)' : '#e7f3ff'}; border: 2px solid ${isIncome ? '#28a745' : '#667eea'}; border-radius: 8px; font-size: 0.9em; flex: 1;">
-                        <span style="font-weight: 600; color: ${isIncome ? '#28a745' : '#667eea'};">
-                            ${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}
-                        </span>
+                    <div class="category-label ${isIncome ? 'income-label' : ''}">
+                        <span>${getCategoryEmoji(txn.category)} ${getCategoryDisplayName(txn.category)}</span>
                         ${!isIncome ? `
                             <button 
                                 onclick="unlabelTransaction('${txn.id}'); event.stopPropagation();" 
-                                style="background: none; border: none; color: #667eea; cursor: pointer; padding: 0; font-size: 1.1em;"
+                                class="unlabel-btn"
                                 title="Remove label"
                             >✕</button>
                         ` : ''}
@@ -1072,7 +1083,6 @@ function renderTransaction(txn) {
                         id="cat-select-${txnId}"
                         class="transaction-category-select" 
                         onchange="labelTransaction('${txn.id}', this.value)"
-                        style="flex: 1; padding: 8px 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 0.9em; cursor: pointer; min-width: 0;"
                     >
                         <option value="" data-translate="selectCategory">Select category</option>
                         ${categories.map(cat => `
