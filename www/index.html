@@ -2847,18 +2847,21 @@
                     sparklineContainer.className = 'category-sparkline-container';
                     sparklineContainer.onclick = () => openCategoryDetail(categoryKey, categoryData);
                     sparklineContainer.style.cssText = `
-                        height: 60px;
+                        height: auto;
                         margin: 10px 0;
                         cursor: pointer;
                         border-radius: 8px;
                         padding: 8px;
                         background: rgba(102, 126, 234, 0.05);
                         transition: all 0.3s ease;
+                        overflow: hidden;
                     `;
                     
                     sparklineContainer.innerHTML = `
                         <div style="font-size: 0.75em; color: #999; margin-bottom: 4px;" data-translate="last6Months">6 derniers mois</div>
-                        <canvas id="sparkline-${categoryKey}" style="height: 40px;"></canvas>
+                        <div style="height: 40px; width: 100%; position: relative;">
+                            <canvas id="sparkline-${categoryKey}"></canvas>
+                        </div>
                     `;
                     
                     // Insérer après le titre de la catégorie
