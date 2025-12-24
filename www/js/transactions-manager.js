@@ -914,7 +914,7 @@ function renderTransactions() {
                 const onclick = isMultiCurrency ? `onclick='toggleCurrencyFilter("${curr}", ${JSON.stringify(availableCurrencies)})'` : '';
                 
                 return `
-                    <div ${onclick} class="currency-block ${isSelected && isMultiCurrency ? 'selected' : ''}" style="opacity: ${opacity}; cursor: ${cursor};">
+                    <div ${onclick} class="currency-block ${isSelected && isMultiCurrency ? 'selected' : ''}" style="display: inline-block !important; opacity: ${opacity}; cursor: ${cursor}; vertical-align: top;">
                         <div class="currency-content">
                             <span class="currency-amount">${symbol}${formatAmount(Math.abs(total), 2)}</span>
                             <span class="currency-count">${count} ${txnLabel}</span>

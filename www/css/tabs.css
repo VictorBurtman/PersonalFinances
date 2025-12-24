@@ -4047,24 +4047,19 @@ body.dark-mode .category-sparkline-container:hover {
    ============================================ */
 
 .currency-block {
-    position: relative;
-    background: #2d3a4a;
-    border-radius: 12px;
-    padding: 8px 12px; /* ✅ Réduit de 12px 16px à 8px 12px */
-    display: inline-block;
-    margin-right: 6px; /* ✅ Réduit de 8px à 6px */
-    margin-bottom: 6px; /* ✅ Réduit de 8px à 6px */
-    vertical-align: top;
+    position: relative !important;
+    background: #2d3a4a !important;
+    border-radius: 10px !important;
+    padding: 8px 12px !important;
+    display: inline-block !important;
+    margin-right: 6px !important;
+    margin-bottom: 6px !important;
+    vertical-align: top !important;
     
-    /* Glossy border effect */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    
-    /* Tap highlight removal */
-    -webkit-tap-highlight-color: transparent;
-    
-    /* Extension légère */
-    min-width: 90px; /* ✅ Réduit de 120px à 90px */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+    min-width: 90px !important;
 }
 
 /* Glossy border effect */
