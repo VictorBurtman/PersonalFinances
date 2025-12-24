@@ -916,7 +916,7 @@ function renderTransactions() {
                 return `
                     <div ${onclick} style="width: fit-content; position: relative; background: ${bgColor}; color: white; padding: 6px 8px; border-radius: 8px; font-weight: 600; white-space: nowrap; display: inline-block; opacity: ${opacity}; cursor: ${cursor}; border: ${border}; transition: all 0.3s ease;">
                         <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-size: 0.8em;">${symbol}${Math.abs(total).toFixed(2)}</span>
+                            <span style="font-size: 0.8em;">${symbol}${formatAmount(Math.abs(total), 2)}</span>
                             <span style="font-size: 0.6em; opacity: 0.75;">${count} ${txnLabel}</span>
                         </div>
                     </div>
@@ -1024,7 +1024,7 @@ function renderTransaction(txn) {
                                 style="width: 100%; margin-top: 4px; padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 0.9em; background: var(--inner-block-bg, white);"
                             />
                         </div>
-                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${isIncome ? '#28a745' : amountColor};">${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}</span></div>
+                        <div style="margin-bottom: 5px;"><strong>${t.amount || 'Amount'}:</strong> <span style="color: ${isIncome ? '#28a745' : amountColor};">${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}</span></div>
                         <div style="color: #667eea; font-weight: 600;"><strong>${t.similarTransactions || 'Similar transactions'}:</strong> ${countSimilarTransactions(txn.description)}</div>
                         ${!isIncome ? `
                             <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
@@ -1040,7 +1040,7 @@ function renderTransaction(txn) {
                     </div>
                 </div>
                 <div class="transaction-amount" style="font-size: 1.1em; font-weight: 600; color: ${isIncome ? '#28a745' : amountColor}; white-space: nowrap; margin-left: 15px;">
-                    ${isIncome ? '+' : ''}${txnCurrency}${Math.abs(txn.chargedAmount).toFixed(2)}
+                    ${isIncome ? '+' : ''}${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
                 </div>
             </div>
             <!-- Bottom row: Checkbox + Category selector or label -->
@@ -2504,8 +2504,8 @@ async function openExcludedTransactionsModal() {
             const t = translations[currentLanguage] || translations['en'];
             const html = excludedTxns.map(txn => {
                 const date = txn.date ? new Date(txn.date).toLocaleDateString() : 'N/A';
-                const amount = Math.abs(txn.chargedAmount || 0).toFixed(2);
-                
+                const amount = formatAmount(Math.abs(txn.chargedAmount || 0), 2);
+
                 return `
                     <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="flex: 1;">
