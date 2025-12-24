@@ -2793,14 +2793,16 @@ body.dark-mode .chartjs-legend span {
     .header-title {
         flex-grow: 0 !important;
         width: auto !important;
-        margin-right: 0 !important;
-        
-        /* Sécurité affichage */
+        margin-right: 8px !important;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow: visible;
         display: block;
-        max-width: 50%;
+        max-width: none; /* ✅ Pas de limite */
+    }
+    
+    /* Réduire la taille pour le titre Transactions */
+    .header-title.transactions-only {
+        font-size: 1.1em !important;
     }
 
     /* Boutons du header */
