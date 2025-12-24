@@ -3867,3 +3867,74 @@ body.dark-mode .language-dropdown button {
 body.dark-mode .language-dropdown button:hover {
     background: #3a3a4e;
 }
+
+/* ============================================
+   CATEGORY TRENDS CARDS
+   ============================================ */
+.category-trends-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+@media (min-width: 600px) {
+    .category-trends-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.category-trend-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.category-trend-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .category-trend-card {
+    background: #2a2a3e;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-trend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.category-trend-name {
+    font-size: 1em;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.dark-mode .category-trend-name {
+    color: #e0e0e0;
+}
+
+.category-trend-amount {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #667eea;
+}
+
+body.dark-mode .category-trend-amount {
+    color: #9ca3ff;
+}
+
+.category-trend-sparkline {
+    height: 50px;
+    position: relative;
+    margin-top: 8px;
+}

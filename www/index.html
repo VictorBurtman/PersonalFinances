@@ -451,38 +451,34 @@
                         </div>
                     </div>
 
-                    <!-- Graphique des dépenses mensuelles -->
+                    <!-- Tendances par catégorie -->
                     <div class="chart-section">
-                        <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                            <h3 style="font-size: 1em; color: #667eea; font-weight: 600; margin: 0;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
-                            
-                            <!-- Dropdown sélecteur de catégories -->
-                            <div style="position: relative;">
-                                <button id="trendCategoriesBtn" class="trend-categories-btn" onclick="toggleTrendCategoriesDropdown()">
-                                    <span data-translate="selectCategories">Select Categories</span>
-                                    <span id="trendCategoriesCount" class="trend-count-badge">1</span>
-                                    <span style="font-size: 0.7em;">▼</span>
-                                </button>
-                                
-                                <!-- Dropdown menu -->
-                                <div id="trendCategoriesDropdown" class="trend-dropdown" style="display: none;">
-                                    <div class="trend-dropdown-content">
-                                        <label class="trend-checkbox-label">
-                                            <input type="checkbox" id="totalTrendCheckbox" checked onchange="updateMonthlyTrendSelection()">
-                                            <span style="font-weight: 600;" data-translate="total">Total</span>
-                                        </label>
-                                        <div class="trend-divider"></div>
-                                        <div id="categoryTrendCheckboxes"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <span data-translate="categoryTrends">Tendances par catégorie</span>
+                            </h3>
                         </div>
                         
-                        <div class="chart-container" style="height: 300px;">
-                            <canvas id="monthlyTrendChart"></canvas>
+                        <!-- Grille de cartes de tendances -->
+                        <div id="categoryTrendsGrid" class="category-trends-grid">
+                            <!-- Les cartes seront générées dynamiquement -->
                         </div>
                     </div>
 
+                    <!-- Modal pour vue détaillée d'une catégorie -->
+                    <div id="categoryDetailModal" class="modal" style="display: none;">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h2 id="categoryDetailTitle"></h2>
+                                <button class="modal-close" onclick="closeCategoryDetail()">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="height: 300px; position: relative;">
+                                    <canvas id="categoryDetailChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="expenses-list" id="expensesList">
                         <!-- Income Category -->
                         <div class="category-section income-category" id="category-income" style="display: none;">
@@ -2411,6 +2407,7 @@
 
                 // Update chart
                 updateChart();
+                generateCategoryTrendCards();
             } catch (error) {
                 console.error('Error updating display:', error);
             }
@@ -2850,6 +2847,246 @@
             }
         }
 
+
+        // Variable globale pour stocker le graphique détaillé
+        let categoryDetailChart = null;
+
+        /**
+         * Générer les cartes de tendances par catégorie
+         */
+        async function generateCategoryTrendCards() {
+            const container = document.getElementById('categoryTrendsGrid');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Récupérer les 6 derniers mois de données pour chaque catégorie
+            const monthlyData = await getCategoryMonthlyData(6);
+            
+            // Pour chaque catégorie (sauf income)
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey === 'income') return;
+                
+                const categoryData = monthlyData[categoryKey] || [];
+                const currentMonthTotal = categoryData[categoryData.length - 1] || 0;
+                
+                // Métadonnées de la catégorie
+                const meta = categoryMetadata[categoryKey] || {
+                    emoji: '📋',
+                    displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+                };
+                
+                // Créer la carte
+                const card = document.createElement('div');
+                card.className = 'category-trend-card';
+                card.onclick = () => openCategoryDetail(categoryKey, categoryData);
+                
+                card.innerHTML = `
+                    <div class="category-trend-header">
+                        <div class="category-trend-name">
+                            <span>${meta.emoji}</span>
+                            <span>${meta.displayName}</span>
+                        </div>
+                        <div class="category-trend-amount">${currency}${currentMonthTotal.toFixed(0)}</div>
+                    </div>
+                    <div class="category-trend-sparkline">
+                        <canvas id="sparkline-${categoryKey}"></canvas>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+                
+                // Créer le mini-graphique sparkline
+                setTimeout(() => createSparkline(categoryKey, categoryData), 50);
+            });
+        }
+
+        /**
+         * Créer un mini-graphique sparkline
+         */
+        function createSparkline(categoryKey, data) {
+            const canvas = document.getElementById(`sparkline-${categoryKey}`);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const color = categoryBaseColors[categoryKey] || '#667eea';
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map((_, i) => ''),
+                    datasets: [{
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        pointHoverRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    },
+                    interaction: { mode: null }
+                }
+            });
+        }
+
+        /**
+         * Ouvrir le modal détaillé d'une catégorie
+         */
+        function openCategoryDetail(categoryKey, data) {
+            const modal = document.getElementById('categoryDetailModal');
+            const title = document.getElementById('categoryDetailTitle');
+            
+            const meta = categoryMetadata[categoryKey] || {
+                emoji: '📋',
+                displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+            };
+            
+            title.textContent = `${meta.emoji} ${meta.displayName}`;
+            modal.style.display = 'flex';
+            
+            // Créer le graphique détaillé
+            setTimeout(() => createDetailChart(categoryKey, data), 100);
+        }
+
+        /**
+         * Créer le graphique détaillé
+         */
+        function createDetailChart(categoryKey, data) {
+            const canvas = document.getElementById('categoryDetailChart');
+            if (!canvas) return;
+            
+            // Détruire l'ancien graphique s'il existe
+            if (categoryDetailChart) {
+                categoryDetailChart.destroy();
+            }
+            
+            const ctx = canvas.getContext('2d');
+            const color = categoryBaseColors[categoryKey] || '#667eea';
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            // Générer les labels des 6 derniers mois
+            const labels = [];
+            const now = new Date();
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                labels.push(date.toLocaleDateString(currentLanguage, { month: 'short', year: 'numeric' }));
+            }
+            
+            categoryDetailChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: categoryMetadata[categoryKey]?.displayName || categoryKey,
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '40',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: color,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDarkMode ? '#2a2a3e' : '#fff',
+                            titleColor: isDarkMode ? '#e0e0e0' : '#333',
+                            bodyColor: isDarkMode ? '#e0e0e0' : '#666',
+                            borderColor: isDarkMode ? '#3a3a4e' : '#e0e0e0',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: (context) => `${currency}${context.parsed.y.toFixed(2)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: isDarkMode ? '#e0e0e0' : '#666' }
+                        },
+                        y: {
+                            grid: { color: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
+                            ticks: {
+                                color: isDarkMode ? '#e0e0e0' : '#666',
+                                callback: (value) => `${currency}${value}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Fermer le modal détaillé
+         */
+        function closeCategoryDetail() {
+            const modal = document.getElementById('categoryDetailModal');
+            modal.style.display = 'none';
+            
+            if (categoryDetailChart) {
+                categoryDetailChart.destroy();
+                categoryDetailChart = null;
+            }
+        }
+
+        /**
+         * Récupérer les données mensuelles par catégorie
+         */
+        async function getCategoryMonthlyData(monthsCount = 6) {
+            // Cette fonction doit interroger Firestore pour obtenir les dépenses des N derniers mois
+            // Pour l'instant, on utilise des données simulées
+            
+            const result = {};
+            const now = new Date();
+            
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey === 'income') return;
+                
+                const monthlyTotals = [];
+                
+                for (let i = monthsCount - 1; i >= 0; i--) {
+                    // Simuler des données aléatoires pour le moment
+                    // Tu devras remplacer par de vraies requêtes Firestore
+                    let total = 0;
+                    expenses[categoryKey].forEach(expense => {
+                        total += parseFloat(expense.amount) || 0;
+                    });
+                    
+                    // Ajouter une variation aléatoire pour simuler l'historique
+                    const variation = 0.7 + Math.random() * 0.6; // 70% à 130% du total
+                    monthlyTotals.push(total * variation);
+                }
+                
+                result[categoryKey] = monthlyTotals;
+            });
+            
+            return result;
+        }
+
+        // Appeler cette fonction dans updateDisplay() ou loadUserData()
+
+        
         /**
          * Générer les checkboxes de sélection de catégories
          */

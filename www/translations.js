@@ -80,6 +80,9 @@ const translations = {
     barChart: "📊 Bar Chart",
     monthlySpendingTrend: "Monthly Spending Trend",
     compare: "📊 Compare",
+
+    categoryTrends: "Category Trends",
+    last6Months: "Last 6 months",
     
     // ============================================
     // CATEGORIES
@@ -579,6 +582,8 @@ const translations = {
         barChart: "📊 Graphique en barres",
         monthlySpendingTrend: "Tendance des dépenses mensuelles",
         compare: "📊 Comparer",
+        categoryTrends: "Tendances par catégorie",
+        last6Months: "6 derniers mois",
         
         // ============================================
         // CATEGORIES
@@ -1078,6 +1083,8 @@ const translations = {
         barChart: "📊 תרשים עמודות",
         monthlySpendingTrend: "מגמת הוצאות חודשית",
         compare: "📊 השווה",
+        categoryTrends: "מגמות לפי קטגוריה",
+        last6Months: "6 חודשים אחרונים",
         
         // ============================================
         // CATEGORIES
@@ -1577,6 +1584,8 @@ const translations = {
         barChart: "📊 Gráfico de barras",
         monthlySpendingTrend: "Tendencia de gastos mensuales",
         compare: "📊 Comparar",
+        categoryTrends: "Tendencias por categoría",
+        last6Months: "Últimos 6 meses",
         
         // ============================================
         // CATEGORIES
@@ -2073,6 +2082,8 @@ const translations = {
         barChart: "📊 Гистограмма",
         monthlySpendingTrend: "Тренд месячных расходов",
         compare: "📊 Сравнить",
+        categoryTrends: "Тенденции по категориям",
+        last6Months: "Последние 6 месяцев",
         
         // ============================================
         // CATEGORIES
@@ -2571,6 +2582,8 @@ const translations = {
         barChart: "📊 مخطط شريطي",
         monthlySpendingTrend: "اتجاه الإنفاق الشهري",
         compare: "📊 مقارنة",
+        categoryTrends: "اتجاهات الفئات",
+        last6Months: "آخر 6 أشهر",
         
         // ============================================
         // CATEGORIES
@@ -3069,6 +3082,8 @@ const translations = {
         barChart: "📊 Balkendiagramm",
         monthlySpendingTrend: "Monatlicher Ausgabentrend",
         compare: "📊 Vergleichen",
+        categoryTrends: "Kategorietrends",
+        last6Months: "Letzte 6 Monate",
         
         // ============================================
         // CATEGORIES
@@ -3563,6 +3578,8 @@ const translations = {
         barChart: "📊 Grafico a barre",
         monthlySpendingTrend: "Andamento spese mensili",
         compare: "📊 Confronta",
+        categoryTrends: "Tendenze per categoria",
+        last6Months: "Ultimi 6 mesi",
         
         // ============================================
         // CATEGORIES
@@ -4014,6 +4031,8 @@ const translations = {
         barChart: "📊 Gráfico de barras",
         monthlySpendingTrend: "Tendência de gastos mensais",
         compare: "📊 Comparar",
+        categoryTrends: "Tendências por categoria",
+        last6Months: "Últimos 6 meses",
         
         // ============================================
         // CATEGORIES
@@ -4512,6 +4531,8 @@ const translations = {
         barChart: "📊 Çubuk grafik",
         monthlySpendingTrend: "Aylık harcama trendi",
         compare: "📊 Karşılaştır",
+        categoryTrends: "Kategori Trendleri",
+        last6Months: "Son 6 ay",
         
         // ============================================
         // CATEGORIES
@@ -5009,6 +5030,8 @@ const translations = {
         barChart: "📊 बार चार्ट",
         monthlySpendingTrend: "मासिक खर्च की प्रवृत्ति",
         compare: "📊 तुलना करें",
+        categoryTrends: "श्रेणी के रुझान",
+        last6Months: "पिछले 6 महीने",
         
         // ============================================
         // CATEGORIES
