@@ -1131,6 +1131,20 @@
         }
 
 
+        function formatAmount(amount, decimals = 2, showCurrency = false) {
+            if (amount === null || amount === undefined || isNaN(amount)) {
+                return showCurrency ? `${currency}0.00` : '0.00';
+            }
+            
+            const formatted = parseFloat(amount).toLocaleString(currentLanguage, {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+            
+            return showCurrency ? `${currency}${formatted}` : formatted;
+        }
+
+
         // Store category metadata (emoji, display name)
         let categoryMetadata = {};
 
@@ -2294,9 +2308,9 @@
                 const remainingPercentage = totalIncome > 0 ? ((remaining / totalIncome) * 100).toFixed(1) : 0;
                 
                 // Update displays
-                document.getElementById('totalAmount').textContent = `${currency}${totalExpenses.toFixed(2)}`;
-                document.getElementById('totalIncome').textContent = `${currency}${totalIncome.toFixed(2)}`;
-                document.getElementById('remainingAmount').textContent = `${currency}${remaining.toFixed(2)}`;
+                document.getElementById('totalAmount').textContent = formatAmount(totalExpenses, 2, true);
+                document.getElementById('totalIncome').textContent = formatAmount(totalIncome, 2, true);
+                document.getElementById('remainingAmount').textContent = formatAmount(remaining, 2, true);
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
                 const ofIncomeText = translations[currentLanguage]?.ofIncome || 'of income';
                 document.getElementById('remainingPercentage').textContent = `(${remainingPercentage}% ${ofIncomeText})`;
@@ -2353,11 +2367,10 @@
                     if (statsElement) {
                         if (categoryKey === 'income') {
                             statsElement.innerHTML = stats.total > 0 ? 
-                                `<span class="amount" style="color: #28a745;">${currency}${stats.total.toFixed(2)}</span>` : '';
+                                `<span class="amount" style="color: #28a745;">${formatAmount(stats.total, 2, true)}</span>` : '';
                         } else {
-                            // Ajouter la comparaison si le mode est activé
                             let statsHTML = stats.total > 0 ? 
-                                `<span class="amount">${currency}${stats.total.toFixed(2)}</span><span class="percentage">(${stats.percentage}% ${t(percentageMode === 'income' ? 'ofIncome' : 'ofExpenses')})</span>` : '';
+                                `<span class="amount">${formatAmount(stats.total, 2, true)}</span><span class="percentage">(${stats.percentage}% ${t(percentageMode === 'income' ? 'ofIncome' : 'ofExpenses')})</span>` : '';
                             
                             // ✅ Utiliser isRealSpendingMode au lieu de compareMode
                             if (stats.total > 0) {
@@ -2582,7 +2595,7 @@
                                 }, 0);
                                 
                                 const percentage = ((value / visibleTotal) * 100).toFixed(1);
-                                return `${capitalizedLabel}: ${currency}${value.toFixed(2)} (${percentage}%)`;
+                                return `${capitalizedLabel}: ${formatAmount(value, 2, true)} (${percentage}%)`;
                             }
                         }
                     }
@@ -2665,7 +2678,8 @@
                 }, 0);
             }
             
-            document.getElementById('totalAmount').textContent = `${currency}${displayTotal.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = formatAmount(displayTotal, 2, true);
+
         }
 
         // ============================================
@@ -2991,7 +3005,7 @@
                             borderColor: isDarkMode ? '#3a3a4e' : '#e0e0e0',
                             borderWidth: 1,
                             callbacks: {
-                                label: (context) => `${currency}${context.parsed.y.toFixed(2)}`
+                                label: (context) => formatAmount(context.parsed.y, 2, true)
                             }
                         }
                     },
@@ -3004,7 +3018,8 @@
                             grid: { color: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
                             ticks: {
                                 color: isDarkMode ? '#e0e0e0' : '#666',
-                                callback: (value) => `${currency}${value}`
+                                callback: (value) => formatAmount(value, 2, true)
+
                             }
                         }
                     }
@@ -3213,7 +3228,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.dataset.label}: ${currency}${context.parsed.y.toFixed(2)}`;
+                                    return `${context.dataset.label}: ${formatAmount(context.parsed.y, 2, true)}`;
                                 }
                             }
                         }
@@ -3224,7 +3239,7 @@
                             ticks: {
                                 color: textColor,
                                 callback: function(value) {
-                                    return currency + value.toFixed(0);
+                                    return formatAmount(value, 0, true);
                                 }
                             },
                             grid: {
@@ -4317,10 +4332,10 @@
             let message;
             if (info.diff > 0) {
                 // Over budget
-                message = `${t.overBy || 'Over by'} ${currency}${Math.abs(info.diff).toFixed(0)} (${usedPercent}% ${t.used || 'used'})`;
+                message = `${t.overBy || 'Over by'} ${formatAmount(Math.abs(info.diff), 0, true)} (${usedPercent}% ${t.used || 'used'})`;
             } else if (info.diff < 0) {
                 // Under budget
-                message = `${t.underBy || 'Under by'} ${currency}${Math.abs(info.diff).toFixed(0)} (${usedPercent}% ${t.used || 'used'})`;
+                message = `${t.underBy || 'Under by'} ${formatAmount(Math.abs(info.diff), 0, true)} (${usedPercent}% ${t.used || 'used'})`;
             } else {
                 // Exact
                 message = `${t.exactly || 'Exact match'} (100% ${t.used || 'used'})`;
@@ -4334,11 +4349,11 @@
                 <div style="margin-top: 10px; padding: 10px; background: rgba(102, 126, 234, 0.05); border-radius: 8px; border-left: 3px solid ${progressColor};">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85em;">
                         <span style="color: #666;">${t.budget || 'Budget'}:</span>
-                        <span style="font-weight: 600;">${currency}${info.budget.toFixed(0)}</span>
+                        <span style="font-weight: 600;">${formatAmount(info.budget, 0, true)}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85em;">
                         <span style="color: #666;">${t.real || 'Real'}:</span>
-                        <span style="font-weight: 600; color: ${progressColor};">${currency}${info.real.toFixed(0)}</span>
+                        <span style="font-weight: 600; color: ${progressColor};">${formatAmount(info.real, 0, true)}</span>
                     </div>
                     <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-bottom: 6px;">
                         <div style="width: ${progressPercent}%; height: 100%; background: ${progressColor}; transition: width 0.3s;"></div>
@@ -4510,7 +4525,7 @@
             
             const confirmMessage = t.deleteCategoryConfirm
                 .replace('{name}', displayName)
-                .replace('{amount}', `${currency}${total.toFixed(2)}`);
+                .replace('{amount}', formatAmount(total, 2, true));
             
             if (!confirm(confirmMessage)) {
                 return;
