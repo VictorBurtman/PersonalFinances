@@ -1592,9 +1592,10 @@ body.dark-mode .transaction-card.income-transaction {
 /* Main row layout */
 .transaction-main-row {
     display: flex;
-    align-items: center;
+    align-items: center; /* ✅ Déjà bon, garde-le */
     gap: 12px;
     margin-bottom: 10px;
+    min-height: 48px; /* ✅ Hauteur minimum pour centrer proprement */
 }
 
 /* Category badge (left) */
@@ -1640,10 +1641,11 @@ body.dark-mode .transaction-desc {
 
 /* Amount (right) */
 .transaction-amount {
-    font-size: 1.05em;
+    font-size: 1.3em; /* ✅ Augmenté de 1.05em à 1.3em */
     font-weight: 700;
     white-space: nowrap;
     flex-shrink: 0;
+    align-self: center; /* ✅ Centré verticalement */
 }
 
 /* Details section */
@@ -1698,10 +1700,14 @@ body.dark-mode .transaction-footer {
     background: #e7f3ff;
     border: 2px solid #667eea;
     border-radius: 8px;
-    font-size: 0.9em;
-    flex: 1;
+    font-size: 0.85em; /* ✅ Réduit de 0.9em à 0.85em */
+    flex: 0 1 auto; /* ✅ Ne prend plus tout l'espace (au lieu de flex: 1) */
+    max-width: 60%; /* ✅ Limite à 60% de la largeur */
     font-weight: 600;
     color: #667eea;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .category-label.income-label {
@@ -1734,11 +1740,12 @@ body.dark-mode .category-label.income-label {
 }
 
 .transaction-category-select {
-    flex: 1;
+    flex: 0 1 auto; /* ✅ Au lieu de flex: 1 */
+    max-width: 60%; /* ✅ Même limite */
     padding: 8px 12px;
     border: 2px solid #dee2e6;
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 0.85em; /* ✅ Réduit aussi */
     cursor: pointer;
     min-width: 0;
     background: white;
