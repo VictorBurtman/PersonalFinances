@@ -2190,6 +2190,7 @@
             }
         }
 
+
         /**
          * Load expenses breakdown by currency
          */
@@ -2250,6 +2251,10 @@
                         return;
                     }
 
+                    // Vérifier si au moins une devise différente de la devise de l'app
+                    const appCurrency = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
+                    const hasMultipleCurrencies = Object.keys(expensesByCurrency).some(curr => curr !== appCurrency);
+
                     let html = '';
                     
                     for (const [curr, amount] of Object.entries(expensesByCurrency)) {
@@ -2261,7 +2266,10 @@
                         `;
                     }
 
-                    html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
+                    // N'afficher la phrase que s'il y a eu conversion
+                    if (hasMultipleCurrencies) {
+                        html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
+                    }
 
                     breakdownDiv.innerHTML = html;
                     updateTransactionsLanguage();
@@ -2276,7 +2284,6 @@
                 console.error('Error loading expenses breakdown:', error);
             }
         }
-
 
 
         /**
@@ -2368,6 +2375,10 @@
 
                 let html = '';
                 
+                // Vérifier si au moins une devise différente de la devise de l'app
+                const appCurrency = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
+                const hasMultipleCurrencies = Object.keys(incomesByCurrency).some(curr => curr !== appCurrency);
+
                 for (const [curr, amount] of Object.entries(incomesByCurrency)) {
                     html += `
                         <div class="income-breakdown-item">
@@ -2377,8 +2388,10 @@
                     `;
                 }
 
-                // ✅ Une seule phrase de conversion à la fin
-                html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
+                // N'afficher la phrase que s'il y a eu conversion
+                if (hasMultipleCurrencies) {
+                    html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
+                }
 
                 breakdownDiv.innerHTML = html;
                 
