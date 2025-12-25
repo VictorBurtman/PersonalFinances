@@ -2228,7 +2228,7 @@
                         excluded: txn.excluded
                     });
                     
-                    if (txnDate >= startDate && txnDate <= endDate && !txn.excluded) {
+                    if (txnDate >= startDate && txnDate <= endDate) {  // ✅ Retirer && !txn.excluded
                         console.log('✅ Transaction INCLUDED');
                         const curr = txn.currency || 'ILS';
                         if (!incomesByCurrency[curr]) {
