@@ -2170,6 +2170,7 @@
             }
         }
 
+
         /**
          * Load income breakdown by currency
          */
@@ -2187,6 +2188,8 @@
             const endDate = new Date(year, month, 0, 23, 59, 59);
             
             console.log('📊 Loading income for period:', startDate.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
+            console.log('📊 DEBUG startDate:', startDate);
+            console.log('📊 DEBUG endDate:', endDate);
 
             try {
                 // Récupérer tous les revenus
@@ -2196,21 +2199,44 @@
                     .where('category', '==', 'income')
                     .get();
 
+                console.log(`📊 DEBUG: Total income transactions in Firestore: ${incomeSnapshot.size}`);
+
                 // Filtrer par date côté client
                 const incomesByCurrency = {};
                 
                 incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
+                    txn.id = doc.id;
+                    
+                    // ✅ Debug: logger chaque transaction
+                    console.log('📊 DEBUG Transaction:', {
+                        id: txn.id.substring(0, 8),
+                        date: txn.date,
+                        dateType: typeof txn.date,
+                        currency: txn.currency,
+                        amount: txn.chargedAmount,
+                        excluded: txn.excluded
+                    });
                     
                     // ✅ Convertir la date de transaction en objet Date pour comparaison correcte
                     const txnDate = new Date(txn.date);
                     
+                    console.log('📊 DEBUG Comparison:', {
+                        txnDate: txnDate,
+                        'txnDate >= startDate': txnDate >= startDate,
+                        'txnDate <= endDate': txnDate <= endDate,
+                        excluded: txn.excluded
+                    });
+                    
                     if (txnDate >= startDate && txnDate <= endDate && !txn.excluded) {
+                        console.log('✅ Transaction INCLUDED');
                         const curr = txn.currency || 'ILS';
                         if (!incomesByCurrency[curr]) {
                             incomesByCurrency[curr] = 0;
                         }
                         incomesByCurrency[curr] += Math.abs(txn.chargedAmount);
+                    } else {
+                        console.log('❌ Transaction EXCLUDED');
                     }
                 });
 
@@ -2255,6 +2281,7 @@
                 console.error('Error loading income breakdown:', error);
             }
         }
+
 
         function saveExpenses() {
             saveUserData();
