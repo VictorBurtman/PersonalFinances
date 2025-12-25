@@ -4202,6 +4202,7 @@
             const endDateStr = endDate.toISOString().split('T')[0];
             
             console.log('📊 Loading real spending data...');
+            console.log('📊 Date range:', startDateStr, 'to', endDateStr);
             
             try {
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
@@ -4223,16 +4224,30 @@
                     .where('category', '==', 'income')
                     .get();
                 
+                console.log(`📊 DEBUG: Found ${incomeSnapshot.size} total income transactions in Firestore`);
+                
                 const unlabeledIncomes = [];
                 incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
                     txn.id = doc.id;
                     
+                    console.log('📊 DEBUG Income txn:', {
+                        id: txn.id.substring(0, 8),
+                        date: txn.date,
+                        amount: txn.chargedAmount,
+                        currency: txn.currency,
+                        isLabeled: txn.isLabeled,
+                        inDateRange: txn.date >= startDateStr && txn.date <= endDateStr
+                    });
+                    
                     // Filtrer par date ET vérifier que ce n'est pas déjà dans labeledTransactions
                     if (txn.date >= startDateStr && txn.date <= endDateStr) {
                         const alreadyHave = labeledTransactions.find(t => t.id === txn.id);
                         if (!alreadyHave) {
+                            console.log('📊 DEBUG: Adding unlabeled income:', txn.id.substring(0, 8));
                             unlabeledIncomes.push(txn);
+                        } else {
+                            console.log('📊 DEBUG: Income already in labeled transactions:', txn.id.substring(0, 8));
                         }
                     }
                 });
@@ -4296,7 +4311,6 @@
                 console.error('Error loading real spending:', error);
             }
         }
-
 
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
