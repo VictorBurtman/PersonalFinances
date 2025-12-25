@@ -2274,10 +2274,20 @@
 
         function calculateIncome() {
             if (!expenses.income) return 0;
+            
             let total = 0;
+            
             expenses.income.forEach(item => {
-                total += parseFloat(item.amount) || 0;
+                const amount = parseFloat(item.amount) || 0;
+                const itemCurrency = item.currency || 'ILS';
+                
+                // Utiliser la fonction de conversion existante
+                const convertedAmount = convertToAppCurrency(amount, itemCurrency);
+                
+                total += convertedAmount;
             });
+            
+            console.log(`💰 Total income calculated: ${total.toFixed(2)} ${currency}`);
             return total;
         }
 
