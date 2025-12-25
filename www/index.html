@@ -373,7 +373,7 @@
                         <img src="img/icons/add.svg" alt="Add">
                     </button>
                     
-                    <select id="compareMonth" class="budget-only" onchange="loadRealSpending()" style="display: inline-block;">
+                    <select id="compareMonth" class="budget-only" onchange="handleMonthChange()" style="display: inline-block;">
                     </select>
                     
                     <button id="filtersBtn" class="edit-mode-btn transactions-only icon-btn" onclick="openFiltersModal()" style="display: none;" title="Filters">
@@ -2241,7 +2241,7 @@
                     `;
                 }
 
-                html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;">💱 <span data-translate="amountsConvertedNote">Amounts converted using daily exchange rates</span></div>`;
+                html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
 
                 breakdownDiv.innerHTML = html;
                 
@@ -2251,8 +2251,7 @@
             } catch (error) {
                 console.error('Error loading income breakdown:', error);
             }
-        }
-
+        }           
         function saveExpenses() {
             saveUserData();
             updateDisplay();
@@ -4311,6 +4310,22 @@
         }
 
 
+        /**
+         * Handle month selector change
+         */
+        async function handleMonthChange() {
+            if (isRealSpendingMode) {
+                await loadRealSpending();
+            }
+            
+            // Rafraîchir le breakdown si le panneau est ouvert
+            const incomeDetails = document.getElementById('incomeDetails');
+            if (incomeDetails && incomeDetails.style.display !== 'none') {
+                await loadIncomeBreakdown();
+            }
+        }
+
+
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
         // ============================================
@@ -4344,15 +4359,23 @@
             if (isRealSpendingMode) {
                 loadRealSpending();
                 loadRealSpendingForChart();
+                
+                // ✅ Rafraîchir le breakdown si le panneau est ouvert
+                const incomeDetails = document.getElementById('incomeDetails');
+                if (incomeDetails && incomeDetails.style.display !== 'none') {
+                    loadIncomeBreakdown();
+                }
             } else {
                 updateDisplay();
-                // Rafraîchir le breakdown si le panneau est ouvert
+                
+                // ✅ Rafraîchir le breakdown si le panneau est ouvert
                 const incomeDetails = document.getElementById('incomeDetails');
                 if (incomeDetails && incomeDetails.style.display !== 'none') {
                     loadIncomeBreakdown();
                 }
             }
         }
+
 
         // Garder pour compatibilité (au cas où c'est appelé ailleurs)
         function toggleBudgetMode() {
