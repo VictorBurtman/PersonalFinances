@@ -2185,10 +2185,8 @@
             const [year, month] = monthKey.split('-');
             const startDate = new Date(year, month - 1, 1);
             const endDate = new Date(year, month, 0, 23, 59, 59);
-            const startDateStr = startDate.toISOString().split('T')[0];
-            const endDateStr = endDate.toISOString().split('T')[0];
-
-            console.log('📊 Loading income for period:', startDateStr, 'to', endDateStr);
+            
+            console.log('📊 Loading income for period:', startDate.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
 
             try {
                 // Récupérer tous les revenus
@@ -2203,7 +2201,11 @@
                 
                 incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
-                    if (txn.date >= startDateStr && txn.date <= endDateStr && !txn.excluded) {
+                    
+                    // ✅ Convertir la date de transaction en objet Date pour comparaison correcte
+                    const txnDate = new Date(txn.date);
+                    
+                    if (txnDate >= startDate && txnDate <= endDate && !txn.excluded) {
                         const curr = txn.currency || 'ILS';
                         if (!incomesByCurrency[curr]) {
                             incomesByCurrency[curr] = 0;
@@ -2241,6 +2243,7 @@
                     `;
                 }
 
+                // ✅ Une seule phrase de conversion à la fin
                 html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
 
                 breakdownDiv.innerHTML = html;
@@ -2251,7 +2254,9 @@
             } catch (error) {
                 console.error('Error loading income breakdown:', error);
             }
-        }           
+        }
+
+
         function saveExpenses() {
             saveUserData();
             updateDisplay();
