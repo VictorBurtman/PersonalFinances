@@ -508,6 +508,8 @@ const translations = {
     // ============================================
     conversionInfo: "Amounts are converted using daily exchange rates and may be approximate",
     noIncomeThisMonth:"No income transactions this month",
+    noExpensesThisMonth: "No expenses this month",
+    estimatedBudgetNote: "Budget estimates shown",
     },
 
     // ============================================
@@ -1010,6 +1012,8 @@ const translations = {
         // ============================================
         conversionInfo: "Les montants sont convertis avec les taux de change quotidiens et peuvent être approximatifs",
         noIncomeThisMonth: "Aucune transaction de revenu ce mois-ci",
+        noExpensesThisMonth: "Aucune dépense ce mois-ci",
+        estimatedBudgetNote: "Estimations budgétaires affichées",
     },
 
     // ============================================
@@ -1512,6 +1516,8 @@ const translations = {
         // ============================================
         conversionInfo: "הסכומים מומרים באמצעות שערי חליפין יומיים ועשויים להיות משוערים",
         noIncomeThisMonth: "אין עסקאות הכנסה החודש",
+        noExpensesThisMonth: "אין הוצאות החודש",
+        estimatedBudgetNote: "הצגת אומדני תקציב",
     },
 
     // ============================================
@@ -2012,6 +2018,8 @@ const translations = {
         // ============================================
         conversionInfo: "Las cantidades se convierten usando tasas de cambio diarias y pueden ser aproximadas",
         noIncomeThisMonth: "No hay transacciones de ingresos este mes",
+        noExpensesThisMonth: "No hay gastos este mes",
+        estimatedBudgetNote: "Estimaciones presupuestarias mostradas",
     },
 
     // ============================================
@@ -2512,6 +2520,8 @@ const translations = {
         // ============================================
         conversionInfo: "Суммы конвертируются по дневным курсам обмена и могут быть приблизительными",
         noIncomeThisMonth: "Нет доходных транзакций в этом месяце",
+        noExpensesThisMonth: "Нет расходов в этом месяце",
+        estimatedBudgetNote: "Показаны бюджетные оценки",
     },
 
     // ============================================
@@ -3013,6 +3023,8 @@ const translations = {
         // ============================================
         conversionInfo: "يتم تحويل المبالغ باستخدام أسعار الصرف اليومية وقد تكون تقريبية",
         noIncomeThisMonth: "لا توجد معاملات دخل هذا الشهر",
+        noExpensesThisMonth: "لا توجد نفقات هذا الشهر",
+        estimatedBudgetNote: "عرض تقديرات الميزانية",
     },
 
     // ============================================
@@ -3514,6 +3526,8 @@ const translations = {
         // ============================================
         conversionInfo: "Beträge werden mit täglichen Wechselkursen umgerechnet und können ungefähr sein",
         noIncomeThisMonth: "Keine Einkommenstransaktionen in diesem Monat",
+        noExpensesThisMonth: "Keine Ausgaben in diesem Monat",
+        estimatedBudgetNote: "Budgetschätzungen angezeigt",
     },
 
     // ============================================
@@ -3964,6 +3978,8 @@ const translations = {
         // ============================================
         conversionInfo: "Gli importi sono convertiti con i tassi di cambio giornalieri e possono essere approssimativi",
         noIncomeThisMonth: "Nessuna transazione di reddito questo mese",
+        noExpensesThisMonth: "Nessuna spesa questo mese",
+        estimatedBudgetNote: "Stime di bilancio visualizzate",
     },
 
     // ============================================
@@ -4465,6 +4481,8 @@ const translations = {
         // ============================================
         conversionInfo: "Os valores são convertidos usando taxas de câmbio diárias e podem ser aproximados",
         noIncomeThisMonth: "Nenhuma transação de renda este mês",
+        noExpensesThisMonth: "Nenhuma despesa este mês",
+        estimatedBudgetNote: "Estimativas orçamentárias exibidas",
     },
 
     // ============================================
@@ -4966,6 +4984,8 @@ const translations = {
         // ============================================
         conversionInfo: "Tutarlar günlük döviz kurları kullanılarak dönüştürülür ve yaklaşık olabilir",
         noIncomeThisMonth: "Bu ay gelir işlemi yok",
+        noExpensesThisMonth: "Bu ay harcama yok",
+        estimatedBudgetNote: "Bütçe tahminleri gösteriliyor",
     },
 
     // ============================================
@@ -5466,5 +5486,7 @@ const translations = {
         // ============================================
         conversionInfo: "राशियों को दैनिक विनिमय दरों का उपयोग करके परिवर्तित किया जाता है और अनुमानित हो सकता है",
         noIncomeThisMonth: "इस महीने कोई आय लेनदेन नहीं",
+        noExpensesThisMonth: "इस महीने कोई खर्च नहीं",
+        estimatedBudgetNote: "बजट अनुमान दिखाए गए",
     }
 }

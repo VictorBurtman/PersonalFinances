@@ -4226,3 +4226,51 @@ body.dark-mode .currency-block.selected {
 .metric-card#incomeDisplay::after {
     background: radial-gradient(circle at 25% 25%, rgba(76, 175, 80, 0.7) 0%, transparent 70%) !important;
 }
+
+
+/* Expenses clickable card */
+.expenses-clickable {
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.expenses-clickable:hover {
+    transform: translateY(-2px);
+}
+
+.expenses-details {
+    margin-top: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.expenses-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 0.85em;
+}
+
+/* Style grisé pour le breakdown en mode Estimé */
+.expenses-details.estimated-mode .expenses-breakdown-item {
+    opacity: 0.5;
+}
+
+.expenses-details.estimated-mode .expenses-breakdown-item span {
+    color: #999 !important;
+}
+
+.expenses-details.estimated-mode > div:last-child {
+    opacity: 0.5;
+    color: #999 !important;
+}
+
+.expenses-breakdown-currency {
+    opacity: 0.8;
+}
+
+.expenses-breakdown-amount {
+    font-weight: 600;
+}

@@ -413,11 +413,17 @@
                                 </div>
                             </div>
 
-                            <!-- Expenses Card -->
-                            <div class="metric-card metric-card-expenses">
-                                <div class="metric-content-row">
-                                    <div class="metric-label" data-translate="expenses">Total Monthly Expenses</div>
-                                    <div class="metric-value" id="totalAmount">₪0</div>
+                            <!-- Expenses Card (Clickable) -->
+                            <div class="metric-card expenses-clickable" id="expensesDisplay" onclick="toggleExpensesDetails()">
+                                <span class="expand-arrow" id="expensesArrow">▼</span>
+                                <div class="metric-label" data-translate="expenses">Expenses</div>
+                                <div class="metric-value" id="totalExpenses">₪0</div>
+                                
+                                <!-- Expandable details -->
+                                <div class="expenses-details" id="expensesDetails" style="display: none;">
+                                    <div id="expensesBreakdown" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.15);">
+                                        <!-- Les détails (breakdown + phrase) seront insérés ici par loadExpensesBreakdown() -->
+                                    </div>
                                 </div>
                             </div>
 
@@ -2166,6 +2172,111 @@
                 arrow.classList.remove('expanded');
             }
         }
+
+        /**
+         * Toggle expenses breakdown visibility
+         */
+        function toggleExpensesDetails() {
+            const details = document.getElementById('expensesDetails');
+            const arrow = document.getElementById('expensesArrow');
+            
+            if (details.style.display === 'none') {
+                details.style.display = 'block';
+                arrow.textContent = '▲';
+                loadExpensesBreakdown();
+            } else {
+                details.style.display = 'none';
+                arrow.textContent = '▼';
+            }
+        }
+
+        /**
+         * Load expenses breakdown by currency
+         */
+        async function loadExpensesBreakdown() {
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load expenses breakdown: Firebase not initialized');
+                return;
+            }
+            
+            const monthKey = document.getElementById('compareMonth')?.value;
+            if (!monthKey) return;
+
+            const [year, month] = monthKey.split('-');
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+            
+            console.log('📊 Loading expenses for period:', startDate.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
+
+            try {
+                const breakdownDiv = document.getElementById('expensesBreakdown');
+                const detailsDiv = document.getElementById('expensesDetails');
+                
+                // Ajouter ou retirer la classe "estimated-mode" selon le mode
+                if (!isRealSpendingMode) {
+                    detailsDiv.classList.add('estimated-mode');
+                } else {
+                    detailsDiv.classList.remove('estimated-mode');
+                }
+
+                // En mode réel : récupérer les dépenses réelles
+                if (isRealSpendingMode) {
+                    const getTransactions = firebase.functions().httpsCallable('getTransactions');
+                    
+                    const result = await getTransactions({
+                        startDate: startDate.toISOString(),
+                        endDate: endDate.toISOString(),
+                        isLabeled: true,
+                        limit: 1000
+                    });
+                    
+                    const labeledExpenses = result.data.transactions || [];
+                    
+                    // Grouper par devise
+                    const expensesByCurrency = {};
+                    labeledExpenses.forEach(txn => {
+                        if (txn.category !== 'income' && txn.chargedAmount < 0) {
+                            const curr = txn.currency || 'ILS';
+                            if (!expensesByCurrency[curr]) {
+                                expensesByCurrency[curr] = 0;
+                            }
+                            expensesByCurrency[curr] += Math.abs(txn.chargedAmount);
+                        }
+                    });
+
+                    if (Object.keys(expensesByCurrency).length === 0) {
+                        breakdownDiv.innerHTML = `<div style="text-align: center; padding: 10px; color: #999;" data-translate="noExpensesThisMonth">No expenses this month</div>`;
+                        updateTransactionsLanguage();
+                        return;
+                    }
+
+                    let html = '';
+                    
+                    for (const [curr, amount] of Object.entries(expensesByCurrency)) {
+                        html += `
+                            <div class="expenses-breakdown-item">
+                                <span class="expenses-breakdown-currency">${curr}</span>
+                                <span class="expenses-breakdown-amount">${formatAmount(amount, 2)}</span>
+                            </div>
+                        `;
+                    }
+
+                    html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;"><span data-translate="conversionInfo">Amounts are converted using daily exchange rates and may be approximate</span></div>`;
+
+                    breakdownDiv.innerHTML = html;
+                    updateTransactionsLanguage();
+                    
+                } else {
+                    // En mode estimé : message que c'est le budget
+                    breakdownDiv.innerHTML = `<div style="text-align: center; padding: 10px; color: #999; font-size: 0.85em;"><span data-translate="estimatedBudgetNote">Budget estimates shown</span></div>`;
+                    updateTransactionsLanguage();
+                }
+                
+            } catch (error) {
+                console.error('Error loading expenses breakdown:', error);
+            }
+        }
+
 
 
         /**
@@ -4351,6 +4462,12 @@
             if (incomeDetails && incomeDetails.style.display !== 'none') {
                 await loadIncomeBreakdown();
             }
+            
+            // Rafraîchir le breakdown des dépenses si ouvert
+            const expensesDetails = document.getElementById('expensesDetails');
+            if (expensesDetails && expensesDetails.style.display !== 'none') {
+                loadExpensesBreakdown();
+            }
         }
 
 
@@ -4388,18 +4505,28 @@
                 loadRealSpending();
                 loadRealSpendingForChart();
                 
-                // ✅ Rafraîchir le breakdown si le panneau est ouvert
+                // ✅ Rafraîchir les breakdowns si les panneaux sont ouverts
                 const incomeDetails = document.getElementById('incomeDetails');
                 if (incomeDetails && incomeDetails.style.display !== 'none') {
                     loadIncomeBreakdown();
                 }
+                
+                const expensesDetails = document.getElementById('expensesDetails');
+                if (expensesDetails && expensesDetails.style.display !== 'none') {
+                    loadExpensesBreakdown();
+                }
             } else {
                 updateDisplay();
                 
-                // ✅ Rafraîchir le breakdown si le panneau est ouvert
+                // ✅ Rafraîchir les breakdowns si les panneaux sont ouverts
                 const incomeDetails = document.getElementById('incomeDetails');
                 if (incomeDetails && incomeDetails.style.display !== 'none') {
                     loadIncomeBreakdown();
+                }
+                
+                const expensesDetails = document.getElementById('expensesDetails');
+                if (expensesDetails && expensesDetails.style.display !== 'none') {
+                    loadExpensesBreakdown();
                 }
             }
         }
