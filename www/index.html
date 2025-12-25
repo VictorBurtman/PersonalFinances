@@ -2564,7 +2564,7 @@
                 const remainingPercentage = totalIncome > 0 ? ((remaining / totalIncome) * 100).toFixed(1) : 0;
                 
                 // Update displays
-                document.getElementById('totalAmount').textContent = formatAmount(totalExpenses, 2, true);
+                document.getElementById('totalExpenses').textContent = formatAmount(totalExpenses, 2, true);
                 document.getElementById('totalIncome').textContent = formatAmount(totalIncome, 2, true);
                 document.getElementById('remainingAmount').textContent = formatAmount(remaining, 2, true);
                 document.getElementById('remainingAmount').style.color = remaining >= 0 ? '#28a745' : '#dc3545';
