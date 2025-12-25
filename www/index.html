@@ -2170,83 +2170,88 @@
             }
         }
 
-        // Load income breakdown by currency for current month
+        /**
+         * Load income breakdown by currency
+         */
         async function loadIncomeBreakdown() {
-            const breakdown = document.getElementById('incomeBreakdown');
-            if (!currentUser || !breakdown) return;
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load income breakdown: Firebase not initialized');
+                return;
+            }
             
+            const monthKey = document.getElementById('compareMonth')?.value;
+            if (!monthKey) return;
+
+            const [year, month] = monthKey.split('-');
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+            const startDateStr = startDate.toISOString().split('T')[0];
+            const endDateStr = endDate.toISOString().split('T')[0];
+
+            console.log('📊 Loading income for period:', startDateStr, 'to', endDateStr);
+
             try {
-                // Récupérer le mois sélectionné
-                const monthSelect = document.getElementById('compareMonth');
-                const selectedMonth = monthSelect ? monthSelect.value : new Date().toISOString().slice(0, 7);
-                
-                // Calculer les dates de début et fin du mois
-                const [year, month] = selectedMonth.split('-');
-                const startDate = new Date(year, month - 1, 1);
-                const endDate = new Date(year, month, 0);
-                
-                const startDateStr = startDate.toISOString().split('T')[0];
-                const endDateStr = endDate.toISOString().split('T')[0];
-                
-                console.log('📊 Loading income for period:', startDateStr, 'to', endDateStr);
-                
-                // Récupérer toutes les transactions de revenus (filtrer les dates en JS)
-                const snapshot = await db.collection('users')
+                // Récupérer tous les revenus
+                const incomeSnapshot = await db.collection('users')
                     .doc(currentUser.uid)
                     .collection('transactions')
                     .where('category', '==', 'income')
                     .get();
-                
+
+                // Filtrer par date côté client
                 const incomesByCurrency = {};
                 
-                snapshot.forEach(doc => {
+                incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
-                    
-                    // Filtrer par date côté client (évite l'index composite)
-                    if (txn.date >= startDateStr && txn.date <= endDateStr) {
+                    if (txn.date >= startDateStr && txn.date <= endDateStr && !txn.excluded) {
                         const curr = txn.currency || 'ILS';
-                        const amount = Math.abs(txn.chargedAmount);
-                        
                         if (!incomesByCurrency[curr]) {
                             incomesByCurrency[curr] = 0;
                         }
-                        incomesByCurrency[curr] += amount;
+                        incomesByCurrency[curr] += Math.abs(txn.chargedAmount);
                     }
                 });
-                
+
                 console.log('📊 Incomes by currency:', incomesByCurrency);
+
+                const breakdownDiv = document.getElementById('incomeBreakdown');
+                const detailsDiv = document.getElementById('incomeDetails');
                 
-                // Afficher le breakdown
-                const currencies = Object.keys(incomesByCurrency).sort();
-                
-                if (currencies.length === 0) {
-                    breakdown.innerHTML = '<div style="text-align: center; opacity: 0.7; font-size: 0.85em;">No income transactions this month</div>';
+                // ✅ Ajouter ou retirer la classe "estimated-mode" selon le mode
+                const isEstimatedMode = !isRealSpendingMode;
+                if (isEstimatedMode) {
+                    detailsDiv.classList.add('estimated-mode');
+                } else {
+                    detailsDiv.classList.remove('estimated-mode');
+                }
+
+                if (Object.keys(incomesByCurrency).length === 0) {
+                    breakdownDiv.innerHTML = '<div style="text-align: center; padding: 10px; color: #999;">No income transactions this month</div>';
                     return;
                 }
+
+                let html = '';
+                const estimatedClass = isEstimatedMode ? 'estimated-mode' : '';
                 
-                breakdown.innerHTML = currencies.map(curr => {
-                    const amount = incomesByCurrency[curr];
-                    const symbol = curr === 'ILS' ? '₪' : 
-                                curr === 'USD' ? '$' : 
-                                curr === 'EUR' ? '€' : 
-                                curr === 'GBP' ? '£' : 
-                                curr === 'JPY' ? '¥' :
-                                curr;
-                    
-                    return `
-                        <div class="income-breakdown-item">
+                for (const [curr, amount] of Object.entries(incomesByCurrency)) {
+                    html += `
+                        <div class="income-breakdown-item ${estimatedClass}">
                             <span class="income-breakdown-currency">${curr}</span>
-                            <span class="income-breakdown-amount">${symbol}${formatAmount(amount, 2)}</span>
+                            <span class="income-breakdown-amount">${formatAmount(amount, 2)}</span>
                         </div>
                     `;
-                }).join('');
+                }
+
+                html += `<div class="income-breakdown-note ${estimatedClass}">💱 Amounts converted using daily exchange rates</div>`;
+
+                breakdownDiv.innerHTML = html;
                 
             } catch (error) {
-                console.error('❌ Error loading income breakdown:', error);
-                breakdown.innerHTML = '<div style="text-align: center; opacity: 0.7; font-size: 0.85em; color: #dc3545;">Error loading details</div>';
+                console.error('Error loading income breakdown:', error);
             }
         }
-        
+
+
         function saveExpenses() {
             saveUserData();
             updateDisplay();
@@ -4340,6 +4345,11 @@
                 loadRealSpendingForChart();
             } else {
                 updateDisplay();
+                // Rafraîchir le breakdown si le panneau est ouvert
+                const incomeDetails = document.getElementById('incomeDetails');
+                if (incomeDetails && incomeDetails.style.display !== 'none') {
+                    loadIncomeBreakdown();
+                }
             }
         }
 

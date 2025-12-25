@@ -4195,6 +4195,25 @@ body.dark-mode .currency-block.selected {
     font-size: 0.85em;
 }
 
+/* Style grisé pour le breakdown en mode Estimé */
+.income-breakdown-item.estimated-mode {
+    opacity: 0.5;
+    color: #999;
+}
+
+.income-breakdown-item.estimated-mode .income-breakdown-currency {
+    color: #999;
+}
+
+.income-breakdown-item.estimated-mode .income-breakdown-amount {
+    color: #999;
+}
+
+.income-details.estimated-mode .income-breakdown-note {
+    opacity: 0.5;
+    color: #999;
+}
+
 .income-breakdown-currency {
     opacity: 0.8;
 }
