@@ -2218,39 +2218,40 @@
                 const detailsDiv = document.getElementById('incomeDetails');
                 
                 // ✅ Ajouter ou retirer la classe "estimated-mode" selon le mode
-                const isEstimatedMode = !isRealSpendingMode;
-                if (isEstimatedMode) {
+                if (!isRealSpendingMode) {
                     detailsDiv.classList.add('estimated-mode');
                 } else {
                     detailsDiv.classList.remove('estimated-mode');
                 }
 
                 if (Object.keys(incomesByCurrency).length === 0) {
-                    breakdownDiv.innerHTML = '<div style="text-align: center; padding: 10px; color: #999;">No income transactions this month</div>';
+                    breakdownDiv.innerHTML = `<div style="text-align: center; padding: 10px; color: #999;" data-translate="noIncomeThisMonth">No income transactions this month</div>`;
+                    updateTransactionsLanguage();
                     return;
                 }
 
                 let html = '';
-                const estimatedClass = isEstimatedMode ? 'estimated-mode' : '';
                 
                 for (const [curr, amount] of Object.entries(incomesByCurrency)) {
                     html += `
-                        <div class="income-breakdown-item ${estimatedClass}">
+                        <div class="income-breakdown-item">
                             <span class="income-breakdown-currency">${curr}</span>
                             <span class="income-breakdown-amount">${formatAmount(amount, 2)}</span>
                         </div>
                     `;
                 }
 
-                html += `<div class="income-breakdown-note ${estimatedClass}">💱 Amounts converted using daily exchange rates</div>`;
+                html += `<div style="margin-top: 8px; font-size: 0.75em; color: #7c8db0; text-align: center;">💱 <span data-translate="amountsConvertedNote">Amounts converted using daily exchange rates</span></div>`;
 
                 breakdownDiv.innerHTML = html;
+                
+                // ✅ Appliquer les traductions
+                updateTransactionsLanguage();
                 
             } catch (error) {
                 console.error('Error loading income breakdown:', error);
             }
         }
-
 
         function saveExpenses() {
             saveUserData();

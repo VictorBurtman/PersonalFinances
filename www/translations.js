@@ -507,6 +507,7 @@ const translations = {
     // CURRENCY & CONVERSION
     // ============================================
     conversionInfo: "Amounts are converted using daily exchange rates and may be approximate",
+    noIncomeThisMonth:"No income transactions this month",
     },
 
     // ============================================
@@ -1008,6 +1009,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Les montants sont convertis avec les taux de change quotidiens et peuvent être approximatifs",
+        noIncomeThisMonth: "Aucune transaction de revenu ce mois-ci",
     },
 
     // ============================================
@@ -1509,6 +1511,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "הסכומים מומרים באמצעות שערי חליפין יומיים ועשויים להיות משוערים",
+        noIncomeThisMonth: "אין עסקאות הכנסה החודש",
     },
 
     // ============================================
@@ -2008,6 +2011,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Las cantidades se convierten usando tasas de cambio diarias y pueden ser aproximadas",
+        noIncomeThisMonth: "No hay transacciones de ingresos este mes",
     },
 
     // ============================================
@@ -2507,6 +2511,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Суммы конвертируются по дневным курсам обмена и могут быть приблизительными",
+        noIncomeThisMonth: "Нет доходных транзакций в этом месяце",
     },
 
     // ============================================
@@ -3007,6 +3012,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "يتم تحويل المبالغ باستخدام أسعار الصرف اليومية وقد تكون تقريبية",
+        noIncomeThisMonth: "لا توجد معاملات دخل هذا الشهر",
     },
 
     // ============================================
@@ -3507,6 +3513,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Beträge werden mit täglichen Wechselkursen umgerechnet und können ungefähr sein",
+        noIncomeThisMonth: "Keine Einkommenstransaktionen in diesem Monat",
     },
 
     // ============================================
@@ -3956,6 +3963,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Gli importi sono convertiti con i tassi di cambio giornalieri e possono essere approssimativi",
+        noIncomeThisMonth: "Nessuna transazione di reddito questo mese",
     },
 
     // ============================================
@@ -4456,6 +4464,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Os valores são convertidos usando taxas de câmbio diárias e podem ser aproximados",
+        noIncomeThisMonth: "Nenhuma transação de renda este mês",
     },
 
     // ============================================
@@ -4956,6 +4965,7 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "Tutarlar günlük döviz kurları kullanılarak dönüştürülür ve yaklaşık olabilir",
+        noIncomeThisMonth: "Bu ay gelir işlemi yok",
     },
 
     // ============================================
@@ -5455,6 +5465,6 @@ const translations = {
         // CURRENCY & CONVERSION
         // ============================================
         conversionInfo: "राशियों को दैनिक विनिमय दरों का उपयोग करके परिवर्तित किया जाता है और अनुमानित हो सकता है",
-
+        noIncomeThisMonth: "इस महीने कोई आय लेनदेन नहीं",
     }
 }

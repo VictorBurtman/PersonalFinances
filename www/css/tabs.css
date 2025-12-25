@@ -4196,23 +4196,19 @@ body.dark-mode .currency-block.selected {
 }
 
 /* Style grisé pour le breakdown en mode Estimé */
-.income-breakdown-item.estimated-mode {
+.income-details.estimated-mode .income-breakdown-item {
     opacity: 0.5;
-    color: #999;
 }
 
-.income-breakdown-item.estimated-mode .income-breakdown-currency {
-    color: #999;
+.income-details.estimated-mode .income-breakdown-item span {
+    color: #999 !important;
 }
 
-.income-breakdown-item.estimated-mode .income-breakdown-amount {
-    color: #999;
-}
-
-.income-details.estimated-mode .income-breakdown-note {
+.income-details.estimated-mode > div:last-child {
     opacity: 0.5;
-    color: #999;
+    color: #999 !important;
 }
+
 
 .income-breakdown-currency {
     opacity: 0.8;
