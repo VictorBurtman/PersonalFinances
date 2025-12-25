@@ -4169,6 +4169,7 @@
             }
         }
 
+
         /**
          * Load real spending data from transactions
          */
@@ -4207,7 +4208,7 @@
             try {
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
                 
-                // ✅ UNE SEULE requête : toutes les transactions labellées du mois
+                // ✅ Requête 1 : Toutes les DÉPENSES labellées (pas les revenus)
                 const result = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
@@ -4215,9 +4216,9 @@
                     limit: 1000
                 });
                 
-                const labeledTransactions = result.data.transactions || [];
+                const labeledExpenses = result.data.transactions || [];
                 
-                // ✅ Récupérer aussi les revenus NON labellés via Firestore direct
+                // ✅ Requête 2 : TOUS les revenus via Firestore (la Cloud Function ne les retourne pas correctement)
                 const incomeSnapshot = await db.collection('users')
                     .doc(currentUser.uid)
                     .collection('transactions')
@@ -4226,36 +4227,27 @@
                 
                 console.log(`📊 DEBUG: Found ${incomeSnapshot.size} total income transactions in Firestore`);
                 
-                const unlabeledIncomes = [];
+                const incomeTransactions = [];
                 incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
                     txn.id = doc.id;
                     
-                    console.log('📊 DEBUG Income txn:', {
-                        id: txn.id.substring(0, 8),
-                        date: txn.date,
-                        amount: txn.chargedAmount,
-                        currency: txn.currency,
-                        isLabeled: txn.isLabeled,
-                        inDateRange: txn.date >= startDateStr && txn.date <= endDateStr
-                    });
-                    
-                    // Filtrer par date ET vérifier que ce n'est pas déjà dans labeledTransactions
+                    // Filtrer par date côté client
                     if (txn.date >= startDateStr && txn.date <= endDateStr) {
-                        const alreadyHave = labeledTransactions.find(t => t.id === txn.id);
-                        if (!alreadyHave) {
-                            console.log('📊 DEBUG: Adding unlabeled income:', txn.id.substring(0, 8));
-                            unlabeledIncomes.push(txn);
-                        } else {
-                            console.log('📊 DEBUG: Income already in labeled transactions:', txn.id.substring(0, 8));
-                        }
+                        console.log('📊 DEBUG: Adding income:', {
+                            id: txn.id.substring(0, 8),
+                            amount: txn.chargedAmount,
+                            currency: txn.currency,
+                            date: txn.date
+                        });
+                        incomeTransactions.push(txn);
                     }
                 });
                 
-                console.log(`📊 Loaded ${labeledTransactions.length} labeled transactions and ${unlabeledIncomes.length} unlabeled incomes`);
+                console.log(`📊 Loaded ${labeledExpenses.length} labeled expenses and ${incomeTransactions.length} income transactions`);
                 
-                // ✅ Fusionner toutes les transactions
-                const allTransactions = [...labeledTransactions, ...unlabeledIncomes];
+                // ✅ Fusionner dépenses + revenus
+                const allTransactions = [...labeledExpenses, ...incomeTransactions];
                 
                 // ✅ Filtrer les transactions exclues
                 const activeTransactions = allTransactions.filter(txn => !txn.excluded);
@@ -4311,6 +4303,7 @@
                 console.error('Error loading real spending:', error);
             }
         }
+
 
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
