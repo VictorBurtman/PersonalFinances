@@ -4193,54 +4193,69 @@
                 }
             }
 
-
             const [year, month] = monthKey.split('-');
             
             // Calculate start and end dates for the month
             const startDate = new Date(year, month - 1, 1);
             const endDate = new Date(year, month, 0, 23, 59, 59);
             
+            console.log('📊 Loading real spending data...');
+            
             try {
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
-                const result = await getTransactions({
+                
+                // ✅ Requête 1 : Récupérer les transactions labellées (dépenses)
+                const expensesResult = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
                     isLabeled: true,
                     limit: 1000
                 });
                 
-                const transactions = result.data.transactions || [];
+                // ✅ Requête 2 : Récupérer TOUS les revenus (labellés ou non)
+                const incomeResult = await getTransactions({
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    category: 'income',
+                    limit: 1000
+                });
+                
+                const expenseTransactions = expensesResult.data.transactions || [];
+                const incomeTransactions = incomeResult.data.transactions || [];
+                
+                console.log(`📊 Loaded ${expenseTransactions.length} labeled expenses and ${incomeTransactions.length} income transactions`);
+                
+                // ✅ Fusionner en évitant les doublons (cas où un revenu est aussi labellé)
+                const allTransactions = [...expenseTransactions];
+                incomeTransactions.forEach(incomeTxn => {
+                    if (!allTransactions.find(t => t.id === incomeTxn.id)) {
+                        allTransactions.push(incomeTxn);
+                    }
+                });
                 
                 // ✅ Filtrer les transactions exclues
-                const activeTransactions = transactions.filter(txn => !txn.excluded);
+                const activeTransactions = allTransactions.filter(txn => !txn.excluded);
                 
                 // Group by category and sum amounts
                 realSpendingData = {};
                 let realIncomeTotal = 0;
                 
                 activeTransactions.forEach(txn => {
-                    // ✅ DEBUG : Logger les transactions de revenus
-                    if (txn.category === 'income') {
-                        console.log('💰 Income transaction:', {
-                            amount: txn.chargedAmount,
-                            currency: txn.currency,
-                            description: txn.description
-                        });
-                    }
-                    
                     // Convertir le montant dans la devise de l'app
                     const convertedAmount = convertToAppCurrency(
                         Math.abs(txn.chargedAmount),
                         txn.currency
                     );
                     
-                    // ✅ DEBUG : Logger la conversion
-                    if (txn.category === 'income') {
-                        console.log('💱 Converted to:', convertedAmount, currency);
-                    }
-                    
                     // Traiter les revenus
-                    if (txn.category === 'income' && txn.chargedAmount > 0) {
+                    if (txn.category === 'income') {
+                        console.log('💰 Income transaction:', {
+                            amount: txn.chargedAmount,
+                            currency: txn.currency,
+                            description: txn.description
+                        });
+                        console.log('💱 Converted to:', convertedAmount, currency);
+                        
                         realIncomeTotal += convertedAmount;
                     }
                     // Traiter les dépenses
@@ -4254,18 +4269,16 @@
                     }
                 });
                 
-                // ✅ DEBUG : Logger le total final
                 console.log('💰 Total income calculated:', realIncomeTotal);
                 console.log('📊 Exchange rates used:', liveExchangeRates);
                 
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
                 
-                // Refresh display with conversion icon (avec délai pour s'assurer que le DOM est prêt)
+                // Refresh display with conversion icon
                 setTimeout(() => {
                     updateDisplay();
                 }, 200);
-
 
                 // Refresh display with comparison
                 updateDisplay();
@@ -4274,8 +4287,6 @@
                 console.error('Error loading real spending:', error);
             }
         }
-
-
 
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
