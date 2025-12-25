@@ -5014,7 +5014,19 @@
         function updateCurrency(currencyCode) {
             currency = currencyOptions[currencyCode];
             saveUserData();
-            updateDisplay();
+            
+            // Rafraîchir selon le mode actif
+            if (isRealSpendingMode) {
+                loadRealSpending();
+            } else {
+                updateDisplay();
+            }
+            
+            // Rafraîchir le breakdown si ouvert
+            const incomeDetails = document.getElementById('incomeDetails');
+            if (incomeDetails && incomeDetails.style.display !== 'none') {
+                loadIncomeBreakdown();
+            }
         }
 
         function toggleIncomeFeature(enabled) {
