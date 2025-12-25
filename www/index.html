@@ -4169,7 +4169,6 @@
             }
         }
 
-
         /**
          * Load real spending data from transactions
          */
@@ -4199,46 +4198,49 @@
             const startDate = new Date(year, month - 1, 1);
             const endDate = new Date(year, month, 0, 23, 59, 59);
             
+            const startDateStr = startDate.toISOString().split('T')[0];
+            const endDateStr = endDate.toISOString().split('T')[0];
+            
             console.log('📊 Loading real spending data...');
             
             try {
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
                 
-                // ✅ Requête 1 : Récupérer les transactions labellées (dépenses)
-                const expensesResult = await getTransactions({
+                // ✅ UNE SEULE requête : toutes les transactions labellées du mois
+                const result = await getTransactions({
                     startDate: startDate.toISOString(),
                     endDate: endDate.toISOString(),
                     isLabeled: true,
                     limit: 1000
                 });
                 
-                // ✅ Requête 2 : Récupérer TOUS les revenus (labellés ou non)
-                // ✅ Requête 2 : Récupérer TOUS les revenus sans filtre de date (évite l'index composite)
-                const incomeResult = await getTransactions({
-                    category: 'income',
-                    limit: 1000
-                });
+                const labeledTransactions = result.data.transactions || [];
                 
-                const expenseTransactions = expensesResult.data.transactions || [];
-                const allIncomeTransactions = incomeResult.data.transactions || [];
-
-                // ✅ Filtrer les revenus par date côté client
-                const startDateStr = startDate.toISOString().split('T')[0];
-                const endDateStr = endDate.toISOString().split('T')[0];
-
-                const incomeTransactions = allIncomeTransactions.filter(txn => {
-                    return txn.date >= startDateStr && txn.date <= endDateStr;
-                });
-
-                console.log(`📊 Loaded ${expenseTransactions.length} labeled expenses and ${incomeTransactions.length} income transactions (filtered from ${allIncomeTransactions.length} total)`);
-
-                // ✅ Fusionner en évitant les doublons (cas où un revenu est aussi labellé)
-                const allTransactions = [...expenseTransactions];
-                incomeTransactions.forEach(incomeTxn => {
-                    if (!allTransactions.find(t => t.id === incomeTxn.id)) {
-                        allTransactions.push(incomeTxn);
+                // ✅ Récupérer aussi les revenus NON labellés via Firestore direct
+                const incomeSnapshot = await db.collection('users')
+                    .doc(currentUser.uid)
+                    .collection('transactions')
+                    .where('category', '==', 'income')
+                    .get();
+                
+                const unlabeledIncomes = [];
+                incomeSnapshot.forEach(doc => {
+                    const txn = doc.data();
+                    txn.id = doc.id;
+                    
+                    // Filtrer par date ET vérifier que ce n'est pas déjà dans labeledTransactions
+                    if (txn.date >= startDateStr && txn.date <= endDateStr) {
+                        const alreadyHave = labeledTransactions.find(t => t.id === txn.id);
+                        if (!alreadyHave) {
+                            unlabeledIncomes.push(txn);
+                        }
                     }
                 });
+                
+                console.log(`📊 Loaded ${labeledTransactions.length} labeled transactions and ${unlabeledIncomes.length} unlabeled incomes`);
+                
+                // ✅ Fusionner toutes les transactions
+                const allTransactions = [...labeledTransactions, ...unlabeledIncomes];
                 
                 // ✅ Filtrer les transactions exclues
                 const activeTransactions = allTransactions.filter(txn => !txn.excluded);
@@ -4294,6 +4296,7 @@
                 console.error('Error loading real spending:', error);
             }
         }
+
 
         // ============================================
         // BUDGET MODE: ESTIMATED VS REAL SPENDING
