@@ -4277,34 +4277,59 @@ body.dark-mode .currency-block.selected {
 
 
 /* ============================================
-   TOGGLE SWITCHES
+   SETTINGS TOGGLE SWITCHES
    ============================================ */
-.toggle-switch {
+.settings-toggle-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 15px 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .settings-toggle-row {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.settings-toggle-label {
+    font-size: 1em !important;
+    color: #333 !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    cursor: default !important;
+}
+
+body.dark-mode .settings-toggle-label {
+    color: #e0e0e0 !important;
+}
+
+.settings-section .toggle-switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 26px;
+    flex-shrink: 0;
 }
 
-.toggle-switch input {
+.settings-section .toggle-switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.toggle-slider {
+.settings-section .toggle-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #ccc !important;
     transition: 0.3s;
     border-radius: 26px;
 }
 
-.toggle-slider:before {
+.settings-section .toggle-slider:before {
     position: absolute;
     content: "";
     height: 20px;
@@ -4316,78 +4341,23 @@ body.dark-mode .currency-block.selected {
     border-radius: 50%;
 }
 
-input:checked + .toggle-slider {
-    background-color: #667eea;
+.settings-section input:checked + .toggle-slider {
+    background-color: #667eea !important;
 }
 
-input:checked + .toggle-slider:before {
+.settings-section input:checked + .toggle-slider:before {
     transform: translateX(24px);
 }
 
-/* Dark mode pour le toggle */
-body.dark-mode .toggle-slider {
-    background-color: #555;
+body.dark-mode .settings-section .toggle-slider {
+    background-color: #555 !important;
 }
 
-body.dark-mode input:checked + .toggle-slider {
-    background-color: #9ca3ff;
+body.dark-mode .settings-section input:checked + .toggle-slider {
+    background-color: #9ca3ff !important;
 }
 
-/* Style pour les settings avec toggle */
-.settings-toggle-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-body.dark-mode .settings-toggle-row {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-.settings-toggle-label {
-    font-size: 1em;
-    color: #333;
-    flex: 1;
-}
-
-body.dark-mode .settings-toggle-label {
-    color: #e0e0e0;
-}
-
-
-/* Force le bon style pour les toggles dans les settings */
-.settings-section .toggle-switch {
-    flex-shrink: 0;
-    margin-left: 15px;
-}
-
-.settings-section .settings-toggle-row .toggle-slider {
-    background-color: #ccc;
-}
-
-.settings-section .settings-toggle-row input:checked + .toggle-slider {
-    background-color: #667eea;
-}
-
-body.dark-mode .settings-section .settings-toggle-row .toggle-slider {
-    background-color: #555;
-}
-
-body.dark-mode .settings-section .settings-toggle-row input:checked + .toggle-slider {
-    background-color: #9ca3ff;
-}
-
-/* Supprimer l'ancien style checkbox qui pourrait interférer */
-.settings-section .settings-checkbox {
-    display: none;
-}
-
-.settings-toggle-row label {
-    cursor: default;
-}
-
-.settings-toggle-row .toggle-switch {
-    cursor: pointer;
+/* Cache l'ancien style checkbox */
+.settings-checkbox {
+    display: none !important;
 }
