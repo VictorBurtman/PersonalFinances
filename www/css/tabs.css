@@ -4419,3 +4419,13 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 #manualTxnMemo {
     min-height: 70px !important;
 }
+
+/* Date - légèrement réduit pour mobile */
+#manualTxnDate {
+    max-width: calc(100% - 4px) !important;
+}
+
+/* Label date en majuscule */
+#manualTransactionForm label:has(+ #manualTxnDate) {
+    text-transform: capitalize;
+}
