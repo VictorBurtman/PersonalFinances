@@ -4379,9 +4379,10 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 }
 
 /* Date - même largeur que les autres champs */
+/* Date - légèrement réduite pour alignement parfait */
 #manualTxnDate {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: calc(100% - 2px) !important;
+    max-width: calc(100% - 2px) !important;
     box-sizing: border-box !important;
     padding: 10px 12px !important;
 }
