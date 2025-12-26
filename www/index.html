@@ -3313,35 +3313,67 @@
          * Récupérer les données mensuelles par catégorie
          */
         async function getCategoryMonthlyData(monthsCount = 6) {
-            // Cette fonction doit interroger Firestore pour obtenir les dépenses des N derniers mois
-            // Pour l'instant, on utilise des données simulées
+            if (!firebase.functions || !currentUser) {
+                console.log('Cannot load category monthly data: Firebase not initialized');
+                return {};
+            }
             
+            const getTransactions = firebase.functions().httpsCallable('getTransactions');
             const result = {};
             const now = new Date();
             
+            // Initialiser les tableaux pour chaque catégorie
             Object.keys(expenses).forEach(categoryKey => {
-                if (categoryKey === 'income') return;
+                if (categoryKey !== 'income') {
+                    result[categoryKey] = [];
+                }
+            });
+            
+            // Charger les transactions des N derniers mois
+            for (let i = monthsCount - 1; i >= 0; i--) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+                const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
                 
-                const monthlyTotals = [];
-                
-                for (let i = monthsCount - 1; i >= 0; i--) {
-                    // Simuler des données aléatoires pour le moment
-                    // Tu devras remplacer par de vraies requêtes Firestore
-                    let total = 0;
-                    expenses[categoryKey].forEach(expense => {
-                        total += parseFloat(expense.amount) || 0;
+                try {
+                    const response = await getTransactions({
+                        startDate: monthStart.toISOString(),
+                        endDate: monthEnd.toISOString(),
+                        isLabeled: true,
+                        limit: 1000
                     });
                     
-                    // Ajouter une variation aléatoire pour simuler l'historique
-                    const variation = 0.7 + Math.random() * 0.6; // 70% à 130% du total
-                    monthlyTotals.push(total * variation);
+                    const transactions = response.data.transactions || [];
+                    
+                    // Grouper par catégorie
+                    const monthTotals = {};
+                    transactions.forEach(txn => {
+                        if (txn.category !== 'income' && txn.chargedAmount < 0) {
+                            if (!monthTotals[txn.category]) {
+                                monthTotals[txn.category] = 0;
+                            }
+                            monthTotals[txn.category] += Math.abs(txn.chargedAmount);
+                        }
+                    });
+                    
+                    // Ajouter les totaux du mois pour chaque catégorie
+                    Object.keys(result).forEach(categoryKey => {
+                        result[categoryKey].push(monthTotals[categoryKey] || 0);
+                    });
+                    
+                } catch (error) {
+                    console.error(`Error loading month ${i}:`, error);
+                    // En cas d'erreur, ajouter 0 pour ce mois
+                    Object.keys(result).forEach(categoryKey => {
+                        result[categoryKey].push(0);
+                    });
                 }
-                
-                result[categoryKey] = monthlyTotals;
-            });
+            }
             
             return result;
         }
+
+
 
         // Appeler cette fonction dans updateDisplay() ou loadUserData()
 
