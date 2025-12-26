@@ -3247,6 +3247,20 @@ body.dark-mode .budget-tab.active {
  /*   }
     
     
+    /* Extension pour couvrir la safe area iOS en bas */
+    body.dark-mode::before {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: env(safe-area-inset-bottom, 0);
+        background: #1a1a2e !important; /* ✅ Couleur du footer */
+        z-index: 999; /* ✅ Juste sous le footer (qui est à 1000) */
+        pointer-events: none;
+    }
+
+
     /* 6. Dark mode */
     body.dark-mode .app-footer {
         background-color: #1a1a2e !important; /* ✅ CHANGER de #1e1e2e à #1a1a2e */
