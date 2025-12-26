@@ -4397,7 +4397,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 
 /* Montant - flexible */
 #manualTxnAmount {
-    flex: 1 !important;
+    flex: 0 1 65% !important; /* Prend 65% au lieu de tout l'espace */
 }
 
 /* Devise - compact */
