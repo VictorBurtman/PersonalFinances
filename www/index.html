@@ -2597,6 +2597,8 @@
         function updateExpense(category, index, value) {
             expenses[category][index].amount = parseFloat(value) || 0;
             saveExpenses();
+            updateResetButtonState(); // ✅ Forcer la mise à jour
+
         }
 
         function updateDisplay() {
@@ -6093,11 +6095,13 @@
                 resetBtn.disabled = true;
                 resetBtn.style.opacity = '0.5';
                 resetBtn.style.cursor = 'not-allowed';
+                resetBtn.style.pointerEvents = 'none'; // ✅ Empêcher complètement le clic
             } else {
                 // Activer le bouton
                 resetBtn.disabled = false;
                 resetBtn.style.opacity = '1';
                 resetBtn.style.cursor = 'pointer';
+                resetBtn.style.pointerEvents = 'auto'; // ✅ Réactiver le clic
             }
         }
 
