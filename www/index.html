@@ -1645,12 +1645,21 @@
         /**
          * Update translations for transactions tab
          */
+
         function updateTransactionsLanguage() {
             // Traduire les éléments avec data-translate
             const elements = document.querySelectorAll('[data-translate]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-translate');
                 if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    // ✅ Vérifier si l'élément a des enfants HTML (pas juste du texte)
+                    const hasComplexChildren = el.children.length > 0;
+                    
+                    if (hasComplexChildren) {
+                        // Ne pas toucher aux éléments avec des enfants complexes
+                        return;
+                    }
+                    
                     el.textContent = translations[currentLanguage][key];
                 }
             });
@@ -1665,7 +1674,6 @@
             });
 
             // Mettre à jour le tooltip de conversion
-            // Mettre à jour le tooltip de conversion
             const conversionIcon = document.getElementById('conversionInfoIcon');
             if (conversionIcon) {
                 const t = translations[currentLanguage] || translations['en'];
@@ -1673,7 +1681,6 @@
                 conversionIcon.setAttribute('data-tooltip', tooltipText);
             }
         }
-
         
         // NOUVELLE FONCTION - Cleanup category order
         function cleanupCategoryOrder() {
