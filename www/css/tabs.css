@@ -4446,3 +4446,16 @@ body.dark-mode .metric-month {
 body:not(.dark-mode) .metric-month {
     color: rgba(0, 0, 0, 0.4);
 }
+
+/* Désactiver le clic sur les cards revenus/dépenses en mode Estimé */
+.income-clickable.disabled,
+.expenses-clickable.disabled {
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+/* Cacher les flèches en mode Estimé */
+.income-clickable.disabled .expand-arrow,
+.expenses-clickable.disabled .expand-arrow {
+    display: none !important;
+}
