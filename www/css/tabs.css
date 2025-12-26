@@ -4561,18 +4561,18 @@ body.dark-mode .secondary-btn:hover {
 
 /* Boutons dans le corps du modal (plus compacts) */
 .modal-body-btn {
-    padding: 8px 16px; /* ✅ Plus petit que les boutons du footer */
-    min-height: 36px; /* ✅ Plus compact (au lieu de 45px) */
+    padding: 6px 12px; /* ✅ Réduit de 8px à 6px */
+    min-height: 32px; /* ✅ Réduit de 36px à 32px */
     border: none;
-    border-radius: 8px;
-    font-size: 0.95em;
+    border-radius: 6px; /* ✅ Coins légèrement moins arrondis */
+    font-size: 0.9em; /* ✅ Texte légèrement plus petit */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px; /* ✅ Espace réduit entre icône et texte */
     background: #f0f0f0;
     color: #333;
 }
