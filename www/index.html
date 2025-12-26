@@ -879,7 +879,7 @@
 
                 <!-- Dark Mode Section -->
                 <div class="settings-section">
-                    <h3 data-translate="darkMode">🌙 Dark Mode</h3>
+                    <h3 data-translate="darkMode">🌙 Dark Mode</h3>Replace settings checkboxes with modern toggle switches
                     <div class="settings-toggle-row">
                         <label class="settings-toggle-label" data-translate="enableDarkMode">Enable dark mode</label>
                         <label class="toggle-switch">
@@ -1651,6 +1651,10 @@
             elements.forEach(el => {
                 const key = el.getAttribute('data-translate');
                 if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    // ✅ Ne pas traduire si l'élément contient un toggle-slider
+                    if (el.querySelector('.toggle-slider')) {
+                        return;
+                    }
                     el.textContent = translations[currentLanguage][key];
                 }
             });
@@ -1665,7 +1669,6 @@
             });
 
             // Mettre à jour le tooltip de conversion
-            // Mettre à jour le tooltip de conversion
             const conversionIcon = document.getElementById('conversionInfoIcon');
             if (conversionIcon) {
                 const t = translations[currentLanguage] || translations['en'];
@@ -1673,7 +1676,6 @@
                 conversionIcon.setAttribute('data-tooltip', tooltipText);
             }
         }
-
         
         // NOUVELLE FONCTION - Cleanup category order
         function cleanupCategoryOrder() {
