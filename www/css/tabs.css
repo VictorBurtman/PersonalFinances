@@ -4385,12 +4385,22 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     min-height: 70px;
 }
 
+/* Date field - même largeur que les autres champs */
+#addManualTransactionModal #manualTxnDate {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Répartition montant + devise */
 #addManualTransactionModal #manualTxnAmount {
-    flex: 1 !important; /* Le montant prend le reste */
+    flex: 1 !important; /* Le montant prend l'espace restant */
 }
 
 #addManualTransactionModal #manualTxnCurrency {
-    flex: 0 0 30% !important; /* Plus petit maintenant */
+    flex: 0 0 90px !important; /* Devise : largeur fixe de 90px */
+    min-width: 90px;
+    max-width: 90px;
     font-size: 0.9em;
-    padding: 10px 8px !important;
+    padding: 10px 6px !important;
+    text-align: center;
 }
