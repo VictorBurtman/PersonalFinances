@@ -1182,6 +1182,7 @@ function openAddManualTransactionModal() {
     
     // Populate categories
     populateManualTxnCategories();
+    populateCurrencySelect('manualTxnCurrency');
     
     modal.classList.add('show'); // ✅ CHANGÉ
     modal.style.zIndex = '99999'; // ✅ AJOUTÉ
