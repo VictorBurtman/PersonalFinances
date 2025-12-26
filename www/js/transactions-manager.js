@@ -1033,7 +1033,7 @@ function renderTransaction(txn) {
                 
                 <div style="margin-bottom: 5px;">
                     <strong>${t.amount || 'Amount'}:</strong> 
-                    <span style="color: ${isIncome ? '#28a745' : amountColor};">
+                    <span style="color: ${isIncome ? '#28a745' : 'white'};">
                         ${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
                     </span>
                 </div>
