@@ -1139,6 +1139,24 @@ body.dark-mode .expense-delete-btn:hover .delete-icon {
     box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
 }
 
+/* État désactivé du bouton reset */
+.reset-button:disabled,
+.reset-button[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background: #e74c3c !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.reset-button:disabled:hover,
+.reset-button[disabled]:hover {
+    background: #e74c3c !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 /* ============================================
    EDIT MODE - CATEGORY CONTROLS
    ============================================ */
