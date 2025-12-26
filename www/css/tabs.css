@@ -4366,8 +4366,10 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 
 
 /* ============================================
-   ADD TRANSACTION MODAL - Force Layout
+   ADD TRANSACTION MODAL - Optimized Layout
    ============================================ */
+
+/* Base styles pour tous les inputs */
 #manualTransactionForm input[type="date"],
 #manualTransactionForm input[type="number"],
 #manualTransactionForm input[type="text"],
@@ -4376,21 +4378,28 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     padding: 10px 12px !important;
     min-height: 42px !important;
     font-size: 0.95em !important;
+    box-sizing: border-box !important;
 }
 
-/* Date - même largeur que les autres champs */
-/* Date - légèrement réduite pour alignement parfait */
+/* Inputs pleine largeur (nom, date, banque) */
+#manualTransactionForm input[type="text"],
+#manualTransactionForm input[type="date"],
+#manualTransactionForm textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Date field - alignement parfait */
 #manualTxnDate {
-    width: calc(100% - 2px) !important;
-    max-width: calc(100% - 2px) !important;
-    box-sizing: border-box !important;
-    padding: 10px 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 /* Container montant + devise */
 #manualTransactionForm > div:has(#manualTxnAmount) > div {
     display: flex !important;
     gap: 10px !important;
+    align-items: center !important;
 }
 
 /* Montant - flexible */
@@ -4399,7 +4408,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     min-width: 0 !important;
 }
 
-/* Devise - fixe et compact */
+/* Devise - compact et fixe */
 #manualTxnCurrency {
     flex: 0 0 90px !important;
     width: 90px !important;
@@ -4408,6 +4417,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     font-size: 0.85em !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
+    text-align: center !important;
 }
 
 /* Textarea */
