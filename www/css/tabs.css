@@ -4429,3 +4429,20 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 #manualTransactionForm label:has(+ #manualTxnDate) {
     text-transform: capitalize;
 }
+
+/* Mois discret dans le label revenus/dépenses */
+.metric-month {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+body.dark-mode .metric-month {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* En mode light */
+body:not(.dark-mode) .metric-month {
+    color: rgba(0, 0, 0, 0.4);
+}

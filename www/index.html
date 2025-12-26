@@ -402,7 +402,10 @@
                             <!-- Income Card (Clickable) -->
                             <div class="metric-card income-clickable" id="incomeDisplay" style="display: none;" onclick="toggleIncomeDetails()">
                                 <span class="expand-arrow" id="incomeArrow">▼</span>
-                                <div class="metric-label" data-translate="income">Income</div>
+                                <div class="metric-label">
+                                    <span data-translate="income">Income</span>
+                                    <span class="metric-month" id="incomeMonth"></span>
+                                </div>
                                 <div class="metric-value" id="totalIncome">₪0</div>
                                 
                                 <!-- Expandable details -->
@@ -4515,6 +4518,13 @@
                 
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
+                
+                // ✅ Afficher le mois dans le label revenus (mode Réel uniquement)
+                const monthDisplay = `${month}/${year}`;
+                const incomeMonthLabel = document.getElementById('incomeMonth');
+                if (incomeMonthLabel) {
+                    incomeMonthLabel.textContent = monthDisplay;
+                }
 
                 // Refresh display with conversion icon
                 setTimeout(() => {
