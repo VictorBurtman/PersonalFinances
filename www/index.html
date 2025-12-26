@@ -844,24 +844,6 @@
                 <div class="settings-section">
                     <h3 data-translate="currency">Devise</h3>
                     <select class="settings-select" id="currencySelect" onchange="updateCurrency(this.value)">
-                        <option value="ILS">Israeli Shekel (₪)</option>
-                        <option value="USD">US Dollar ($)</option>
-                        <option value="EUR">Euro (€)</option>
-                        <option value="GBP">British Pound (£)</option>
-                        <option value="JPY">Japanese Yen (¥)</option>
-                        <option value="RUB">Russian Ruble (₽)</option>
-                        <option value="CNY">Chinese Yuan (¥)</option>
-                        <option value="EGP">Egyptian Pound (E£)</option>
-                        <option value="SAR">Saudi Riyal (﷼)</option>
-                        <option value="AED">UAE Dirham (د.إ)</option>
-                        <option value="INR">Indian Rupee (₹)</option>
-                        <option value="THB">Thai Baht (฿)</option>
-                        <option value="CHF">Swiss Franc (CHF)</option>
-                        <option value="CAD">Canadian Dollar (CA$)</option>
-                        <option value="AUD">Australian Dollar (A$)</option>
-                        <option value="MXN">Mexican Peso (MX$)</option>
-                        <option value="BRL">Brazilian Real (R$)</option>
-                        <option value="NZD">New Zealand Dollar (NZ$)</option>
                     </select>
                 </div>
                 
@@ -1206,7 +1188,7 @@
             currencies.forEach(curr => {
                 const option = document.createElement('option');
                 option.value = curr.code;
-                option.textContent = `${curr.name} (${curr.symbol})`;
+                option.textContent = `${curr.code} ${curr.symbol}`; // ✅ "ILS ₪"
                 select.appendChild(option);
             });
         }
@@ -5201,7 +5183,7 @@
                 console.error('Settings modal not found');
                 return;
             }
-            
+
             // ✅ Populate currency dropdown dynamically
             populateCurrencySelect('currencySelect');
 

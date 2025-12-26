@@ -4385,13 +4385,12 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     min-height: 70px;
 }
 
-/* Répartition montant + devise */
 #addManualTransactionModal #manualTxnAmount {
-    flex: 0 1 55% !important; /* Montant prend 55% */
+    flex: 1 !important; /* Le montant prend le reste */
 }
 
 #addManualTransactionModal #manualTxnCurrency {
-    flex: 0 1 43% !important; /* Devise prend 43% */
-    font-size: 0.85em;
+    flex: 0 0 30% !important; /* Plus petit maintenant */
+    font-size: 0.9em;
     padding: 10px 8px !important;
 }
