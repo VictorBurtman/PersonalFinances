@@ -4606,6 +4606,30 @@
                 }
             }
             
+            // ✅ Activer/désactiver le clic sur les cards revenus/dépenses
+            const incomeCard = document.getElementById('incomeDisplay');
+            const expensesCard = document.getElementById('expensesDisplay');
+            
+            if (isRealSpendingMode) {
+                if (incomeCard) incomeCard.classList.remove('disabled');
+                if (expensesCard) expensesCard.classList.remove('disabled');
+            } else {
+                if (incomeCard) incomeCard.classList.add('disabled');
+                if (expensesCard) expensesCard.classList.add('disabled');
+                
+                // Fermer les détails si ouverts
+                const incomeDetails = document.getElementById('incomeDetails');
+                const expensesDetails = document.getElementById('expensesDetails');
+                if (incomeDetails) incomeDetails.style.display = 'none';
+                if (expensesDetails) expensesDetails.style.display = 'none';
+                
+                // Remettre les flèches vers le bas
+                const incomeArrow = document.getElementById('incomeArrow');
+                const expensesArrow = document.getElementById('expensesArrow');
+                if (incomeArrow) incomeArrow.textContent = '▼';
+                if (expensesArrow) expensesArrow.textContent = '▼';
+            }
+            
             // Logique qui fonctionnait avant
             if (isRealSpendingMode) {
                 loadRealSpending();
@@ -4642,6 +4666,7 @@
                 }
             }
         }
+
 
 
         // Garder pour compatibilité (au cas où c'est appelé ailleurs)
