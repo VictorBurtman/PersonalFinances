@@ -3033,6 +3033,7 @@ body.dark-mode .chartjs-legend span {
     #addManualTransactionModal .modal-content {
         max-height: calc(100vh - 200px) !important;
         max-height: calc(100dvh - 200px) !important;
+        padding-right: 8px !important;
     }
     
 
