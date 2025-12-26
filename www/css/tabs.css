@@ -62,11 +62,11 @@ html, body {
 }
 
 body.dark-mode {
-    background: #1a1a2e;
+    background: #1e1e2e; /* ✅ Prend la couleur de l'ancien footer - plus clair */
 }
 
 body.dark-mode html {
-    background: #1a1a2e;
+    background: #1e1e2e; /* ✅ Plus clair */
 }
 
 /* AppScreen prend toute la hauteur */
@@ -197,7 +197,7 @@ body.dark-mode .dashboard {
 
 /* Dark Mode */
 body.dark-mode .edit-mode-controls {
-    background-color: #2a2a3e !important; 
+    background-color: #1a1a2e !important; /* ✅ Prend la couleur de l'ancien fond - plus foncé */
     border-bottom: 1px solid #3a3a4e !important;
 }
 
@@ -370,11 +370,11 @@ body.dark-mode .edit-mode-btn.icon-btn {
 }
 
 body.dark-mode .app-footer::after {
-    background: #1e1e2e;
+    background: #1a1a2e; /* ✅ Prend la couleur de l'ancien fond - plus foncé */
 }
 
 body.dark-mode .app-footer {
-    background: #1e1e2e;
+    background: #1a1a2e; /* ✅ Plus foncé */
     border-top-color: #3a3a4e;
     border-radius: 20px 20px 0 0;
 }
