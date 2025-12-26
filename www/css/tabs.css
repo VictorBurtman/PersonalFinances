@@ -2577,7 +2577,12 @@ body.dark-mode .settings-select {
     border-color: #3a3a4e;
 }
 
-
+.settings-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1em;
+}
 
 .settings-checkbox input[type="checkbox"] {
     width: 20px;
@@ -4349,4 +4354,40 @@ body.dark-mode .settings-toggle-row {
 
 body.dark-mode .settings-toggle-label {
     color: #e0e0e0;
+}
+
+
+/* Force le bon style pour les toggles dans les settings */
+.settings-section .toggle-switch {
+    flex-shrink: 0;
+    margin-left: 15px;
+}
+
+.settings-section .settings-toggle-row .toggle-slider {
+    background-color: #ccc;
+}
+
+.settings-section .settings-toggle-row input:checked + .toggle-slider {
+    background-color: #667eea;
+}
+
+body.dark-mode .settings-section .settings-toggle-row .toggle-slider {
+    background-color: #555;
+}
+
+body.dark-mode .settings-section .settings-toggle-row input:checked + .toggle-slider {
+    background-color: #9ca3ff;
+}
+
+/* Supprimer l'ancien style checkbox qui pourrait interférer */
+.settings-section .settings-checkbox {
+    display: none;
+}
+
+.settings-toggle-row label {
+    cursor: default;
+}
+
+.settings-toggle-row .toggle-switch {
+    cursor: pointer;
 }
