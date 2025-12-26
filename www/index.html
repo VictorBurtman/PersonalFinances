@@ -868,19 +868,25 @@
                 <!-- Income Tracking Section -->
                 <div class="settings-section">
                     <h3 data-translate="incomeTracking">Income Tracking</h3>
-                    <label class="settings-checkbox">
-                        <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)" />
-                        <span data-translate="trackIncome">Track monthly income</span>
-                    </label>
+                    <div class="settings-toggle-row">
+                        <label class="settings-toggle-label" data-translate="trackIncome">Suivre les revenus mensuels</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
                 
                 <!-- Dark Mode Section -->
                 <div class="settings-section">
                     <h3 data-translate="darkMode">🌙 Dark Mode</h3>
-                    <label class="settings-checkbox">
-                        <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)" />
-                        <span data-translate="enableDarkMode">Enable dark mode</span>
-                    </label>
+                    <div class="settings-toggle-row">
+                        <label class="settings-toggle-label" data-translate="enableDarkMode">Activer le mode sombre</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
 
                                 
