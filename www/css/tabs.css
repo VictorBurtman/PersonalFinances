@@ -4366,27 +4366,32 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 
 
 /* ============================================
-   ADD TRANSACTION MODAL - Larger Input Fields
+   ADD TRANSACTION MODAL - Optimized Layout
    ============================================ */
 #addManualTransactionModal .auth-input {
-    padding: 12px 15px !important;
-    min-height: 45px;
-    font-size: 1em;
+    padding: 10px 12px !important;
+    min-height: 42px;
+    font-size: 0.95em;
 }
 
 #addManualTransactionModal input[type="date"],
 #addManualTransactionModal input[type="number"],
 #addManualTransactionModal input[type="text"],
 #addManualTransactionModal select {
-    height: 45px;
+    height: 42px;
 }
 
 #addManualTransactionModal textarea {
-    min-height: 80px;
+    min-height: 70px;
+}
+
+/* Répartition montant + devise */
+#addManualTransactionModal #manualTxnAmount {
+    flex: 0 1 55% !important; /* Montant prend 55% */
 }
 
 #addManualTransactionModal #manualTxnCurrency {
-    width: 100px !important;
-    max-width: 100px;
-    font-size: 0.9em;
+    flex: 0 1 43% !important; /* Devise prend 43% */
+    font-size: 0.85em;
+    padding: 10px 8px !important;
 }
