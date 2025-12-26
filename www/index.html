@@ -2154,6 +2154,7 @@
                 setTimeout(() => {
                     switchTab('budget');
                     updateResetButtonState(); // ✅ Ajouter ici
+                    attachChartButtonListeners(); // ✅ Attacher les listeners ici
                 }, 100);
                 
             } catch (error) {
@@ -3047,7 +3048,10 @@
                 }, 0);
             }
             
-            document.getElementById('totalAmount').textContent = formatAmount(displayTotal, 2, true);
+            const totalAmountEl = document.getElementById('totalAmount');
+            if (totalAmountEl) {
+                totalAmountEl.textContent = formatAmount(displayTotal, 2, true);
+            }
 
         }
 
@@ -7855,6 +7859,32 @@
                 } else {
                     dot.classList.remove('active');
                 }
+            });
+        }
+
+
+        function attachChartButtonListeners() {
+            const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
+            console.log('📊 Attaching listeners to', toggleButtons.length, 'buttons');
+            
+            if (toggleButtons.length === 0) {
+                console.warn('⚠️ No chart buttons found, retrying...');
+                setTimeout(attachChartButtonListeners, 200);
+                return;
+            }
+            
+            toggleButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('🔵 Chart button clicked:', this.dataset.type);
+                    currentChartType = this.dataset.type;
+                    saveUserData();
+                    
+                    toggleButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    updateChart();
+                    updateChartIndicators();
+                });
             });
         }
 
