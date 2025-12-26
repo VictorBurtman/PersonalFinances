@@ -2575,12 +2575,39 @@
         }
 
         function updateDisplay() {
+            // ✅ Gérer les labels de mois et l'état des cards selon le mode
             if (!isRealSpendingMode) {
+                // Mode Estimé : nettoyer les labels de mois
                 const incomeMonthLabel = document.getElementById('incomeMonth');
                 const expensesMonthLabel = document.getElementById('expensesMonth');
                 if (incomeMonthLabel) incomeMonthLabel.textContent = '';
                 if (expensesMonthLabel) expensesMonthLabel.textContent = '';
+                
+                // Désactiver les cards en mode Estimé
+                const incomeCard = document.getElementById('incomeDisplay');
+                const expensesCard = document.getElementById('expensesDisplay');
+                if (incomeCard) incomeCard.classList.add('disabled');
+                if (expensesCard) expensesCard.classList.add('disabled');
+                
+                // Fermer les détails si ouverts
+                const incomeDetails = document.getElementById('incomeDetails');
+                const expensesDetails = document.getElementById('expensesDetails');
+                if (incomeDetails) incomeDetails.style.display = 'none';
+                if (expensesDetails) expensesDetails.style.display = 'none';
+                
+                // Remettre les flèches
+                const incomeArrow = document.getElementById('incomeArrow');
+                const expensesArrow = document.getElementById('expensesArrow');
+                if (incomeArrow) incomeArrow.textContent = '▼';
+                if (expensesArrow) expensesArrow.textContent = '▼';
+            } else {
+                // Mode Réel : activer les cards
+                const incomeCard = document.getElementById('incomeDisplay');
+                const expensesCard = document.getElementById('expensesDisplay');
+                if (incomeCard) incomeCard.classList.remove('disabled');
+                if (expensesCard) expensesCard.classList.remove('disabled');
             }
+            
             try {
                 cleanupCategoryOrder();
                 // Update income section visibility
@@ -2717,6 +2744,7 @@
                 initDragAndDrop();
             }
         }
+
 
 
 
