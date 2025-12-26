@@ -2159,6 +2159,7 @@
                 // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
                     switchTab('budget');
+                    updateResetButtonState(); // ✅ Ajouter ici
                 }, 100);
                 
             } catch (error) {
@@ -6088,20 +6089,24 @@
          */
         function updateResetButtonState() {
             const resetBtn = document.getElementById('resetBtn');
-            if (!resetBtn) return;
+            if (!resetBtn) {
+                // Réessayer après un délai si le bouton n'existe pas encore
+                setTimeout(updateResetButtonState, 100);
+                return;
+            }
             
             if (areAllExpensesZero()) {
                 // Désactiver le bouton
                 resetBtn.disabled = true;
                 resetBtn.style.opacity = '0.5';
                 resetBtn.style.cursor = 'not-allowed';
-                resetBtn.style.pointerEvents = 'none'; // ✅ Empêcher complètement le clic
+                resetBtn.style.pointerEvents = 'none';
             } else {
                 // Activer le bouton
                 resetBtn.disabled = false;
                 resetBtn.style.opacity = '1';
                 resetBtn.style.cursor = 'pointer';
-                resetBtn.style.pointerEvents = 'auto'; // ✅ Réactiver le clic
+                resetBtn.style.pointerEvents = 'auto';
             }
         }
 
