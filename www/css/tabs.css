@@ -3192,9 +3192,7 @@ body.dark-mode .budget-tab.active {
     
     /* Sélecteur corrigé pour que la couleur s'applique au root */
     html:has(body.dark-mode) {
-        background-color: #1a1a2e !important; /* ✅ Couleur du footer au lieu du fond */
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
+        background-color: #1e1e2e !important;
     }
     
     body.dark-mode {
