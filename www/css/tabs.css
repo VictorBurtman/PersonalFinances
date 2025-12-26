@@ -4454,3 +4454,11 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
         width: calc(100% - 4px) !important;
     }
 }
+
+/* Supprimer l'espace de l'indicateur mobile */
+#addManualTransactionModal input[type="date"]::-webkit-inner-spin-button,
+#addManualTransactionModal input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+}
