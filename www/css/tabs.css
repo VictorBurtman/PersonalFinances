@@ -3192,7 +3192,9 @@ body.dark-mode .budget-tab.active {
     
     /* Sélecteur corrigé pour que la couleur s'applique au root */
     html:has(body.dark-mode) {
-        background-color: #1e1e2e !important;
+        background-color: #1a1a2e !important; /* ✅ Couleur du footer au lieu du fond */
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
     }
     
     body.dark-mode {
@@ -3233,18 +3235,18 @@ body.dark-mode .budget-tab.active {
     }
 
     
-    /* 5. Le bouche-trou du footer pour la safe area */
-    .app-footer::after {
+    /* 5. Le bouche-trou du footer (Intouché sauf couleur) */
+  /*  .app-footer::after {
         content: '' !important;
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         width: 100% !important;
-        height: 100px !important; /* ✅ Hauteur pour couvrir la safe area */
+        height: 0px !important;
         z-index: -1 !important;
-        background-color: white !important; /* Couleur light mode */
-        pointer-events: none;
-    }
+        background-color: white !important; /* Couleur Jour corrigée */
+  /*      pointer-events: none;
+ /*   }
     
     
     /* 6. Dark mode */
