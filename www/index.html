@@ -629,7 +629,7 @@
                         </div>
                     </div>
 
-                    <button id="resetBtn" class="reset-button" onclick="resetExpenses()">
+                    <button id="resetBtn" class="reset-button" onclick="if (!this.disabled) resetExpenses()">
                         <span data-translate="resetAll">Reset All Expenses</span>
                     </button>
                 </div>
@@ -2761,6 +2761,8 @@
                 // Update chart
                 updateChart();
                 addCategorySparklines();
+
+                updateResetButtonState();
             } catch (error) {
                 console.error('Error updating display:', error);
             }
@@ -3723,6 +3725,8 @@
                     // 3. Mettre à jour l'affichage
                     updateDisplay();
                     
+                    // ✅ Mettre à jour l'état du bouton
+                    updateResetButtonState();
                 } catch (error) {
                     console.error('Erreur lors du reset:', error);
                     alert('Erreur lors de la sauvegarde : ' + error.message);
@@ -6057,6 +6061,46 @@
             });
         }
 
+
+        /**
+         * Vérifier si toutes les dépenses sont à zéro
+         */
+        function areAllExpensesZero() {
+            for (const categoryKey in expenses) {
+                if (categoryKey === 'income') continue; // Ignorer les revenus
+                
+                const categoryExpenses = expenses[categoryKey];
+                if (categoryExpenses && categoryExpenses.length > 0) {
+                    // Vérifier s'il y a au moins un item avec un montant > 0
+                    const hasNonZeroExpense = categoryExpenses.some(item => 
+                        item && item.amount && parseFloat(item.amount) > 0
+                    );
+                    if (hasNonZeroExpense) return false;
+                }
+            }
+            return true; // Toutes les dépenses sont à zéro
+        }
+
+        /**
+         * Mettre à jour l'état du bouton Reset
+         */
+        function updateResetButtonState() {
+            const resetBtn = document.getElementById('resetBtn');
+            if (!resetBtn) return;
+            
+            if (areAllExpensesZero()) {
+                // Désactiver le bouton
+                resetBtn.disabled = true;
+                resetBtn.style.opacity = '0.5';
+                resetBtn.style.cursor = 'not-allowed';
+            } else {
+                // Activer le bouton
+                resetBtn.disabled = false;
+                resetBtn.style.opacity = '1';
+                resetBtn.style.cursor = 'pointer';
+            }
+        }
+
         
         // ✅ UNIQUE onAuthStateChanged fusionné
         auth.onAuthStateChanged(async (user) => {
@@ -7682,6 +7726,7 @@
                 setTimeout(initializeApp, 100);
             }
         }
+
 
 
         // Initialize on load (Bloc final simplifié et corrigé)
