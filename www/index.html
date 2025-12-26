@@ -4578,7 +4578,6 @@
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
 
-
         function switchBudgetMode(mode) {
             isRealSpendingMode = (mode === 'spent');
             
@@ -4617,6 +4616,12 @@
                     loadExpensesBreakdown();
                 }
             } else {
+                // ✅ Mode Estimé : vider les labels de mois
+                const incomeMonthLabel = document.getElementById('incomeMonth');
+                const expensesMonthLabel = document.getElementById('expensesMonth');
+                if (incomeMonthLabel) incomeMonthLabel.textContent = '';
+                if (expensesMonthLabel) expensesMonthLabel.textContent = '';
+                
                 updateDisplay();
                 
                 // ✅ Rafraîchir les breakdowns si les panneaux sont ouverts
