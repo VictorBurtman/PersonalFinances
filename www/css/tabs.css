@@ -4384,3 +4384,9 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 #addManualTransactionModal textarea {
     min-height: 80px;
 }
+
+#addManualTransactionModal #manualTxnCurrency {
+    width: 100px !important;
+    max-width: 100px;
+    font-size: 0.9em;
+}

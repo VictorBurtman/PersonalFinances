@@ -1194,7 +1194,11 @@
                 { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
                 { code: 'MXN', name: 'Mexican Peso', symbol: 'MX$' },
                 { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
-                { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$' }
+                { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$' },
+                { code: 'EGP', name: 'Egyptian Pound', symbol: 'E£' },
+                { code: 'SAR', name: 'Saudi Riyal', symbol: '﷼' },
+                { code: 'AED', name: 'UAE Dirham', symbol: 'د.إ' },
+                { code: 'THB', name: 'Thai Baht', symbol: '฿' }
             ];
             
             select.innerHTML = '';
@@ -5198,6 +5202,9 @@
                 return;
             }
             
+            // ✅ Populate currency dropdown dynamically
+            populateCurrencySelect('currencySelect');
+
             // Set current values
             const currencyCode = Object.keys(currencyOptions).find(key => currencyOptions[key] === currency) || 'ILS';
             if (currencySelect) currencySelect.value = currencyCode;
