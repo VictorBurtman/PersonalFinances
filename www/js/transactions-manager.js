@@ -967,9 +967,6 @@ function renderTransaction(txn) {
     if (txnCurrency === 'USD') txnCurrency = '$';
     if (txnCurrency === 'GBP') txnCurrency = '£';
     
-    const isDifferentCurrency = txnCurrency !== (window.currency || '₪');
-    const amountColor = isDifferentCurrency ? '#9333ea' : '#667eea';
-    
     // Couleur différente pour transactions manuelles
     const descColor = txn.isManual ? '#ff6b6b' : 'inherit';
     const manualBadge = txn.isManual ? ' <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; margin-left: 5px;">MANUAL</span>' : '';
@@ -996,7 +993,7 @@ function renderTransaction(txn) {
                 </div>
                 
                 <!-- Droite : Montant -->
-                <div class="transaction-amount" style="color: ${isIncome ? '#28a745' : amountColor}; cursor: pointer;" onclick="showTransactionDetails('${txnId}')">
+                <div class="transaction-amount" style="color: ${isIncome ? '#28a745' : 'white'}; cursor: pointer;" onclick="showTransactionDetails('${txnId}')">
                     ${isIncome ? '+' : ''}${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
                 </div>
             </div>
