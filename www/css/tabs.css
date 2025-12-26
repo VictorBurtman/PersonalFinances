@@ -4506,3 +4506,55 @@ body.dark-mode .clickable-link {
 body.dark-mode .clickable-link:hover {
     color: #b8bdff;
 }
+
+
+/* ============================================
+   MODAL BUTTONS
+   ============================================ */
+
+.primary-btn,
+.secondary-btn {
+    padding: 12px 20px; /* ✅ Augmente la hauteur (était probablement 8px-10px par défaut) */
+    min-height: 45px; /* ✅ Hauteur minimale */
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.primary-btn {
+    background: #667eea;
+    color: white;
+}
+
+.primary-btn:hover {
+    background: #5568d3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.secondary-btn {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.secondary-btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+/* Dark mode */
+body.dark-mode .secondary-btn {
+    background: #3a3a4e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .secondary-btn:hover {
+    background: #4a4a5e;
+}
