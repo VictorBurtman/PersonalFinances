@@ -406,6 +406,9 @@ const translations = {
     versionInfo: 'Current version of your Personal Finance app',
     madeBy: "Made by Victor Burtman",
     contactInfo: "For any bug report, ideas, or suggestions:",
+
+    roundValues: "Round Values",
+    roundValuesToWhole: "Round values to whole numbers",
     
     // ============================================
     // COMMON BUTTONS & ACTIONS
@@ -910,6 +913,9 @@ const translations = {
         versionInfo: 'Version actuelle de votre application de finances personnelles',
         madeBy: "Créé par Victor Burtman",
         contactInfo: "Pour tout rapport de bug, idées ou suggestions :",
+
+        roundValues: "Arrondir les valeurs",
+        roundValuesToWhole: "Arrondir les valeurs aux nombres entiers",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -1414,6 +1420,9 @@ const translations = {
         versionInfo: 'גרסה נוכחית של אפליקציית הפיננסים האישיים שלך',
         madeBy: "נוצר על ידי ויקטור ברטמן",
         contactInfo: "לכל דיווח על באג, רעיונות או הצעות:",
+
+        roundValues: "עיגול ערכים",
+        roundValuesToWhole: "עיגול ערכים למספרים שלמים",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -1916,6 +1925,9 @@ const translations = {
         versionInfo: 'Versión actual de tu aplicación de finanzas personales',
         madeBy: "Hecho por Victor Burtman",
         contactInfo: "Para cualquier reporte de errores, ideas o sugerencias:",
+
+        roundValues: "Redondear valores",
+        roundValuesToWhole: "Redondear valores a números enteros",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -2418,6 +2430,9 @@ const translations = {
         versionInfo: 'Текущая версия вашего приложения личных финансов',
         madeBy: "Создано Виктором Буртманом",
         contactInfo: "По любым сообщениям об ошибках, идеях или предложениях:",
+
+        roundValues: "Округление значений",
+        roundValuesToWhole: "Округлять значения до целых чисел",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -2921,6 +2936,9 @@ const translations = {
         versionInfo: 'الإصدار الحالي لتطبيق المالية الشخصية الخاص بك',
         madeBy: "صنع بواسطة فيكتور بورتمان",
         contactInfo: "لأي تقرير عن خطأ أو أفكار أو اقتراحات:",
+
+        roundValues: "تقريب القيم",
+        roundValuesToWhole: "تقريب القيم إلى أرقام صحيحة",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -3424,6 +3442,9 @@ const translations = {
         versionInfo: 'Aktuelle Version Ihrer persönlichen Finanz-App',
         madeBy: "Erstellt von Victor Burtman",
         contactInfo: "Für Fehlerberichte, Ideen oder Vorschläge:",
+
+        roundValues: "Werte runden",
+        roundValuesToWhole: "Werte auf ganze Zahlen runden",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -3881,7 +3902,10 @@ const translations = {
         versionInfo: 'Versione attuale della tua applicazione di finanza personale',
         madeBy: "Creata da Victor Burtman",
         contactInfo: "Per segnalazioni bug, idee o suggerimenti:",
-        
+
+        roundValues: "Arrotonda valori",
+        roundValuesToWhole: "Arrotonda i valori ai numeri interi",
+
         // ============================================
         // COMMON BUTTONS & ACTIONS
         // ============================================
@@ -4379,6 +4403,9 @@ const translations = {
         versionInfo: 'Versão atual do seu aplicativo de finanças pessoais',
         madeBy: "Criado por Victor Burtman",
         contactInfo: "Para relatórios de bugs, ideias ou sugestões:",
+
+        roundValues: "Arredondar valores",
+        roundValuesToWhole: "Arredondar valores para números inteiros",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -4882,6 +4909,9 @@ const translations = {
         versionInfo: 'Kişisel finans uygulamanızın mevcut sürümü',
         madeBy: "Victor Burtman tarafından yapıldı",
         contactInfo: "Hata raporları, fikirler veya öneriler için:",
+
+        roundValues: "Değerleri Yuvarla",
+        roundValuesToWhole: "Değerleri tam sayılara yuvarla",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS
@@ -5384,6 +5414,9 @@ const translations = {
         versionInfo: 'आपके व्यक्तिगत वित्त ऐप का वर्तमान संस्करण',
         madeBy: "Victor Burtman द्वारा बनाया गया",
         contactInfo: "किसी भी बग रिपोर्ट, विचार या सुझाव के लिए:",
+
+        roundValues: "मान गोल करें",
+        roundValuesToWhole: "मानों को पूर्ण संख्याओं में गोल करें",
         
         // ============================================
         // COMMON BUTTONS & ACTIONS

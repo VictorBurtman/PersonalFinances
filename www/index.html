@@ -881,6 +881,18 @@
                     </div>
                 </div>
 
+                <!-- Round Values Section -->
+                <div class="settings-section">
+                    <h3 data-translate="roundValues">Round Values</h3>
+                    <div class="settings-toggle-row">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="roundValuesCheckbox" onchange="toggleRoundValues(this.checked)" />
+                            <span class="toggle-slider" translate="no"></span>
+                        </label>
+                        <span class="settings-toggle-label" data-translate="roundValuesToWhole">Round values to whole numbers</span>
+                    </div>
+                </div>
+
                                 
                 <!-- Percentage Calculation Section -->
                 <div class="settings-section" id="percentageModeSection" style="display: none;">
@@ -1044,6 +1056,7 @@
         };
         let percentageMode = 'expenses'; // 'expenses' or 'income'
 
+        let roundValues = true; // Par défaut : arrondir les valeurs
 
 
         // Taux de change de secours
@@ -1147,9 +1160,12 @@
                 return showCurrency ? `${currency}0.00` : '0.00';
             }
             
+            // ✅ Si roundValues est activé, arrondir à 0 décimales
+            const finalDecimals = roundValues ? 0 : decimals;
+            
             const formatted = parseFloat(amount).toLocaleString(currentLanguage, {
-                minimumFractionDigits: decimals,
-                maximumFractionDigits: decimals
+                minimumFractionDigits: finalDecimals,
+                maximumFractionDigits: finalDecimals
             });
             
             return showCurrency ? `${currency}${formatted}` : formatted;
@@ -2001,6 +2017,9 @@
                     currency = data.currency || '₪';
                     percentageMode = data.percentageMode || 'expenses';
                     
+                    // ✅ Charger la préférence d'arrondi (par défaut: true)
+                    roundValues = data.roundValues !== undefined ? data.roundValues : true;
+
                     // ✅ Charger l'état du mode budget
                     isRealSpendingMode = data.isRealSpendingMode || false;
                     console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode);
@@ -2183,25 +2202,27 @@
                     customColors: customColors,
                     chartType: currentChartType,
                     categoryOrder: categoryOrder,
-                    categoryBaseColors: categoryBaseColors, // ✅ Ajoute si pas déjà présent
+                    categoryBaseColors: categoryBaseColors,
                     useIncome: useIncome,
                     currency: currency,
                     percentageMode: percentageMode,
                     categoryMetadata: categoryMetadata,
-                    isRealSpendingMode: isRealSpendingMode, // ✅ Ajoute cette ligne
+                    isRealSpendingMode: isRealSpendingMode,
+                    roundValues: roundValues, // ✅ Ajout
                     language: currentLanguage,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                console.log('💾 Data to save:', dataToSave.isRealSpendingMode); // ✅ Debug
+                console.log('💾 Data to save:', dataToSave.isRealSpendingMode);
 
-                // IMPORTANT : Ne PAS utiliser merge pour que les clés supprimées disparaissent vraiment
                 await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
             } catch (error) {
                 console.error('Error saving user data:', error);
                 throw error;
             }
         }
+
+
 
 
         // Toggle income details
@@ -5265,6 +5286,9 @@
             const settingsUserEmail = document.getElementById('settingsUserEmail');
             const percentageModeSelect = document.getElementById('percentageModeSelect');
             const percentageModeSection = document.getElementById('percentageModeSection');
+
+            const roundValuesCheckbox = document.getElementById('roundValuesCheckbox');
+            if (roundValuesCheckbox) roundValuesCheckbox.checked = roundValues;
             
             if (!modal) {
                 console.error('Settings modal not found');
@@ -5654,6 +5678,27 @@
                 console.error('Error loading dark mode preference:', error);
             });
         }
+
+
+        function toggleRoundValues(enabled) {
+            roundValues = enabled;
+            saveUserData();
+            
+            // Rafraîchir l'affichage selon le mode
+            if (isRealSpendingMode) {
+                loadRealSpending();
+            } else {
+                updateDisplay();
+            }
+            
+            // Rafraîchir les transactions si affichées
+            if (typeof renderTransactions === 'function') {
+                renderTransactions();
+            }
+        }
+
+
+
 
         /**
          * Détecte automatiquement la langue et la devise
