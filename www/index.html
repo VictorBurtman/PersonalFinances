@@ -6088,26 +6088,28 @@
          * Mettre à jour l'état du bouton Reset
          */
         function updateResetButtonState() {
-            const resetBtn = document.getElementById('resetBtn');
-            if (!resetBtn) {
-                // Réessayer après un délai si le bouton n'existe pas encore
-                setTimeout(updateResetButtonState, 100);
-                return;
-            }
-            
-            if (areAllExpensesZero()) {
-                // Désactiver le bouton
-                resetBtn.disabled = true;
-                resetBtn.style.opacity = '0.5';
-                resetBtn.style.cursor = 'not-allowed';
-                resetBtn.style.pointerEvents = 'none';
-            } else {
-                // Activer le bouton
-                resetBtn.disabled = false;
-                resetBtn.style.opacity = '1';
-                resetBtn.style.cursor = 'pointer';
-                resetBtn.style.pointerEvents = 'auto';
-            }
+            setTimeout(() => {
+                const resetBtn = document.getElementById('resetBtn');
+                if (!resetBtn) return;
+                
+                const allZero = areAllExpensesZero();
+                
+                if (allZero) {
+                    // Désactiver le bouton - forcer tous les styles
+                    resetBtn.setAttribute('disabled', 'true');
+                    resetBtn.disabled = true;
+                    resetBtn.style.opacity = '0.5';
+                    resetBtn.style.cursor = 'not-allowed';
+                    resetBtn.style.pointerEvents = 'none';
+                } else {
+                    // Activer le bouton - forcer tous les styles
+                    resetBtn.removeAttribute('disabled');
+                    resetBtn.disabled = false;
+                    resetBtn.style.opacity = '1';
+                    resetBtn.style.cursor = 'pointer';
+                    resetBtn.style.pointerEvents = 'auto';
+                }
+            }, 50);
         }
 
         
