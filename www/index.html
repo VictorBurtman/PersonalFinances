@@ -4479,11 +4479,12 @@
                 
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
-                
+
                 // Refresh display with conversion icon
                 setTimeout(() => {
                     updateDisplay();
-                }, 200);
+                    addCategorySparklines();  // ✅ Ajouter les sparklines
+                }, 250);
 
                 // Refresh display with comparison
                 updateDisplay();
