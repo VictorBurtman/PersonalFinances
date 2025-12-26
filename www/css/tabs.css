@@ -4459,3 +4459,27 @@ body:not(.dark-mode) .metric-month {
 .expenses-clickable.disabled .expand-arrow {
     display: none !important;
 }
+
+
+
+
+/* Lien cliquable dans l'empty state des transactions */
+.clickable-link {
+    color: #667eea;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: underline;
+}
+
+.clickable-link:hover {
+    color: #5568d3;
+    opacity: 1 !important;
+}
+
+body.dark-mode .clickable-link {
+    color: #9ca3ff;
+}
+
+body.dark-mode .clickable-link:hover {
+    color: #b8bdff;
+}
