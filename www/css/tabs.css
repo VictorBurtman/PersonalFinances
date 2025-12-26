@@ -4378,9 +4378,12 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     font-size: 0.95em !important;
 }
 
-/* Date - pleine largeur */
+/* Date - même largeur que les autres champs */
 #manualTxnDate {
     width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 12px !important;
 }
 
 /* Container montant + devise */
