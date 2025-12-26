@@ -869,7 +869,7 @@
                 <div class="settings-section">
                     <h3 data-translate="incomeTracking">Income Tracking</h3>
                     <div class="settings-toggle-row">
-                        <label class="settings-toggle-label" data-translate="trackIncome">Track monthly income</label>
+                        <span class="settings-toggle-label" data-translate="trackIncome">Track monthly income</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="useIncomeCheckbox" onchange="toggleIncomeFeature(this.checked)" />
                             <span class="toggle-slider"></span>
@@ -881,7 +881,7 @@
                 <div class="settings-section">
                     <h3 data-translate="darkMode">🌙 Dark Mode</h3>
                     <div class="settings-toggle-row">
-                        <label class="settings-toggle-label" data-translate="enableDarkMode">Enable dark mode</label>
+                        <span class="settings-toggle-label" data-translate="enableDarkMode">Enable dark mode</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)" />
                             <span class="toggle-slider"></span>
@@ -1645,21 +1645,12 @@
         /**
          * Update translations for transactions tab
          */
-
         function updateTransactionsLanguage() {
             // Traduire les éléments avec data-translate
             const elements = document.querySelectorAll('[data-translate]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-translate');
                 if (translations[currentLanguage] && translations[currentLanguage][key]) {
-                    // ✅ Vérifier si l'élément a des enfants HTML (pas juste du texte)
-                    const hasComplexChildren = el.children.length > 0;
-                    
-                    if (hasComplexChildren) {
-                        // Ne pas toucher aux éléments avec des enfants complexes
-                        return;
-                    }
-                    
                     el.textContent = translations[currentLanguage][key];
                 }
             });
