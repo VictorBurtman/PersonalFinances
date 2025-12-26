@@ -4393,6 +4393,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 #manualTransactionForm > div:has(#manualTxnAmount) > div {
     display: flex !important;
     gap: 10px !important;
+    padding-right: 5px !important; /* ✅ Petit espace à droite */
 }
 
 /* Montant - flexible */
