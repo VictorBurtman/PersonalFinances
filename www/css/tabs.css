@@ -4558,3 +4558,36 @@ body.dark-mode .secondary-btn {
 body.dark-mode .secondary-btn:hover {
     background: #4a4a5e;
 }
+
+/* Boutons dans le corps du modal (plus compacts) */
+.modal-body-btn {
+    padding: 8px 16px; /* ✅ Plus petit que les boutons du footer */
+    min-height: 36px; /* ✅ Plus compact (au lieu de 45px) */
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal-body-btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+/* Dark mode */
+body.dark-mode .modal-body-btn {
+    background: #3a3a4e;
+    color: #e0e0e0;
+}
+
+body.dark-mode .modal-body-btn:hover {
+    background: #4a4a5e;
+}

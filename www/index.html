@@ -741,10 +741,10 @@
             <div class="modal-body">
                 <!-- Toggle entre vue Simple et Avancée -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <button id="randomColorsBtn" class="secondary-btn" onclick="randomizeAllColors()">
+                    <button id="randomColorsBtn" class="modal-body-btn" onclick="randomizeAllColors()">
                         🎲 <span data-translate="randomColors">Random Colors</span>
                     </button>
-                    <button id="toggleAdvancedBtn" class="secondary-btn" onclick="toggleAdvancedView()">
+                    <button id="toggleAdvancedBtn" class="modal-body-btn" onclick="toggleAdvancedView()">
                         <span id="advancedBtnText" data-translate="advanced">Advanced</span> →
                     </button>
                 </div>
@@ -754,10 +754,10 @@
                     <h4 style="margin-bottom: 15px;" data-translate="categoryColors">Category Colors</h4>
                     <div id="categoryColorsList"></div>
                 </div>
-                 
+                
                 <!-- Vue Avancée : Items détaillés -->
                 <div id="itemColorsView" style="display: none;">
-                    <button class="secondary-btn" onclick="toggleAdvancedView()" style="margin-bottom: 15px;">
+                    <button class="modal-body-btn" onclick="toggleAdvancedView()" style="margin-bottom: 15px;">
                         ← <span data-translate="backToCategories">Back to Categories</span>
                     </button>
                     <h4 style="margin-bottom: 15px;" data-translate="itemColors">Item Colors</h4>
