@@ -4389,23 +4389,30 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     width: 100% !important;
 }
 
-/* Container montant + devise */
+/* Container montant + devise - FORCÉ */
 #manualTransactionForm > div:has(#manualTxnAmount) > div {
     display: flex !important;
-    gap: 10px !important;
-    padding-right: 5px !important; /* ✅ Petit espace à droite */
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-/* Montant - flexible */
+/* Montant - réduit pour faire de la place */
 #manualTxnAmount {
-    flex: 0 1 65% !important; /* Prend 65% au lieu de tout l'espace */
+    flex: 1 1 auto !important;
+    max-width: calc(100% - 98px) !important; /* 90px devise + 8px gap */
+    min-width: 0 !important;
 }
 
-/* Devise - compact */
+/* Devise - compact et fixe */
 #manualTxnCurrency {
     flex: 0 0 90px !important;
+    width: 90px !important;
+    max-width: 90px !important;
     font-size: 0.85em !important;
     text-align: center !important;
+    padding: 10px 4px !important;
 }
 
 /* Textarea plus haute */
