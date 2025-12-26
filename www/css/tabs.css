@@ -3035,6 +3035,7 @@ body.dark-mode .chartjs-legend span {
         max-height: calc(100dvh - 200px) !important;
     }
     
+
     /* Toasts positionnés plus bas */
     .toast-container {
         top: 50px;
@@ -4423,4 +4424,17 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 /* Textarea */
 #manualTxnMemo {
     min-height: 70px !important;
+}
+
+
+/* Compenser l'icône du sélecteur de date */
+#addManualTransactionModal #manualTxnDate {
+    padding-right: 8px !important; /* Réduit de 12px à 8px */
+}
+
+/* Réduire la taille de l'icône calendrier */
+#addManualTransactionModal #manualTxnDate::-webkit-calendar-picker-indicator {
+    width: 16px;
+    height: 16px;
+    margin-right: -2px;
 }
