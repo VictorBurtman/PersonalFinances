@@ -4422,7 +4422,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 
 /* Date - légèrement réduit pour mobile */
 #manualTxnDate {
-    max-width: calc(100% - 20px) !important;
+    max-width: calc(100% - 15px) !important;
 }
 
 /* Label date en majuscule */
