@@ -1110,7 +1110,6 @@
                     };
                     
                     const updatedAt = data.updatedAt?.toDate();
-                    console.log('✅ Exchange rates loaded from Firestore', updatedAt);
                 } else {
                     console.warn('⚠️ No exchange rates in Firestore, using fallback');
                 }
@@ -1226,10 +1225,8 @@
             if (window.Capacitor) {
                 const platform = window.Capacitor.getPlatform();
                 document.body.classList.add(`platform-${platform}`);
-                console.log('📱 Plateforme détectée:', platform);
             } else {
                 document.body.classList.add('platform-web');
-                console.log('🌐 Plateforme: Web/PWA');
             }
         });
 
@@ -2016,7 +2013,6 @@
 
                     // ✅ Charger l'état du mode budget
                     isRealSpendingMode = data.isRealSpendingMode || false;
-                    console.log('📥 Loaded isRealSpendingMode:', isRealSpendingMode);
                     
                     categoryMetadata = data.categoryMetadata || {};
                     
@@ -2026,7 +2022,6 @@
                             const monthSelect = document.getElementById('compareMonth');
                             if (monthSelect) {
                                 monthSelect.value = data.selectedMonth;
-                                console.log('📅 Loaded selected month:', data.selectedMonth);
                             }
                         }, 100);
                     }
@@ -2100,7 +2095,6 @@
                         const estimatedTab = document.getElementById('estimatedTab');
                         const spentTab = document.getElementById('spentTab');
                         
-                        console.log('🔍 Restoring budget mode:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
                         
                         if (estimatedTab && spentTab) {
                             // Mettre à jour l'apparence des boutons
@@ -2109,7 +2103,6 @@
                                 spentTab.classList.add('active');
                                 
                                 // Mode "Dépensé" activé - charger les données
-                                console.log('📊 Loading real spending data...');
                                 loadRealSpending();
                                 loadRealSpendingForChart();
                             } else {
@@ -2209,8 +2202,6 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                console.log('💾 Data to save:', dataToSave.isRealSpendingMode);
-
                 await db.collection('users').doc(currentUser.uid).set(dataToSave, { merge: true });
             } catch (error) {
                 console.error('Error saving user data:', error);
@@ -2259,7 +2250,6 @@
          */
         async function loadExpensesBreakdown() {
             if (!firebase.functions || !currentUser) {
-                console.log('Cannot load expenses breakdown: Firebase not initialized');
                 return;
             }
             
@@ -2270,8 +2260,6 @@
             const startDate = new Date(year, month - 1, 1);
             const endDate = new Date(year, month, 0, 23, 59, 59);
             
-            console.log('📊 Loading expenses for period:', startDate.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
-
             try {
                 const breakdownDiv = document.getElementById('expensesBreakdown');
                 const detailsDiv = document.getElementById('expensesDetails');
@@ -2354,7 +2342,6 @@
          */
         async function loadIncomeBreakdown() {
             if (!firebase.functions || !currentUser) {
-                console.log('Cannot load income breakdown: Firebase not initialized');
                 return;
             }
             
@@ -2365,10 +2352,6 @@
             const startDate = new Date(year, month - 1, 1);
             const endDate = new Date(year, month, 0, 23, 59, 59);
             
-            console.log('📊 Loading income for period:', startDate.toISOString().split('T')[0], 'to', endDate.toISOString().split('T')[0]);
-            console.log('📊 DEBUG startDate:', startDate);
-            console.log('📊 DEBUG endDate:', endDate);
-
             try {
                 // Récupérer tous les revenus
                 const incomeSnapshot = await db.collection('users')
@@ -2377,8 +2360,6 @@
                     .where('category', '==', 'income')
                     .get();
 
-                console.log(`📊 DEBUG: Total income transactions in Firestore: ${incomeSnapshot.size}`);
-
                 // Filtrer par date côté client
                 const incomesByCurrency = {};
                 
@@ -2386,28 +2367,12 @@
                     const txn = doc.data();
                     txn.id = doc.id;
                     
-                    // ✅ Debug: logger chaque transaction
-                    console.log('📊 DEBUG Transaction:', {
-                        id: txn.id.substring(0, 8),
-                        date: txn.date,
-                        dateType: typeof txn.date,
-                        currency: txn.currency,
-                        amount: txn.chargedAmount,
-                        excluded: txn.excluded
-                    });
                     
                     // ✅ Convertir la date de transaction en objet Date pour comparaison correcte
                     const txnDate = new Date(txn.date);
                     
-                    console.log('📊 DEBUG Comparison:', {
-                        txnDate: txnDate,
-                        'txnDate >= startDate': txnDate >= startDate,
-                        'txnDate <= endDate': txnDate <= endDate,
-                        excluded: txn.excluded
-                    });
                     
                     if (txnDate >= startDate && txnDate <= endDate) {  // ✅ Retirer && !txn.excluded
-                        console.log('✅ Transaction INCLUDED');
                         const curr = txn.currency || 'ILS';
                         if (!incomesByCurrency[curr]) {
                             incomesByCurrency[curr] = 0;
@@ -2417,8 +2382,6 @@
                         console.log('❌ Transaction EXCLUDED');
                     }
                 });
-
-                console.log('📊 Incomes by currency:', incomesByCurrency);
 
                 const breakdownDiv = document.getElementById('incomeBreakdown');
                 const detailsDiv = document.getElementById('incomeDetails');
@@ -2507,7 +2470,6 @@
                 total += convertedAmount;
             });
             
-            console.log(`💰 Total income calculated: ${total.toFixed(2)} ${currency}`);
             return total;
         }
 
@@ -3070,23 +3032,18 @@
         async function loadMonthlyTrendChart() {
             // ✅ Bloquer si déjà en cours
             if (isLoadingMonthlyTrend) {
-                console.log('📊 Already loading, skipping...');
                 return;
             }
             
-            console.log('📊 loadMonthlyTrendChart called');
             
             if (!currentUser || !firebase.functions) {
-                console.log('❌ Cannot load monthly trend: Firebase not initialized');
                 return;
             }
             
             // ✅ Marquer comme en cours
             isLoadingMonthlyTrend = true;
             
-            try {
-                console.log('📊 Step 1: Creating months array');
-                
+            try {                
                 // Charger les 6 derniers mois de transactions
                 const months = [];
                 const currentDate = new Date();
@@ -3113,9 +3070,7 @@
                         label: label
                     });
                 }
-                
-                console.log('📊 Step 2: Months created:', months);
-                
+                                
                 // Initialiser les données
                 monthlyTrendData = {
                     labels: months.map(m => m.label),
@@ -3129,14 +3084,11 @@
                         monthlyTrendData.categories[categoryKey] = [];
                     }
                 });
-                
-                console.log('📊 Step 3: Starting transaction loading for', months.length, 'months');
-                
+                                
                 // Charger les transactions pour chaque mois
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
                 
                 for (const monthInfo of months) {
-                    console.log('📊 Loading month:', monthInfo.label);
                     
                     const startDate = new Date(monthInfo.year, monthInfo.month - 1, 1);
                     const endDate = new Date(monthInfo.year, monthInfo.month, 0, 23, 59, 59);
@@ -3148,9 +3100,7 @@
                             isLabeled: true,
                             limit: 10000
                         });
-                        
-                        console.log('📊 Received', result.data.transactions?.length || 0, 'transactions for', monthInfo.label);
-                        
+                                                
                         const transactions = result.data.transactions || [];
                         
                         // Calculer le total et par catégorie
@@ -3184,19 +3134,13 @@
                         });
                     }
                 }
-                
-                console.log('📊 Step 4: All months loaded. Data:', monthlyTrendData);
-                
+                                
                 // Générer les checkboxes des catégories
                 populateCategoryTrendCheckboxes();
-                
-                console.log('📊 Step 5: Calling updateMonthlyTrendChart');
-                
+                                
                 // Afficher le graphique
                 updateMonthlyTrendChart();
-                
-                console.log('📊 Step 6: Chart updated successfully! ✅');
-                
+                                
             } catch (error) {
                 console.error('❌ FATAL Error loading monthly trend:', error);
             } finally {
@@ -3418,7 +3362,6 @@
          */
         async function getCategoryMonthlyData(monthsCount = 6) {
             if (!firebase.functions || !currentUser) {
-                console.log('Cannot load category monthly data: Firebase not initialized');
                 return {};
             }
             
@@ -4470,7 +4413,6 @@
          */
         async function loadRealSpending() {
             if (!firebase.functions || !currentUser) {
-                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
                 return;
             }
             
@@ -4497,9 +4439,6 @@
             const startDateStr = startDate.toISOString().split('T')[0];
             const endDateStr = endDate.toISOString().split('T')[0];
             
-            console.log('📊 Loading real spending data...');
-            console.log('📊 Date range:', startDateStr, 'to', endDateStr);
-            
             try {
                 const getTransactions = firebase.functions().httpsCallable('getTransactions');
                 
@@ -4519,9 +4458,7 @@
                     .collection('transactions')
                     .where('category', '==', 'income')
                     .get();
-                
-                console.log(`📊 DEBUG: Found ${incomeSnapshot.size} total income transactions in Firestore`);
-                
+                                
                 const incomeTransactions = [];
                 incomeSnapshot.forEach(doc => {
                     const txn = doc.data();
@@ -4529,18 +4466,10 @@
                     
                     // Filtrer par date côté client
                     if (txn.date >= startDateStr && txn.date <= endDateStr) {
-                        console.log('📊 DEBUG: Adding income:', {
-                            id: txn.id.substring(0, 8),
-                            amount: txn.chargedAmount,
-                            currency: txn.currency,
-                            date: txn.date
-                        });
                         incomeTransactions.push(txn);
                     }
                 });
-                
-                console.log(`📊 Loaded ${labeledExpenses.length} labeled expenses and ${incomeTransactions.length} income transactions`);
-                
+                                
                 // ✅ Fusionner dépenses + revenus
                 const allTransactions = [...labeledExpenses, ...incomeTransactions];
                 
@@ -4559,14 +4488,7 @@
                     );
                     
                     // Traiter les revenus
-                    if (txn.category === 'income') {
-                        console.log('💰 Income transaction:', {
-                            amount: txn.chargedAmount,
-                            currency: txn.currency,
-                            description: txn.description
-                        });
-                        console.log('💱 Converted to:', convertedAmount, currency);
-                        
+                    if (txn.category === 'income') {            
                         realIncomeTotal += convertedAmount;
                     }
                     // Traiter les dépenses
@@ -4579,10 +4501,7 @@
                         }
                     }
                 });
-                
-                console.log('💰 Total income calculated:', realIncomeTotal);
-                console.log('📊 Exchange rates used:', liveExchangeRates);
-                
+                         
                 // Stocker le revenu total
                 realSpendingData._incomeTotal = realIncomeTotal;
                 
@@ -4644,9 +4563,7 @@
 
         function switchBudgetMode(mode) {
             isRealSpendingMode = (mode === 'spent');
-            
-            console.log('🔄 Budget mode changed to:', isRealSpendingMode ? 'Dépensé' : 'Estimé');
-            
+                        
             // ✅ Sauvegarder l'état dans les préférences
             saveUserData();
             
@@ -4738,7 +4655,6 @@
         */
         async function loadRealSpendingForChart() {
             if (!firebase.functions || !currentUser) {
-                console.log('Cannot load real spending: Firebase not initialized or user not logged in');
                 return;
             }
             
@@ -5019,7 +4935,6 @@
             saveUserData().then(() => {
                 updateDisplay();
             }).catch(error => {
-                console.error('Error saving new category:', error);
                 alert(t.errorCreatingCategory || 'Error creating category. Please try again.');
             });
         }
@@ -5114,7 +5029,6 @@
                     document.body.style.overflow = '';
                 }
                 
-                console.error('Error deleting category:', error);
                 showToast(t.errorDeletingCategory + ' ' + error.message, 'error');
             }
         }
@@ -7669,31 +7583,23 @@
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
-                console.log('📊 Nombre de boutons chart trouvés:', toggleButtons.length);
                 
                 toggleButtons.forEach(btn => {
-                    console.log('📊 Configuration bouton:', btn.dataset.type);
                     
                     btn.addEventListener('click', function() {
-                        console.log('🔵 CLIC DÉTECTÉ sur bouton:', this.dataset.type);
-                        console.log('🔵 AVANT - currentChartType:', currentChartType);
+
                         
                         currentChartType = this.dataset.type;
                         
-                        console.log('🔵 APRÈS assignation - currentChartType:', currentChartType);
                         
                         saveUserData();
                         
                         toggleButtons.forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         
-                        console.log('🔵 AVANT updateChart');
                         updateChart();
-                        console.log('🔵 APRÈS updateChart - currentChartType:', currentChartType);
                         
-                        console.log('🔵 AVANT updateChartIndicators');
                         updateChartIndicators();
-                        console.log('🔵 APRÈS updateChartIndicators');
                     });
                 });
 
@@ -7865,7 +7771,6 @@
 
         function attachChartButtonListeners() {
             const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
-            console.log('📊 Attaching listeners to', toggleButtons.length, 'buttons');
             
             if (toggleButtons.length === 0) {
                 console.warn('⚠️ No chart buttons found, retrying...');
@@ -7875,7 +7780,6 @@
             
             toggleButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    console.log('🔵 Chart button clicked:', this.dataset.type);
                     currentChartType = this.dataset.type;
                     saveUserData();
                     
