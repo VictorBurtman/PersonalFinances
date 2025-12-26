@@ -4439,3 +4439,18 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     height: 16px;
     margin-right: -2px;
 }
+
+
+/* Fix spécifique mobile pour le champ de date */
+@media (max-width: 768px) {
+    #addManualTransactionModal #manualTxnDate {
+        padding: 10px 8px 10px 12px !important;
+    }
+}
+
+/* OU force une largeur légèrement réduite sur mobile */
+@media (max-width: 768px) {
+    #addManualTransactionModal #manualTxnDate {
+        width: calc(100% - 4px) !important;
+    }
+}
