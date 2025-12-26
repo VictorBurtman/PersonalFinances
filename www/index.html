@@ -996,12 +996,6 @@
                 timeout = setTimeout(() => func.apply(this, args), delay);
             };
         }
-
-
-
-
-
-        
         
         // Global error handler
         window.addEventListener('error', function(e) {
@@ -7671,16 +7665,31 @@
             if (typeof Chart !== 'undefined') {
                 // Set up chart type toggle buttons
                 const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
+                console.log('📊 Nombre de boutons chart trouvés:', toggleButtons.length);
+                
                 toggleButtons.forEach(btn => {
+                    console.log('📊 Configuration bouton:', btn.dataset.type);
+                    
                     btn.addEventListener('click', function() {
+                        console.log('🔵 CLIC DÉTECTÉ sur bouton:', this.dataset.type);
+                        console.log('🔵 AVANT - currentChartType:', currentChartType);
+                        
                         currentChartType = this.dataset.type;
+                        
+                        console.log('🔵 APRÈS assignation - currentChartType:', currentChartType);
+                        
                         saveUserData();
                         
                         toggleButtons.forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                         
+                        console.log('🔵 AVANT updateChart');
                         updateChart();
-                        updateChartIndicators(); // ✅ Ajouter cette ligne
+                        console.log('🔵 APRÈS updateChart - currentChartType:', currentChartType);
+                        
+                        console.log('🔵 AVANT updateChartIndicators');
+                        updateChartIndicators();
+                        console.log('🔵 APRÈS updateChartIndicators');
                     });
                 });
 
