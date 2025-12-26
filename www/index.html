@@ -2575,6 +2575,12 @@
         }
 
         function updateDisplay() {
+            if (!isRealSpendingMode) {
+                const incomeMonthLabel = document.getElementById('incomeMonth');
+                const expensesMonthLabel = document.getElementById('expensesMonth');
+                if (incomeMonthLabel) incomeMonthLabel.textContent = '';
+                if (expensesMonthLabel) expensesMonthLabel.textContent = '';
+            }
             try {
                 cleanupCategoryOrder();
                 // Update income section visibility
