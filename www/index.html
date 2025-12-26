@@ -419,7 +419,10 @@
                             <!-- Expenses Card (Clickable) -->
                             <div class="metric-card expenses-clickable" id="expensesDisplay" onclick="toggleExpensesDetails()">
                                 <span class="expand-arrow" id="expensesArrow">▼</span>
-                                <div class="metric-label" data-translate="expenses">Expenses</div>
+                                <div class="metric-label">
+                                    <span data-translate="expenses">Expenses</span>
+                                    <span class="metric-month" id="expensesMonth"></span>
+                                </div>
                                 <div class="metric-value" id="totalExpenses">₪0</div>
                                 
                                 <!-- Expandable details -->
@@ -4524,6 +4527,12 @@
                 const incomeMonthLabel = document.getElementById('incomeMonth');
                 if (incomeMonthLabel) {
                     incomeMonthLabel.textContent = monthDisplay;
+                }
+
+                // ✅ Afficher le mois dans le label dépenses (mode Réel uniquement)
+                const expensesMonthLabel = document.getElementById('expensesMonth');
+                if (expensesMonthLabel) {
+                    expensesMonthLabel.textContent = monthDisplay;
                 }
 
                 // Refresh display with conversion icon
