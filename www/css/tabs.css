@@ -4366,41 +4366,47 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
 
 
 /* ============================================
-   ADD TRANSACTION MODAL - Optimized Layout
+   ADD TRANSACTION MODAL - Force Layout
    ============================================ */
-#addManualTransactionModal .auth-input {
+#manualTransactionForm input[type="date"],
+#manualTransactionForm input[type="number"],
+#manualTransactionForm input[type="text"],
+#manualTransactionForm select,
+#manualTransactionForm textarea {
     padding: 10px 12px !important;
-    min-height: 42px;
-    font-size: 0.95em;
+    min-height: 42px !important;
+    font-size: 0.95em !important;
 }
 
-#addManualTransactionModal input[type="date"],
-#addManualTransactionModal input[type="number"],
-#addManualTransactionModal input[type="text"],
-#addManualTransactionModal select {
-    height: 42px;
-}
-
-#addManualTransactionModal textarea {
-    min-height: 70px;
-}
-
-/* Date field - même largeur que les autres champs */
-#addManualTransactionModal #manualTxnDate {
+/* Date - pleine largeur */
+#manualTxnDate {
     width: 100% !important;
-    max-width: 100% !important;
 }
 
-/* Répartition montant + devise */
-#addManualTransactionModal #manualTxnAmount {
-    flex: 1 !important; /* Le montant prend l'espace restant */
+/* Container montant + devise */
+#manualTransactionForm > div:has(#manualTxnAmount) > div {
+    display: flex !important;
+    gap: 10px !important;
 }
 
-#addManualTransactionModal #manualTxnCurrency {
-    flex: 0 0 90px !important; /* Devise : largeur fixe de 90px */
-    min-width: 90px;
-    max-width: 90px;
-    font-size: 0.9em;
-    padding: 10px 6px !important;
-    text-align: center;
+/* Montant - flexible */
+#manualTxnAmount {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+/* Devise - fixe et compact */
+#manualTxnCurrency {
+    flex: 0 0 90px !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
+    font-size: 0.85em !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+}
+
+/* Textarea */
+#manualTxnMemo {
+    min-height: 70px !important;
 }
