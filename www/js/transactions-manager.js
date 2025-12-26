@@ -996,7 +996,7 @@ function renderTransaction(txn) {
                 </div>
                 
                 <!-- Droite : Montant -->
-                <div class="transaction-amount" style="color: ${isIncome ? '#28a745' : amountColor};">
+                <div class="transaction-amount" style="color: ${isIncome ? '#28a745' : amountColor}; cursor: pointer;" onclick="showTransactionDetails('${txnId}')">
                     ${isIncome ? '+' : ''}${txnCurrency}${formatAmount(Math.abs(txn.chargedAmount), 2)}
                 </div>
             </div>
