@@ -4372,9 +4372,7 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
    ============================================ */
 
 /* Base styles pour tous les inputs */
-#manualTransactionForm input[type="date"],
-#manualTransactionForm input[type="number"],
-#manualTransactionForm input[type="text"],
+#manualTransactionForm input,
 #manualTransactionForm select,
 #manualTransactionForm textarea {
     padding: 10px 12px !important;
@@ -4383,82 +4381,33 @@ body.dark-mode .settings-section input:checked + .toggle-slider {
     box-sizing: border-box !important;
 }
 
-/* Inputs pleine largeur (nom, date, banque) */
+/* Inputs pleine largeur */
 #manualTransactionForm input[type="text"],
 #manualTransactionForm input[type="date"],
-#manualTransactionForm textarea {
+#manualTransactionForm textarea,
+#manualTransactionForm select {
     width: 100% !important;
-    max-width: 100% !important;
-}
-
-/* Date field - alignement parfait */
-#manualTxnDate {
-    width: 100% !important;
-    max-width: 100% !important;
 }
 
 /* Container montant + devise */
 #manualTransactionForm > div:has(#manualTxnAmount) > div {
     display: flex !important;
     gap: 10px !important;
-    align-items: center !important;
 }
 
 /* Montant - flexible */
 #manualTxnAmount {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
+    flex: 1 !important;
 }
 
-/* Devise - compact et fixe */
+/* Devise - compact */
 #manualTxnCurrency {
     flex: 0 0 90px !important;
-    width: 90px !important;
-    min-width: 90px !important;
-    max-width: 90px !important;
     font-size: 0.85em !important;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
     text-align: center !important;
 }
 
-/* Textarea */
+/* Textarea plus haute */
 #manualTxnMemo {
     min-height: 70px !important;
-}
-
-
-/* Compenser l'icône du sélecteur de date */
-#addManualTransactionModal #manualTxnDate {
-    padding-right: 8px !important; /* Réduit de 12px à 8px */
-}
-
-/* Réduire la taille de l'icône calendrier */
-#addManualTransactionModal #manualTxnDate::-webkit-calendar-picker-indicator {
-    width: 16px;
-    height: 16px;
-    margin-right: -2px;
-}
-
-
-/* Fix spécifique mobile pour le champ de date */
-@media (max-width: 768px) {
-    #addManualTransactionModal #manualTxnDate {
-        padding: 10px 8px 10px 12px !important;
-    }
-}
-
-/* OU force une largeur légèrement réduite sur mobile */
-@media (max-width: 768px) {
-    #addManualTransactionModal #manualTxnDate {
-        width: calc(100% - 4px) !important;
-    }
-}
-
-/* Supprimer l'espace de l'indicateur mobile */
-#addManualTransactionModal input[type="date"]::-webkit-inner-spin-button,
-#addManualTransactionModal input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    position: absolute;
-    right: 0;
 }
