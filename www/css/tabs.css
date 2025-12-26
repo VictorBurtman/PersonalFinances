@@ -3249,13 +3249,13 @@ body.dark-mode .budget-tab.active {
     
     /* 6. Dark mode */
     body.dark-mode .app-footer {
-        background-color: #1e1e2e !important;
+        background-color: #1a1a2e !important; /* ✅ CHANGER de #1e1e2e à #1a1a2e */
         border-top: 1px solid #3a3a4e !important;
     }
 
     /* Le bouche-trou passe en sombre */
     body.dark-mode .app-footer::after {
-        background-color: #1e1e2e !important; 
+        background-color: #1a1a2e !important; /* ✅ CHANGER de #1e1e2e à #1a1a2e */
     }
     
     .footer-spacer {
