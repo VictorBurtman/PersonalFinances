@@ -3557,57 +3557,69 @@
             const hasMonthlyData = monthlyTrendData.total && monthlyTrendData.total.some(val => val > 0);
             
             // Préparer les datasets
-            const datasets = [];
+            let datasets = [];
+            let chartData;
             
-            // Ajouter le total si sélectionné
-            if (selectedTrendCategories.has('total')) {
-                datasets.push({
-                    label: translations[currentLanguage].total || 'Total',
-                    data: monthlyTrendData.total,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    pointBackgroundColor: '#667eea',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2
-                });
-            }
-            
-            // Ajouter les catégories sélectionnées
-            Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
-                if (selectedTrendCategories.has(categoryKey)) {
-                    const color = categoryBaseColors[categoryKey] || generateRandomColor();
-                    const meta = categoryMetadata[categoryKey] || {
-                        displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
-                    };
-                    
+            if (!hasMonthlyData) {
+                // ✅ GRAPHIQUE VIDE - Pas de ligne, juste un placeholder
+                chartData = {
+                    labels: monthlyTrendData.labels || ['', '', '', '', '', ''],
+                    datasets: []
+                };
+            } else {
+                // ✅ GRAPHIQUE AVEC DONNÉES
+                // Ajouter le total si sélectionné
+                if (selectedTrendCategories.has('total')) {
                     datasets.push({
-                        label: meta.displayName,
-                        data: monthlyTrendData.categories[categoryKey],
-                        borderColor: color,
-                        backgroundColor: color + '20',
-                        borderWidth: 2,
+                        label: translations[currentLanguage].total || 'Total',
+                        data: monthlyTrendData.total,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
                         fill: true,
                         tension: 0,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: color,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#667eea',
                         pointBorderColor: '#fff',
                         pointBorderWidth: 2
                     });
                 }
-            });
+                
+                // Ajouter les catégories sélectionnées
+                Object.keys(monthlyTrendData.categories).forEach(categoryKey => {
+                    if (selectedTrendCategories.has(categoryKey)) {
+                        const color = categoryBaseColors[categoryKey] || generateRandomColor();
+                        const meta = categoryMetadata[categoryKey] || {
+                            displayName: categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1)
+                        };
+                        
+                        datasets.push({
+                            label: meta.displayName,
+                            data: monthlyTrendData.categories[categoryKey],
+                            borderColor: color,
+                            backgroundColor: color + '20',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: color,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2
+                        });
+                    }
+                });
+                
+                chartData = {
+                    labels: monthlyTrendData.labels,
+                    datasets: datasets
+                };
+            }
             
             monthlyTrendChart = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: monthlyTrendData.labels,
-                    datasets: datasets
-                },
+                data: chartData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -3641,6 +3653,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            display: hasMonthlyData, // ✅ Masquer l'axe Y si vide
                             ticks: {
                                 color: textColor,
                                 callback: function(value) {
@@ -3652,6 +3665,7 @@
                             }
                         },
                         x: {
+                            display: hasMonthlyData, // ✅ Masquer l'axe X si vide
                             ticks: {
                                 color: textColor
                             },
@@ -3663,8 +3677,6 @@
                 }
             });
         }
-
-
 
 
         /**
