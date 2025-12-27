@@ -2771,7 +2771,8 @@
             const aggregatedItems = {};
 
             // ✅ MODE DÉPENSÉ: Utiliser les vraies transactions par catégorie
-            if (isRealSpendingMode && realSpendingChartData && Object.keys(realSpendingChartData).length > 0) {
+            if (isRealSpendingMode) {
+                // Utiliser realSpendingChartData (même s'il est vide)
                 Object.keys(realSpendingChartData).forEach(category => {
                     const amount = realSpendingChartData[category];
                     if (amount > 0) {
@@ -2782,8 +2783,7 @@
                     }
                 });
             } 
-            // ✅ MODE ESTIMÉ: Utiliser les items comme avant
-            // ✅ MODE ESTIMÉ: Agréger par catégorie (comme en mode Réel)
+            // ✅ MODE ESTIMÉ: Utiliser les items manuels uniquement
             else {
                 Object.keys(expenses).forEach(categoryKey => {
                     if (categoryKey === 'income') return;
