@@ -468,6 +468,14 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Monthly Trend Chart -->
+                    <div class="chart-container" style="margin-top: 20px;">
+                        <h3 style="font-size: 1.1em; margin-bottom: 15px; color: #333;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="monthlyTrendChart"></canvas>
+                        </div>
+                    </div>
                     <div class="expenses-list" id="expensesList">
                         <!-- Income Category -->
                         <div class="category-section income-category" id="category-income" style="display: none;">
@@ -4640,6 +4648,7 @@
                     loadExpensesBreakdown();
                 }
             }
+            loadMonthlyTrendChart();
         }
 
 

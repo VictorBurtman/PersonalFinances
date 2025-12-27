@@ -956,6 +956,11 @@ body.dark-mode .color-btn-mini:hover {
     transition: transform 0.3s ease;
 }
 
+/* Dark mode pour les titres des graphiques */
+body.dark-mode .chart-container h3 {
+    color: #e0e0e0 !important;
+}
+
 /* ============================================
    EXPENSES LIST (Budget Tab)
    ============================================ */
@@ -979,7 +984,7 @@ body.dark-mode .color-btn-mini:hover {
 
 .category-title {
     font-size: 1.1em;
-    font-weight: 600;
+    font-weight: 400;  /* ✅ Changé de 600 à 400 */
     color: #ffffff; /* ✅ Blanc au lieu de violet */
     margin-bottom: 8px;
     padding-bottom: 8px;
@@ -1824,7 +1829,7 @@ body.dark-mode .category-header-trans {
 }
 
 .category-name-trans {
-    font-weight: 600;
+    font-weight: 400;  /* ✅ Changé de 600 à 400 */
     color: #495057;
 }
 
