@@ -1262,7 +1262,7 @@
             // Récupérer les boutons
             const signInBtn = document.getElementById('signInBtn');
             const signUpBtn = document.getElementById('signUpBtn');
-            
+
             if (!signInBtn || !signUpBtn) {
                 console.error('❌ Boutons introuvables');
                 return;
@@ -1270,11 +1270,11 @@
                         
             // Sauvegarder le texte original
             const originalSignInText = signInBtn.innerHTML;
-            
+
             // Désactiver et afficher loading
             signInBtn.disabled = true;
             signUpBtn.disabled = true;
-            
+
             const lang = localStorage.getItem('language') || 'en';
             const loadingText = translations[lang]?.loading || 'Loading...';
             signInBtn.innerHTML = '⏳ ' + loadingText;
@@ -1305,22 +1305,21 @@
                 return;
             }
             
+            // Récupérer les boutons
             const signInBtn = document.getElementById('signInBtn');
-            const signUpBtn = document.getElementById('signUpBtn');
-            
-            if (!signInBtn || !signUpBtn) {
-                console.error('❌ Boutons introuvables');
+
+            if (!signInBtn) {
+                console.error('❌ Bouton introuvable');
                 return;
             }
                         
-            const originalSignUpText = signUpBtn.innerHTML;
-            
+            const originalSignUpText = signInBtn.innerHTML;
+
             signInBtn.disabled = true;
-            signUpBtn.disabled = true;
-            
+
             const lang = localStorage.getItem('language') || 'en';
             const loadingText = translations[lang]?.loading || 'Loading...';
-            signUpBtn.innerHTML = '⏳ ' + loadingText;
+            signInBtn.innerHTML = '⏳ ' + loadingText;
             
             // ✅ AJOUTER TRY/CATCH pour attraper les erreurs
             try {
@@ -1748,18 +1747,25 @@
         // Authentication functions
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const toggleText = document.getElementById('authToggleText');
-            const toggleBtn = document.getElementById('authToggleBtn');
+            const signInBtn = document.getElementById('signInBtn');
+            const toggleText = document.querySelector('.auth-switch span[data-translate]');
+            const toggleLink = document.querySelector('.auth-switch a[data-translate]');
+            
+            const lang = localStorage.getItem('language') || 'en';
+            const t = translations[lang] || translations['en'];
             
             if (isSignUpMode) {
-                submitBtn.textContent = 'Sign Up';
-                toggleText.textContent = 'Already have an account?';
-                toggleBtn.textContent = 'Sign In';
+                // Mode inscription
+                signInBtn.textContent = t.signUp || 'Sign Up';
+                signInBtn.onclick = handleSignUp;
+                if (toggleText) toggleText.textContent = t.alreadyHaveAccount || 'Already have an account?';
+                if (toggleLink) toggleLink.textContent = t.signIn || 'Sign In';
             } else {
-                submitBtn.textContent = 'Sign In';
-                toggleText.textContent = "Don't have an account?";
-                toggleBtn.textContent = 'Sign Up';
+                // Mode connexion
+                signInBtn.textContent = t.signIn || 'Sign In';
+                signInBtn.onclick = handleSignIn;
+                if (toggleText) toggleText.textContent = t.noAccount || "Don't have an account?";
+                if (toggleLink) toggleLink.textContent = t.signUp || 'Sign Up';
             }
         }
 
