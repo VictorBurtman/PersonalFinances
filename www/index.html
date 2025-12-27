@@ -119,6 +119,10 @@
     <link rel="stylesheet" href="css/tabs.css">
 </head>
 <body>
+    <!-- ✅ FORCER DARK MODE TOUJOURS -->
+    <script>
+        document.body.classList.add('dark-mode');
+    </script>
     <!-- ✅ AUTO-UPDATE SYSTEM - Doit être le premier script -->
     <script>
         (async function checkForUpdates() {
@@ -874,18 +878,6 @@
                             <span class="toggle-slider" translate="no"></span>
                         </label>
                         <span class="settings-toggle-label" data-translate="trackIncome">Track monthly income</span>
-                    </div>
-                </div>
-
-                <!-- Dark Mode Section -->
-                <div class="settings-section">
-                    <h3 data-translate="darkMode">🌙 Dark Mode</h3>
-                    <div class="settings-toggle-row">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode(this.checked)" />
-                            <span class="toggle-slider" translate="no"></span>
-                        </label>
-                        <span class="settings-toggle-label" data-translate="enableDarkMode">Enable dark mode</span>
                     </div>
                 </div>
 
@@ -1979,23 +1971,10 @@
                         document.documentElement.setAttribute('dir', 'ltr');
                     }
                     
-                    // ✅ CHARGER DARK MODE (par défaut activé pour nouveaux utilisateurs)
-                    const darkMode = data.darkMode !== undefined ? data.darkMode : true;
-                    if (darkMode) {
-                        document.body.classList.add('dark-mode');
-                    } else {
-                        document.body.classList.remove('dark-mode');
-                    }
-
-                    // ✅ Cocher la checkbox
-                    const darkModeCheckbox = document.getElementById('darkModeCheckbox');
-                    if (darkModeCheckbox) {
-                        darkModeCheckbox.checked = darkMode;
-                    }
-                    
-                    // ✅ Mettre à jour la couleur iOS
+                    // ✅ FORCER DARK MODE TOUJOURS ACTIVÉ
+                    document.body.classList.add('dark-mode');
                     updateThemeColor();
-                    
+                                        
                     // ✅ MAINTENANT charger le reste des données
                     expenses = data.expenses || JSON.parse(JSON.stringify(defaultExpenses));
                     customColors = data.customColors || {};
@@ -5653,36 +5632,6 @@
             percentageMode = mode;
             saveUserData();
             updateDisplay();
-        }
-
-        /**
-         * Toggle dark mode
-         */
-        function toggleDarkMode(enabled) {
-            if (enabled) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-            
-            // === MISE A JOUR IMMEDIATE DU GRAPHIQUE ===
-            // On force le graphique à se redessiner avec les nouvelles couleurs
-            if (typeof updateChart === 'function') {
-                updateChart();
-            }
-            // ==========================================
-        
-            // Save preference to Firebase
-            if (currentUser) {
-                db.collection('users').doc(currentUser.uid).set({
-                    darkMode: enabled
-                }, { merge: true }).then(() => {
-                    console.log('Dark mode preference saved:', enabled);
-                }).catch(error => {
-                    console.error('Error saving dark mode preference:', error);
-                });
-            }
-            updateThemeColor();
         }
 
         // ============================================
