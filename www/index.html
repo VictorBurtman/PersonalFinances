@@ -3623,9 +3623,9 @@
             
             // ✅ PLUGIN TEXTE CENTRÉ pour graphique vide
             const centerTextPlugin = {
-                id: 'centerTextMonthly',
+                id: 'centerText',
                 afterDraw: function(chart) {
-                    if (!hasMonthlyData) {
+                    if (isEmpty && currentChartType === 'doughnut') { // ✅ Seulement pour pie chart
                         const ctx = chart.ctx;
                         const width = chart.width;
                         const height = chart.height;
@@ -3635,7 +3635,9 @@
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
-                        ctx.fillText(noExpensesText, width / 2, height / 2);
+                        
+                        // ✅ Remonter le texte de 20px pour centrer dans le cercle
+                        ctx.fillText(noExpensesText, width / 2, (height / 2) - 20);
                         ctx.restore();
                     }
                 }
