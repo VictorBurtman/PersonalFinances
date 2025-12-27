@@ -3556,6 +3556,10 @@
             // ✅ VÉRIFIER SI LE GRAPHIQUE EST VIDE
             const hasMonthlyData = monthlyTrendData.total && monthlyTrendData.total.some(val => val > 0);
             
+            // ✅ Récupérer la traduction
+            const t = translations[currentLanguage] || translations['en'];
+            const noExpensesText = t.noExpensesYet || "No expenses yet";
+            
             // Préparer les datasets
             let datasets = [];
             let chartData;
@@ -3571,7 +3575,7 @@
                 // Ajouter le total si sélectionné
                 if (selectedTrendCategories.has('total')) {
                     datasets.push({
-                        label: translations[currentLanguage].total || 'Total',
+                        label: t.total || 'Total',
                         data: monthlyTrendData.total,
                         borderColor: '#667eea',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -3617,6 +3621,26 @@
                 };
             }
             
+            // ✅ PLUGIN TEXTE CENTRÉ pour graphique vide
+            const centerTextPlugin = {
+                id: 'centerTextMonthly',
+                afterDraw: function(chart) {
+                    if (!hasMonthlyData) {
+                        const ctx = chart.ctx;
+                        const width = chart.width;
+                        const height = chart.height;
+                        
+                        ctx.save();
+                        ctx.font = "bold 1.1em sans-serif";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
+                        ctx.fillText(noExpensesText, width / 2, height / 2);
+                        ctx.restore();
+                    }
+                }
+            };
+            
             monthlyTrendChart = new Chart(ctx, {
                 type: 'line',
                 data: chartData,
@@ -3653,7 +3677,6 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            display: hasMonthlyData, // ✅ Masquer l'axe Y si vide
                             ticks: {
                                 color: textColor,
                                 callback: function(value) {
@@ -3665,7 +3688,6 @@
                             }
                         },
                         x: {
-                            display: hasMonthlyData, // ✅ Masquer l'axe X si vide
                             ticks: {
                                 color: textColor
                             },
@@ -3674,10 +3696,10 @@
                             }
                         }
                     }
-                }
+                },
+                plugins: [centerTextPlugin] // ✅ Ajouter le plugin
             });
         }
-
 
         /**
          * Toggle du dropdown de sélection de catégories
