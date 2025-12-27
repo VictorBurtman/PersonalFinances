@@ -356,8 +356,8 @@ html[dir="rtl"] .remember-me-container {
    ============================================ */
 @media (max-height: 700px) {
     .auth-logo img {
-        width: 250px;
-        height: 250px;
+        width: 220px;
+        height: 220px;
     }
     
     .auth-logo h2 {
