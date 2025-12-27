@@ -292,70 +292,62 @@
             </div>
         </div>
         
-        <div id="auth-screen">
-            <!-- Logo en haut -->
-            <div class="auth-logo">
-                <img src="img/icons/logo.png" alt="Wise Budget">
-                <h2>Wise Budget</h2>
-            </div>
+        <!-- Logo en haut -->
+        <div class="auth-logo">
+            <img src="img/icons/logo.png" alt="Wise Budget">
+            <h2>Wise Budget</h2>
+        </div>
+        
+        <!-- Formulaire en bas -->
+        <div class="auth-container">
+            <!-- Error message -->
+            <div id="authError" class="auth-error" style="display: none;"></div>
             
-            <!-- Formulaire en bas -->
-            <div class="auth-container">
-                <!-- Error message -->
-                <div id="authError" class="auth-error" style="display: none;"></div>
+            <div class="auth-form">
+                <input type="email" 
+                    id="email" 
+                    placeholder="Email" 
+                    data-translate-placeholder="email"
+                    autocomplete="email">
                 
-                <div class="auth-form">
-                    <input type="email" 
-                        id="email" 
-                        placeholder="Email" 
-                        data-translate-placeholder="email"
-                        autocomplete="email">
-                    
-                    <div style="position: relative;">
-                        <input type="password" 
-                            id="password" 
-                            placeholder="Password (min 6 characters)" 
-                            data-translate-placeholder="password"
-                            autocomplete="current-password">
-                        <button type="button" id="togglePassword">👁️</button>
-                    </div>
-                    
-                    <!-- Forgot Password + Remember Me -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -4px;">
-                        <div class="remember-me-container">
-                            <label for="rememberMe">
-                                <input type="checkbox" id="rememberMe">
-                                <span data-translate="rememberMe">Remember me</span>
-                            </label>
-                        </div>
-                        <a id="forgotPasswordLink" 
-                        onclick="authManager.showForgotPasswordDialog()" 
-                        data-translate="forgotPassword">
-                            Forgot password?
-                        </a>
-                    </div>
-                    
-                    <!-- Bouton unique : Se connecter -->
-                    <div class="auth-buttons">
-                        <button id="signInBtn" 
-                                onclick="handleSignIn()" 
-                                data-translate="signIn">Sign In</button>
-                    </div>
+                <div style="position: relative;">
+                    <input type="password" 
+                        id="password" 
+                        placeholder="Password (min 6 characters)" 
+                        data-translate-placeholder="password"
+                        autocomplete="current-password">
+                    <button type="button" id="togglePassword">👁️</button>
                 </div>
                 
-                <!-- Lien S'inscrire -->
-                <div class="auth-switch">
-                    <span data-translate="noAccount">Don't have an account?</span>
-                    <a onclick="toggleAuthMode()" data-translate="signUp">Sign Up</a>
+                <!-- Forgot Password + Remember Me -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -4px;">
+                    <div class="remember-me-container">
+                        <label for="rememberMe">
+                            <input type="checkbox" id="rememberMe">
+                            <span data-translate="rememberMe">Remember me</span>
+                        </label>
+                    </div>
+                    <a id="forgotPasswordLink" 
+                    onclick="authManager.showForgotPasswordDialog()" 
+                    data-translate="forgotPassword">
+                        Forgot password?
+                    </a>
+                </div>
+                
+                <!-- Bouton unique : Se connecter -->
+                <div class="auth-buttons">
+                    <button id="signInBtn" 
+                            onclick="handleSignIn()" 
+                            data-translate="signIn">Sign In</button>
                 </div>
             </div>
             
-            <!-- Sélecteur de langue -->
-            <div class="language-selector">
-                <!-- Les boutons de langue seront ajoutés par JS -->
+            <!-- Lien S'inscrire -->
+            <div class="auth-switch">
+                <span data-translate="noAccount">Don't have an account?</span>
+                <a onclick="toggleAuthMode()" data-translate="signUp">Sign Up</a>
             </div>
         </div>
-
     </div>
     <!-- ========== FIN DE L'ÉCRAN DE CONNEXION ========== -->
 
