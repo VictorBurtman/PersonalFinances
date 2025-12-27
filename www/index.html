@@ -2728,6 +2728,7 @@
 
                 // Update chart
                 updateChart();
+                updateChartIndicators();
                 addCategorySparklines();
 
                 updateResetButtonState();
@@ -7697,6 +7698,14 @@
         let currentX = 0;
         let isDragging = false;
 
+        // ✅ Fonction helper pour vérifier s'il y a des dépenses
+        function hasExpenses() {
+            return Object.keys(expenses).some(cat => {
+                if (cat === 'income') return false;
+                return expenses[cat] && expenses[cat].items && expenses[cat].items.length > 0;
+            });
+        }
+
         function initChartSwipe() {
             const wrapper = document.getElementById('chartWrapper');
             // ✅ Vérifier s'il y a des dépenses
@@ -7752,7 +7761,7 @@
             }
             
             // Swipe threshold: 50px
-            if (Math.abs(diff) > 50) {
+            if (Math.abs(diff) > 50 && hasExpenses()) {
                 if (diff > 0) {
                     // Swipe right → graphique précédent
                     switchToChart('doughnut');
@@ -7778,17 +7787,12 @@
 
         function updateChartIndicators() {
             const dots = document.querySelectorAll('.chart-dot');
-            
-            // ✅ Vérifier s'il y a des dépenses
-            const hasExpenses = Object.keys(expenses).some(cat => {
-                if (cat === 'income') return false;
-                return expenses[cat] && expenses[cat].items && expenses[cat].items.length > 0;
-            });
+            const dataExists = hasExpenses();
             
             dots.forEach(dot => {
                 const chartType = dot.getAttribute('data-chart');
                 
-                // ✅ Gérer l'état actif
+                // Gérer l'état actif
                 if (chartType === currentChartType) {
                     dot.classList.add('active');
                 } else {
@@ -7796,14 +7800,14 @@
                 }
                 
                 // ✅ Désactiver les dots s'il n'y a pas de données
-                if (!hasExpenses) {
-                    dot.classList.add('disabled');
+                if (!dataExists) {
                     dot.style.pointerEvents = 'none';
                     dot.style.opacity = '0.3';
+                    dot.style.cursor = 'not-allowed';
                 } else {
-                    dot.classList.remove('disabled');
                     dot.style.pointerEvents = 'auto';
                     dot.style.opacity = '1';
+                    dot.style.cursor = 'pointer';
                 }
             });
         }
@@ -7834,9 +7838,11 @@
 
         // Permettre de cliquer sur les dots pour changer
         document.querySelectorAll('.chart-dot').forEach(dot => {
-            dot.addEventListener('click', function() {
-                // ✅ Ne rien faire si le dot est désactivé
-                if (this.classList.contains('disabled')) {
+            dot.addEventListener('click', function(e) {
+                // ✅ Ne rien faire si pas de données
+                if (!hasExpenses()) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
                 

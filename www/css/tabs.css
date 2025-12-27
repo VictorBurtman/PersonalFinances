@@ -898,6 +898,12 @@ body.dark-mode .metric-card {
     cursor: pointer;
 }
 
+/* Dots désactivés quand pas de données */
+.chart-dot[style*="pointer-events: none"] {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+}
+
 .chart-dot.active {
     width: 24px;
     border-radius: 4px;
