@@ -4584,7 +4584,7 @@
         let isRealSpendingMode = false;
         let realSpendingChartData = {};
 
-        function switchBudgetMode(mode) {
+        async function switchBudgetMode(mode) {
             isRealSpendingMode = (mode === 'spent');
                         
             // ✅ Sauvegarder l'état dans les préférences
@@ -4631,8 +4631,11 @@
             // Logique selon le mode
             if (isRealSpendingMode) {
                 // ✅ MODE RÉEL : Charger les transactions labélisées
-                loadRealSpending();
-                loadRealSpendingForChart();
+                await loadRealSpending();
+                await loadRealSpendingForChart();
+                
+                // ✅ Forcer la mise à jour après chargement
+                updateChartIndicators();
                 
                 // ✅ Rafraîchir les breakdowns si les panneaux sont ouverts
                 const incomeDetails = document.getElementById('incomeDetails');
@@ -4647,6 +4650,7 @@
             } else {
                 // ✅ MODE ESTIMÉ : Vider realSpendingChartData pour éviter toute confusion
                 realSpendingChartData = {};
+                realSpendingData = {};
                 
                 // ✅ Vider les labels de mois
                 const incomeMonthLabel = document.getElementById('incomeMonth');
