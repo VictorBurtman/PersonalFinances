@@ -3622,6 +3622,7 @@
             }
             
             // ✅ PLUGIN TEXTE CENTRÉ pour graphique vide
+            // --- 5. PLUGIN TEXTE CENTRÉ ---
             const centerTextPlugin = {
                 id: 'centerText',
                 afterDraw: function(chart) {
@@ -3635,9 +3636,8 @@
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
-                        
-                        // ✅ Remonter le texte de 20px pour centrer dans le cercle
-                        ctx.fillText(noExpensesText, width / 2, (height / 2) - 20);
+                        // ✅ Remonter le texte pour centrer dans le cercle (pas dans tout le canvas)
+                        ctx.fillText(noExpensesText, width / 2, (height / 2) - 30);
                         ctx.restore();
                     }
                 }
