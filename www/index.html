@@ -7725,36 +7725,43 @@
 
         // ✅ Fonction helper pour vérifier s'il y a des dépenses (manuelles OU labélisées)
         function hasExpenses() {
-            // 1. Vérifier les items manuels dans expenses
-            let hasManualItems = false;
-            Object.keys(expenses).forEach(categoryKey => {
-                if (categoryKey === 'income') return;
-                
-                if (Array.isArray(expenses[categoryKey])) {
-                    expenses[categoryKey].forEach(item => {
-                        const amount = parseFloat(item.amount) || 0;
-                        if (amount > 0) {
-                            hasManualItems = true;
-                        }
-                    });
+            // ✅ MODE RÉEL : Vérifier uniquement les transactions labélisées
+            if (isRealSpendingMode) {
+                if (typeof realSpendingChartData === 'undefined' || !realSpendingChartData) {
+                    return false;
                 }
-            });
-            
-            // 2. Vérifier les transactions labélisées dans realSpendingChartData
-            let hasLabeledTransactions = false;
-            if (typeof realSpendingChartData !== 'undefined' && realSpendingChartData) {
+                
+                let hasData = false;
                 Object.keys(realSpendingChartData).forEach(category => {
                     if (category !== '_incomeTotal') {
                         const amount = realSpendingChartData[category] || 0;
                         if (amount > 0) {
-                            hasLabeledTransactions = true;
+                            hasData = true;
                         }
                     }
                 });
+                return hasData;
             }
             
-            // Retourner true si l'un des deux existe
-            return hasManualItems || hasLabeledTransactions;
+            // ✅ MODE ESTIMÉ : Vérifier uniquement les items manuels
+            else {
+                let hasData = false;
+                
+                Object.keys(expenses).forEach(categoryKey => {
+                    if (categoryKey === 'income') return;
+                    
+                    if (Array.isArray(expenses[categoryKey])) {
+                        expenses[categoryKey].forEach(item => {
+                            const amount = parseFloat(item.amount) || 0;
+                            if (amount > 0) {
+                                hasData = true;
+                            }
+                        });
+                    }
+                });
+                
+                return hasData;
+            }
         }
 
         function initChartSwipe() {
