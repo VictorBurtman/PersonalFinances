@@ -3190,13 +3190,14 @@ body.dark-mode .budget-tab.active {
         pointer-events: none;
     }
     
-    /* Sélecteur corrigé pour que la couleur s'applique au root */
+    /* Dans la media query iOS, trouve cette section et REMPLACE : */
+
     html:has(body.dark-mode) {
-        background-color: #1e1e2e !important;
+        background-color: #1a1a2e !important; /* ✅ Même couleur que le footer */
     }
-    
+
     body.dark-mode {
-        background-color: #1e1e2e !important;
+        background-color: #1e1e2e !important; /* ✅ Fond de l'app (plus clair) */
     }
     
     /* Le fond global passe en sombre */
