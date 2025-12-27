@@ -3553,6 +3553,9 @@
                 monthlyTrendChart.destroy();
             }
             
+            // ✅ VÉRIFIER SI LE GRAPHIQUE EST VIDE
+            const hasMonthlyData = monthlyTrendData.total && monthlyTrendData.total.some(val => val > 0);
+            
             // Préparer les datasets
             const datasets = [];
             
@@ -3565,7 +3568,6 @@
                     backgroundColor: 'rgba(102, 126, 234, 0.1)',
                     borderWidth: 3,
                     fill: true,
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',  // ✅ Couleur de remplissage transparente
                     tension: 0,
                     pointRadius: 5,
                     pointHoverRadius: 7,
@@ -3587,7 +3589,7 @@
                         label: meta.displayName,
                         data: monthlyTrendData.categories[categoryKey],
                         borderColor: color,
-                        backgroundColor: color + '20', // Ajoute transparence
+                        backgroundColor: color + '20',
                         borderWidth: 2,
                         fill: true,
                         tension: 0,
@@ -3609,10 +3611,12 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    // ✅ DÉSACTIVER l'interactivité si le graphique est vide
+                    events: hasMonthlyData ? ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'] : [],
                     interaction: {
                         mode: 'nearest',
                         intersect: false,
-                        axis: 'x' // ✅ Ajoute ceci
+                        axis: 'x'
                     },
                     plugins: {
                         legend: {
@@ -3625,6 +3629,8 @@
                             }
                         },
                         tooltip: {
+                            // ✅ Désactiver tooltip si vide
+                            enabled: hasMonthlyData,
                             callbacks: {
                                 label: function(context) {
                                     return `${context.dataset.label}: ${formatAmount(context.parsed.y, 2, true)}`;
@@ -3657,6 +3663,8 @@
                 }
             });
         }
+
+
 
 
         /**
