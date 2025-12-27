@@ -4562,6 +4562,19 @@
             if (expensesDetails && expensesDetails.style.display !== 'none') {
                 loadExpensesBreakdown();
             }
+            
+            // ✅ Mettre à jour les graphiques
+            updateDisplay();
+            updateChart();
+            updateChartIndicators();
+            
+            // ✅ Mettre à jour le graphique d'évolution mensuelle
+            if (typeof loadMonthlyTrendChart === 'function') {
+                loadMonthlyTrendChart();
+            }
+            
+            // ✅ Sauvegarder le mois sélectionné
+            saveUserData();
         }
 
 
