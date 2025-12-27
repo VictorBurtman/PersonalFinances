@@ -2889,6 +2889,8 @@
             const commonOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
+                // ✅ DÉSACTIVER l'interactivité si graphique vide
+                events: isEmpty ? [] : ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
                 layout: {
                     padding: {
                         bottom: 20
@@ -2923,6 +2925,9 @@
                             }
                         },
                         onClick: function(e, legendItem, legend) {
+                            // ✅ Ne rien faire si le graphique est vide
+                            if (isEmpty) return;
+                            
                             const label = sortedLabels[legendItem.index];
                             hiddenItems[label] = !hiddenItems[label];
                             updateChart();
@@ -2952,6 +2957,8 @@
                     }
                 }
             };
+
+
 
             // Options spécifiques
             let finalOptions;
