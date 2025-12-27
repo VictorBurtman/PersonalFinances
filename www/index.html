@@ -14,8 +14,8 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#ffffff">
     <meta name="theme-color" content="#1e1e2e" media="(prefers-color-scheme: dark)">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Finances">
     
     <!-- Icons pour iOS -->
@@ -3184,96 +3184,120 @@
          * Ajouter les sparklines dans chaque section de catégorie
          */
         async function addCategorySparklines() {
-            // Récupérer les 6 derniers mois de données pour chaque catégorie
-            const monthlyData = await getCategoryMonthlyData(6);
-            
-            // Pour chaque catégorie (sauf income)
-            Object.keys(expenses).forEach(categoryKey => {
-                if (categoryKey === 'income') return;
+            try {
+                // Récupérer les 6 derniers mois de données pour chaque catégorie
+                const monthlyData = await getCategoryMonthlyData(6);
                 
-                const categorySection = document.getElementById(`category-${categoryKey}`);
-                if (!categorySection) return;
-                
-                const categoryData = monthlyData[categoryKey] || [];
-                
-                // Vérifier si le sparkline existe déjà
-                let sparklineContainer = categorySection.querySelector('.category-sparkline-container');
-                
-                if (!sparklineContainer) {
-                    // Créer le conteneur pour le sparkline
-                    sparklineContainer = document.createElement('div');
-                    sparklineContainer.className = 'category-sparkline-container';
-                    sparklineContainer.onclick = () => openCategoryDetail(categoryKey, categoryData);
-                    sparklineContainer.style.cssText = `
-                        height: auto;
-                        margin: 10px 0;
-                        cursor: pointer;
-                        border-radius: 8px;
-                        padding: 8px;
-                        background: rgba(102, 126, 234, 0.05);
-                        transition: all 0.3s ease;
-                        overflow: hidden;
-                    `;
+                // Pour chaque catégorie (sauf income)
+                Object.keys(expenses).forEach(categoryKey => {
+                    if (categoryKey === 'income') return;
                     
-                    sparklineContainer.innerHTML = `
-                        <div style="font-size: 0.75em; color: #999; margin-bottom: 4px;" data-translate="last6Months">6 derniers mois</div>
-                        <div style="height: 40px; width: 100%; position: relative;">
-                            <canvas id="sparkline-${categoryKey}"></canvas>
-                        </div>
-                    `;
-                    
-                    // Insérer après le titre de la catégorie
-                    const categoryTitle = categorySection.querySelector('.category-title');
-                    if (categoryTitle) {
-                        categoryTitle.after(sparklineContainer);
+                    try {
+                        const categorySection = document.getElementById(`category-${categoryKey}`);
+                        if (!categorySection) return;
+                        
+                        const categoryData = monthlyData[categoryKey] || [];
+                        
+                        // Vérifier si le sparkline existe déjà
+                        let sparklineContainer = categorySection.querySelector('.category-sparkline-container');
+                        
+                        if (!sparklineContainer) {
+                            // Créer le conteneur pour le sparkline
+                            sparklineContainer = document.createElement('div');
+                            sparklineContainer.className = 'category-sparkline-container';
+                            sparklineContainer.onclick = () => openCategoryDetail(categoryKey, categoryData);
+                            sparklineContainer.style.cssText = `
+                                height: auto;
+                                margin: 10px 0;
+                                cursor: pointer;
+                                border-radius: 8px;
+                                padding: 8px;
+                                background: rgba(102, 126, 234, 0.05);
+                                transition: all 0.3s ease;
+                                overflow: hidden;
+                            `;
+                            
+                            sparklineContainer.innerHTML = `
+                                <div style="font-size: 0.75em; color: #999; margin-bottom: 4px;" data-translate="last6Months">6 derniers mois</div>
+                                <div style="height: 40px; width: 100%; position: relative;">
+                                    <canvas id="sparkline-${categoryKey}"></canvas>
+                                </div>
+                            `;
+                            
+                            // Insérer après le titre de la catégorie
+                            const categoryTitle = categorySection.querySelector('.category-title');
+                            if (categoryTitle) {
+                                categoryTitle.after(sparklineContainer);
+                            }
+                        }
+                        
+                        // Créer le mini-graphique sparkline
+                        setTimeout(() => {
+                            try {
+                                createSparkline(categoryKey, categoryData);
+                            } catch (err) {
+                                // Ignorer les erreurs de création de sparkline
+                            }
+                        }, 50);
+                        
+                    } catch (err) {
+                        // Ignorer les erreurs individuelles de catégorie
                     }
-                }
-                
-                // Créer le mini-graphique sparkline
-                setTimeout(() => createSparkline(categoryKey, categoryData), 50);
-            });
+                });
+            } catch (err) {
+                // Ignorer les erreurs globales de sparklines
+            }
         }
+
 
         /**
          * Créer un mini-graphique sparkline
          */
         function createSparkline(categoryKey, data) {
-            const canvas = document.getElementById(`sparkline-${categoryKey}`);
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            const color = categoryBaseColors[categoryKey] || '#667eea';
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map((_, i) => ''),
-                    datasets: [{
-                        data: data,
-                        borderColor: color,
-                        backgroundColor: color + '20',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
-                        pointHoverRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false }
+            try {
+                const canvas = document.getElementById(`sparkline-${categoryKey}`);
+                if (!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                
+                const color = categoryBaseColors[categoryKey] || '#667eea';
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map((_, i) => ''),
+                        datasets: [{
+                            data: data,
+                            borderColor: color,
+                            backgroundColor: color + '20',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 0
+                        }]
                     },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    },
-                    interaction: { mode: null }
-                }
-            });
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false }
+                        },
+                        interaction: { mode: null }
+                    }
+                });
+            } catch (err) {
+                // Ignorer les erreurs de création de sparkline
+            }
         }
+
+
 
         /**
          * Ouvrir le modal détaillé d'une catégorie
