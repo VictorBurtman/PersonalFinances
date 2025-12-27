@@ -1035,7 +1035,7 @@ body:not(.dark-mode) .category-title {
 }
 
 body.dark-mode .expense-item {
-    background: #16161e; /* ✅ Plus sombre pour mieux contraster avec #1e1e2e */
+    background: #1b1b2e; /* ✅ Intermédiaire - ni trop sombre ni trop clair */
     color: #e0e0e0;
     border: 1px solid rgba(255, 255, 255, 0.05); /* ✅ Légère bordure pour plus de définition */
 }
@@ -1282,8 +1282,9 @@ body.dark-mode .category-btn:hover {
 }
 
 body.dark-mode .transactions-section {
-    background: #2a2a3e;
+    background: transparent; /* ✅ Invisible - on voit juste les cartes */
     color: #e0e0e0;
+    padding: 0; /* ✅ Optionnel - retire le padding si tu veux */
 }
 
 .section-title-trans {
