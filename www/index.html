@@ -1261,9 +1261,8 @@
             
             // Récupérer les boutons
             const signInBtn = document.getElementById('signInBtn');
-            const signUpBtn = document.getElementById('signUpBtn');
 
-            if (!signInBtn || !signUpBtn) {
+            if (!signInBtn) {
                 console.error('❌ Boutons introuvables');
                 return;
             }
@@ -1273,7 +1272,6 @@
 
             // Désactiver et afficher loading
             signInBtn.disabled = true;
-            signUpBtn.disabled = true;
 
             const lang = localStorage.getItem('language') || 'en';
             const loadingText = translations[lang]?.loading || 'Loading...';
@@ -1285,7 +1283,6 @@
             if (!result) {                
                 // Réactiver les boutons
                 signInBtn.disabled = false;
-                signUpBtn.disabled = false;
                 signInBtn.innerHTML = originalSignInText;
             } else {
                 // Connexion réussie, l'app va se recharger via onAuthStateChanged
@@ -1328,8 +1325,6 @@
                 if (!result) {
                     
                     signInBtn.disabled = false;
-                    signUpBtn.disabled = false;
-                    signUpBtn.innerHTML = originalSignUpText;
                 } else {
                     console.log('✅ Inscription réussie, l\'app va se recharger');
                 }
@@ -1338,8 +1333,6 @@
                 console.error('❌ Erreur handleSignUp:', error);
                 
                 signInBtn.disabled = false;
-                signUpBtn.disabled = false;
-                signUpBtn.innerHTML = originalSignUpText;
             }
         }
 
