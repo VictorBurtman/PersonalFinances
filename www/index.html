@@ -7924,9 +7924,8 @@
                 
                 if (window.chartButtonRetries < 10) {
                     setTimeout(attachChartButtonListeners, 200);
-                } else {
-                    console.warn('❌ Chart buttons not found after 10 retries. Stopping.');
                 }
+                // ✅ Pas de message d'erreur - c'est normal si les boutons n'existent pas
                 return;
             }
             
