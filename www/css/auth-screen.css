@@ -1,82 +1,22 @@
-/* auth-screen.css
-   Styles pour l'écran de connexion avec support dark mode et RTL */
+/* auth-screen.css - Design moderne Dark Mode uniquement */
 
 /* ============================================
-   VARIABLES CSS
+   VARIABLES CSS - DARK MODE UNIQUEMENT
    ============================================ */
 :root {
-    /* Light mode colors */
-    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --auth-card-bg: white;
-    --auth-text: #333;
-    --auth-text-secondary: #666;
-    --auth-input-bg: #f8f9fa;
-    --auth-input-border: #dee2e6;
+    --auth-bg: #1a1a2e;
+    --auth-bg-secondary: #16213e;
+    --auth-card-bg: rgba(30, 30, 46, 0.8);
+    --auth-input-bg: rgba(42, 42, 62, 0.6);
+    --auth-input-border: rgba(102, 126, 234, 0.2);
     --auth-input-focus: #667eea;
-    --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --auth-btn-secondary: #6c757d;
-    --auth-link: #667eea;
-    --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-/* Dark mode colors */
-body.dark-mode {
-    --auth-bg: linear-gradient(135deg, #2d3561 0%, #3b2667 100%);
-    --auth-card-bg: #1e1e2e;
     --auth-text: #e0e0e0;
     --auth-text-secondary: #a0a0a0;
-    --auth-input-bg: #2a2a3e;
-    --auth-input-border: #3a3a4e;
-    --auth-input-focus: #667eea;
     --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --auth-btn-secondary: #4a4a5e;
+    --auth-btn-secondary: rgba(108, 117, 125, 0.3);
     --auth-link: #9ca3ff;
     --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-/* ============================================
-   FORCE LIGHT MODE SUR AUTH SCREEN
-   ============================================ */
-#auth-screen {
-    /* Force les couleurs light mode */
-    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    --auth-card-bg: white !important;
-    --auth-text: #333 !important;
-    --auth-text-secondary: #666 !important;
-    --auth-input-bg: #f8f9fa !important;
-    --auth-input-border: #dee2e6 !important;
-    --auth-input-focus: #667eea !important;
-    --auth-btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    --auth-btn-secondary: #6c757d !important;
-    --auth-link: #667eea !important;
-    --auth-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Désactiver dark mode sur auth-screen spécifiquement */
-body.dark-mode #auth-screen {
-    --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    --auth-card-bg: white !important;
-    --auth-text: #333 !important;
-    --auth-text-secondary: #666 !important;
-    --auth-input-bg: #f8f9fa !important;
-    --auth-input-border: #dee2e6 !important;
-}
-
-body.dark-mode #auth-screen .auth-container {
-    background: white !important;
-    color: #333 !important;
-}
-
-body.dark-mode #auth-screen input {
-    background: #f8f9fa !important;
-    color: #333 !important;
-    border-color: #dee2e6 !important;
-}
-
-body.dark-mode #auth-screen .language-selector button {
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
+    --auth-pattern-bg: #DFDBE5;
 }
 
 /* ============================================
@@ -94,23 +34,41 @@ body.dark-mode #auth-screen .language-selector button {
     justify-content: center;
     z-index: 9999;
     padding: 20px;
+    overflow: hidden;
+}
+
+/* Pattern décoratif en bas */
+#auth-screen::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 35%;
+    background-color: #DFDBE5;
+    background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M81.28 88H68.413l19.298 19.298L81.28 88zm2.107 0h13.226L90 107.838 83.387 88zm15.334 0h12.866l-19.298 19.298L98.72 88zm-32.927-2.207L73.586 78h32.827l.5.5 7.294 7.293L115.414 87l-24.707 24.707-.707.707L64.586 87l1.207-1.207zm2.62.207L74 80.414 79.586 86H68.414zm16 0L90 80.414 95.586 86H84.414zm16 0L106 80.414 111.586 86h-11.172zm-8-6h11.173L98 85.586 92.414 80zM82 85.586L87.586 80H76.414L82 85.586zM17.414 0L.707 16.707 0 17.414V0h17.414zM4.28 0L0 12.838V0h4.28zm10.306 0L2.288 12.298 6.388 0h8.198zM180 17.414L162.586 0H180v17.414zM165.414 0l12.298 12.298L173.612 0h-8.198zM180 12.838L175.72 0H180v12.838zM0 163h16.413l.5.5 7.294 7.293L25.414 172l-8 8H0v-17zm0 10h6.613l-2.334 7H0v-7zm14.586 7l7-7H8.72l-2.333 7h8.2zM0 165.414L5.586 171H0v-5.586zM10.414 171L16 165.414 21.586 171H10.414zm-8-6h11.172L8 170.586 2.414 165zM180 163h-16.413l-7.794 7.793-1.207 1.207 8 8H180v-17zm-14.586 17l-7-7h12.865l2.333 7h-8.2zM180 173h-6.613l2.334 7H180v-7zm-21.586-2l5.586-5.586 5.586 5.586h-11.172zM180 165.414L174.414 171H180v-5.586zm-8 5.172l5.586-5.586h-11.172l5.586 5.586zM152.933 25.653l1.414 1.414-33.94 33.942-1.416-1.416 33.943-33.94zm1.414 127.28l-1.414 1.414-33.942-33.94 1.416-1.416 33.94 33.943zm-127.28 1.414l-1.414-1.414 33.94-33.942 1.416 1.416-33.943 33.94zm-1.414-127.28l1.414-1.414 33.942 33.94-1.416 1.416-33.94-33.943zM0 85c2.21 0 4 1.79 4 4s-1.79 4-4 4v-8zm180 0c-2.21 0-4 1.79-4 4s1.79 4 4 4v-8zM94 0c0 2.21-1.79 4-4 4s-4-1.79-4-4h8zm0 180c0-2.21-1.79-4-4-4s-4 1.79-4 4h8z' fill='%239C92AC' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    z-index: 0;
 }
 
 .auth-container {
     background: var(--auth-card-bg);
-    border-radius: 20px;
-    padding: 40px;
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 50px 40px;
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     box-shadow: var(--auth-shadow);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    position: relative;
+    z-index: 1;
 }
 
 /* Animation d'entrée */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(-30px);
     }
     to {
         opacity: 1;
@@ -119,25 +77,41 @@ body.dark-mode #auth-screen .language-selector button {
 }
 
 .auth-container {
-    animation: fadeIn 0.4s ease;
+    animation: fadeIn 0.5s ease;
 }
 
 /* ============================================
-   TITRE ET SOUS-TITRE
+   LOGO ET TITRE
    ============================================ */
+.auth-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.auth-logo img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+}
+
 .auth-container h2 {
     text-align: center;
     color: var(--auth-text);
     font-size: 28px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .auth-container p {
     text-align: center;
     color: var(--auth-text-secondary);
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     font-size: 14px;
+    line-height: 1.5;
 }
 
 /* ============================================
@@ -146,41 +120,36 @@ body.dark-mode #auth-screen .language-selector button {
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
 }
 
 .auth-form input[type="email"],
 .auth-form input[type="password"],
-.auth-form input[type="text"]#password {  /* ✅ Ajoute cette ligne */
+.auth-form input[type="text"]#password {
     width: 100%;
-    padding: 12px 15px;
-    padding-right: 45px; /* ✅ Espace pour le bouton œil */
-    border: 1px solid var(--auth-input-border);
-    border-radius: 10px;
-    font-size: 14px;
+    padding: 16px 18px;
+    padding-right: 50px;
+    border: 1.5px solid var(--auth-input-border);
+    border-radius: 14px;
+    font-size: 15px;
     background: var(--auth-input-bg);
+    backdrop-filter: blur(5px);
     color: var(--auth-text);
     transition: all 0.3s ease;
 }
 
 .auth-form input[type="email"]:focus,
 .auth-form input[type="password"]:focus,
-.auth-form input[type="text"]#password:focus {  /* ✅ Ajoute cette ligne */
+.auth-form input[type="text"]#password:focus {
     outline: none;
     border-color: var(--auth-input-focus);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.auth-form input[type="email"]:focus,
-.auth-form input[type="password"]:focus {
-    outline: none;
-    border-color: var(--auth-input-focus);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(42, 42, 62, 0.8);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
 .auth-form input::placeholder {
     color: var(--auth-text-secondary);
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 /* ============================================
@@ -189,25 +158,22 @@ body.dark-mode #auth-screen .language-selector button {
 .remember-me-container {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 10px 0;
+    gap: 10px;
+    margin: 5px 0;
     user-select: none;
 }
 
 .remember-me-container input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
     accent-color: #667eea;
 }
 
 .remember-me-container label {
-    color: var(--auth-text);
+    color: var(--auth-text-secondary);
     font-size: 14px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 /* ============================================
@@ -215,54 +181,59 @@ body.dark-mode #auth-screen .language-selector button {
    ============================================ */
 .auth-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    height: auto !important; /* ✅ Ajoute cette ligne */
-    min-height: auto !important; /* ✅ Et celle-ci */
+    gap: 12px;
+    margin-top: 25px;
 }
 
 .auth-buttons button {
     flex: 1;
-    padding: 12px;
+    padding: 16px;
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    letter-spacing: 0.3px;
 }
 
 #signInBtn {
     background: var(--auth-btn-primary);
     color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 #signUpBtn {
     background: var(--auth-btn-secondary);
-    color: white;
+    color: var(--auth-text);
+    border: 1.5px solid rgba(102, 126, 234, 0.2);
 }
 
 .auth-buttons button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+#signUpBtn:hover:not(:disabled) {
+    background: rgba(108, 117, 125, 0.4);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.auth-buttons button:active:not(:disabled) {
+    transform: translateY(-1px);
 }
 
 .auth-buttons button:disabled {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* Loading state */
-.auth-buttons button:disabled {
-    position: relative;
-}
-
+/* Loading spinner */
 .auth-buttons button:disabled::after {
     content: '';
     position: absolute;
-    width: 16px;
-    height: 16px;
-    margin: auto;
+    width: 18px;
+    height: 18px;
     border: 2px solid transparent;
     border-radius: 50%;
     border-top-color: white;
@@ -277,11 +248,11 @@ body.dark-mode #auth-screen .language-selector button {
 }
 
 /* ============================================
-   SWITCH MODE (Sign In / Sign Up)
+   SWITCH MODE
    ============================================ */
 .auth-switch {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     color: var(--auth-text-secondary);
     font-size: 14px;
 }
@@ -291,10 +262,11 @@ body.dark-mode #auth-screen .language-selector button {
     text-decoration: none;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .auth-switch a:hover {
+    color: #667eea;
     text-decoration: underline;
 }
 
@@ -302,77 +274,68 @@ body.dark-mode #auth-screen .language-selector button {
    MESSAGES D'ERREUR
    ============================================ */
 .auth-error {
-    background: #fee;
-    border: 1px solid #fcc;
-    color: #c33;
-    padding: 10px 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    background: rgba(220, 53, 69, 0.15);
+    border: 1.5px solid rgba(220, 53, 69, 0.3);
+    color: #ff6b6b;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     font-size: 14px;
     text-align: center;
     animation: shake 0.5s ease;
 }
 
-body.dark-mode .auth-error {
-    background: #4a2020;
-    border-color: #6a3030;
-    color: #ffaaaa;
-}
-
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
 }
 
 /* ============================================
-   SÉLECTEUR DE LANGUE (OPTIONNEL)
+   SÉLECTEUR DE LANGUE
    ============================================ */
 .language-selector {
     position: absolute;
-    top: 80px;  /* ← Change de 20px à 80px */
-    right: 20px !important;
-    left: auto !important;
+    top: 30px;
+    right: 30px;
     display: flex;
-    gap: 5px;
-    direction: ltr !important;
-    z-index: 1000;
+    gap: 8px;
+    direction: ltr;
+    z-index: 10;
 }
 
-
-/* ✅ Force explicitement même en mode RTL */
 html[dir="rtl"] .language-selector {
-    right: 20px !important;
-    left: auto !important;
+    right: 30px;
+    left: auto;
 }
 
 .language-selector button {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
+    background: rgba(102, 126, 234, 0.15);
+    border: 1.5px solid rgba(102, 126, 234, 0.25);
+    color: var(--auth-text);
+    padding: 8px 14px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 500;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .language-selector button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(102, 126, 234, 0.25);
+    border-color: rgba(102, 126, 234, 0.4);
 }
 
 .language-selector button.active {
-    background: white;
-    color: #667eea;
-}
-
-body.dark-mode .language-selector button.active {
-    background: var(--auth-card-bg);
-    color: var(--auth-link);
+    background: var(--auth-btn-primary);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 /* ============================================
-   SUPPORT RTL (Right-to-Left)
+   SUPPORT RTL
    ============================================ */
 html[dir="rtl"] .auth-container {
     direction: rtl;
@@ -380,7 +343,6 @@ html[dir="rtl"] .auth-container {
 
 html[dir="rtl"] .auth-form input {
     text-align: right;
-    direction: rtl;
 }
 
 html[dir="rtl"] .remember-me-container {
@@ -394,126 +356,53 @@ html[dir="rtl"] .auth-buttons {
 /* ============================================
    RESPONSIVE
    ============================================ */
-
-/* Petits écrans (< 400px) - Ex: Pixel 4a */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+    #auth-screen {
+        padding: 15px;
+    }
+    
     .auth-container {
-        padding: 25px 15px !important;
+        padding: 35px 25px;
+        border-radius: 25px;
+    }
+    
+    .auth-logo img {
+        width: 70px;
+        height: 70px;
     }
     
     .auth-container h2 {
-        font-size: 22px !important;
+        font-size: 24px;
     }
     
     .auth-buttons {
-        flex-direction: column !important;
-        gap: 0 !important; /* ✅ Désactive le gap qui ne fonctionne pas */
-        height: auto !important;
-        min-height: auto !important;
+        flex-direction: column;
+        gap: 12px;
     }
     
     .auth-buttons button {
-        width: 100% !important;
-        margin: 12px 0 !important; /* ✅ Force l'espacement avec margin */
-        padding: 16px !important;
-        flex: none !important;
-    }
-    
-    .auth-buttons button:first-child {
-        margin-top: 0 !important; /* ✅ Pas de marge en haut du premier bouton */
-    }
-    
-    .auth-buttons button:last-child {
-        margin-bottom: 0 !important; /* ✅ Pas de marge en bas du dernier bouton */
+        width: 100%;
+        padding: 18px;
     }
     
     .language-selector {
-        top: 60px !important;
-        right: 50% !important;  /* au lieu de 10px */
-        transform: translateX(50%) !important;  /* ajoute cette ligne */
-        gap: 0 !important; /* ✅ Désactive le gap */
+        top: 20px;
+        right: 20px;
+        gap: 6px;
     }
     
     .language-selector button {
-        padding: 8px 14px !important;
-        font-size: 13px !important;
-        margin: 0 6px !important; /* ✅ Force l'espacement avec margin */
-    }
-    
-    .language-selector button:first-child {
-        margin-left: 0 !important; /* ✅ Pas de marge à gauche du premier */
-    }
-    
-    .language-selector button:last-child {
-        margin-right: 0 !important; /* ✅ Pas de marge à droite du dernier */
+        padding: 7px 11px;
+        font-size: 12px;
     }
 }
 
-/* Écrans moyens (401px - 480px) */
-@media (min-width: 401px) and (max-width: 480px) {
+@media (max-width: 360px) {
     .auth-container {
-        padding: 30px 20px !important;
+        padding: 30px 20px;
     }
     
     .auth-container h2 {
-        font-size: 24px !important;
+        font-size: 22px;
     }
-    
-    .auth-buttons {
-        flex-direction: column !important;
-        gap: 0 !important; /* ✅ Désactive le gap */
-        height: auto !important;
-        min-height: auto !important;
-    }
-    
-    .auth-buttons button {
-        width: 100% !important;
-        margin: 10px 0 !important; /* ✅ Force l'espacement avec margin */
-        padding: 14px !important;
-        flex: none !important;
-    }
-    
-    .auth-buttons button:first-child {
-        margin-top: 0 !important;
-    }
-    
-    .auth-buttons button:last-child {
-        margin-bottom: 0 !important;
-    }
-    
-    .language-selector {
-        top: 60px !important;
-        right: 50% !important;  /* au lieu de 10px */
-        transform: translateX(50%) !important;  /* ajoute cette ligne */
-        gap: 0 !important; /* ✅ Désactive le gap */
-    }
-    
-    .language-selector button {
-        padding: 7px 11px !important;
-        font-size: 13px !important;
-        margin: 0 5px !important; /* ✅ Force l'espacement avec margin */
-    }
-    
-    .language-selector button:first-child {
-        margin-left: 0 !important;
-    }
-    
-    .language-selector button:last-child {
-        margin-right: 0 !important;
-    }
-}
-
-/* ============================================
-   TRANSITIONS DARK MODE
-   ============================================ */
-body,
-#auth-screen,
-.auth-container,
-.auth-form input,
-.auth-buttons button,
-.auth-switch a {
-    transition: background-color 0.3s ease, 
-                color 0.3s ease, 
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
 }
