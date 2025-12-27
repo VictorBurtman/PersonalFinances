@@ -1298,6 +1298,22 @@ async function saveManualTransaction(event) {
         
         // Reload transactions
         await loadTransactions();
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
         
     } catch (error) {
         // Hide loading overlay
@@ -1974,6 +1990,22 @@ async function syncAllTransactions() {
             const t = translations[currentLanguage] || translations['en'];
             showToast(t.syncCompleted.replace('{count}', totalTransactions), 'success');
             await loadTransactions();
+            // ✅ Mettre à jour les graphiques du Budget
+            if (typeof loadRealSpendingForChart === 'function') {
+                await loadRealSpendingForChart();
+            }
+            if (typeof loadRealSpending === 'function') {
+                await loadRealSpending();
+            }
+            if (typeof updateDisplay === 'function') {
+                updateDisplay();
+            }
+            if (typeof updateChartIndicators === 'function') {
+                updateChartIndicators();
+            }
+            if (typeof loadMonthlyTrendChart === 'function') {
+                loadMonthlyTrendChart();
+            }
         }
     } catch (error) {
         console.error('Error syncing:', error);
@@ -2012,6 +2044,22 @@ async function syncTransactions() {
         updateSyncStatus(new Date(), result.data.transactionCount);
         
         await loadTransactions();
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
     } catch (error) {
         console.error('Error syncing:', error);
         showTransactionAlert('Error: ' + error.message, 'error');
@@ -2067,6 +2115,23 @@ async function autoLabelAll() {
         const scrollPosition = dashboard ? dashboard.scrollTop : 0;
         
         await loadTransactions();
+
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
         
         // ✅ Restaurer la position du scroll
         if (dashboard) {
@@ -2494,6 +2559,22 @@ async function excludeTransaction(transactionId, excludeSimilar) {
         }
         
         await loadTransactions();
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error excluding transaction:', error);
@@ -2647,6 +2728,22 @@ async function restoreTransaction(transactionId) {
         
         // Refresh main transactions list
         await loadTransactions();
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error restoring transaction:', error);
@@ -2686,6 +2783,22 @@ async function restoreAllTransactions() {
         // Refresh
         await openExcludedTransactionsModal();
         await loadTransactions();
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
     } catch (error) {
         hideLoadingOverlay();
         console.error('Error restoring all:', error);
