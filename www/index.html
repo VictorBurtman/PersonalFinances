@@ -470,8 +470,8 @@
                     </div>
 
                     <!-- Monthly Trend Chart -->
-                    <div class="chart-container" style="margin-top: 20px;">
-                        <h3 style="font-size: 1.1em; margin-bottom: 15px; color: #333;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
+                    <div class="chart-container" id="monthlyTrendContainer" style="margin-top: 20px;">
+                        <h3 id="monthlyTrendTitle" style="font-size: 1.1em; margin-bottom: 15px; text-align: center;" data-translate="monthlySpendingTrend">Monthly Spending Trend</h3>
                         <div style="position: relative; height: 300px;">
                             <canvas id="monthlyTrendChart"></canvas>
                         </div>
@@ -3561,8 +3561,21 @@
             // ✅ VÉRIFIER SI LE GRAPHIQUE EST VIDE
             const hasMonthlyData = monthlyTrendData.total && monthlyTrendData.total.some(val => val > 0);
             
+            // ✅ GRISER LE TITRE ET LE CONTENEUR SI VIDE
+            const titleElement = document.getElementById('monthlyTrendTitle');
+            const containerElement = document.getElementById('monthlyTrendContainer');
+            
+            if (!hasMonthlyData) {
+                if (titleElement) titleElement.style.opacity = '0.3';
+                if (containerElement) containerElement.style.opacity = '0.5';
+            } else {
+                if (titleElement) titleElement.style.opacity = '1';
+                if (containerElement) containerElement.style.opacity = '1';
+            }
+            
             // ✅ Récupérer la traduction
-            const t = translations[currentLanguage] || translations['en'];
+            const userLang = localStorage.getItem('language') || 'en';
+            const t = translations[userLang] || translations['en'];
             const noExpensesText = t.noExpensesYet || "No expenses yet";
             
             // Préparer les datasets
@@ -3627,11 +3640,10 @@
             }
             
             // ✅ PLUGIN TEXTE CENTRÉ pour graphique vide
-            // --- 5. PLUGIN TEXTE CENTRÉ ---
             const centerTextPlugin = {
-                id: 'centerText',
+                id: 'centerTextMonthly',
                 afterDraw: function(chart) {
-                    if (isEmpty && currentChartType === 'doughnut') { // ✅ Seulement pour pie chart
+                    if (!hasMonthlyData) {
                         const ctx = chart.ctx;
                         const width = chart.width;
                         const height = chart.height;
@@ -3641,8 +3653,8 @@
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
-                        // ✅ Remonter le texte pour centrer dans le cercle (pas dans tout le canvas)
-                        ctx.fillText(noExpensesText, width / 2, (height / 2) - 30);
+                        // ✅ Centré verticalement
+                        ctx.fillText(noExpensesText, width / 2, height / 2);
                         ctx.restore();
                     }
                 }
@@ -3707,6 +3719,8 @@
                 plugins: [centerTextPlugin] // ✅ Ajouter le plugin
             });
         }
+
+
 
         /**
          * Toggle du dropdown de sélection de catégories
