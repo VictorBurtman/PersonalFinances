@@ -2869,7 +2869,7 @@
             const centerTextPlugin = {
                 id: 'centerText',
                 afterDraw: function(chart) {
-                    if (isEmpty && currentChartType === 'doughnut') {
+                    if (isEmpty) {
                         const ctx = chart.ctx;
                         const width = chart.width;
                         const height = chart.height;
@@ -2879,7 +2879,10 @@
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         ctx.fillStyle = isDarkMode ? "#6c757d" : "#adb5bd";
-                        ctx.fillText(noExpensesText, width / 2, (height / 2) - 30);
+                        
+                        // ✅ Ajuster la hauteur selon le type de graphique
+                        const yOffset = currentChartType === 'doughnut' ? -10 : 0;
+                        ctx.fillText(noExpensesText, width / 2, (height / 2) + yOffset);
                         ctx.restore();
                     }
                 }
