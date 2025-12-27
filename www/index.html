@@ -2149,7 +2149,17 @@
                 updateChartButtonsState();
                 loadMonthlyTrendChart();
                 populateMonthDropdown();
-                loadRealSpending();
+                // ✅ Charger les données selon le mode
+                if (isRealSpendingMode) {
+                    loadRealSpending();
+                    loadRealSpendingForChart().then(() => {
+                        // Mettre à jour les indicateurs APRÈS le chargement des données
+                        updateChartIndicators();
+                    });
+                } else {
+                    // En mode Estimé, mettre à jour directement
+                    updateChartIndicators();
+                }
                 
                 // ✅ Forcer l'affichage de l'onglet Budget au démarrage
                 setTimeout(() => {
