@@ -2229,11 +2229,14 @@ async function labelTransaction(transactionId, category) {
         await loadTransactions();
 
         // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
         if (typeof updateDisplay === 'function') {
             updateDisplay();
-        }
-        if (typeof updateChart === 'function') {
-            updateChart();
         }
         if (typeof updateChartIndicators === 'function') {
             updateChartIndicators();
@@ -2308,11 +2311,14 @@ async function unlabelTransaction(transactionId, isUnique = false) {
         await loadTransactions();
 
         // ✅ Mettre à jour les graphiques du Budget
+        if (typeof loadRealSpendingForChart === 'function') {
+            await loadRealSpendingForChart();
+        }
+        if (typeof loadRealSpending === 'function') {
+            await loadRealSpending();
+        }
         if (typeof updateDisplay === 'function') {
             updateDisplay();
-        }
-        if (typeof updateChart === 'function') {
-            updateChart();
         }
         if (typeof updateChartIndicators === 'function') {
             updateChartIndicators();
