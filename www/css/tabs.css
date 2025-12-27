@@ -912,6 +912,13 @@ body.dark-mode .chart-dot.active {
     background: #9ca3ff;
 }
 
+/* Dots désactivés quand pas de données */
+.chart-dot.disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
 .color-btn-mini {
     background: rgba(102, 126, 234, 0.1);
     border: none;
