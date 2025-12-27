@@ -55,8 +55,8 @@
 }
 
 .auth-logo img {
-    width: 140px;
-    height: 140px;
+    width: 200px;
+    height: 200px;
     margin-bottom: 20px;
     filter: drop-shadow(0 8px 24px rgba(102, 126, 234, 0.4));
 }
