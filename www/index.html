@@ -7887,10 +7887,20 @@
             const toggleButtons = document.querySelectorAll('.chart-toggle-btn');
             
             if (toggleButtons.length === 0) {
-                console.warn('⚠️ No chart buttons found, retrying...');
-                setTimeout(attachChartButtonListeners, 200);
+                // ✅ Arrêter après 10 tentatives (2 secondes)
+                if (!window.chartButtonRetries) window.chartButtonRetries = 0;
+                window.chartButtonRetries++;
+                
+                if (window.chartButtonRetries < 10) {
+                    setTimeout(attachChartButtonListeners, 200);
+                } else {
+                    console.warn('❌ Chart buttons not found after 10 retries. Stopping.');
+                }
                 return;
             }
+            
+            // ✅ Reset counter si trouvé
+            window.chartButtonRetries = 0;
             
             toggleButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
