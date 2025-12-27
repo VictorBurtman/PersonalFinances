@@ -4628,8 +4628,9 @@
                 if (expensesArrow) expensesArrow.textContent = '▼';
             }
             
-            // Logique qui fonctionnait avant
+            // Logique selon le mode
             if (isRealSpendingMode) {
+                // ✅ MODE RÉEL : Charger les transactions labélisées
                 loadRealSpending();
                 loadRealSpendingForChart();
                 
@@ -4644,13 +4645,19 @@
                     loadExpensesBreakdown();
                 }
             } else {
-                // ✅ Mode Estimé : vider les labels de mois
+                // ✅ MODE ESTIMÉ : Vider realSpendingChartData pour éviter toute confusion
+                realSpendingChartData = {};
+                
+                // ✅ Vider les labels de mois
                 const incomeMonthLabel = document.getElementById('incomeMonth');
                 const expensesMonthLabel = document.getElementById('expensesMonth');
                 if (incomeMonthLabel) incomeMonthLabel.textContent = '';
                 if (expensesMonthLabel) expensesMonthLabel.textContent = '';
                 
+                // ✅ Mettre à jour l'affichage ET le graphique
                 updateDisplay();
+                updateChart();
+                updateChartIndicators();
                 
                 // ✅ Rafraîchir les breakdowns si les panneaux sont ouverts
                 const incomeDetails = document.getElementById('incomeDetails');
@@ -4663,10 +4670,10 @@
                     loadExpensesBreakdown();
                 }
             }
+            
+            // ✅ Mettre à jour le graphique d'évolution mensuelle
             loadMonthlyTrendChart();
         }
-
-
 
         // Garder pour compatibilité (au cas où c'est appelé ailleurs)
         function toggleBudgetMode() {
