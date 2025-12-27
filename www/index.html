@@ -2830,7 +2830,7 @@
 
             // --- 4. GESTION DE L'ÉTAT VIDE ---
             // ✅ Récupérer la langue directement depuis localStorage (plus fiable au chargement)
-            const userLang = localStorage.getItem('userLanguage') || 'en';
+            const userLang = localStorage.getItem('language') || 'en';
             const t = translations[userLang] || translations['en'];
             const noExpensesText = t.noExpensesYet || "No expenses yet";
             
