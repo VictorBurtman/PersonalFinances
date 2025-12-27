@@ -62,11 +62,11 @@ html, body {
 }
 
 body.dark-mode {
-    background: #1e1e2e; /* ✅ Prend la couleur de l'ancien footer - plus clair */
+    background: #1e1e2e; /* ✅ Fond de l'app */
 }
 
-body.dark-mode html {
-    background: #1e1e2e; /* ✅ Plus clair */
+html:has(body.dark-mode) {
+    background: #1a1a2e; /* ✅ Fond HTML - couleur du footer pour la safe area */
 }
 
 /* AppScreen prend toute la hauteur */
