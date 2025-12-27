@@ -7701,14 +7701,23 @@
 
         // ✅ Fonction helper pour vérifier s'il y a des dépenses
         function hasExpenses() {
-            return Object.keys(expenses).some(cat => {
-                if (cat === 'income') return false;
-                const items = expenses[cat]?.items || expenses[cat];
-                return Array.isArray(items) && items.length > 0 && items.some(item => {
-                    const amount = parseFloat(item.amount) || 0;
-                    return amount > 0;
-                });
+            let hasData = false;
+            
+            Object.keys(expenses).forEach(categoryKey => {
+                if (categoryKey === 'income') return;
+                
+                // expenses[categoryKey] est un tableau directement
+                if (Array.isArray(expenses[categoryKey])) {
+                    expenses[categoryKey].forEach(item => {
+                        const amount = parseFloat(item.amount) || 0;
+                        if (amount > 0) {
+                            hasData = true;
+                        }
+                    });
+                }
             });
+            
+            return hasData;
         }
 
         function initChartSwipe() {

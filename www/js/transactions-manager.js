@@ -2228,6 +2228,20 @@ async function labelTransaction(transactionId, category) {
 
         await loadTransactions();
 
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChart === 'function') {
+            updateChart();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
+
         // ✅ Restaurer la position du scroll
         if (dashboard) {
             setTimeout(() => {
@@ -2292,6 +2306,20 @@ async function unlabelTransaction(transactionId, isUnique = false) {
         const scrollPosition = dashboard ? dashboard.scrollTop : 0;
 
         await loadTransactions();
+
+        // ✅ Mettre à jour les graphiques du Budget
+        if (typeof updateDisplay === 'function') {
+            updateDisplay();
+        }
+        if (typeof updateChart === 'function') {
+            updateChart();
+        }
+        if (typeof updateChartIndicators === 'function') {
+            updateChartIndicators();
+        }
+        if (typeof loadMonthlyTrendChart === 'function') {
+            loadMonthlyTrendChart();
+        }
 
         // ✅ Restaurer la position du scroll
         if (dashboard) {
