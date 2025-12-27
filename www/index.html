@@ -4549,6 +4549,7 @@
         async function handleMonthChange() {
             if (isRealSpendingMode) {
                 await loadRealSpending();
+                await loadRealSpendingForChart(); // ✅ AJOUTER CETTE LIGNE
             }
             
             // Rafraîchir le breakdown si le panneau est ouvert
@@ -4563,9 +4564,8 @@
                 loadExpensesBreakdown();
             }
             
-            // ✅ Mettre à jour les graphiques
+            // ✅ Mettre à jour l'affichage et les indicateurs
             updateDisplay();
-            updateChart();
             updateChartIndicators();
             
             // ✅ Mettre à jour le graphique d'évolution mensuelle
@@ -4573,7 +4573,7 @@
                 loadMonthlyTrendChart();
             }
             
-            // ✅ Sauvegarder le mois sélectionné
+            // ✅ Sauvegarder le mois sélectionné (déjà fait dans loadRealSpending mais on le garde ici aussi)
             saveUserData();
         }
 
