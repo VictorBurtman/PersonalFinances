@@ -453,8 +453,8 @@
                         <!-- Indicateur de graphique + bouton couleurs -->
                         <div class="chart-header">
                             <div class="chart-indicators">
-                                <span class="chart-dot active" data-chart="doughnut"></span>
-                                <span class="chart-dot" data-chart="bar"></span>
+                                <span class="chart-dot active" data-chart="doughnut" style="opacity: 0.3; pointer-events: none;"></span>
+                                <span class="chart-dot" data-chart="bar" style="opacity: 0.3; pointer-events: none;"></span>
                             </div>
                             <button class="color-btn-mini" onclick="openColorEditor()" title="Customize colors">
                                 🎨
@@ -3023,7 +3023,8 @@
             if (totalAmountEl) {
                 totalAmountEl.textContent = formatAmount(displayTotal, 2, true);
             }
-
+            // ✅ Mettre à jour l'état des dots après chaque mise à jour du graphique
+        updateChartIndicators();
         }
 
         // ============================================
@@ -7702,7 +7703,11 @@
         function hasExpenses() {
             return Object.keys(expenses).some(cat => {
                 if (cat === 'income') return false;
-                return expenses[cat] && expenses[cat].items && expenses[cat].items.length > 0;
+                const items = expenses[cat]?.items || expenses[cat];
+                return Array.isArray(items) && items.length > 0 && items.some(item => {
+                    const amount = parseFloat(item.amount) || 0;
+                    return amount > 0;
+                });
             });
         }
 
@@ -7799,7 +7804,7 @@
                     dot.classList.remove('active');
                 }
                 
-                // ✅ Désactiver les dots s'il n'y a pas de données
+                // ✅ Activer/désactiver selon les données
                 if (!dataExists) {
                     dot.style.pointerEvents = 'none';
                     dot.style.opacity = '0.3';
@@ -7854,7 +7859,7 @@
         // Initialiser au chargement
         document.addEventListener('DOMContentLoaded', function() {
             initChartSwipe();
-            updateChartIndicators();
+            // ✅ Ne PAS appeler updateChartIndicators ici car les données ne sont pas encore chargées
         });
 
     </script>
