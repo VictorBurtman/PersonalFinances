@@ -2829,7 +2829,9 @@
             const sortedColors = indices.map(i => allBackgroundColors[i]);
 
             // --- 4. GESTION DE L'ÉTAT VIDE ---
-            const t = translations[currentLanguage] || translations['en'];
+            // ✅ Récupérer la langue directement depuis localStorage (plus fiable au chargement)
+            const userLang = localStorage.getItem('userLanguage') || 'en';
+            const t = translations[userLang] || translations['en'];
             const noExpensesText = t.noExpensesYet || "No expenses yet";
             
             let chartData;
