@@ -7699,25 +7699,38 @@
         let currentX = 0;
         let isDragging = false;
 
-        // ✅ Fonction helper pour vérifier s'il y a des dépenses
+        // ✅ Fonction helper pour vérifier s'il y a des dépenses (manuelles OU labélisées)
         function hasExpenses() {
-            let hasData = false;
-            
+            // 1. Vérifier les items manuels dans expenses
+            let hasManualItems = false;
             Object.keys(expenses).forEach(categoryKey => {
                 if (categoryKey === 'income') return;
                 
-                // expenses[categoryKey] est un tableau directement
                 if (Array.isArray(expenses[categoryKey])) {
                     expenses[categoryKey].forEach(item => {
                         const amount = parseFloat(item.amount) || 0;
                         if (amount > 0) {
-                            hasData = true;
+                            hasManualItems = true;
                         }
                     });
                 }
             });
             
-            return hasData;
+            // 2. Vérifier les transactions labélisées dans realSpendingChartData
+            let hasLabeledTransactions = false;
+            if (typeof realSpendingChartData !== 'undefined' && realSpendingChartData) {
+                Object.keys(realSpendingChartData).forEach(category => {
+                    if (category !== '_incomeTotal') {
+                        const amount = realSpendingChartData[category] || 0;
+                        if (amount > 0) {
+                            hasLabeledTransactions = true;
+                        }
+                    }
+                });
+            }
+            
+            // Retourner true si l'un des deux existe
+            return hasManualItems || hasLabeledTransactions;
         }
 
         function initChartSwipe() {
