@@ -1035,8 +1035,9 @@ body:not(.dark-mode) .category-title {
 }
 
 body.dark-mode .expense-item {
-    background: #1f1f2e;
+    background: #16161e; /* ✅ Plus sombre pour mieux contraster avec #1e1e2e */
     color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* ✅ Légère bordure pour plus de définition */
 }
 
 .expense-name {
