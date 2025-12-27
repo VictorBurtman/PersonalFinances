@@ -28,7 +28,7 @@
     width: 100%;
     height: 85%; /* ✅ Ajusté pour couvrir plus */
     background-image: url('../img/icons/glamorous.svg');
-    background-size: 400px 400px; /* ✅ Plus gros (était 180px) */
+    background-size: 200px 200px; /* ✅ Plus gros (était 180px) */
     background-repeat: repeat;
     opacity: 0;
     mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 10%, rgba(0,0,0,0.25) 100%); /* ✅ Plus clair */
